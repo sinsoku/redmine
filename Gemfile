@@ -95,6 +95,7 @@ end
 group :development do
   gem 'listen', '~> 3.3'
   gem 'yard', require: false
+  gem 'steep', require: false
 end
 
 group :test do
