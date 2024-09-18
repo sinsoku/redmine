@@ -288,3 +288,12 @@ Style/TrailingCommaInHashLiteral:
 
 Style/YodaExpression:
   Enabled: false
+
+Style/CommentedKeyword:
+  Enabled: false
+
+Layout/LeadingCommentSpace:
+  Enabled: false
+
+Style/AccessorGrouping:
+  Enabled: false
