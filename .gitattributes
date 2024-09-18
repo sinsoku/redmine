@@ -1,0 +1,2 @@
+sig/generated/**/*.rbs linguist-generated
+sig/rbs_rails/**/*.rbs linguist-generated
