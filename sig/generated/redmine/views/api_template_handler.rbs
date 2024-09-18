@@ -1,0 +1,9 @@
+# Generated from lib/redmine/views/api_template_handler.rb with RBS::Inline
+
+module Redmine
+  module Views
+    class ApiTemplateHandler
+      def self.call: (untyped template, ?untyped source) -> untyped
+    end
+  end
+end

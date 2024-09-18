@@ -1,0 +1,86 @@
+# Generated from app/models/issue_relation.rb with RBS::Inline
+
+class IssueRelation < ApplicationRecord
+  # Class used to represent the relations of an issue
+  class Relations < Array
+    include Redmine::I18n
+
+    def initialize: (untyped issue, *untyped args) -> untyped
+
+    def to_s: (*untyped args) -> untyped
+  end
+
+  include Redmine::SafeAttributes
+
+  include Redmine::Utils::DateCalculation
+
+  TYPE_RELATES: ::String
+
+  TYPE_DUPLICATES: ::String
+
+  TYPE_DUPLICATED: ::String
+
+  TYPE_BLOCKS: ::String
+
+  TYPE_BLOCKED: ::String
+
+  TYPE_PRECEDES: ::String
+
+  TYPE_FOLLOWS: ::String
+
+  TYPE_COPIED_TO: ::String
+
+  TYPE_COPIED_FROM: ::String
+
+  TYPES: untyped
+
+  def safe_attributes=: (untyped attrs, ?untyped user) -> untyped
+
+  def visible?: (?untyped user) -> untyped
+
+  def deletable?: (?untyped user) -> untyped
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def validate_issue_relation: () -> untyped
+
+  def other_issue: (untyped issue) -> untyped
+
+  # Returns the relation type for +issue+
+  def relation_type_for: (untyped issue) -> untyped
+
+  def label_for: (untyped issue) -> untyped
+
+  def to_s: (?untyped issue) -> untyped
+
+  def css_classes_for: (untyped issue) -> untyped
+
+  def handle_issue_order: () -> untyped
+
+  def set_issue_to_dates: (?untyped journal) -> untyped
+
+  def successor_soonest_start: () -> untyped
+
+  def <=>: (untyped relation) -> untyped
+
+  def init_journals: (untyped user) -> untyped
+
+  private
+
+  # Reverses the relation if needed so that it gets stored in the proper way
+  # Should not be reversed before validation so that it can be displayed back
+  # as entered on new relation form.
+  #
+  # Orders relates relations by ID, so that uniqueness index in DB is triggered
+  # on concurrent access.
+  def reverse_if_needed: () -> untyped
+
+  # Returns true if the relation would create a circular dependency
+  def circular_dependency?: () -> untyped
+
+  def call_issues_relation_added_callback: () -> untyped
+
+  def call_issues_relation_removed_callback: () -> untyped
+
+  def call_issues_callback: (untyped name) -> untyped
+end

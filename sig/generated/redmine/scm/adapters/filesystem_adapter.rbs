@@ -1,0 +1,29 @@
+# Generated from lib/redmine/scm/adapters/filesystem_adapter.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+      class FilesystemAdapter < AbstractAdapter
+        def self.client_available: () -> untyped
+
+        def initialize: (untyped url, ?untyped root_url, ?untyped login, ?untyped password, ?untyped path_encoding) -> untyped
+
+        def path_encoding: () -> untyped
+
+        def format_path_ends: (untyped path, ?untyped leading, ?untyped trailing) -> untyped
+
+        def info: () -> untyped
+
+        def entries: (?untyped path, ?untyped identifier, ?untyped options) -> untyped
+
+        def cat: (untyped path, ?untyped identifier) -> untyped
+
+        private
+
+        # AbstractAdapter::target is implicitly made to quote paths.
+        # Here we do not shell-out, so we do not want quotes.
+        def target: (?untyped path) -> untyped
+      end
+    end
+  end
+end

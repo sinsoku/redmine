@@ -1,0 +1,10 @@
+# Generated from lib/redmine/notifiable.rb with RBS::Inline
+
+module Redmine
+  class Notifiable
+    def to_s: () -> untyped
+
+    # TODO: Plugin API for adding a new notification?
+    def self.all: () -> untyped
+  end
+end

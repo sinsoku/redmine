@@ -1,0 +1,18 @@
+# Generated from lib/redmine/utils.rb with RBS::Inline
+
+module Redmine
+  module Utils
+    # Returns the relative root url of the application
+    def self.relative_url_root: () -> untyped
+
+    # Sets the relative root url of the application
+    def self.relative_url_root=: (untyped arg) -> untyped
+
+    # Generates a n bytes random hex string
+    # Example:
+    #   random_hex(4) # => "89b8c729"
+    def self.random_hex: (untyped n) -> untyped
+
+    def self.save_upload: (untyped upload, untyped path) -> untyped
+  end
+end

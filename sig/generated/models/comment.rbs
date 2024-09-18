@@ -1,0 +1,13 @@
+# Generated from app/models/comment.rb with RBS::Inline
+
+class Comment < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  def comments=: (untyped arg) -> untyped
+
+  def comments: () -> untyped
+
+  private
+
+  def send_notification: () -> untyped
+end

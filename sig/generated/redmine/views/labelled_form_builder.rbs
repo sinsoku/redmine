@@ -1,0 +1,17 @@
+# Generated from lib/redmine/views/labelled_form_builder.rb with RBS::Inline
+
+class Redmine::Views::LabelledFormBuilder < ActionView::Helpers::FormBuilder
+  include Redmine::I18n
+
+  def check_box: (untyped field, ?untyped options, ?untyped checked_value, ?untyped unchecked_value) -> untyped
+
+  def select: (untyped field, untyped choices, ?untyped options, ?untyped html_options) -> untyped
+
+  def time_zone_select: (untyped field, ?untyped priority_zones, ?untyped options, ?untyped html_options) -> untyped
+
+  # A field for entering hours value
+  def hours_field: (untyped field, ?untyped options) -> untyped
+
+  # Returns a label tag for the given field
+  def label_for_field: (untyped field, ?untyped options) -> untyped
+end

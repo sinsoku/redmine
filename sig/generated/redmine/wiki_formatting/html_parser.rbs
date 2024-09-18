@@ -1,0 +1,15 @@
+# Generated from lib/redmine/wiki_formatting/html_parser.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    class HtmlParser
+      def self.to_text: (untyped html) -> untyped
+
+      class WikiTags < ::Loofah::Scrubber
+        def initialize: (untyped tags_to_text) -> untyped
+
+        def scrub: (untyped node) -> untyped
+      end
+    end
+  end
+end

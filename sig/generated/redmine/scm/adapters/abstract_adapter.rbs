@@ -1,0 +1,211 @@
+# Generated from lib/redmine/scm/adapters/abstract_adapter.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+      # @private
+      class AbstractAdapter
+        include Redmine::Utils::Shell
+
+        # raised if scm command exited with error, e.g. unknown revision.
+        class ScmCommandAborted < ::Redmine::Scm::Adapters::CommandFailed
+        end
+
+        def self.client_command: () -> untyped
+
+        def self.shell_quote: (untyped str) -> untyped
+
+        def self.shell_quote_command: () -> untyped
+
+        # Returns the version of the scm client
+        # Eg: [1, 5, 0] or [] if unknown
+        def self.client_version: () -> untyped
+
+        # Returns the version string of the scm client
+        # Eg: '1.5.0' or 'Unknown version' if unknown
+        def self.client_version_string: () -> untyped
+
+        # Returns true if the current client version is above
+        # or equals the given one
+        # If option is :unknown is set to true, it will return
+        # true if the client version is unknown
+        def self.client_version_above?: (untyped v, ?untyped options) -> untyped
+
+        def self.client_available: () -> untyped
+
+        def initialize: (untyped url, ?untyped root_url, ?untyped login, ?untyped password, ?untyped path_encoding) -> untyped
+
+        def adapter_name: () -> untyped
+
+        def supports_cat?: () -> untyped
+
+        def supports_annotate?: () -> untyped
+
+        def root_url: () -> untyped
+
+        def url: () -> untyped
+
+        def path_encoding: () -> untyped
+
+        # get info about the svn repository
+        def info: () -> untyped
+
+        # Returns the entry identified by path and revision identifier
+        # or nil if entry doesn't exist in the repository
+        def entry: (?untyped path, ?untyped identifier) -> untyped
+
+        # Returns an Entries collection
+        # or nil if the given path doesn't exist in the repository
+        def entries: (?untyped path, ?untyped identifier, ?untyped options) -> untyped
+
+        def branches: () -> untyped
+
+        def tags: () -> untyped
+
+        def default_branch: () -> untyped
+
+        def properties: (untyped path, ?untyped identifier) -> untyped
+
+        def revisions: (?untyped path, ?untyped identifier_from, ?untyped identifier_to, ?untyped options) -> untyped
+
+        def diff: (untyped path, untyped identifier_from, ?untyped identifier_to) -> untyped
+
+        def cat: (untyped path, ?untyped identifier) -> untyped
+
+        def with_leading_slash: (untyped path) -> untyped
+
+        def with_trailing_slash: (untyped path) -> untyped
+
+        def without_leading_slash: (untyped path) -> untyped
+
+        def without_trailing_slash: (untyped path) -> untyped
+
+        def valid_name?: (untyped name) -> untyped
+
+        private
+
+        def retrieve_root_url: () -> untyped
+
+        def target: (untyped path, ?untyped sq) -> untyped
+
+        def logger: () -> untyped
+
+        def shellout: (untyped cmd, ?untyped options) ?{ (?) -> untyped } -> untyped
+
+        # Path to the file where scm stderr output is logged
+        # Returns nil if the log file is not writable
+        def self.stderr_log_file: () -> untyped
+
+        def self.logger: () -> untyped
+
+        def self.shellout: (untyped cmd, ?untyped options) ?{ (?) -> untyped } -> untyped
+
+        # Hides username/password in a given command
+        def self.strip_credential: (untyped cmd) -> untyped
+
+        def strip_credential: (untyped cmd) -> untyped
+
+        def scm_iconv: (untyped to, untyped from, untyped str) -> untyped
+
+        def parse_xml: (untyped xml) -> untyped
+      end
+
+      class Entries < Array
+        def sort_by_name: () -> untyped
+
+        def revisions: () -> untyped
+      end
+
+      class Info
+        attr_accessor root_url: untyped
+
+        attr_accessor lastrev: untyped
+
+        def initialize: (?untyped attributes) -> untyped
+      end
+
+      class Entry
+        attr_accessor name: untyped
+
+        attr_accessor path: untyped
+
+        attr_accessor kind: untyped
+
+        attr_accessor size: untyped
+
+        attr_accessor lastrev: untyped
+
+        attr_accessor changeset: untyped
+
+        def initialize: (?untyped attributes) -> untyped
+
+        def is_file?: () -> untyped
+
+        def is_dir?: () -> untyped
+
+        def is_text?: () -> untyped
+
+        def author: () -> untyped
+      end
+
+      class Revisions < Array
+        def latest: () -> untyped
+      end
+
+      class Revision
+        attr_accessor scmid: untyped
+
+        attr_accessor name: untyped
+
+        attr_accessor author: untyped
+
+        attr_accessor time: untyped
+
+        attr_accessor message: untyped
+
+        attr_accessor paths: untyped
+
+        attr_accessor revision: untyped
+
+        attr_accessor branch: untyped
+
+        attr_accessor identifier: untyped
+
+        attr_accessor parents: untyped
+
+        def initialize: (?untyped attributes) -> untyped
+
+        # Returns the readable identifier.
+        def format_identifier: () -> untyped
+
+        def ==: (untyped other) -> untyped
+      end
+
+      class Annotate
+        attr_reader lines: untyped
+
+        attr_reader revisions: untyped
+
+        attr_reader previous_annotations: untyped
+
+        def initialize: () -> untyped
+
+        def add_line: (untyped line, untyped revision, ?untyped previous) -> untyped
+
+        def content: () -> untyped
+
+        def empty?: () -> untyped
+      end
+
+      class Branch < String
+        attr_accessor revision: untyped
+
+        attr_accessor scmid: untyped
+      end
+
+      module ScmData
+        def self.binary?: (untyped data) -> untyped
+      end
+    end
+  end
+end

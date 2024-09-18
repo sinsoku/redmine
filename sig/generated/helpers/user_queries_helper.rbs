@@ -1,0 +1,11 @@
+# Generated from app/helpers/user_queries_helper.rb with RBS::Inline
+
+module UserQueriesHelper
+  def column_value: (untyped column, untyped object, untyped value) -> untyped
+
+  def csv_value: (untyped column, untyped object, untyped value) -> untyped
+
+  def user_status_label: (untyped value) -> untyped
+
+  def twofa_scheme_label: (untyped value) -> untyped
+end

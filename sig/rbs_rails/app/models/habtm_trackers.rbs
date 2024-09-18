@@ -1,0 +1,107 @@
+class IssueCustomField < ::CustomField
+  class HABTM_Trackers < ::ActiveRecord::Base
+    extend _ActiveRecord_Relation_ClassMethods[IssueCustomField::HABTM_Trackers, ActiveRecord_Relation, top]
+
+    module GeneratedAttributeMethods
+      def custom_field_id: () -> Integer
+
+      def custom_field_id=: (Integer) -> Integer
+
+      def custom_field_id?: () -> bool
+
+      def custom_field_id_changed?: () -> bool
+
+      def custom_field_id_change: () -> [ Integer?, Integer? ]
+
+      def custom_field_id_will_change!: () -> void
+
+      def custom_field_id_was: () -> Integer?
+
+      def custom_field_id_previously_changed?: () -> bool
+
+      def custom_field_id_previous_change: () -> Array[Integer?]?
+
+      def custom_field_id_previously_was: () -> Integer?
+
+      def custom_field_id_before_last_save: () -> Integer?
+
+      def custom_field_id_change_to_be_saved: () -> Array[Integer?]?
+
+      def custom_field_id_in_database: () -> Integer?
+
+      def saved_change_to_custom_field_id: () -> Array[Integer?]?
+
+      def saved_change_to_custom_field_id?: () -> bool
+
+      def will_save_change_to_custom_field_id?: () -> bool
+
+      def restore_custom_field_id!: () -> void
+
+      def clear_custom_field_id_change: () -> void
+
+      def tracker_id: () -> Integer
+
+      def tracker_id=: (Integer) -> Integer
+
+      def tracker_id?: () -> bool
+
+      def tracker_id_changed?: () -> bool
+
+      def tracker_id_change: () -> [ Integer?, Integer? ]
+
+      def tracker_id_will_change!: () -> void
+
+      def tracker_id_was: () -> Integer?
+
+      def tracker_id_previously_changed?: () -> bool
+
+      def tracker_id_previous_change: () -> Array[Integer?]?
+
+      def tracker_id_previously_was: () -> Integer?
+
+      def tracker_id_before_last_save: () -> Integer?
+
+      def tracker_id_change_to_be_saved: () -> Array[Integer?]?
+
+      def tracker_id_in_database: () -> Integer?
+
+      def saved_change_to_tracker_id: () -> Array[Integer?]?
+
+      def saved_change_to_tracker_id?: () -> bool
+
+      def will_save_change_to_tracker_id?: () -> bool
+
+      def restore_tracker_id!: () -> void
+
+      def clear_tracker_id_change: () -> void
+    end
+    include GeneratedAttributeMethods
+
+    def left_side: () -> IssueCustomField?
+    def left_side=: (IssueCustomField?) -> IssueCustomField?
+    def reload_left_side: () -> IssueCustomField?
+    def build_left_side: (untyped) -> IssueCustomField
+    def create_left_side: (untyped) -> IssueCustomField
+    def create_left_side!: (untyped) -> IssueCustomField
+    def tracker: () -> Tracker?
+    def tracker=: (Tracker?) -> Tracker?
+    def reload_tracker: () -> Tracker?
+    def build_tracker: (untyped) -> Tracker
+    def create_tracker: (untyped) -> Tracker
+    def create_tracker!: (untyped) -> Tracker
+
+    module GeneratedRelationMethods
+    end
+
+    class ActiveRecord_Relation < ::ActiveRecord::Relation
+      include GeneratedRelationMethods
+      include _ActiveRecord_Relation[IssueCustomField::HABTM_Trackers, top]
+      include Enumerable[IssueCustomField::HABTM_Trackers]
+    end
+
+    class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+      include GeneratedRelationMethods
+      include _ActiveRecord_Relation[IssueCustomField::HABTM_Trackers, top]
+    end
+  end
+end

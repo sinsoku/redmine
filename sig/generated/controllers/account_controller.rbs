@@ -1,0 +1,80 @@
+# Generated from app/controllers/account_controller.rb with RBS::Inline
+
+class AccountController < ApplicationController
+  include CustomFieldsHelper
+
+  # Login request and validation
+  def login: () -> untyped
+
+  # Log out current user and redirect to welcome page
+  def logout: () -> untyped
+
+  # Lets user choose a new password
+  def lost_password: () -> untyped
+
+  # User self-registration
+  def register: () -> untyped
+
+  # Token based account activation
+  def activate: () -> untyped
+
+  # Sends a new account activation email
+  def activation_email: () -> untyped
+
+  def twofa_resend: () -> untyped
+
+  def twofa_confirm: () -> untyped
+
+  def twofa: () -> untyped
+
+  private
+
+  def prevent_twofa_session_replay: () -> untyped
+
+  def twofa_setup: () -> untyped
+
+  def require_active_twofa: () -> untyped
+
+  def setup_twofa_session: (untyped user, ?untyped previous_tries) -> untyped
+
+  # Prevent replay attacks by using each twofa_session_token only for exactly one request
+  def renew_twofa_session: (untyped user) -> untyped
+
+  def destroy_twofa_session: () -> untyped
+
+  def authenticate_user: () -> untyped
+
+  def password_authentication: () -> untyped
+
+  def handle_active_user: (untyped user) -> untyped
+
+  def successful_authentication: (untyped user) -> untyped
+
+  def set_autologin_cookie: (untyped user) -> untyped
+
+  # Onthefly creation failed, display the registration form to fill/fix attributes
+  def onthefly_creation_failed: (untyped user, ?untyped auth_source_options) -> untyped
+
+  def invalid_credentials: () -> untyped
+
+  # Register a user for email activation.
+  #
+  # Pass a block for behavior when a user fails to save
+  def register_by_email_activation: (untyped user) ?{ (?) -> untyped } -> untyped
+
+  # Automatically register a user
+  #
+  # Pass a block for behavior when a user fails to save
+  def register_automatically: (untyped user) ?{ (?) -> untyped } -> untyped
+
+  # Manual activation by the administrator
+  #
+  # Pass a block for behavior when a user fails to save
+  def register_manually_by_administrator: (untyped user) ?{ (?) -> untyped } -> untyped
+
+  def handle_inactive_user: (untyped user, ?untyped redirect_path) -> untyped
+
+  def account_pending: (untyped user, ?untyped redirect_path) -> untyped
+
+  def account_locked: (untyped user, ?untyped redirect_path) -> untyped
+end

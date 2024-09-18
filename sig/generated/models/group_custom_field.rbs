@@ -1,0 +1,5 @@
+# Generated from app/models/group_custom_field.rb with RBS::Inline
+
+class GroupCustomField < CustomField
+  def type_name: () -> untyped
+end

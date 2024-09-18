@@ -1,0 +1,5 @@
+# Generated from app/helpers/twofa_helper.rb with RBS::Inline
+
+module TwofaHelper
+  def require_active_twofa: () -> untyped
+end

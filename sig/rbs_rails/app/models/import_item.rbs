@@ -1,0 +1,243 @@
+class ImportItem < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[ImportItem, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def import_id: () -> Integer
+
+    def import_id=: (Integer) -> Integer
+
+    def import_id?: () -> bool
+
+    def import_id_changed?: () -> bool
+
+    def import_id_change: () -> [ Integer?, Integer? ]
+
+    def import_id_will_change!: () -> void
+
+    def import_id_was: () -> Integer?
+
+    def import_id_previously_changed?: () -> bool
+
+    def import_id_previous_change: () -> Array[Integer?]?
+
+    def import_id_previously_was: () -> Integer?
+
+    def import_id_before_last_save: () -> Integer?
+
+    def import_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def import_id_in_database: () -> Integer?
+
+    def saved_change_to_import_id: () -> Array[Integer?]?
+
+    def saved_change_to_import_id?: () -> bool
+
+    def will_save_change_to_import_id?: () -> bool
+
+    def restore_import_id!: () -> void
+
+    def clear_import_id_change: () -> void
+
+    def position: () -> Integer
+
+    def position=: (Integer) -> Integer
+
+    def position?: () -> bool
+
+    def position_changed?: () -> bool
+
+    def position_change: () -> [ Integer?, Integer? ]
+
+    def position_will_change!: () -> void
+
+    def position_was: () -> Integer?
+
+    def position_previously_changed?: () -> bool
+
+    def position_previous_change: () -> Array[Integer?]?
+
+    def position_previously_was: () -> Integer?
+
+    def position_before_last_save: () -> Integer?
+
+    def position_change_to_be_saved: () -> Array[Integer?]?
+
+    def position_in_database: () -> Integer?
+
+    def saved_change_to_position: () -> Array[Integer?]?
+
+    def saved_change_to_position?: () -> bool
+
+    def will_save_change_to_position?: () -> bool
+
+    def restore_position!: () -> void
+
+    def clear_position_change: () -> void
+
+    def obj_id: () -> Integer?
+
+    def obj_id=: (Integer?) -> Integer?
+
+    def obj_id?: () -> bool
+
+    def obj_id_changed?: () -> bool
+
+    def obj_id_change: () -> [ Integer?, Integer? ]
+
+    def obj_id_will_change!: () -> void
+
+    def obj_id_was: () -> Integer?
+
+    def obj_id_previously_changed?: () -> bool
+
+    def obj_id_previous_change: () -> Array[Integer?]?
+
+    def obj_id_previously_was: () -> Integer?
+
+    def obj_id_before_last_save: () -> Integer?
+
+    def obj_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def obj_id_in_database: () -> Integer?
+
+    def saved_change_to_obj_id: () -> Array[Integer?]?
+
+    def saved_change_to_obj_id?: () -> bool
+
+    def will_save_change_to_obj_id?: () -> bool
+
+    def restore_obj_id!: () -> void
+
+    def clear_obj_id_change: () -> void
+
+    def message: () -> String?
+
+    def message=: (String?) -> String?
+
+    def message?: () -> bool
+
+    def message_changed?: () -> bool
+
+    def message_change: () -> [ String?, String? ]
+
+    def message_will_change!: () -> void
+
+    def message_was: () -> String?
+
+    def message_previously_changed?: () -> bool
+
+    def message_previous_change: () -> Array[String?]?
+
+    def message_previously_was: () -> String?
+
+    def message_before_last_save: () -> String?
+
+    def message_change_to_be_saved: () -> Array[String?]?
+
+    def message_in_database: () -> String?
+
+    def saved_change_to_message: () -> Array[String?]?
+
+    def saved_change_to_message?: () -> bool
+
+    def will_save_change_to_message?: () -> bool
+
+    def restore_message!: () -> void
+
+    def clear_message_change: () -> void
+
+    def unique_id: () -> String?
+
+    def unique_id=: (String?) -> String?
+
+    def unique_id?: () -> bool
+
+    def unique_id_changed?: () -> bool
+
+    def unique_id_change: () -> [ String?, String? ]
+
+    def unique_id_will_change!: () -> void
+
+    def unique_id_was: () -> String?
+
+    def unique_id_previously_changed?: () -> bool
+
+    def unique_id_previous_change: () -> Array[String?]?
+
+    def unique_id_previously_was: () -> String?
+
+    def unique_id_before_last_save: () -> String?
+
+    def unique_id_change_to_be_saved: () -> Array[String?]?
+
+    def unique_id_in_database: () -> String?
+
+    def saved_change_to_unique_id: () -> Array[String?]?
+
+    def saved_change_to_unique_id?: () -> bool
+
+    def will_save_change_to_unique_id?: () -> bool
+
+    def restore_unique_id!: () -> void
+
+    def clear_unique_id_change: () -> void
+  end
+  include GeneratedAttributeMethods
+
+  def import: () -> Import
+  def import=: (Import?) -> Import?
+  def reload_import: () -> Import?
+  def build_import: (untyped) -> Import
+  def create_import: (untyped) -> Import
+  def create_import!: (untyped) -> Import
+
+  module GeneratedRelationMethods
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[ImportItem, Integer]
+    include Enumerable[ImportItem]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[ImportItem, Integer]
+  end
+end

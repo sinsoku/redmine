@@ -1,0 +1,20 @@
+# Generated from lib/redmine/default_data/loader.rb with RBS::Inline
+
+module Redmine
+  module DefaultData
+    class DataAlreadyLoaded < StandardError
+    end
+
+    module Loader
+      include Redmine::I18n
+
+      # Returns true if no data is already loaded in the database
+      # otherwise false
+      def self.no_data?: () -> untyped
+
+      # Loads the default data
+      # Raises a RecordNotSaved exception if something goes wrong
+      def self.load: (?untyped lang, ?untyped options) -> untyped
+    end
+  end
+end

@@ -1,0 +1,14 @@
+# Generated from app/helpers/imports_helper.rb with RBS::Inline
+
+module ImportsHelper
+  def import_title: () -> untyped
+
+  def import_partial_prefix: () -> untyped
+
+  def options_for_mapping_select: (untyped import, untyped field, ?untyped options) -> untyped
+
+  def mapping_select_tag: (untyped import, untyped field, ?untyped options) -> untyped
+
+  # Returns the options for the date_format setting
+  def date_format_options: () -> untyped
+end

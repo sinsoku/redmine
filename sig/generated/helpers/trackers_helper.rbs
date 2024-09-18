@@ -1,0 +1,5 @@
+# Generated from app/helpers/trackers_helper.rb with RBS::Inline
+
+module TrackersHelper
+  def tracker_name_tag: (untyped tracker) -> untyped
+end

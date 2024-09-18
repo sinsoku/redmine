@@ -1,0 +1,51 @@
+# Generated from lib/redmine/nested_set/issue_nested_set.rb with RBS::Inline
+
+module Redmine
+  module NestedSet
+    module IssueNestedSet
+      def self.included: (untyped base) -> untyped
+
+      private
+
+      def target_lft: () -> untyped
+
+      def add_to_nested_set: (?untyped lock) -> untyped
+
+      def add_to_nested_set_without_lock: () -> untyped
+
+      def add_as_root: () -> untyped
+
+      def handle_parent_change: () -> untyped
+
+      def move_to_nested_set: () -> untyped
+
+      def remove_from_nested_set: () -> untyped
+
+      def destroy_children: () -> untyped
+
+      def destroy_without_nested_set_update: () -> untyped
+
+      def reload_nested_set_values: () -> untyped
+
+      def save_nested_set_values: () -> untyped
+
+      def move_possible?: (untyped issue) -> untyped
+
+      def lock_nested_set: () -> untyped
+
+      def nested_set_scope: () -> untyped
+
+      def same_nested_set_scope?: (untyped issue) -> untyped
+
+      module ClassMethods
+        def rebuild_tree!: () -> untyped
+
+        def rebuild_single_tree!: (untyped root_id) -> untyped
+
+        private
+
+        def rebuild_nodes: (?untyped parent_id) -> untyped
+      end
+    end
+  end
+end

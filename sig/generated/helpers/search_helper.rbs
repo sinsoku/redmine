@@ -1,0 +1,13 @@
+# Generated from app/helpers/search_helper.rb with RBS::Inline
+
+module SearchHelper
+  def highlight_tokens: (untyped text, untyped tokens) -> untyped
+
+  def type_label: (untyped t) -> untyped
+
+  def project_select_tag: () -> untyped
+
+  def render_results_by_type: (untyped results_by_type) -> untyped
+
+  def issues_filter_path: (untyped question, untyped options) -> untyped
+end

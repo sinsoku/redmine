@@ -1,0 +1,7 @@
+# Generated from app/helpers/groups_helper.rb with RBS::Inline
+
+module GroupsHelper
+  def group_settings_tabs: (untyped group) -> untyped
+
+  def render_principals_for_new_group_users: (untyped group, ?untyped limit) -> untyped
+end

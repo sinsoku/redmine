@@ -1,0 +1,14 @@
+# Generated from lib/redmine/views/other_formats_builder.rb with RBS::Inline
+
+module Redmine
+  module Views
+    class OtherFormatsBuilder
+      def initialize: (untyped view) -> untyped
+
+      def link_to: (untyped name, ?untyped options) -> untyped
+
+      # Preserves query parameters
+      def link_to_with_query_parameters: (untyped name, ?untyped url, ?untyped options) -> untyped
+    end
+  end
+end

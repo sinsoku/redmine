@@ -1,0 +1,12 @@
+# Generated from lib/redmine/wiki_formatting/html_sanitizer.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    # Combination of SanitizationFilter and ExternalLinksFilter
+    class HtmlSanitizer
+      Pipeline: untyped
+
+      def self.call: (untyped html) -> untyped
+    end
+  end
+end

@@ -1,0 +1,13 @@
+# Generated from app/models/repository/filesystem.rb with RBS::Inline
+
+class Repository::Filesystem < Repository
+  def self.human_attribute_name: (untyped attribute_key_name, *untyped args) -> untyped
+
+  def self.scm_adapter_class: () -> untyped
+
+  def self.scm_name: () -> untyped
+
+  def supports_history?: () -> untyped
+
+  def fetch_changesets: () -> untyped
+end

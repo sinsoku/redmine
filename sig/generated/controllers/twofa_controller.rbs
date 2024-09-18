@@ -1,0 +1,27 @@
+# Generated from app/controllers/twofa_controller.rb with RBS::Inline
+
+class TwofaController < ApplicationController
+  include TwofaHelper
+
+  def select_scheme: () -> untyped
+
+  def activate_init: () -> untyped
+
+  def activate_confirm: () -> untyped
+
+  def activate: () -> untyped
+
+  def deactivate_init: () -> untyped
+
+  def deactivate_confirm: () -> untyped
+
+  def deactivate: () -> untyped
+
+  def admin_deactivate: () -> untyped
+
+  private
+
+  def activate_setup: () -> untyped
+
+  def deactivate_setup: () -> untyped
+end

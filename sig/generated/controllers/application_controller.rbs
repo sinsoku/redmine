@@ -1,0 +1,202 @@
+# Generated from app/controllers/application_controller.rb with RBS::Inline
+
+class Unauthorized < StandardError
+end
+
+class ApplicationController < ActionController::Base
+  include Redmine::I18n
+
+  include Redmine::Pagination
+
+  include Redmine::Hook::Helper
+
+  include RoutesHelper
+
+  include AvatarsHelper
+
+  include IconsHelper
+
+  def verify_authenticity_token: () -> untyped
+
+  def handle_unverified_request: () -> untyped
+
+  include Redmine::Search::Controller
+
+  include Redmine::MenuManager::MenuController
+
+  include Redmine::SudoMode::Controller
+
+  def session_expiration: () -> untyped
+
+  def session_expired?: () -> untyped
+
+  def start_user_session: (untyped user) -> untyped
+
+  def user_setup: () -> untyped
+
+  # Returns the current user or nil if no user is logged in
+  # and starts a session if needed
+  def find_current_user: () -> untyped
+
+  def autologin_cookie_name: () -> untyped
+
+  def try_to_autologin: () -> untyped
+
+  # Sets the logged in user
+  def logged_user=: (untyped user) -> untyped
+
+  # Logs out current user
+  def logout_user: () -> untyped
+
+  # check if login is globally required to access the application
+  def check_if_login_required: () -> untyped
+
+  def check_password_change: () -> untyped
+
+  def init_twofa_pairing_and_send_code_for: (untyped twofa) -> untyped
+
+  def check_twofa_activation: () -> untyped
+
+  def set_localization: (?untyped user) -> untyped
+
+  def require_login: () -> untyped
+
+  def require_admin: () -> untyped
+
+  def deny_access: () -> untyped
+
+  # Authorize the user for the requested action
+  def authorize: (?untyped ctrl, ?untyped action, ?untyped global) -> untyped
+
+  # Authorize the user for the requested action outside a project
+  def authorize_global: (?untyped ctrl, ?untyped action, ?untyped global) -> untyped
+
+  # Find project of id params[:id]
+  def find_project: (?untyped project_id) -> untyped
+
+  # Find project of id params[:project_id]
+  def find_project_by_project_id: () -> untyped
+
+  # Find project of id params[:id] if present
+  def find_optional_project_by_id: () -> untyped
+
+  # Find a project based on params[:project_id]
+  # and authorize the user for the requested action
+  def find_optional_project: () -> untyped
+
+  # Finds and sets @project based on @object.project
+  def find_project_from_association: () -> untyped
+
+  def find_model_object: () -> untyped
+
+  def self.model_object: (untyped model) -> untyped
+
+  # Find the issue whose id is the :id parameter
+  # Raises a Unauthorized exception if the issue is not visible
+  def find_issue: () -> untyped
+
+  # Find issues with a single :id param or :ids array param
+  # Raises a Unauthorized exception if one of the issues is not visible
+  def find_issues: () -> untyped
+
+  def find_attachments: () -> untyped
+
+  def parse_params_for_bulk_update: (untyped params) -> untyped
+
+  def replace_none_values_with_blank: (untyped params) -> untyped
+
+  # make sure that the user is a member of the project (or admin) if project is private
+  # used as a before_action for actions that do not require any particular permission on the project
+  def check_project_privacy: () -> untyped
+
+  def record_project_usage: () -> untyped
+
+  def back_url: () -> untyped
+
+  def redirect_back_or_default: (untyped default, ?untyped options) -> untyped
+
+  # Returns a validated URL string if back_url is a valid url for redirection,
+  # otherwise false
+  def validate_back_url: (untyped back_url) -> untyped
+
+  def valid_back_url?: (untyped back_url) -> untyped
+
+  # Redirects to the request referer if present, redirects to args or call block otherwise.
+  def redirect_to_referer_or: (*untyped args) ?{ (?) -> untyped } -> untyped
+
+  def render_403: (?untyped options) -> untyped
+
+  def render_404: (?untyped options) -> untyped
+
+  # Renders an error response
+  def render_error: (untyped arg) -> untyped
+
+  # Handler for ActionView::MissingTemplate exception
+  def missing_template: (untyped exception) -> untyped
+
+  # Filter for actions that provide an API response
+  # but have no HTML representation for non admin users
+  def require_admin_or_api_request: () -> untyped
+
+  # Picks which layout to use based on the request
+  #
+  # @return [boolean, string] name of the layout to use or false for no layout
+  def use_layout: () -> untyped
+
+  def render_feed: (untyped items, ?untyped options) -> untyped
+
+  def self.accept_atom_auth: (*untyped actions) -> untyped
+
+  def accept_atom_auth?: (?untyped action) -> untyped
+
+  def self.accept_api_auth: (*untyped actions) -> untyped
+
+  def accept_api_auth?: (?untyped action) -> untyped
+
+  # Returns the number of objects that should be displayed
+  # on the paginated list
+  def per_page_option: () -> untyped
+
+  # Returns offset and limit used to retrieve objects
+  # for an API response based on offset, limit and page parameters
+  def api_offset_and_limit: (?untyped options) -> untyped
+
+  # qvalues http header parser
+  # code taken from webrick
+  def parse_qvalues: (untyped value) -> untyped
+
+  # Returns a string that can be used as filename value in Content-Disposition header
+  def filename_for_content_disposition: (untyped name) -> untyped
+
+  def api_request?: () -> untyped
+
+  # Returns the API key present in the request
+  def api_key_from_request: () -> untyped
+
+  # Returns the API 'switch user' value if present
+  def api_switch_user_from_request: () -> untyped
+
+  # Renders a warning flash if obj has unsaved attachments
+  def render_attachment_warning_if_needed: (untyped obj) -> untyped
+
+  # Rescues an invalid query statement. Just in case...
+  def query_statement_invalid: (untyped exception) -> untyped
+
+  def query_error: (untyped exception) -> untyped
+
+  # Renders a 204 response for successful updates or deletions via the API
+  def render_api_ok: () -> untyped
+
+  # Renders a head API response
+  def render_api_head: (untyped status) -> untyped
+
+  # Renders API response on validation failure
+  # for an object or an array of objects
+  def render_validation_errors: (untyped objects) -> untyped
+
+  def render_api_errors: (*untyped messages) -> untyped
+
+  # Overrides #_include_layout? so that #render with no arguments
+  # doesn't use the layout for api requests
+  def _include_layout?: (*untyped args) -> untyped
+end

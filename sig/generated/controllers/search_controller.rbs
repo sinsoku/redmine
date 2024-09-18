@@ -1,0 +1,5 @@
+# Generated from app/controllers/search_controller.rb with RBS::Inline
+
+class SearchController < ApplicationController
+  def index: () -> untyped
+end

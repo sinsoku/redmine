@@ -1,0 +1,13 @@
+# Generated from app/models/watcher.rb with RBS::Inline
+
+class Watcher < ApplicationRecord
+  # Returns true if at least one object among objects is watched by user
+  def self.any_watched?: (untyped objects, untyped user) -> untyped
+
+  # Unwatch things that users are no longer allowed to view
+  def self.prune: (?untyped options) -> untyped
+
+  def validate_user: () -> untyped
+
+  def self.prune_single_user: (untyped user, ?untyped options) -> untyped
+end

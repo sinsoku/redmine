@@ -1,0 +1,28 @@
+# Generated from lib/plugins/gravatar/lib/gravatar.rb with RBS::Inline
+
+module GravatarHelper
+  # These are the options that control the default behavior of the public
+  # methods. They can be overridden during the actual call to the helper,
+  # or you can set them in your environment.rb as such:
+  #
+  #   # Allow racier gravatars
+  #   GravatarHelper::DEFAULT_OPTIONS[:rating] = 'R'
+  DEFAULT_OPTIONS: ::Hash
+
+  # The methods that will be made available to your views.
+  module PublicMethods
+    # Return the HTML img tag for the given user's gravatar. Presumes that
+    # the given user object will respond_to "email", and return the user's
+    # email address.
+    def gravatar_for: (untyped user, ?untyped options) -> untyped
+
+    # Return the HTML img tag for the given email address's gravatar.
+    def gravatar: (untyped email, ?untyped options) -> untyped
+
+    # Returns the base Gravatar URL for the given email hash
+    def gravatar_api_url: (untyped hash) -> untyped
+
+    # Return the gravatar URL for the given email address.
+    def gravatar_url: (untyped email, ?untyped options) -> untyped
+  end
+end

@@ -1,0 +1,21 @@
+# Generated from app/models/repository/bazaar.rb with RBS::Inline
+
+class Repository::Bazaar < Repository
+  def self.human_attribute_name: (untyped attribute_key_name, *untyped args) -> untyped
+
+  def self.scm_adapter_class: () -> untyped
+
+  def self.scm_name: () -> untyped
+
+  def entry: (?untyped path, ?untyped identifier) -> untyped
+
+  def cat: (untyped path, ?untyped identifier) -> untyped
+
+  def annotate: (untyped path, ?untyped identifier) -> untyped
+
+  def diff: (untyped path, untyped rev, untyped rev_to) -> untyped
+
+  def scm_entries: (?untyped path, ?untyped identifier) -> untyped
+
+  def fetch_changesets: () -> untyped
+end

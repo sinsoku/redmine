@@ -1,0 +1,26 @@
+# Generated from app/models/wiki_content_version.rb with RBS::Inline
+
+class WikiContentVersion < ApplicationRecord
+  def text=: (untyped plain) -> untyped
+
+  def text: () -> untyped
+
+  def project: () -> untyped
+
+  def attachments: () -> untyped
+
+  # Return true if the content is the current page content
+  def current_version?: () -> untyped
+
+  # Returns the previous version or nil
+  def previous: () -> untyped
+
+  # Returns the next version or nil
+  def next: () -> untyped
+
+  private
+
+  # Updates page's content if the latest version is removed
+  # or destroys the page if it was the only version
+  def page_update_after_destroy: () -> untyped
+end

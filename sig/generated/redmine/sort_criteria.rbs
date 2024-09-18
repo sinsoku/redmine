@@ -1,0 +1,34 @@
+# Generated from lib/redmine/sort_criteria.rb with RBS::Inline
+
+module Redmine
+  class SortCriteria < Array
+    def initialize: (?untyped arg) -> untyped
+
+    def to_param: () -> untyped
+
+    def to_a: () -> untyped
+
+    def add!: (untyped key, untyped asc) -> untyped
+
+    def add: (*untyped args) -> untyped
+
+    def first_key: () -> untyped
+
+    def first_asc?: () -> untyped
+
+    def key_at: (untyped arg) -> untyped
+
+    def order_at: (untyped arg) -> untyped
+
+    def order_for: (untyped key) -> untyped
+
+    def sort_clause: (untyped sortable_columns) -> untyped
+
+    private
+
+    def normalize!: () -> untyped
+
+    # Appends ASC/DESC to the sort criterion unless it has a fixed order
+    def append_order: (untyped criterion, untyped order) -> untyped
+  end
+end

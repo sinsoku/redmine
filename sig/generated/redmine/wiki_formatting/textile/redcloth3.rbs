@@ -1,0 +1,328 @@
+# Generated from lib/redmine/wiki_formatting/textile/redcloth3.rb with RBS::Inline
+
+class RedCloth3 < String
+  include Redmine::Helpers::URL
+
+  VERSION: ::String
+
+  DEFAULT_RULES: ::Array
+
+  #
+  #  Two accessor for setting security restrictions.
+  #
+  #  This is a nice thing if you're using RedCloth for
+  #  formatting in public places (e.g. Wikis) where you
+  #  don't want users to abuse HTML for bad things.
+  #
+  #  If +:filter_html+ is set, HTML which wasn't
+  #  created by the Textile processor will be escaped.
+  #
+  #  If +:filter_styles+ is set, it will also disable
+  #  the style markup specifier. ('{color: red}')
+  attr_accessor filter_html: untyped
+
+  #
+  #  Two accessor for setting security restrictions.
+  #
+  #  This is a nice thing if you're using RedCloth for
+  #  formatting in public places (e.g. Wikis) where you
+  #  don't want users to abuse HTML for bad things.
+  #
+  #  If +:filter_html+ is set, HTML which wasn't
+  #  created by the Textile processor will be escaped.
+  #
+  #  If +:filter_styles+ is set, it will also disable
+  #  the style markup specifier. ('{color: red}')
+  attr_accessor filter_styles: untyped
+
+  #
+  #  Accessor for toggling hard breaks.
+  #
+  #  If +:hard_breaks+ is set, single newlines will
+  #  be converted to HTML break tags.  This is the
+  #  default behavior for traditional RedCloth.
+  attr_accessor hard_breaks: untyped
+
+  # Accessor for toggling lite mode.
+  #
+  # In lite mode, block-level rules are ignored.  This means
+  # that tables, paragraphs, lists, and such aren't available.
+  # Only the inline markup for bold, italics, entities and so on.
+  #
+  #   r = RedCloth.new( "And then? She *fell*!", [:lite_mode] )
+  #   r.to_html
+  #   #=> "And then? She <strong>fell</strong>!"
+  attr_accessor lite_mode: untyped
+
+  #
+  #  Accessor for toggling span caps.
+  #
+  #  Textile places `span' tags around capitalized
+  #  words by default, but this wreaks havoc on Wikis.
+  #  If +:no_span_caps+ is set, this will be
+  #  suppressed.
+  attr_accessor no_span_caps: untyped
+
+  #
+  #  Establishes the markup predence.  Available rules include:
+  #
+  #  == Textile Rules
+  #
+  #  The following textile rules can be set individually.  Or add the complete
+  #  set of rules with the single :textile rule, which supplies the rule set in
+  #  the following precedence:
+  #
+  #  refs_textile::          Textile references (i.e. [hobix]http://hobix.com/)
+  #  block_textile_table::   Textile table block structures
+  #  block_textile_lists::   Textile list structures
+  #  block_textile_prefix::  Textile blocks with prefixes (i.e. bq., h2., etc.)
+  #  inline_textile_image::  Textile inline images
+  #  inline_textile_link::   Textile inline links
+  #  inline_textile_span::   Textile inline spans
+  #  glyphs_textile:: Textile entities (such as em-dashes and smart quotes)
+  #
+  #  == Markdown
+  #
+  #  refs_markdown::         Markdown references (for example: [hobix]: http://hobix.com/)
+  #  block_markdown_setext:: Markdown setext headers
+  #  block_markdown_atx::    Markdown atx headers
+  #  block_markdown_rule::   Markdown horizontal rules
+  #  block_markdown_bq::     Markdown blockquotes
+  #  block_markdown_lists::  Markdown lists
+  #  inline_markdown_link::  Markdown links
+  attr_accessor rules: untyped
+
+  # Returns a new RedCloth object, based on _string_ and
+  # enforcing all the included _restrictions_.
+  #
+  #   r = RedCloth.new( "h1. A <b>bold</b> man", [:filter_html] )
+  #   r.to_html
+  #     #=>"<h1>A &lt;b&gt;bold&lt;/b&gt; man</h1>"
+  def initialize: (untyped string, ?untyped restrictions) -> untyped
+
+  #
+  #  Generates HTML from the Textile contents.
+  #
+  #    r = RedCloth.new( "And then? She *fell*!" )
+  #    r.to_html( true )
+  #      #=>"And then? She <strong>fell</strong>!"
+  def to_html: (*untyped rules) -> untyped
+
+  private
+
+  #
+  #  Mapping of 8-bit ASCII codes to HTML numerical entity equivalents.
+  #  (from PyTextile)
+  TEXTILE_TAGS: untyped
+
+  #
+  #  Regular expressions to convert to HTML.
+  A_HLGN: ::Regexp
+
+  A_VLGN: ::Regexp
+
+  C_CLAS: ::String
+
+  C_LNGE: ::String
+
+  C_STYL: ::String
+
+  S_CSPN: ::String
+
+  S_RSPN: ::String
+
+  A: ::String
+
+  S: ::String
+
+  C: ::String
+
+  # PUNCT = Regexp::quote( '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~' )
+  PUNCT: untyped
+
+  PUNCT_NOQ: untyped
+
+  PUNCT_Q: untyped
+
+  HYPERLINK: ::String
+
+  # Text markup tags, don't conflict with block tags
+  SIMPLE_HTML_TAGS: ::Array
+
+  QTAGS: ::Array
+
+  QTAGS_JOIN: untyped
+
+  # Elements to handle
+  GLYPHS: ::Array
+
+  H_ALGN_VALS: ::Hash
+
+  V_ALGN_VALS: ::Hash
+
+  #
+  #  Flexible HTML escaping
+  def htmlesc: (untyped str, ?untyped mode) -> untyped
+
+  # Search and replace for Textile glyphs (quotes, dashes, other symbols)
+  def pgl: (untyped text) -> untyped
+
+  # Parses Textile attribute lists and builds an HTML attribute string
+  def pba: (untyped text_in, ?untyped element) -> untyped
+
+  STYLES_RE: ::Regexp
+
+  def sanitize_styles: (untyped str) -> untyped
+
+  TABLE_RE: ::Regexp
+
+  # Parses a Textile table block, building HTML from the result.
+  def block_textile_table: (untyped text) -> untyped
+
+  LISTS_RE: ::Regexp
+
+  LISTS_CONTENT_RE: ::Regexp
+
+  # Parses Textile lists and generates HTML
+  def block_textile_lists: (untyped text) -> untyped
+
+  QUOTES_RE: ::Regexp
+
+  QUOTES_CONTENT_RE: ::Regexp
+
+  def block_textile_quotes: (untyped text) -> untyped
+
+  CODE_RE: ::Regexp
+
+  def inline_textile_code: (untyped text) -> untyped
+
+  def lT: (untyped text) -> untyped
+
+  def hard_break: (untyped text) -> untyped
+
+  BLOCKS_GROUP_RE: ::Regexp
+
+  def blocks: (untyped text, ?untyped deep_code) -> untyped
+
+  def textile_bq: (untyped tag, untyped atts, untyped cite, untyped content) -> untyped
+
+  def textile_p: (untyped tag, untyped atts, untyped cite, untyped content) -> untyped
+
+  alias textile_h1 textile_p
+
+  alias textile_h2 textile_p
+
+  alias textile_h3 textile_p
+
+  alias textile_h4 textile_p
+
+  alias textile_h5 textile_p
+
+  alias textile_h6 textile_p
+
+  def textile_fn_: (untyped tag, untyped num, untyped atts, untyped cite, untyped content) -> untyped
+
+  BLOCK_RE: ::Regexp
+
+  def block_textile_prefix: (untyped text) -> untyped
+
+  SETEXT_RE: ::Regexp
+
+  def block_markdown_setext: (untyped text) -> untyped
+
+  ATX_RE: ::Regexp
+
+  def block_markdown_atx: (untyped text) -> untyped
+
+  MARKDOWN_BQ_RE: ::Regexp
+
+  def block_markdown_bq: (untyped text) -> untyped
+
+  MARKDOWN_RULE_RE: ::Regexp
+
+  def block_markdown_rule: (untyped text) -> untyped
+
+  # XXX TODO XXX
+  def block_markdown_lists: (untyped text) -> untyped
+
+  def inline_textile_span: (untyped text) -> untyped
+
+  LINK_RE: ::Regexp
+
+  def inline_textile_link: (untyped text) -> untyped
+
+  MARKDOWN_REFLINK_RE: ::Regexp
+
+  def inline_markdown_reflink: (untyped text) -> untyped
+
+  MARKDOWN_LINK_RE: ::Regexp
+
+  def inline_markdown_link: (untyped text) -> untyped
+
+  TEXTILE_REFS_RE: ::Regexp
+
+  MARKDOWN_REFS_RE: ::Regexp
+
+  def refs: (untyped text) -> untyped
+
+  def refs_textile: (untyped text) -> untyped
+
+  def refs_markdown: (untyped text) -> untyped
+
+  def check_refs: (untyped text) -> untyped
+
+  IMAGE_RE: ::Regexp
+
+  def inline_textile_image: (untyped text) -> untyped
+
+  def shelve: (untyped val) -> untyped
+
+  def retrieve: (untyped text) -> untyped
+
+  def incoming_entities: (untyped text) -> untyped
+
+  def no_textile: (untyped text) -> untyped
+
+  def clean_white_space: (untyped text) -> untyped
+
+  def flush_left: (untyped text) -> untyped
+
+  def footnote_ref: (untyped text) -> untyped
+
+  OFFTAGS: ::Regexp
+
+  OFFTAG_MATCH: ::Regexp
+
+  OFFTAG_OPEN: ::Regexp
+
+  OFFTAG_CLOSE: ::Regexp
+
+  HASTAG_MATCH: ::Regexp
+
+  ALLTAG_MATCH: ::Regexp
+
+  def glyphs_textile: (untyped text, ?untyped level) -> untyped
+
+  def rip_offtags: (untyped text, ?untyped escape_aftertag, ?untyped escape_line) -> untyped
+
+  def smooth_offtags: (untyped text) -> untyped
+
+  def inline: (untyped text) -> untyped
+
+  def h_align: (untyped text) -> untyped
+
+  def v_align: (untyped text) -> untyped
+
+  def textile_popup_help: (untyped name, untyped windowW, untyped windowH) -> untyped
+
+  # HTML cleansing stuff
+  BASIC_TAGS: ::Hash
+
+  def clean_html: (untyped text, ?untyped tags) -> untyped
+
+  ALLOWED_TAGS: ::Array
+
+  def escape_html_tags: (untyped text) -> untyped
+
+  def remove_html_comments: (untyped text) -> untyped
+end

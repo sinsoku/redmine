@@ -1,0 +1,47 @@
+# Generated from app/models/issue_import.rb with RBS::Inline
+
+class IssueImport < Import
+  AUTO_MAPPABLE_FIELDS: ::Hash
+
+  def self.menu_item: () -> untyped
+
+  def self.authorized?: (untyped user) -> untyped
+
+  # Returns the objects that were imported
+  def saved_objects: () -> untyped
+
+  # Returns a scope of projects that user is allowed to
+  # import issue to
+  def allowed_target_projects: () -> untyped
+
+  def project: () -> untyped
+
+  # Returns a scope of trackers that user is allowed to
+  # import issue to
+  def allowed_target_trackers: () -> untyped
+
+  def tracker: () -> untyped
+
+  # Returns true if missing categories should be created during the import
+  def create_categories?: () -> untyped
+
+  # Returns true if missing versions should be created during the import
+  def create_versions?: () -> untyped
+
+  def mappable_custom_fields: () -> untyped
+
+  private
+
+  def build_object: (untyped row, untyped item) -> untyped
+
+  def extend_object: (untyped row, untyped item, untyped issue) -> untyped
+
+  def build_relations: (untyped row, untyped item, untyped issue) -> untyped
+
+  def relation_values: (untyped row, untyped name) -> untyped
+
+  # Callback that sets issue as the parent of a previously imported issue
+  def set_as_parent_callback: (untyped issue, untyped child_position) -> untyped
+
+  def set_relation_callback: (untyped to_issue, untyped from_position, untyped type, untyped delay) -> untyped
+end

@@ -1,0 +1,9 @@
+# Generated from app/models/workflow_rule.rb with RBS::Inline
+
+class WorkflowRule < ApplicationRecord
+  # Copies workflows from source to targets
+  def self.copy: (untyped source_tracker, untyped source_role, untyped target_trackers, untyped target_roles) -> untyped
+
+  # Copies a single set of workflows from source to target
+  def self.copy_one: (untyped source_tracker, untyped source_role, untyped target_tracker, untyped target_role) -> untyped
+end

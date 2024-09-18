@@ -1,0 +1,68 @@
+# Generated from app/helpers/queries_helper.rb with RBS::Inline
+
+module QueriesHelper
+  include ApplicationHelper
+
+  def filters_options_for_select: (untyped query) -> untyped
+
+  def query_filters_hidden_tags: (untyped query) -> untyped
+
+  def query_columns_hidden_tags: (untyped query) -> untyped
+
+  def query_hidden_tags: (untyped query) -> untyped
+
+  def group_by_column_select_tag: (untyped query) -> untyped
+
+  def available_block_columns_tags: (untyped query) -> untyped
+
+  def available_totalable_columns_tags: (untyped query, ?untyped options) -> untyped
+
+  def query_available_inline_columns_options: (untyped query) -> untyped
+
+  def query_selected_inline_columns_options: (untyped query) -> untyped
+
+  def render_query_columns_selection: (untyped query, ?untyped options) -> untyped
+
+  def available_display_types_tags: (untyped query) -> untyped
+
+  def grouped_query_results: (untyped items, untyped query) ?{ (?) -> untyped } -> untyped
+
+  def render_query_totals: (untyped query) -> untyped
+
+  def total_tag: (untyped column, untyped value) -> untyped
+
+  def column_header: (untyped query, untyped column, ?untyped options) -> untyped
+
+  def column_content: (untyped column, untyped item) -> untyped
+
+  def column_value: (untyped column, untyped item, untyped value) -> untyped
+
+  def csv_content: (untyped column, untyped item) -> untyped
+
+  def csv_value: (untyped column, untyped object, untyped value) -> untyped
+
+  def query_to_csv: (untyped items, untyped query, ?untyped options) -> untyped
+
+  def filename_for_export: (untyped query, untyped default_name) -> untyped
+
+  # Retrieve query from session or build a new query
+  def retrieve_query: (?untyped klass, ?untyped use_session, ?untyped options) -> untyped
+
+  def retrieve_query_from_session: (?untyped klass) -> untyped
+
+  # Returns the query definition as hidden field tags
+  def query_as_hidden_field_tags: (untyped query) -> untyped
+
+  def query_hidden_sort_tag: (untyped query) -> untyped
+
+  # Returns the queries that are rendered in the sidebar
+  def sidebar_queries: (untyped klass, untyped project) -> untyped
+
+  # Renders a group of queries
+  def query_links: (untyped title, untyped queries) -> untyped
+
+  def link_to_clear_query: (?untyped params) -> untyped
+
+  # Renders the list of queries for the sidebar
+  def render_sidebar_queries: (untyped klass, untyped project) -> untyped
+end

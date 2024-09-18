@@ -1,0 +1,87 @@
+# Generated from app/models/import.rb with RBS::Inline
+
+class Import < ApplicationRecord
+  DATE_FORMATS: ::Array
+
+  AUTO_MAPPABLE_FIELDS: ::Hash
+
+  def self.menu_item: () -> untyped
+
+  def self.layout: () -> untyped
+
+  def self.authorized?: (untyped user) -> untyped
+
+  def initialize: (*untyped args) -> untyped
+
+  def file=: (untyped arg) -> untyped
+
+  def set_default_settings: (?untyped options) -> untyped
+
+  def to_param: () -> untyped
+
+  # Returns the full path of the file to import
+  # It is stored in tmp/imports with a random hex as filename
+  def filepath: () -> untyped
+
+  # Returns true if the file to import exists
+  def file_exists?: () -> untyped
+
+  # Returns the headers as an array that
+  # can be used for select options
+  def columns_options: (?untyped default) -> untyped
+
+  # Parses the file to import and updates the total number of items
+  def parse_file: () -> untyped
+
+  # Reads the items to import and yields the given block for each item
+  def read_items: () -> untyped
+
+  # Returns the count first rows of the file (including headers)
+  def first_rows: (?untyped count) -> untyped
+
+  # Returns an array of headers
+  def headers: () -> untyped
+
+  # Returns the mapping options
+  def mapping: () -> untyped
+
+  # Adds a callback that will be called after the item at given position is imported
+  def add_callback: (untyped position, untyped name, *untyped args) -> untyped
+
+  # Executes the callbacks for the given object
+  def do_callbacks: (untyped position, untyped object) -> untyped
+
+  # Imports items and returns the position of the last processed item
+  def run: (?untyped options) -> untyped
+
+  def unsaved_items: () -> untyped
+
+  def saved_items: () -> untyped
+
+  private
+
+  def read_rows: () -> untyped
+
+  def row_value: (untyped row, untyped key) -> untyped
+
+  def row_date: (untyped row, untyped key) -> untyped
+
+  # Builds a record for the given row and returns it
+  # To be implemented by subclasses
+  def build_object: (untyped row, untyped item) -> untyped
+
+  # Extends object with properties, that may only be handled after it's been
+  # persisted.
+  def extend_object: (untyped row, untyped item, untyped object) -> untyped
+
+  # Generates a filename used to store the import file
+  def generate_filename: () -> untyped
+
+  # Deletes the import file
+  def remove_file: () -> untyped
+
+  # Returns true if value is a string that represents a true value
+  def yes?: (untyped value) -> untyped
+
+  def use_unique_id?: () -> untyped
+end

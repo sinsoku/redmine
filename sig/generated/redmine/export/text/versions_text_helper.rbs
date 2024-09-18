@@ -1,0 +1,11 @@
+# Generated from lib/redmine/export/text/versions_text_helper.rb with RBS::Inline
+
+module Redmine
+  module Export
+    module Text
+      module VersionsTextHelper
+        def version_to_text: (untyped version) -> untyped
+      end
+    end
+  end
+end

@@ -1,0 +1,26 @@
+# Generated from app/helpers/timelog_helper.rb with RBS::Inline
+
+module TimelogHelper
+  include ApplicationHelper
+
+  # Returns a collection of activities for a select field.  time_entry
+  # is optional and will be used to check if the selected TimeEntryActivity
+  # is active.
+  def activity_collection_for_select_options: (?untyped time_entry, ?untyped project) -> untyped
+
+  def user_collection_for_select_options: (untyped time_entry) -> untyped
+
+  def default_activity: (untyped time_entry) -> untyped
+
+  def select_hours: (untyped data, untyped criteria, untyped value) -> untyped
+
+  def sum_hours: (untyped data) -> untyped
+
+  def format_criteria_value: (untyped criteria_options, untyped value, ?untyped html) -> untyped
+
+  def report_to_csv: (untyped report) -> untyped
+
+  def report_criteria_to_csv: (untyped csv, untyped available_criteria, untyped columns, untyped criteria, untyped periods, untyped hours, ?untyped level) -> untyped
+
+  def cancel_button_tag_for_time_entry: (untyped project) -> untyped
+end

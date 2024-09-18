@@ -1,0 +1,125 @@
+# Generated from lib/redmine/sudo_mode.rb with RBS::Inline
+
+module Redmine
+  module SudoMode
+    class SudoRequired < StandardError
+    end
+
+    class Form
+      include ActiveModel::Validations
+
+      attr_accessor password: untyped
+
+      attr_accessor original_fields: untyped
+
+      def initialize: (?untyped password) -> untyped
+
+      def check_password: () -> untyped
+    end
+
+    module Helper
+      # Represents params data from hash as hidden fields
+      #
+      # taken from https://github.com/brianhempel/hash_to_hidden_fields
+      def hash_to_hidden_fields: (untyped hash) -> untyped
+    end
+
+    module Controller
+      extend ActiveSupport::Concern
+
+      # Sudo mode Around Filter
+      #
+      # Checks the 'last used' timestamp from session and sets the
+      # SudoMode::active? flag accordingly.
+      #
+      # After the request refreshes the timestamp if sudo mode was used during
+      # this request.
+      def sudo_mode: () -> untyped
+
+      # This renders the sudo mode form / handles sudo form submission.
+      #
+      # Call this method in controller actions if sudo permissions are required
+      # for processing this request. This approach is good in cases where the
+      # action needs to be protected in any case or where the check is simple.
+      #
+      # In cases where this decision depends on complex conditions in the model,
+      # consider the declarative approach using the require_sudo_mode class
+      # method and a corresponding declaration in the model that causes it to throw
+      # a SudoRequired Error when necessary.
+      #
+      # All parameter names given are included as hidden fields to be resubmitted
+      # along with the password.
+      #
+      # Returns true when processing the action should continue, false otherwise.
+      # If false is returned, render has already been called for display of the
+      # password form.
+      #
+      # if @user.mail_changed?
+      #   require_sudo_mode :user or return
+      # end
+      def require_sudo_mode: (*untyped param_names) -> untyped
+
+      # display the sudo password form
+      def render_sudo_form: (untyped param_names) -> untyped
+
+      # handle sudo password form submit
+      def process_sudo_form: () -> untyped
+
+      def sudo_timestamp_valid?: () -> untyped
+
+      def update_sudo_timestamp!: (?untyped new_value) -> untyped
+
+      # Before Filter which is used by the require_sudo_mode class method.
+      class SudoRequestFilter
+        def before: (untyped controller) -> untyped
+      end
+
+      module ClassMethods
+        # Handles sudo requirements for the given actions, preserving the named
+        # parameters, or any parameters if you omit the :parameters option.
+        #
+        # Sudo enforcement by default is active for all requests to an action
+        # but may be limited to a certain subset of request methods via the
+        # :only option.
+        #
+        # Examples:
+        #
+        # require_sudo_mode :account, only: :post
+        # require_sudo_mode :update, :create, parameters: %w(role)
+        # require_sudo_mode :destroy
+        def require_sudo_mode: (*untyped args) -> untyped
+      end
+    end
+
+    class CurrentSudoMode < ActiveSupport::CurrentAttributes
+    end
+
+    # true if the sudo mode state was queried during this request
+    def self.was_used?: () -> untyped
+
+    # true if sudo mode is currently active.
+    #
+    # Calling this method also turns was_used? to true, therefore
+    # it is important to only call this when sudo is actually needed, as the last
+    # condition to determine whether a change can be done or not.
+    #
+    # If you do it wrong, timeout of the sudo mode will happen too late or not at
+    # all.
+    def self.active?: () -> untyped
+
+    def self.active!: () -> untyped
+
+    def self.possible?: () -> untyped
+
+    # Turn off sudo mode (never require password entry).
+    def self.disable!: () -> untyped
+
+    # Turn sudo mode back on
+    def self.enable!: () -> untyped
+
+    def self.enabled?: () -> untyped
+
+    # Timespan after which sudo mode expires when unused.
+    def self.timeout: () -> untyped
+  end
+end

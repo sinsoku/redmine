@@ -1,0 +1,41 @@
+# Generated from lib/redmine/wiki_formatting/textile/formatter.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module Textile
+      class Formatter < RedCloth3
+        include ActionView::Helpers::TagHelper
+
+        include Redmine::WikiFormatting::LinksHelper
+
+        include Redmine::WikiFormatting::SectionHelper
+
+        alias inline_auto_link auto_link!
+
+        alias inline_auto_mailto auto_mailto!
+
+        alias inline_restore_redmine_links restore_redmine_links
+
+        # auto_link rule after textile rules so that it doesn't break !image_url! tags
+        RULES: ::Array
+
+        def initialize: (*untyped args) -> untyped
+
+        def to_html: (*untyped rules) -> untyped
+
+        def extract_sections: (untyped index) -> untyped
+
+        private
+
+        # Patch for RedCloth.  Fixed in RedCloth r128 but _why hasn't released it yet.
+        # <a href="http://code.whytheluckystiff.net/redcloth/changeset/128">http://code.whytheluckystiff.net/redcloth/changeset/128</a>
+        def hard_break: (untyped text) -> untyped
+
+        alias smooth_offtags_without_code_highlighting smooth_offtags
+
+        # Patch to add code highlighting support to RedCloth
+        def smooth_offtags: (untyped text) -> untyped
+      end
+    end
+  end
+end

@@ -1,0 +1,8 @@
+# Generated from lib/redmine/core_ext/string.rb with RBS::Inline
+
+# @private
+class String
+  include Redmine::CoreExt::String::Conversions
+
+  include Redmine::CoreExt::String::Inflections
+end

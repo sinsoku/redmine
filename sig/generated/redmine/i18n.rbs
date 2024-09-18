@@ -1,0 +1,73 @@
+# Generated from lib/redmine/i18n.rb with RBS::Inline
+
+module Redmine
+  module I18n
+    include ActionView::Helpers::NumberHelper
+
+    def self.included: (untyped base) -> untyped
+
+    def l: (*untyped args) -> untyped
+
+    def l_or_humanize: (untyped s, ?untyped options) -> untyped
+
+    def l_hours: (untyped hours) -> untyped
+
+    def l_hours_short: (untyped hours) -> untyped
+
+    def ll: (untyped lang, untyped str, ?untyped arg) -> untyped
+
+    # Localizes the given args with user's language
+    def lu: (untyped user, *untyped args) -> untyped
+
+    def format_date: (untyped date) -> untyped
+
+    def format_time: (untyped time, ?untyped include_date, ?untyped user) -> untyped
+
+    def format_hours: (untyped hours) -> untyped
+
+    # Will consider language specific separator in user input
+    # and normalize them to a unified format to be accepted by Kernel.Float().
+    #
+    # @param value [String] A string represenation of a float value.
+    #
+    # @note The delimiter cannot be used here if it is a decimal point since it
+    #       will clash with the dot separator.
+    def normalize_float: (untyped value) -> untyped
+
+    def day_name: (untyped day) -> untyped
+
+    def abbr_day_name: (untyped day) -> untyped
+
+    def day_letter: (untyped day) -> untyped
+
+    def month_name: (untyped month) -> untyped
+
+    def valid_languages: () -> untyped
+
+    # Returns an array of languages names and code sorted by names, example:
+    # [["Deutsch", "de"], ["English", "en"] ...]
+    #
+    # The result is cached to prevent from loading all translations files
+    # unless :cache => false option is given
+    def languages_options: (?untyped options) -> untyped
+
+    def find_language: (untyped lang) -> untyped
+
+    def set_language_if_valid: (untyped lang) -> untyped
+
+    def current_language: () -> untyped
+
+    # Custom backend based on I18n::Backend::Simple with the following changes:
+    # * available_locales are determined by looking at translation file names
+    class Backend < ::I18n::Backend::Simple
+      module Implementation
+        # Get available locales from the translations filenames
+        def available_locales: () -> untyped
+      end
+
+      include ::I18n::Backend::Pluralization
+
+      include ::I18n::Backend::Fallbacks
+    end
+  end
+end

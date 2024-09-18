@@ -1,0 +1,14 @@
+# Generated from lib/redmine/unified_diff.rb with RBS::Inline
+
+module Redmine
+  # Class used to parse unified diffs
+  class UnifiedDiff < Array
+    attr_reader diff_type: untyped
+
+    attr_reader diff_style: untyped
+
+    def initialize: (untyped diff, ?untyped options) -> untyped
+
+    def truncated?: () -> untyped
+  end
+end

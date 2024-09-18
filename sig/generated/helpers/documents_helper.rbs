@@ -1,0 +1,4 @@
+# Generated from app/helpers/documents_helper.rb with RBS::Inline
+
+module DocumentsHelper
+end

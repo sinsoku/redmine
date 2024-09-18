@@ -1,0 +1,9 @@
+# Generated from app/models/project_custom_field.rb with RBS::Inline
+
+class ProjectCustomField < CustomField
+  def type_name: () -> untyped
+
+  def visible_by?: (untyped project, ?untyped user) -> untyped
+
+  def visibility_by_project_condition: (?untyped project_key, ?untyped user, ?untyped id_column) -> untyped
+end

@@ -1,0 +1,83 @@
+# Generated from app/controllers/wiki_controller.rb with RBS::Inline
+
+# The WikiController follows the Rails REST controller pattern but with
+# a few differences
+#
+# * index - shows a list of WikiPages grouped by page or date
+# * new - not used
+# * create - not used
+# * show - will also show the form for creating a new wiki page
+# * edit - used to edit an existing or new page
+# * update - used to save a wiki page update to the database, including new pages
+# * destroy - normal
+#
+# Other member and collection methods are also used
+#
+# TODO: still being worked on
+class WikiController < ApplicationController
+  include AttachmentsHelper
+
+  include Redmine::Export::PDF
+
+  # List of pages, sorted alphabetically and by parent (hierarchy)
+  def index: () -> untyped
+
+  # List of page, by last update
+  def date_index: () -> untyped
+
+  def new: () -> untyped
+
+  # display a page (in editing mode if it doesn't exist)
+  def show: () -> untyped
+
+  # edit an existing page or a new one
+  def edit: () -> untyped
+
+  # Creates a new page or updates an existing one
+  def update: () -> untyped
+
+  # rename a page
+  def rename: () -> untyped
+
+  def protect: () -> untyped
+
+  # show page history
+  def history: () -> untyped
+
+  def diff: () -> untyped
+
+  def annotate: () -> untyped
+
+  # Removes a wiki page and its history
+  # Children can be either set as root pages, removed or reassigned to another parent page
+  def destroy: () -> untyped
+
+  def destroy_version: () -> untyped
+
+  # Export wiki to a single pdf or html file
+  def export: () -> untyped
+
+  def preview: () -> untyped
+
+  def add_attachment: () -> untyped
+
+  private
+
+  def find_wiki: () -> untyped
+
+  # Finds the requested page or a new page if it doesn't exist
+  def find_existing_or_new_page: () -> untyped
+
+  # Finds the requested page and returns a 404 error if it doesn't exist
+  def find_existing_page: () -> untyped
+
+  def redirect_to_page: (untyped page) -> untyped
+
+  # Returns true if the current user is allowed to edit the page, otherwise false
+  def editable?: (?untyped page) -> untyped
+
+  # Returns the default content of a new wiki page
+  def initial_page_content: (untyped page) -> untyped
+
+  def load_pages_for_index: () -> untyped
+end

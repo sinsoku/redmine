@@ -1,0 +1,34 @@
+# Generated from lib/redmine/diff_table.rb with RBS::Inline
+
+# Class that represents a file diff
+module Redmine
+  class DiffTable < Array
+    attr_reader file_name: untyped
+
+    attr_reader previous_file_name: untyped
+
+    # Initialize with a Diff file and the type of Diff View
+    # The type view must be inline or sbs (side_by_side)
+    def initialize: (?untyped type, ?untyped style) -> untyped
+
+    # Function for add a line of this Diff
+    # Returns false when the diff ends
+    def add_line: (untyped line) -> untyped
+
+    def each_line: () -> untyped
+
+    def inspect: () -> untyped
+
+    private
+
+    def file_name=: (untyped arg) -> untyped
+
+    def diff_for_added_line: () -> untyped
+
+    def parse_line: (untyped line, ?untyped type) -> untyped
+
+    def write_offsets: () -> untyped
+
+    def offsets: (untyped line_left, untyped line_right) -> untyped
+  end
+end

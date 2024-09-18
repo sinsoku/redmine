@@ -1,0 +1,19 @@
+# Generated from app/controllers/documents_controller.rb with RBS::Inline
+
+class DocumentsController < ApplicationController
+  def index: () -> untyped
+
+  def show: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  def add_attachment: () -> untyped
+end

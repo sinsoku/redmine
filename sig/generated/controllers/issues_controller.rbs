@@ -1,0 +1,62 @@
+# Generated from app/controllers/issues_controller.rb with RBS::Inline
+
+class IssuesController < ApplicationController
+  include QueriesHelper
+
+  def index: () -> untyped
+
+  def show: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def issue_tab: () -> untyped
+
+  # Bulk edit/copy a set of issues
+  def bulk_edit: () -> untyped
+
+  def bulk_update: () -> untyped
+
+  def destroy: () -> untyped
+
+  # Overrides Redmine::MenuManager::MenuController::ClassMethods for
+  # when the "New issue" tab is enabled
+  def current_menu_item: () -> untyped
+
+  private
+
+  def query_error: (untyped exception) -> untyped
+
+  def retrieve_default_query: (untyped use_session) -> untyped
+
+  def retrieve_previous_and_next_issue_ids: () -> untyped
+
+  def previous_and_next_issue_ids_params: () -> untyped
+
+  # Used by #edit and #update to set some common instance variables
+  # from the params
+  def update_issue_from_params: () -> untyped
+
+  # Used by #new and #create to build a new issue from the params
+  # The new issue will be copied from an existing one if copy_from parameter is given
+  def build_new_issue_from_params: () -> untyped
+
+  # Saves @issue and a time_entry from the parameters
+  def save_issue_with_child_records: () -> untyped
+
+  # Returns true if the issue copy should be linked
+  # to the original issue
+  def link_copy?: (untyped param) -> untyped
+
+  # Returns true if the attachments should be copied
+  # from the original issue
+  def copy_attachments?: (untyped param) -> untyped
+
+  # Redirects user after a successful issue creation
+  def redirect_after_create: () -> untyped
+end

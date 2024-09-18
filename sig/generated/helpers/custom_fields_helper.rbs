@@ -1,0 +1,55 @@
+# Generated from app/helpers/custom_fields_helper.rb with RBS::Inline
+
+module CustomFieldsHelper
+  CUSTOM_FIELDS_TABS: ::Array
+
+  def render_custom_fields_tabs: (untyped types) -> untyped
+
+  def custom_field_type_options: () -> untyped
+
+  def custom_field_title: (untyped custom_field) -> untyped
+
+  def render_custom_field_format_partial: (untyped form, untyped custom_field) -> untyped
+
+  def custom_field_tag_name: (untyped prefix, untyped custom_field) -> untyped
+
+  def custom_field_tag_id: (untyped prefix, untyped custom_field) -> untyped
+
+  # Return custom field html tag corresponding to its format
+  def custom_field_tag: (untyped prefix, untyped custom_value) -> untyped
+
+  # Return custom field name tag
+  def custom_field_name_tag: (untyped custom_field) -> untyped
+
+  # Return custom field label tag
+  def custom_field_label_tag: (untyped name, untyped custom_value, ?untyped options) -> untyped
+
+  # Return custom field tag with its label tag
+  def custom_field_tag_with_label: (untyped name, untyped custom_value, ?untyped options) -> untyped
+
+  # Returns the custom field tag for when bulk editing objects
+  def custom_field_tag_for_bulk_edit: (untyped prefix, untyped custom_field, ?untyped objects, ?untyped value) -> untyped
+
+  # Returns custom field value tag
+  def custom_field_value_tag: (untyped value) -> untyped
+
+  # Return a string used to display a custom value
+  def show_value: (untyped custom_value, ?untyped html) -> untyped
+
+  # Return a string used to display a custom value
+  def format_value: (untyped value, untyped custom_field) -> untyped
+
+  # Return an array of custom field formats which can be used in select_tag
+  def custom_field_formats_for_select: (untyped custom_field) -> untyped
+
+  # Yields the given block for each custom field value of object that should be
+  # displayed, with the custom field and the formatted value as arguments
+  def render_custom_field_values: (untyped object) ?{ (?) -> untyped } -> untyped
+
+  # Renders the custom_values in api views
+  def render_api_custom_values: (untyped custom_values, untyped api) -> untyped
+
+  def edit_tag_style_tag: (untyped form, ?untyped options) -> untyped
+
+  def select_type_radio_buttons: (untyped default_type) -> untyped
+end

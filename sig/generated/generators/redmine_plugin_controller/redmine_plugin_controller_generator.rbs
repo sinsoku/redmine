@@ -1,0 +1,13 @@
+# Generated from lib/generators/redmine_plugin_controller/redmine_plugin_controller_generator.rb with RBS::Inline
+
+class RedminePluginControllerGenerator < Rails::Generators::NamedBase
+  attr_reader plugin_path: untyped
+
+  attr_reader plugin_name: untyped
+
+  attr_reader plugin_pretty_name: untyped
+
+  def initialize: (*untyped args) -> untyped
+
+  def copy_templates: () -> untyped
+end

@@ -1,0 +1,76 @@
+# Generated from app/models/wiki_page.rb with RBS::Inline
+
+class WikiPage < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  attr_accessor redirect_existing_links: untyped
+
+  attr_writer deleted_attachment_ids: untyped
+
+  # Wiki pages that are protected by default
+  DEFAULT_PROTECTED_PAGES: ::Array
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def visible?: (?untyped user) -> untyped
+
+  def title=: (untyped value) -> untyped
+
+  def safe_attributes=: (untyped attrs, ?untyped user) -> untyped
+
+  # Manages redirects if page is renamed or moved
+  def handle_rename_or_move: () -> untyped
+
+  # Moves child pages if page was moved
+  def handle_children_move: () -> untyped
+
+  # Deletes redirects to this page
+  def delete_redirects: () -> untyped
+
+  def pretty_title: () -> untyped
+
+  def content_for_version: (?untyped version) -> untyped
+
+  def diff: (?untyped version_to, ?untyped version_from) -> untyped
+
+  def annotate: (?untyped version) -> untyped
+
+  def self.pretty_title: (untyped str) -> untyped
+
+  def project: () -> untyped
+
+  def text: () -> untyped
+
+  def updated_on: () -> untyped
+
+  def version: () -> untyped
+
+  # Returns true if usr is allowed to edit the page, otherwise false
+  def editable_by?: (untyped usr) -> untyped
+
+  def attachments_deletable?: (?untyped usr) -> untyped
+
+  def parent_title: () -> untyped
+
+  def parent_title=: (untyped t) -> untyped
+
+  def is_start_page: () -> untyped
+
+  def is_start_page=: (untyped arg) -> untyped
+
+  def update_wiki_start_page: () -> untyped
+
+  # Saves the page and its content if text was changed
+  # Return true if the page was saved
+  def save_with_content: (untyped content) -> untyped
+
+  def deleted_attachment_ids: () -> untyped
+
+  def delete_selected_attachments: () -> untyped
+
+  def validate_parent_title: () -> untyped
+
+  private
+
+  def content_attribute: (untyped name) -> untyped
+end

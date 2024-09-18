@@ -1,0 +1,35 @@
+# Generated from lib/redmine/project_jump_box.rb with RBS::Inline
+
+module Redmine
+  class ProjectJumpBox
+    def initialize: (untyped user) -> untyped
+
+    def recent_projects_count: () -> untyped
+
+    def recently_used_projects: () -> untyped
+
+    def bookmarked_projects: () -> untyped
+
+    def project_used: (untyped project) -> untyped
+
+    def bookmark_project: (untyped project) -> untyped
+
+    def delete_project_bookmark: (untyped project) -> untyped
+
+    def bookmark?: (untyped project) -> untyped
+
+    private
+
+    def bookmarked_project_ids: () -> untyped
+
+    def bookmarked_project_ids=: (untyped new_ids) -> untyped
+
+    def recently_used_project_ids: () -> untyped
+
+    def recently_used_project_ids=: (untyped new_ids) -> untyped
+
+    def pref_project_ids: (untyped key) -> untyped
+
+    def set_pref_project_ids: (untyped key, untyped new_values) -> untyped
+  end
+end

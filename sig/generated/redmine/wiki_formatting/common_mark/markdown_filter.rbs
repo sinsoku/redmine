@@ -1,0 +1,26 @@
+# Generated from lib/redmine/wiki_formatting/common_mark/markdown_filter.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module CommonMark
+      # Converts Markdown to HTML using CommonMarker
+      #
+      # We do not use the stock HTML::Pipeline::MarkdownFilter because this
+      # does not allow for straightforward configuration of render and parsing
+      # options
+      class MarkdownFilter < HTML::Pipeline::TextFilter
+        def initialize: (untyped text, ?untyped context, ?untyped result) -> untyped
+
+        def call: () -> untyped
+
+        private
+
+        def extensions: () -> untyped
+
+        def parse_options: () -> untyped
+
+        def render_options: () -> untyped
+      end
+    end
+  end
+end

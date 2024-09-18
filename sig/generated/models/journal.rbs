@@ -1,0 +1,85 @@
+# Generated from app/models/journal.rb with RBS::Inline
+
+class Journal < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  attr_accessor indice: untyped
+
+  # Returns a SQL condition to filter out journals with notes that are not visible to user
+  def self.visible_notes_condition: (?untyped user, ?untyped options) -> untyped
+
+  def initialize: (*untyped args) -> untyped
+
+  def save: (*untyped args) -> untyped
+
+  # Returns journal details that are visible to user
+  def visible_details: (?untyped user) -> untyped
+
+  # Returns the JournalDetail for the given attribute, or nil if the attribute
+  # was not updated
+  def detail_for_attribute: (untyped attribute) -> untyped
+
+  # Returns the new status if the journal contains a status change, otherwise nil
+  def new_status: () -> untyped
+
+  def new_value_for: (untyped prop) -> untyped
+
+  def editable_by?: (untyped usr) -> untyped
+
+  def project: () -> untyped
+
+  def attachments: () -> untyped
+
+  def visible?: (*untyped args) -> untyped
+
+  # Returns a string of css classes
+  def css_classes: () -> untyped
+
+  def notify?: () -> untyped
+
+  def notify=: (untyped arg) -> untyped
+
+  def notified_users: () -> untyped
+
+  def recipients: () -> untyped
+
+  def notified_watchers: () -> untyped
+
+  def notified_mentions: () -> untyped
+
+  def watcher_recipients: () -> untyped
+
+  # Sets @custom_field instance variable on journals details using a single query
+  def self.preload_journals_details_custom_fields: (untyped journals) -> untyped
+
+  # Stores the values of the attributes and custom fields of the journalized object
+  def start: () -> untyped
+
+  # Adds a journal detail for an attachment that was added or removed
+  def journalize_attachment: (untyped attachment, untyped added_or_removed) -> untyped
+
+  # Adds a journal detail for an issue relation that was added or removed
+  def journalize_relation: (untyped relation, untyped added_or_removed) -> untyped
+
+  private
+
+  # Generates journal details for attribute and custom field changes
+  def journalize_changes: () -> untyped
+
+  # Adds a journal detail for an attribute change
+  def add_attribute_detail: (untyped attribute, untyped old_value, untyped value) -> untyped
+
+  # Adds a journal detail for a custom field value change
+  def add_custom_field_detail: (untyped custom_field_id, untyped old_value, untyped value) -> untyped
+
+  # Adds a journal detail
+  def add_detail: (untyped property, untyped prop_key, untyped old_value, untyped value) -> untyped
+
+  def split_private_notes: () -> untyped
+
+  def add_watcher: () -> untyped
+
+  def send_notification: () -> untyped
+
+  def select_journal_visible_user: (untyped notified) -> untyped
+end

@@ -1,0 +1,46 @@
+# Generated from lib/plugins/acts_as_attachable/lib/acts_as_attachable.rb with RBS::Inline
+
+module Redmine
+  module Acts
+    module Attachable
+      class ObjectTypeConstraint
+        def self.matches?: (untyped request) -> untyped
+
+        def self.register_object_type: (untyped type) -> untyped
+
+        def self.param_expression: () -> untyped
+      end
+
+      def self.included: (untyped base) -> untyped
+
+      module ClassMethods
+        def acts_as_attachable: (?untyped options) -> untyped
+      end
+
+      module InstanceMethods
+        def self.included: (untyped base) -> untyped
+
+        def attachments_visible?: (?untyped user) -> untyped
+
+        def attachments_editable?: (?untyped user) -> untyped
+
+        def attachments_deletable?: (?untyped user) -> untyped
+
+        def saved_attachments: () -> untyped
+
+        def unsaved_attachments: () -> untyped
+
+        def save_attachments: (untyped attachments, ?untyped author) -> untyped
+
+        def attach_saved_attachments: () -> untyped
+
+        def detach_saved_attachments: () -> untyped
+
+        def warn_about_failed_attachments: () -> untyped
+
+        module ClassMethods
+        end
+      end
+    end
+  end
+end

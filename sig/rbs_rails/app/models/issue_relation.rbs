@@ -1,0 +1,213 @@
+class IssueRelation < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[IssueRelation, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def issue_from_id: () -> Integer
+
+    def issue_from_id=: (Integer) -> Integer
+
+    def issue_from_id?: () -> bool
+
+    def issue_from_id_changed?: () -> bool
+
+    def issue_from_id_change: () -> [ Integer?, Integer? ]
+
+    def issue_from_id_will_change!: () -> void
+
+    def issue_from_id_was: () -> Integer?
+
+    def issue_from_id_previously_changed?: () -> bool
+
+    def issue_from_id_previous_change: () -> Array[Integer?]?
+
+    def issue_from_id_previously_was: () -> Integer?
+
+    def issue_from_id_before_last_save: () -> Integer?
+
+    def issue_from_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def issue_from_id_in_database: () -> Integer?
+
+    def saved_change_to_issue_from_id: () -> Array[Integer?]?
+
+    def saved_change_to_issue_from_id?: () -> bool
+
+    def will_save_change_to_issue_from_id?: () -> bool
+
+    def restore_issue_from_id!: () -> void
+
+    def clear_issue_from_id_change: () -> void
+
+    def issue_to_id: () -> Integer
+
+    def issue_to_id=: (Integer) -> Integer
+
+    def issue_to_id?: () -> bool
+
+    def issue_to_id_changed?: () -> bool
+
+    def issue_to_id_change: () -> [ Integer?, Integer? ]
+
+    def issue_to_id_will_change!: () -> void
+
+    def issue_to_id_was: () -> Integer?
+
+    def issue_to_id_previously_changed?: () -> bool
+
+    def issue_to_id_previous_change: () -> Array[Integer?]?
+
+    def issue_to_id_previously_was: () -> Integer?
+
+    def issue_to_id_before_last_save: () -> Integer?
+
+    def issue_to_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def issue_to_id_in_database: () -> Integer?
+
+    def saved_change_to_issue_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_issue_to_id?: () -> bool
+
+    def will_save_change_to_issue_to_id?: () -> bool
+
+    def restore_issue_to_id!: () -> void
+
+    def clear_issue_to_id_change: () -> void
+
+    def relation_type: () -> String
+
+    def relation_type=: (String) -> String
+
+    def relation_type?: () -> bool
+
+    def relation_type_changed?: () -> bool
+
+    def relation_type_change: () -> [ String?, String? ]
+
+    def relation_type_will_change!: () -> void
+
+    def relation_type_was: () -> String?
+
+    def relation_type_previously_changed?: () -> bool
+
+    def relation_type_previous_change: () -> Array[String?]?
+
+    def relation_type_previously_was: () -> String?
+
+    def relation_type_before_last_save: () -> String?
+
+    def relation_type_change_to_be_saved: () -> Array[String?]?
+
+    def relation_type_in_database: () -> String?
+
+    def saved_change_to_relation_type: () -> Array[String?]?
+
+    def saved_change_to_relation_type?: () -> bool
+
+    def will_save_change_to_relation_type?: () -> bool
+
+    def restore_relation_type!: () -> void
+
+    def clear_relation_type_change: () -> void
+
+    def delay: () -> Integer?
+
+    def delay=: (Integer?) -> Integer?
+
+    def delay?: () -> bool
+
+    def delay_changed?: () -> bool
+
+    def delay_change: () -> [ Integer?, Integer? ]
+
+    def delay_will_change!: () -> void
+
+    def delay_was: () -> Integer?
+
+    def delay_previously_changed?: () -> bool
+
+    def delay_previous_change: () -> Array[Integer?]?
+
+    def delay_previously_was: () -> Integer?
+
+    def delay_before_last_save: () -> Integer?
+
+    def delay_change_to_be_saved: () -> Array[Integer?]?
+
+    def delay_in_database: () -> Integer?
+
+    def saved_change_to_delay: () -> Array[Integer?]?
+
+    def saved_change_to_delay?: () -> bool
+
+    def will_save_change_to_delay?: () -> bool
+
+    def restore_delay!: () -> void
+
+    def clear_delay_change: () -> void
+  end
+  include GeneratedAttributeMethods
+
+  def issue_from: () -> Issue
+  def issue_from=: (Issue?) -> Issue?
+  def reload_issue_from: () -> Issue?
+  def build_issue_from: (untyped) -> Issue
+  def create_issue_from: (untyped) -> Issue
+  def create_issue_from!: (untyped) -> Issue
+  def issue_to: () -> Issue
+  def issue_to=: (Issue?) -> Issue?
+  def reload_issue_to: () -> Issue?
+  def build_issue_to: (untyped) -> Issue
+  def create_issue_to: (untyped) -> Issue
+  def create_issue_to!: (untyped) -> Issue
+
+  module GeneratedRelationMethods
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[IssueRelation, Integer]
+    include Enumerable[IssueRelation]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[IssueRelation, Integer]
+  end
+end

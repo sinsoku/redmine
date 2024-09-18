@@ -1,0 +1,7 @@
+# Generated from app/controllers/calendars_controller.rb with RBS::Inline
+
+class CalendarsController < ApplicationController
+  include QueriesHelper
+
+  def show: () -> untyped
+end

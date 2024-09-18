@@ -1,0 +1,52 @@
+# Generated from app/models/time_entry_query.rb with RBS::Inline
+
+class TimeEntryQuery < Query
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def initialize_available_filters: () -> untyped
+
+  def available_columns: () -> untyped
+
+  def default_columns_names: () -> untyped
+
+  def default_totalable_names: () -> untyped
+
+  def default_sort_criteria: () -> untyped
+
+  # If a filter against a single issue is set, returns its id, otherwise nil.
+  def filtered_issue_id: () -> untyped
+
+  def base_scope: () -> untyped
+
+  def results_scope: (?untyped options) -> untyped
+
+  # Returns sum of all the spent hours
+  def total_for_hours: (untyped scope) -> untyped
+
+  def sql_for_issue_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_issue_fixed_version_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_issue_parent_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_activity_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_issue_tracker_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_issue_status_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_issue_category_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_issue_subject_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_project_status_field: (untyped field, untyped operator, untyped value, ?untyped options) -> untyped
+
+  def sql_for_user_group_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_user_role_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  # Accepts :from/:to params as shortcut filters
+  def build_from_params: (untyped params, ?untyped defaults) -> untyped
+
+  def joins_for_order_statement: (untyped order_options) -> untyped
+end

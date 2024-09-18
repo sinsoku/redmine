@@ -1,0 +1,33 @@
+# Generated from lib/redmine/database.rb with RBS::Inline
+
+module Redmine
+  # Helper module to get information about the Redmine database
+  module Database
+    # Returns true if the database is SQLite
+    def self.sqlite?: () -> untyped
+
+    # Returns true if the database is PostgreSQL
+    def self.postgresql?: () -> untyped
+
+    # Returns the PostgreSQL version or nil if another DBMS is used
+    def self.postgresql_version: () -> untyped
+
+    # Returns true if the database is a PostgreSQL >=9.0 database with the unaccent extension installed
+    def self.postgresql_unaccent?: () -> untyped
+
+    # Returns true if the database is MySQL
+    def self.mysql?: () -> untyped
+
+    def self.mysql_version: () -> untyped
+
+    # Returns a SQL statement for case/accent (if possible) insensitive match
+    def self.like: (untyped left, untyped right, ?untyped options) -> untyped
+
+    # Returns a SQL statement to cast a timestamp column to a date given a time zone
+    # Returns nil if not implemented for the current database
+    def self.timestamp_to_date: (untyped column, untyped time_zone) -> untyped
+
+    # Resets database information
+    def self.reset: () -> untyped
+  end
+end

@@ -1,0 +1,56 @@
+# Generated from lib/redmine/access_control.rb with RBS::Inline
+
+module Redmine
+  module AccessControl
+    def self.map: () -> untyped
+
+    def self.permissions: () -> untyped
+
+    # Returns the permission of given name or nil if it wasn't found
+    # Argument should be a symbol
+    def self.permission: (untyped name) -> untyped
+
+    # Returns the actions that are allowed by the permission of given name
+    def self.allowed_actions: (untyped permission_name) -> untyped
+
+    def self.public_permissions: () -> untyped
+
+    def self.members_only_permissions: () -> untyped
+
+    def self.loggedin_only_permissions: () -> untyped
+
+    def self.read_action?: (untyped action) -> untyped
+
+    def self.available_project_modules: () -> untyped
+
+    def self.modules_permissions: (untyped modules) -> untyped
+
+    class Mapper
+      def initialize: () -> untyped
+
+      def permission: (untyped name, untyped hash, ?untyped options) -> untyped
+
+      def project_module: (untyped name, ?untyped options) -> untyped
+
+      def mapped_permissions: () -> untyped
+    end
+
+    class Permission
+      attr_reader name: untyped
+
+      attr_reader actions: untyped
+
+      attr_reader project_module: untyped
+
+      def initialize: (untyped name, untyped hash, untyped options) -> untyped
+
+      def public?: () -> untyped
+
+      def require_member?: () -> untyped
+
+      def require_loggedin?: () -> untyped
+
+      def read?: () -> untyped
+    end
+  end
+end

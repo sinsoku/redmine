@@ -1,0 +1,7 @@
+# Generated from app/controllers/welcome_controller.rb with RBS::Inline
+
+class WelcomeController < ApplicationController
+  def index: () -> untyped
+
+  def robots: () -> untyped
+end

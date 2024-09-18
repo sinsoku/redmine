@@ -1,0 +1,15 @@
+# Generated from lib/redmine/info.rb with RBS::Inline
+
+module Redmine
+  module Info
+    def self.app_name: () -> untyped
+
+    def self.url: () -> untyped
+
+    def self.help_url: () -> untyped
+
+    def self.versioned_name: () -> untyped
+
+    def self.environment: () -> untyped
+  end
+end

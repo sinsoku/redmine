@@ -1,0 +1,7 @@
+# Generated from app/helpers/boards_helper.rb with RBS::Inline
+
+module BoardsHelper
+  def board_breadcrumb: (untyped item) -> untyped
+
+  def boards_options_for_select: (untyped boards) -> untyped
+end

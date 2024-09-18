@@ -1,0 +1,54 @@
+# Generated from app/models/auth_source_ldap.rb with RBS::Inline
+
+class AuthSourceLdap < AuthSource
+  NETWORK_EXCEPTIONS: ::Array
+
+  LDAP_MODES: ::Array
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def authenticate: (untyped login, untyped password) -> untyped
+
+  # Test the connection to the LDAP
+  def test_connection: () -> untyped
+
+  def auth_method_name: () -> untyped
+
+  # Returns true if this source can be searched for users
+  def searchable?: () -> untyped
+
+  # Searches the source for users and returns an array of results
+  def search: (untyped q) -> untyped
+
+  def ldap_mode: () -> untyped
+
+  def ldap_mode=: (untyped ldap_mode) -> untyped
+
+  private
+
+  def with_timeout: () ?{ (?) -> untyped } -> untyped
+
+  def ldap_filter: () -> untyped
+
+  def base_filter: () -> untyped
+
+  def validate_filter: () -> untyped
+
+  def strip_ldap_attributes: () -> untyped
+
+  def initialize_ldap_con: (untyped ldap_user, untyped ldap_password) -> untyped
+
+  def get_user_attributes_from_ldap_entry: (untyped entry) -> untyped
+
+  # Return the attributes needed for the LDAP search.  It will only
+  # include the user attributes if on-the-fly registration is enabled
+  def search_attributes: () -> untyped
+
+  # Check if a DN (user record) authenticates with the password
+  def authenticate_dn: (untyped dn, untyped password) -> untyped
+
+  # Get the user's dn and any attributes for them, given their login
+  def get_user_dn: (untyped login, untyped password) -> untyped
+
+  def self.get_attr: (untyped entry, untyped attr_name) -> untyped
+end

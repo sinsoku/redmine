@@ -1,0 +1,313 @@
+# Generated from app/models/project.rb with RBS::Inline
+
+class Project < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  include Redmine::NestedSet::ProjectNestedSet
+
+  # Project statuses
+  STATUS_ACTIVE: ::Integer
+
+  STATUS_CLOSED: ::Integer
+
+  STATUS_ARCHIVED: ::Integer
+
+  STATUS_SCHEDULED_FOR_DELETION: ::Integer
+
+  # Maximum length for project identifiers
+  IDENTIFIER_MAX_LENGTH: ::Integer
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def identifier=: (untyped identifier) -> untyped
+
+  def identifier_frozen?: () -> untyped
+
+  # returns latest created projects
+  # non public projects will be returned only if user is a member of those
+  def self.latest: (?untyped user, ?untyped count) -> untyped
+
+  # Returns true if the project is visible to +user+ or to the current user.
+  def visible?: (?untyped user) -> untyped
+
+  # Returns a SQL conditions string used to find all projects visible by the specified user.
+  #
+  # Examples:
+  #   Project.visible_condition(admin)        => "projects.status = 1"
+  #   Project.visible_condition(normal_user)  => "((projects.status = 1) AND (projects.is_public = 1 OR projects.id IN (1,3,4)))"
+  #   Project.visible_condition(anonymous)    => "((projects.status = 1) AND (projects.is_public = 1))"
+  def self.visible_condition: (untyped user, ?untyped options) -> untyped
+
+  # Returns a SQL conditions string used to find all projects for which +user+ has the given +permission+
+  #
+  # Valid options:
+  # * :skip_pre_condition => true       don't check that the module is enabled (eg. when the condition is already set elsewhere in the query)
+  # * :project => project               limit the condition to project
+  # * :with_subprojects => true         limit the condition to project and its subprojects
+  # * :member => true                   limit the condition to the user projects
+  def self.allowed_to_condition: (untyped user, untyped permission, ?untyped options) -> untyped
+
+  def override_roles: (untyped role) -> untyped
+
+  def principals: () -> untyped
+
+  def users: () -> untyped
+
+  # Returns the Systemwide and project specific activities
+  def activities: (?untyped include_inactive) -> untyped
+
+  # Creates or updates project time entry activities
+  def update_or_create_time_entry_activities: (untyped activities) -> untyped
+
+  # Will create a new Project specific Activity or update an existing one
+  #
+  # This will raise a ActiveRecord::Rollback if the TimeEntryActivity
+  # does not successfully save.
+  def update_or_create_time_entry_activity: (untyped id, untyped activity_hash) -> untyped
+
+  # Create a new TimeEntryActivity if it overrides a system TimeEntryActivity
+  #
+  # This will raise a ActiveRecord::Rollback if the TimeEntryActivity
+  # does not successfully save.
+  def create_time_entry_activity_if_needed: (untyped activity) -> untyped
+
+  # returns the time log activity to be used when logging time via a changeset
+  def commit_logtime_activity: () -> untyped
+
+  # Returns a :conditions SQL string that can be used to find the issues associated with this project.
+  #
+  # Examples:
+  #   project.project_condition(true)  => "(projects.lft >= 1 AND projects.rgt <= 10)"
+  #   project.project_condition(false) => "projects.id = 1"
+  def project_condition: (untyped with_subprojects) -> untyped
+
+  def self.find: (*untyped args) -> untyped
+
+  def self.find_by_param: (*untyped args) -> untyped
+
+  alias base_reload reload
+
+  def reload: (*untyped args) -> untyped
+
+  def to_param: () -> untyped
+
+  def active?: () -> untyped
+
+  def closed?: () -> untyped
+
+  def archived?: () -> untyped
+
+  def scheduled_for_deletion?: () -> untyped
+
+  # Archives the project and its descendants
+  def archive: () -> untyped
+
+  # Unarchives the project and its archived ancestors
+  def unarchive: () -> untyped
+
+  def close: () -> untyped
+
+  def reopen: () -> untyped
+
+  # Returns an array of projects the project can be moved to
+  # by the current user
+  def allowed_parents: (?untyped user) -> untyped
+
+  # Sets the parent of the project and saves the project
+  # Argument can be either a Project, a String, a Fixnum or nil
+  def set_parent!: (untyped p) -> untyped
+
+  # Returns a scope of the trackers used by the project and its active sub projects
+  def rolled_up_trackers: (?untyped include_subprojects) -> untyped
+
+  def rolled_up_trackers_base_scope: () -> untyped
+
+  def rolled_up_statuses: () -> untyped
+
+  # Closes open and locked project versions that are completed
+  def close_completed_versions: () -> untyped
+
+  # Returns a scope of the Versions on subprojects
+  def rolled_up_versions: () -> untyped
+
+  # Returns a scope of the Versions used by the project
+  def shared_versions: () -> untyped
+
+  # Returns a hash of project users/groups grouped by role
+  def principals_by_role: () -> untyped
+
+  # Adds user as a project member with the default role
+  # Used for when a non-admin user creates a project
+  def add_default_member: (untyped user) -> untyped
+
+  # Default role that is given to non-admin users that
+  # create a project
+  def self.default_member_role: () -> untyped
+
+  # Deletes all project's members
+  def delete_all_members: () -> untyped
+
+  # Return a Principal scope of users/groups issues can be assigned to
+  def assignable_users: (?untyped tracker) -> untyped
+
+  # Returns the mail addresses of users that should be always notified on project events
+  def recipients: () -> untyped
+
+  # Returns the users that should be notified on project events
+  def notified_users: () -> untyped
+
+  # Returns a scope of all custom fields enabled for project issues
+  # (explicitly associated custom fields and custom fields enabled for all projects)
+  def all_issue_custom_fields: () -> untyped
+
+  # Returns a scope of all custom fields enabled for issues of the project
+  # and its subprojects
+  def rolled_up_custom_fields: () -> untyped
+
+  def project: () -> untyped
+
+  def <=>: (untyped project) -> untyped
+
+  def to_s: () -> untyped
+
+  # Returns a short description of the projects (first lines)
+  def short_description: (?untyped length) -> untyped
+
+  def css_classes: () -> untyped
+
+  # The earliest start date of a project, based on it's issues and versions
+  def start_date: () -> untyped
+
+  # The latest due date of an issue or version
+  def due_date: () -> untyped
+
+  def overdue?: () -> untyped
+
+  # Returns the percent completed for this project, based on the
+  # progress on it's versions.
+  def completed_percent: (?untyped options) -> untyped
+
+  # Return true if this project allows to do the specified action.
+  # action can be:
+  # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
+  # * a permission Symbol (eg. :edit_project)
+  def allows_to?: (untyped action) -> untyped
+
+  def deletable?: (?untyped user) -> untyped
+
+  # Return the enabled module with the given name
+  # or nil if the module is not enabled for the project
+  def enabled_module: (untyped name) -> untyped
+
+  # Return true if the module with the given name is enabled
+  def module_enabled?: (untyped name) -> untyped
+
+  def enabled_module_names=: (untyped module_names) -> untyped
+
+  # Returns an array of the enabled modules names
+  def enabled_module_names: () -> untyped
+
+  # Enable a specific module
+  #
+  # Examples:
+  #   project.enable_module!(:issue_tracking)
+  #   project.enable_module!("issue_tracking")
+  def enable_module!: (untyped name) -> untyped
+
+  # Disable a module if it exists
+  #
+  # Examples:
+  #   project.disable_module!(:issue_tracking)
+  #   project.disable_module!("issue_tracking")
+  #   project.disable_module!(project.enabled_modules.first)
+  def disable_module!: (untyped target) -> untyped
+
+  def safe_attributes=: (untyped attrs, ?untyped user) -> untyped
+
+  # Returns an auto-generated project identifier based on the last identifier used
+  def self.next_identifier: () -> untyped
+
+  # Copies and saves the Project instance based on the +project+.
+  # Duplicates the source project's:
+  # * Wiki
+  # * Versions
+  # * Categories
+  # * Issues
+  # * Members
+  # * Queries
+  #
+  # Accepts an +options+ argument to specify what to copy
+  #
+  # Examples:
+  #   project.copy(1)                                    # => copies everything
+  #   project.copy(1, :only => 'members')                # => copies members only
+  #   project.copy(1, :only => ['members', 'versions'])  # => copies members and versions
+  def copy: (untyped project, ?untyped options) -> untyped
+
+  # Returns a new unsaved Project instance with attributes copied from +project+
+  def self.copy_from: (untyped project) -> untyped
+
+  # Yields the given block for each project with its level in the tree
+  def self.project_tree: (untyped projects, ?untyped options) ?{ (?) -> untyped } -> untyped
+
+  # Overrides Redmine::Acts::Customizable::InstanceMethods#validate_custom_field_values
+  # so that custom values that are not editable are not validated (eg. a custom field that
+  # is marked as required should not trigger a validation error if the user is not allowed
+  # to edit this field).
+  def validate_custom_field_values: () -> untyped
+
+  # Returns the custom_field_values that can be edited by the given user
+  def editable_custom_field_values: (?untyped user) -> untyped
+
+  def visible_custom_field_values: (?untyped user) -> untyped
+
+  def last_activity_date: () -> untyped
+
+  # Preloads last activity date for a collection of projects
+  def self.load_last_activity_date: (untyped projects, ?untyped user) -> untyped
+
+  private
+
+  def update_inherited_members: () -> untyped
+
+  def remove_inherited_member_roles: () -> untyped
+
+  def add_inherited_member_roles: () -> untyped
+
+  def update_versions_from_hierarchy_change: () -> untyped
+
+  def validate_parent: () -> untyped
+
+  # Copies wiki from +project+
+  def copy_wiki: (untyped project) -> untyped
+
+  # Copies versions from +project+
+  def copy_versions: (untyped project) -> untyped
+
+  # Copies issue categories from +project+
+  def copy_issue_categories: (untyped project) -> untyped
+
+  # Copies issues from +project+
+  def copy_issues: (untyped project) -> untyped
+
+  # Copies members from +project+
+  def copy_members: (untyped project) -> untyped
+
+  # Copies queries from +project+
+  def copy_queries: (untyped project) -> untyped
+
+  # Copies boards from +project+
+  def copy_boards: (untyped project) -> untyped
+
+  # Copies documents from +project+
+  def copy_documents: (untyped project) -> untyped
+
+  def allowed_permissions: () -> untyped
+
+  def allowed_actions: () -> untyped
+
+  # Archives subprojects recursively
+  def archive!: () -> untyped
+
+  def fetch_last_activity_date: () -> untyped
+end

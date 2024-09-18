@@ -1,0 +1,41 @@
+# Generated from app/models/auth_source.rb with RBS::Inline
+
+# Generic exception for when the AuthSource can not be reached
+# (eg. can not connect to the LDAP)
+class AuthSourceException < StandardError
+end
+
+class AuthSourceTimeoutException < AuthSourceException
+end
+
+class AuthSource < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  include Redmine::SubclassFactory
+
+  include Redmine::Ciphering
+
+  def authenticate: (untyped login, untyped password) -> untyped
+
+  def test_connection: () -> untyped
+
+  def auth_method_name: () -> untyped
+
+  def account_password: () -> untyped
+
+  def account_password=: (untyped arg) -> untyped
+
+  def searchable?: () -> untyped
+
+  def visible?: (?untyped user) -> untyped
+
+  def self.search: (untyped q) -> untyped
+
+  def allow_password_changes?: () -> untyped
+
+  # Does this auth source backend allow password changes?
+  def self.allow_password_changes?: () -> untyped
+
+  # Try to authenticate a user not yet registered against available sources
+  def self.authenticate: (untyped login, untyped password) -> untyped
+end

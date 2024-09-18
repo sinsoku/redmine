@@ -1,0 +1,102 @@
+# Generated from app/models/user_preference.rb with RBS::Inline
+
+class UserPreference < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  TEXTAREA_FONT_OPTIONS: ::Array
+
+  DEFAULT_TOOLBAR_LANGUAGE_OPTIONS: ::Array
+
+  AUTO_WATCH_ON_OPTIONS: ::Array
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def set_others_hash: () -> untyped
+
+  def []: (untyped attr_name) -> untyped
+
+  def []=: (untyped attr_name, untyped value) -> untyped
+
+  def comments_sorting: () -> untyped
+
+  def comments_sorting=: (untyped order) -> untyped
+
+  def warn_on_leaving_unsaved: () -> untyped
+
+  def warn_on_leaving_unsaved=: (untyped value) -> untyped
+
+  def no_self_notified: () -> untyped
+
+  def no_self_notified=: (untyped value) -> untyped
+
+  def notify_about_high_priority_issues: () -> untyped
+
+  def notify_about_high_priority_issues=: (untyped value) -> untyped
+
+  def activity_scope: () -> untyped
+
+  def activity_scope=: (untyped value) -> untyped
+
+  def textarea_font: () -> untyped
+
+  def textarea_font=: (untyped value) -> untyped
+
+  def recently_used_projects: () -> untyped
+
+  def recently_used_projects=: (untyped value) -> untyped
+
+  def history_default_tab: () -> untyped
+
+  def history_default_tab=: (untyped value) -> untyped
+
+  def toolbar_language_options: () -> untyped
+
+  def toolbar_language_options=: (untyped value) -> untyped
+
+  def default_issue_query: () -> untyped
+
+  def default_issue_query=: (untyped value) -> untyped
+
+  def default_project_query: () -> untyped
+
+  def default_project_query=: (untyped value) -> untyped
+
+  def auto_watch_on: () -> untyped
+
+  def auto_watch_on=: (untyped values) -> untyped
+
+  def auto_watch_on?: (untyped action) -> untyped
+
+  # Returns the names of groups that are displayed on user's page
+  # Example:
+  #   preferences.my_page_groups
+  #   # => ['top', 'left, 'right']
+  def my_page_groups: () -> untyped
+
+  def my_page_layout: () -> untyped
+
+  def my_page_layout=: (untyped arg) -> untyped
+
+  def my_page_settings: (?untyped block) -> untyped
+
+  def my_page_settings=: (untyped arg) -> untyped
+
+  # Removes block from the user page layout
+  # Example:
+  #   preferences.remove_block('news')
+  def remove_block: (untyped block) -> untyped
+
+  # Adds block to the user page layout
+  # Returns nil if block is not valid or if it's already
+  # present in the user page layout
+  def add_block: (untyped block) -> untyped
+
+  # Sets the block order for the given group.
+  # Example:
+  #   preferences.order_blocks('left', ['issueswatched', 'news'])
+  def order_blocks: (untyped group, untyped blocks) -> untyped
+
+  def update_block_settings: (untyped block, untyped settings) -> untyped
+
+  def clear_unused_block_settings: () -> untyped
+end

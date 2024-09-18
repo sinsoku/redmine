@@ -1,0 +1,25 @@
+# Generated from app/controllers/issue_categories_controller.rb with RBS::Inline
+
+class IssueCategoriesController < ApplicationController
+  def index: () -> untyped
+
+  def show: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  def redirect_to_settings_in_projects: () -> untyped
+
+  # Wrap ApplicationController's find_model_object method to set
+  # @category instead of just @issue_category
+  def find_model_object: () -> untyped
+end

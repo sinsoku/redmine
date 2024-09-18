@@ -1,0 +1,23 @@
+# Generated from lib/redmine/helpers/diff.rb with RBS::Inline
+
+module Redmine
+  module Helpers
+    class Diff
+      include ERB::Util
+
+      include ActionView::Helpers::TagHelper
+
+      include ActionView::Helpers::TextHelper
+
+      include ActionView::Helpers::OutputSafetyHelper
+
+      attr_reader diff: untyped
+
+      attr_reader words: untyped
+
+      def initialize: (untyped content_to, untyped content_from) -> untyped
+
+      def to_html: () -> untyped
+    end
+  end
+end

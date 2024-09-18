@@ -1,0 +1,49 @@
+# Generated from app/helpers/settings_helper.rb with RBS::Inline
+
+module SettingsHelper
+  def administration_settings_tabs: () -> untyped
+
+  def render_settings_error: (untyped errors) -> untyped
+
+  def setting_value: (untyped setting) -> untyped
+
+  def setting_select: (untyped setting, untyped choices, ?untyped options) -> untyped
+
+  def setting_multiselect: (untyped setting, untyped choices, ?untyped options) -> untyped
+
+  def setting_text_field: (untyped setting, ?untyped options) -> untyped
+
+  def setting_text_area: (untyped setting, ?untyped options) -> untyped
+
+  def setting_check_box: (untyped setting, ?untyped options) -> untyped
+
+  def setting_label: (untyped setting, ?untyped options) -> untyped
+
+  # Renders a notification field for a Redmine::Notifiable option
+  def notification_field: (untyped notifiable) -> untyped
+
+  def session_lifetime_options: () -> untyped
+
+  def session_timeout_options: () -> untyped
+
+  def link_copied_issue_options: () -> untyped
+
+  def copy_attachments_on_issue_copy_options: () -> untyped
+
+  def default_global_issue_query_options: () -> untyped
+
+  def default_global_project_query_options: () -> untyped
+
+  def cross_project_subtasks_options: () -> untyped
+
+  def parent_issue_dates_options: () -> untyped
+
+  def parent_issue_priority_options: () -> untyped
+
+  def parent_issue_done_ratio_options: () -> untyped
+
+  # Returns the options for the date_format setting
+  def date_format_setting_options: (untyped locale) -> untyped
+
+  def gravatar_default_setting_options: () -> untyped
+end

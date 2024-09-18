@@ -1,0 +1,67 @@
+# Generated from lib/redmine/scm/adapters/git_adapter.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+      class GitAdapter < AbstractAdapter
+        # Git executable name
+        GIT_BIN: untyped
+
+        # Repositories created after 2020 may have a default branch of
+        # "main" instead of "master"
+        GIT_DEFAULT_BRANCH_NAMES: untyped
+
+        class GitBranch < Branch
+          attr_accessor is_default: untyped
+        end
+
+        def self.client_command: () -> untyped
+
+        def self.sq_bin: () -> untyped
+
+        def self.client_version: () -> untyped
+
+        def self.client_available: () -> untyped
+
+        def self.scm_command_version: () -> untyped
+
+        def self.scm_version_from_command_line: () -> untyped
+
+        def path_encoding: () -> untyped
+
+        def info: () -> untyped
+
+        def branches: () -> untyped
+
+        def tags: () -> untyped
+
+        def default_branch: () -> untyped
+
+        def entry: (?untyped path, ?untyped identifier) -> untyped
+
+        def entries: (?untyped path, ?untyped identifier, ?untyped options) -> untyped
+
+        def lastrev: (untyped path, untyped rev) -> untyped
+
+        def revisions: (untyped path, untyped identifier_from, untyped identifier_to, ?untyped options) -> untyped
+
+        def diff: (untyped path, untyped identifier_from, ?untyped identifier_to) -> untyped
+
+        def annotate: (untyped path, ?untyped identifier) -> untyped
+
+        def cat: (untyped path, ?untyped identifier) -> untyped
+
+        def valid_name?: (untyped name) -> untyped
+
+        class Revision < Redmine::Scm::Adapters::Revision
+          # Returns the readable identifier
+          def format_identifier: () -> untyped
+        end
+
+        private
+
+        def git_cmd: (untyped args, ?untyped options) ?{ (?) -> untyped } -> untyped
+      end
+    end
+  end
+end

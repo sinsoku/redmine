@@ -1,0 +1,4 @@
+# Generated from app/helpers/enumerations_helper.rb with RBS::Inline
+
+module EnumerationsHelper
+end

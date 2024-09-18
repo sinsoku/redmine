@@ -1,0 +1,17 @@
+# Generated from app/models/document.rb with RBS::Inline
+
+class Document < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  def visible?: (?untyped user) -> untyped
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def updated_on: () -> untyped
+
+  def notified_users: () -> untyped
+
+  private
+
+  def send_notification: () -> untyped
+end

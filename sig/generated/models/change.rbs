@@ -1,0 +1,7 @@
+# Generated from app/models/change.rb with RBS::Inline
+
+class Change < ApplicationRecord
+  def replace_invalid_utf8_of_path: () -> untyped
+
+  def init_path: () -> untyped
+end

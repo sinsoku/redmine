@@ -1,0 +1,23 @@
+# Generated from app/models/custom_field_enumeration.rb with RBS::Inline
+
+class CustomFieldEnumeration < ApplicationRecord
+  def to_s: () -> untyped
+
+  def objects_count: () -> untyped
+
+  def in_use?: () -> untyped
+
+  alias destroy_without_reassign destroy
+
+  def destroy: (?untyped reassign_to) -> untyped
+
+  def custom_values: () -> untyped
+
+  def self.update_each: (untyped custom_field, untyped attributes) -> untyped
+
+  def self.fields_for_order_statement: (?untyped table) -> untyped
+
+  private
+
+  def set_position: () -> untyped
+end

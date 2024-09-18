@@ -1,0 +1,370 @@
+class Journal < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Journal, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def journalized_id: () -> Integer
+
+    def journalized_id=: (Integer) -> Integer
+
+    def journalized_id?: () -> bool
+
+    def journalized_id_changed?: () -> bool
+
+    def journalized_id_change: () -> [ Integer?, Integer? ]
+
+    def journalized_id_will_change!: () -> void
+
+    def journalized_id_was: () -> Integer?
+
+    def journalized_id_previously_changed?: () -> bool
+
+    def journalized_id_previous_change: () -> Array[Integer?]?
+
+    def journalized_id_previously_was: () -> Integer?
+
+    def journalized_id_before_last_save: () -> Integer?
+
+    def journalized_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def journalized_id_in_database: () -> Integer?
+
+    def saved_change_to_journalized_id: () -> Array[Integer?]?
+
+    def saved_change_to_journalized_id?: () -> bool
+
+    def will_save_change_to_journalized_id?: () -> bool
+
+    def restore_journalized_id!: () -> void
+
+    def clear_journalized_id_change: () -> void
+
+    def journalized_type: () -> String
+
+    def journalized_type=: (String) -> String
+
+    def journalized_type?: () -> bool
+
+    def journalized_type_changed?: () -> bool
+
+    def journalized_type_change: () -> [ String?, String? ]
+
+    def journalized_type_will_change!: () -> void
+
+    def journalized_type_was: () -> String?
+
+    def journalized_type_previously_changed?: () -> bool
+
+    def journalized_type_previous_change: () -> Array[String?]?
+
+    def journalized_type_previously_was: () -> String?
+
+    def journalized_type_before_last_save: () -> String?
+
+    def journalized_type_change_to_be_saved: () -> Array[String?]?
+
+    def journalized_type_in_database: () -> String?
+
+    def saved_change_to_journalized_type: () -> Array[String?]?
+
+    def saved_change_to_journalized_type?: () -> bool
+
+    def will_save_change_to_journalized_type?: () -> bool
+
+    def restore_journalized_type!: () -> void
+
+    def clear_journalized_type_change: () -> void
+
+    def user_id: () -> Integer
+
+    def user_id=: (Integer) -> Integer
+
+    def user_id?: () -> bool
+
+    def user_id_changed?: () -> bool
+
+    def user_id_change: () -> [ Integer?, Integer? ]
+
+    def user_id_will_change!: () -> void
+
+    def user_id_was: () -> Integer?
+
+    def user_id_previously_changed?: () -> bool
+
+    def user_id_previous_change: () -> Array[Integer?]?
+
+    def user_id_previously_was: () -> Integer?
+
+    def user_id_before_last_save: () -> Integer?
+
+    def user_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def user_id_in_database: () -> Integer?
+
+    def saved_change_to_user_id: () -> Array[Integer?]?
+
+    def saved_change_to_user_id?: () -> bool
+
+    def will_save_change_to_user_id?: () -> bool
+
+    def restore_user_id!: () -> void
+
+    def clear_user_id_change: () -> void
+
+    def notes: () -> String?
+
+    def notes=: (String?) -> String?
+
+    def notes?: () -> bool
+
+    def notes_changed?: () -> bool
+
+    def notes_change: () -> [ String?, String? ]
+
+    def notes_will_change!: () -> void
+
+    def notes_was: () -> String?
+
+    def notes_previously_changed?: () -> bool
+
+    def notes_previous_change: () -> Array[String?]?
+
+    def notes_previously_was: () -> String?
+
+    def notes_before_last_save: () -> String?
+
+    def notes_change_to_be_saved: () -> Array[String?]?
+
+    def notes_in_database: () -> String?
+
+    def saved_change_to_notes: () -> Array[String?]?
+
+    def saved_change_to_notes?: () -> bool
+
+    def will_save_change_to_notes?: () -> bool
+
+    def restore_notes!: () -> void
+
+    def clear_notes_change: () -> void
+
+    def created_on: () -> ActiveSupport::TimeWithZone
+
+    def created_on=: (ActiveSupport::TimeWithZone) -> ActiveSupport::TimeWithZone
+
+    def created_on?: () -> bool
+
+    def created_on_changed?: () -> bool
+
+    def created_on_change: () -> [ ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone? ]
+
+    def created_on_will_change!: () -> void
+
+    def created_on_was: () -> ActiveSupport::TimeWithZone?
+
+    def created_on_previously_changed?: () -> bool
+
+    def created_on_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def created_on_previously_was: () -> ActiveSupport::TimeWithZone?
+
+    def created_on_before_last_save: () -> ActiveSupport::TimeWithZone?
+
+    def created_on_change_to_be_saved: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def created_on_in_database: () -> ActiveSupport::TimeWithZone?
+
+    def saved_change_to_created_on: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def saved_change_to_created_on?: () -> bool
+
+    def will_save_change_to_created_on?: () -> bool
+
+    def restore_created_on!: () -> void
+
+    def clear_created_on_change: () -> void
+
+    def private_notes: () -> bool
+
+    def private_notes=: (bool) -> bool
+
+    def private_notes?: () -> bool
+
+    def private_notes_changed?: () -> bool
+
+    def private_notes_change: () -> [ bool?, bool? ]
+
+    def private_notes_will_change!: () -> void
+
+    def private_notes_was: () -> bool?
+
+    def private_notes_previously_changed?: () -> bool
+
+    def private_notes_previous_change: () -> Array[bool?]?
+
+    def private_notes_previously_was: () -> bool?
+
+    def private_notes_before_last_save: () -> bool?
+
+    def private_notes_change_to_be_saved: () -> Array[bool?]?
+
+    def private_notes_in_database: () -> bool?
+
+    def saved_change_to_private_notes: () -> Array[bool?]?
+
+    def saved_change_to_private_notes?: () -> bool
+
+    def will_save_change_to_private_notes?: () -> bool
+
+    def restore_private_notes!: () -> void
+
+    def clear_private_notes_change: () -> void
+
+    def updated_on: () -> ActiveSupport::TimeWithZone?
+
+    def updated_on=: (ActiveSupport::TimeWithZone?) -> ActiveSupport::TimeWithZone?
+
+    def updated_on?: () -> bool
+
+    def updated_on_changed?: () -> bool
+
+    def updated_on_change: () -> [ ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone? ]
+
+    def updated_on_will_change!: () -> void
+
+    def updated_on_was: () -> ActiveSupport::TimeWithZone?
+
+    def updated_on_previously_changed?: () -> bool
+
+    def updated_on_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def updated_on_previously_was: () -> ActiveSupport::TimeWithZone?
+
+    def updated_on_before_last_save: () -> ActiveSupport::TimeWithZone?
+
+    def updated_on_change_to_be_saved: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def updated_on_in_database: () -> ActiveSupport::TimeWithZone?
+
+    def saved_change_to_updated_on: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def saved_change_to_updated_on?: () -> bool
+
+    def will_save_change_to_updated_on?: () -> bool
+
+    def restore_updated_on!: () -> void
+
+    def clear_updated_on_change: () -> void
+
+    def updated_by_id: () -> Integer?
+
+    def updated_by_id=: (Integer?) -> Integer?
+
+    def updated_by_id?: () -> bool
+
+    def updated_by_id_changed?: () -> bool
+
+    def updated_by_id_change: () -> [ Integer?, Integer? ]
+
+    def updated_by_id_will_change!: () -> void
+
+    def updated_by_id_was: () -> Integer?
+
+    def updated_by_id_previously_changed?: () -> bool
+
+    def updated_by_id_previous_change: () -> Array[Integer?]?
+
+    def updated_by_id_previously_was: () -> Integer?
+
+    def updated_by_id_before_last_save: () -> Integer?
+
+    def updated_by_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def updated_by_id_in_database: () -> Integer?
+
+    def saved_change_to_updated_by_id: () -> Array[Integer?]?
+
+    def saved_change_to_updated_by_id?: () -> bool
+
+    def will_save_change_to_updated_by_id?: () -> bool
+
+    def restore_updated_by_id!: () -> void
+
+    def clear_updated_by_id_change: () -> void
+  end
+  include GeneratedAttributeMethods
+  def details: () -> JournalDetail::ActiveRecord_Associations_CollectionProxy
+  def details=: (JournalDetail::ActiveRecord_Associations_CollectionProxy | Array[JournalDetail]) -> (JournalDetail::ActiveRecord_Associations_CollectionProxy | Array[JournalDetail])
+  def detail_ids: () -> Array[Integer]
+  def detail_ids=: (Array[Integer]) -> Array[Integer]
+
+  def journalized: () -> untyped
+  def journalized=: (untyped?) -> untyped?
+  def reload_journalized: () -> untyped?
+  def issue: () -> Issue
+  def issue=: (Issue?) -> Issue?
+  def reload_issue: () -> Issue?
+  def build_issue: (untyped) -> Issue
+  def create_issue: (untyped) -> Issue
+  def create_issue!: (untyped) -> Issue
+  def user: () -> User
+  def user=: (User?) -> User?
+  def reload_user: () -> User?
+  def build_user: (untyped) -> User
+  def create_user: (untyped) -> User
+  def create_user!: (untyped) -> User
+  def updated_by: () -> User
+  def updated_by=: (User?) -> User?
+  def reload_updated_by: () -> User?
+  def build_updated_by: (untyped) -> User
+  def create_updated_by: (untyped) -> User
+  def create_updated_by!: (untyped) -> User
+
+  module GeneratedRelationMethods
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Journal, Integer]
+    include Enumerable[Journal]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Journal, Integer]
+  end
+end

@@ -1,0 +1,24 @@
+# Generated from lib/redmine/configuration.rb with RBS::Inline
+
+module Redmine
+  module Configuration
+    # Loads the Redmine configuration file
+    # Valid options:
+    # * <tt>:file</tt>: the configuration file to load (default: config/configuration.yml)
+    # * <tt>:env</tt>: the environment to load the configuration for (default: Rails.env)
+    def self.load: (?untyped options) -> untyped
+
+    # Returns a configuration setting
+    def self.[]: (untyped name) -> untyped
+
+    # Yields a block with the specified hash configuration settings
+    def self.with: (untyped settings) -> untyped
+
+    private def self.load_from_yaml: (untyped filename, untyped env) -> untyped
+
+    private def self.load_deprecated_email_configuration: (untyped env) -> untyped
+
+    # Checks the validness of regular expressions set for repository paths at startup
+    private def self.check_regular_expressions: () -> untyped
+  end
+end

@@ -1,0 +1,13 @@
+# Generated from app/controllers/comments_controller.rb with RBS::Inline
+
+class CommentsController < ApplicationController
+  def create: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  # ApplicationController's find_model_object sets it based on the controller
+  # name so it needs to be overridden and set to @news instead
+  def find_model_object: () -> untyped
+end

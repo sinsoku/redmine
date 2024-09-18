@@ -1,0 +1,29 @@
+# Generated from lib/redmine/plugin_loader.rb with RBS::Inline
+
+module Redmine
+  class PluginPath
+    attr_reader assets_dir: untyped
+
+    attr_reader initializer: untyped
+
+    def initialize: (untyped dir) -> untyped
+
+    def run_initializer: () -> untyped
+
+    def to_s: () -> untyped
+
+    def has_assets_dir?: () -> untyped
+
+    def has_initializer?: () -> untyped
+  end
+
+  class PluginLoader
+    def self.load: () -> untyped
+
+    def self.setup: () -> untyped
+
+    def self.add_autoload_paths: () -> untyped
+
+    def self.directories: () -> untyped
+  end
+end

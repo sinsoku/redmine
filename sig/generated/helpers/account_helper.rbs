@@ -1,0 +1,4 @@
+# Generated from app/helpers/account_helper.rb with RBS::Inline
+
+module AccountHelper
+end

@@ -1,0 +1,16 @@
+# Generated from app/helpers/wiki_helper.rb with RBS::Inline
+
+module WikiHelper
+  include Redmine::Export::PDF::WikiPdfHelper
+
+  def wiki_page_options_for_select: (untyped pages, ?untyped selected, ?untyped parent, ?untyped level) -> untyped
+
+  def wiki_page_wiki_options_for_select: (untyped page) -> untyped
+
+  def wiki_page_breadcrumb: (untyped page) -> untyped
+
+  # Returns the path for the Cancel link when editing a wiki page
+  def wiki_page_edit_cancel_path: (untyped page) -> untyped
+
+  def wiki_content_update_info: (untyped content) -> untyped
+end

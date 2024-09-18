@@ -1,0 +1,36 @@
+# Generated from app/models/anonymous_user.rb with RBS::Inline
+
+class AnonymousUser < User
+  def validate_anonymous_uniqueness: () -> untyped
+
+  def available_custom_fields: () -> untyped
+
+  # Overrides a few properties
+  def logged?: () -> untyped
+
+  def admin: () -> untyped
+
+  def name: (*untyped args) -> untyped
+
+  def mail=: (*untyped args) -> untyped
+
+  def mail: () -> untyped
+
+  def time_zone: () -> untyped
+
+  def atom_key: () -> untyped
+
+  def pref: () -> untyped
+
+  # Returns the user's bult-in role
+  def builtin_role: () -> untyped
+
+  def membership: (*untyped args) -> untyped
+
+  def member_of?: (*untyped args) -> untyped
+
+  # Anonymous user can not be destroyed
+  def destroy: () -> untyped
+
+  def instantiate_email_address: () -> untyped
+end

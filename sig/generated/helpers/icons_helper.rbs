@@ -1,0 +1,21 @@
+# Generated from app/helpers/icons_helper.rb with RBS::Inline
+
+module IconsHelper
+  DEFAULT_ICON_SIZE: ::String
+
+  DEFAULT_SPRITE: ::String
+
+  def icon_with_label: (untyped icon_name, untyped label_text, ?icon_only: untyped, ?size: untyped, ?css_class: untyped) -> untyped
+
+  def icon_for_file: (untyped entry, untyped name, ?size: untyped, ?css_class: untyped) -> untyped
+
+  def icon_for_principal: (untyped principal_class, ?size: untyped, ?css_class: untyped) -> untyped
+
+  def icon_for_event_type: (untyped event_type, ?size: untyped, ?css_class: untyped) -> untyped
+
+  def sprite_icon: (untyped icon_name, ?size: untyped, ?sprite: untyped, ?css_class: untyped) -> untyped
+
+  private
+
+  def icon_for_mime_type: (untyped mime) -> untyped
+end

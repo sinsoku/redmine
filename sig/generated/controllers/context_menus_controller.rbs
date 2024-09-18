@@ -1,0 +1,11 @@
+# Generated from app/controllers/context_menus_controller.rb with RBS::Inline
+
+class ContextMenusController < ApplicationController
+  def issues: () -> untyped
+
+  def time_entries: () -> untyped
+
+  def projects: () -> untyped
+
+  def users: () -> untyped
+end

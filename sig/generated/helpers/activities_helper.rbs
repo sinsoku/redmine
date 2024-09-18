@@ -1,0 +1,7 @@
+# Generated from app/helpers/activities_helper.rb with RBS::Inline
+
+module ActivitiesHelper
+  def sort_activity_events: (untyped events) -> untyped
+
+  def activity_authors_options_for_select: (untyped project, untyped selected) -> untyped
+end

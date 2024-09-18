@@ -1,0 +1,501 @@
+# Generated from app/models/issue.rb with RBS::Inline
+
+class Issue < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  include Redmine::Utils::DateCalculation
+
+  include Redmine::I18n
+
+  include Redmine::NestedSet::IssueNestedSet
+
+  DONE_RATIO_OPTIONS: ::Array
+
+  attr_reader transition_warning: untyped
+
+  attr_writer deleted_attachment_ids: untyped
+
+  # Returns a SQL conditions string used to find all issues visible by the specified user
+  def self.visible_condition: (untyped user, ?untyped options) -> untyped
+
+  # Returns true if usr or current user is allowed to view the issue
+  def visible?: (?untyped usr) -> untyped
+
+  # Returns true if user or current user is allowed to edit or add notes to the issue
+  def editable?: (?untyped user) -> untyped
+
+  # Returns true if user or current user is allowed to edit the issue
+  def attributes_editable?: (?untyped user) -> untyped
+
+  def attachments_addable?: (?untyped user) -> untyped
+
+  # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_editable?
+  def attachments_editable?: (?untyped user) -> untyped
+
+  # Returns true if user or current user is allowed to add notes to the issue
+  def notes_addable?: (?untyped user) -> untyped
+
+  # Returns true if user or current user is allowed to delete the issue
+  def deletable?: (?untyped user) -> untyped
+
+  # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_deletable?
+  def attachments_deletable?: (?untyped user) -> untyped
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def create_or_update: (*untyped args) -> untyped
+
+  # AR#Persistence#destroy would raise and RecordNotFound exception
+  # if the issue was already deleted or updated (non matching lock_version).
+  # This is a problem when bulk deleting issues or deleting a project
+  # (because an issue may already be deleted if its parent was deleted
+  # first).
+  # The issue is reloaded by the nested_set before being deleted so
+  # the lock_version condition should not be an issue but we handle it.
+  def destroy: () -> untyped
+
+  alias base_reload reload
+
+  def reload: (*untyped args) -> untyped
+
+  # Overrides Redmine::Acts::Customizable::InstanceMethods#available_custom_fields
+  def available_custom_fields: () -> untyped
+
+  def visible_custom_field_values: (?untyped user) -> untyped
+
+  # Overrides Redmine::Acts::Customizable::InstanceMethods#set_custom_field_default?
+  def set_custom_field_default?: (untyped custom_value) -> untyped
+
+  # Copies attributes from another issue, arg can be an id or an Issue
+  def copy_from: (untyped arg, ?untyped options) -> untyped
+
+  # Returns an unsaved copy of the issue
+  def copy: (?untyped attributes, ?untyped copy_options) -> untyped
+
+  # Returns true if the issue is a copy
+  def copy?: () -> untyped
+
+  def status_id=: (untyped status_id) -> untyped
+
+  # Sets the status.
+  def status=: (untyped status) -> untyped
+
+  def priority_id=: (untyped pid) -> untyped
+
+  def category_id=: (untyped cid) -> untyped
+
+  def fixed_version_id=: (untyped vid) -> untyped
+
+  def tracker_id=: (untyped tracker_id) -> untyped
+
+  # Sets the tracker.
+  # This will set the status to the default status of the new tracker if:
+  # * the status was the default for the previous tracker
+  # * or if the status was not part of the new tracker statuses
+  # * or the status was nil
+  def tracker=: (untyped tracker) -> untyped
+
+  def project_id=: (untyped project_id) -> untyped
+
+  # Sets the project.
+  # Unless keep_tracker argument is set to true, this will change the tracker
+  # to the first tracker of the new project if the previous tracker is not part
+  # of the new project trackers.
+  # This will:
+  # * clear the fixed_version is it's no longer valid for the new project.
+  # * clear the parent issue if it's no longer valid for the new project.
+  # * set the category to the category with the same name in the new
+  #   project if it exists, or clear it if it doesn't.
+  # * for new issue, set the fixed_version to the project default version
+  #   if it's a valid fixed_version.
+  def project=: (untyped project, ?untyped keep_tracker) -> untyped
+
+  def description=: (untyped arg) -> untyped
+
+  def deleted_attachment_ids: () -> untyped
+
+  # Overrides assign_attributes so that project and tracker get assigned first
+  def assign_attributes: (untyped new_attributes, *untyped args) -> untyped
+
+  def attributes=: (untyped new_attributes) -> untyped
+
+  def estimated_hours=: (untyped h) -> untyped
+
+  def safe_attribute_names: (?untyped user) -> untyped
+
+  # Safely sets attributes
+  # Should be called from controllers instead of #attributes=
+  # attr_accessible is too rough because we still want things like
+  # Issue.new(:project => foo) to work
+  def safe_attributes=: (untyped attrs, ?untyped user) -> untyped
+
+  def disabled_core_fields: () -> untyped
+
+  # Returns the custom_field_values that can be edited by the given user
+  def editable_custom_field_values: (?untyped user) -> untyped
+
+  # Returns the custom fields that can be edited by the given user
+  def editable_custom_fields: (?untyped user) -> untyped
+
+  # Returns the names of attributes that are read-only for user or the current user
+  # For users with multiple roles, the read-only fields are the intersection of
+  # read-only fields of each role
+  # The result is an array of strings where sustom fields are represented with their ids
+  #
+  # Examples:
+  #   issue.read_only_attribute_names # => ['due_date', '2']
+  #   issue.read_only_attribute_names(user) # => []
+  def read_only_attribute_names: (?untyped user) -> untyped
+
+  # Returns the names of required attributes for user or the current user
+  # For users with multiple roles, the required fields are the intersection of
+  # required fields of each role
+  # The result is an array of strings where sustom fields are represented with their ids
+  #
+  # Examples:
+  #   issue.required_attribute_names # => ['due_date', '2']
+  #   issue.required_attribute_names(user) # => []
+  def required_attribute_names: (?untyped user) -> untyped
+
+  # Returns true if the attribute is required for user
+  def required_attribute?: (untyped name, ?untyped user) -> untyped
+
+  # Returns a hash of the workflow rule by attribute for the given user
+  #
+  # Examples:
+  #   issue.workflow_rule_by_attribute # => {'due_date' => 'required', 'start_date' => 'readonly'}
+  def workflow_rule_by_attribute: (?untyped user) -> untyped
+
+  def done_ratio: () -> untyped
+
+  def self.use_status_for_done_ratio?: () -> untyped
+
+  def self.use_field_for_done_ratio?: () -> untyped
+
+  def validate_issue: () -> untyped
+
+  # Validates the issue against additional workflow requirements
+  def validate_required_fields: () -> untyped
+
+  def validate_permissions: () -> untyped
+
+  # Overrides Redmine::Acts::Customizable::InstanceMethods#validate_custom_field_values
+  # so that custom values that are not editable are not validated (eg. a custom field that
+  # is marked as required should not trigger a validation error if the user is not allowed
+  # to edit this field).
+  def validate_custom_field_values: () -> untyped
+
+  # Set the done_ratio using the status if that setting is set.  This will keep the done_ratios
+  # even if the user turns off the setting later
+  def update_done_ratio_from_issue_status: () -> untyped
+
+  def init_journal: (untyped user, ?untyped notes) -> untyped
+
+  # Returns the current journal or nil if it's not initialized
+  def current_journal: () -> untyped
+
+  # Clears the current journal
+  def clear_journal: () -> untyped
+
+  # Returns the names of attributes that are journalized when updating the issue
+  def journalized_attribute_names: () -> untyped
+
+  # Returns the id of the last journal or nil
+  def last_journal_id: () -> untyped
+
+  # Returns a scope for journals that have an id greater than journal_id
+  def journals_after: (untyped journal_id) -> untyped
+
+  # Returns the journals that are visible to user with their index
+  # Used to display the issue history
+  def visible_journals_with_index: (?untyped user) -> untyped
+
+  # Returns the assignee immediately prior to the current one from the issue history
+  def prior_assigned_to: () -> untyped
+
+  # Returns the initial status of the issue
+  # Returns nil for a new issue
+  def status_was: () -> untyped
+
+  # Return true if the issue is closed, otherwise false
+  def closed?: () -> untyped
+
+  # Returns true if the issue was closed when loaded
+  def was_closed?: () -> untyped
+
+  # Return true if the issue is being reopened
+  def reopening?: () -> untyped
+
+  alias reopened? reopening?
+
+  # Return true if the issue is being closed
+  def closing?: () -> untyped
+
+  # Returns true if the issue is overdue
+  def overdue?: () -> untyped
+
+  # Is the amount of work done less than it should for the due date
+  def behind_schedule?: () -> untyped
+
+  # Does this issue have children?
+  def children?: () -> untyped
+
+  # Users the issue can be assigned to
+  def assignable_users: () -> untyped
+
+  # Versions that the issue can be assigned to
+  def assignable_versions: () -> untyped
+
+  # Returns true if this issue is blocked by another issue that is still open
+  def blocked?: () -> untyped
+
+  # Returns true if this issue can be closed and if not, returns false and populates the reason
+  def closable?: () -> untyped
+
+  # Returns true if this issue can be reopen and if not, returns false and populates the reason
+  def reopenable?: () -> untyped
+
+  # Returns the default status of the issue based on its tracker
+  # Returns nil if tracker is nil
+  def default_status: () -> untyped
+
+  # Returns an array of statuses that user is able to apply
+  def new_statuses_allowed_to: (?untyped user, ?untyped include_default) -> untyped
+
+  # Returns the original tracker
+  def tracker_was: () -> untyped
+
+  # Returns the previous assignee whenever we're before the save
+  # or in after_* callbacks
+  def previous_assignee: () -> untyped
+
+  # Returns the users that should be notified
+  def notified_users: () -> untyped
+
+  # Returns the email addresses that should be notified
+  def recipients: () -> untyped
+
+  def notify?: () -> untyped
+
+  def notify=: (untyped arg) -> untyped
+
+  # Returns the number of hours spent on this issue
+  def spent_hours: () -> untyped
+
+  # Returns the total number of hours spent on this issue and its descendants
+  def total_spent_hours: () -> untyped
+
+  def total_estimated_hours: () -> untyped
+
+  # Returns the number of estimated remaining hours on this issue
+  def estimated_remaining_hours: () -> untyped
+
+  def relations: () -> untyped
+
+  def last_updated_by: () -> untyped
+
+  def last_notes: () -> untyped
+
+  # Preloads relations for a collection of issues
+  def self.load_relations: (untyped issues) -> untyped
+
+  # Preloads visible spent time for a collection of issues
+  def self.load_visible_spent_hours: (untyped issues, ?untyped user) -> untyped
+
+  # Preloads visible total spent time for a collection of issues
+  def self.load_visible_total_spent_hours: (untyped issues, ?untyped user) -> untyped
+
+  # Preloads visible relations for a collection of issues
+  def self.load_visible_relations: (untyped issues, ?untyped user) -> untyped
+
+  # Returns a scope of the given issues and their descendants
+  def self.self_and_descendants: (untyped issues) -> untyped
+
+  # Preloads users who updated last a collection of issues
+  def self.load_visible_last_updated_by: (untyped issues, ?untyped user) -> untyped
+
+  # Preloads visible last notes for a collection of issues
+  def self.load_visible_last_notes: (untyped issues, ?untyped user) -> untyped
+
+  # Finds an issue relation given its id.
+  def find_relation: (untyped relation_id) -> untyped
+
+  # Returns true if this issue blocks the other issue, otherwise returns false
+  def blocks?: (untyped other) -> untyped
+
+  # Returns true if the other issue might be rescheduled if the start/due dates of this issue change
+  def would_reschedule?: (untyped other) -> untyped
+
+  # Returns an array of issues that duplicate this one
+  def duplicates: () -> untyped
+
+  # Returns the due date or the target due date if any
+  # Used on gantt chart
+  def due_before: () -> untyped
+
+  # Returns the time scheduled for this issue.
+  #
+  # Example:
+  #   Start Date: 2/26/09, End Date: 3/04/09
+  #   duration => 6
+  def duration: () -> untyped
+
+  # Returns the duration in working days
+  def working_duration: () -> untyped
+
+  def soonest_start: (?untyped reload) -> untyped
+
+  # Sets start_date on the given date or the next working day
+  # and changes due_date to keep the same working duration.
+  def reschedule_on: (untyped date) -> untyped
+
+  # Reschedules the issue on the given date or the next working day and saves the record.
+  # If the issue is a parent task, this is done by rescheduling its subtasks.
+  def reschedule_on!: (untyped date, ?untyped journal) -> untyped
+
+  def dates_derived?: () -> untyped
+
+  def priority_derived?: () -> untyped
+
+  def done_ratio_derived?: () -> untyped
+
+  def <=>: (untyped issue) -> untyped
+
+  def to_s: () -> untyped
+
+  # Returns a string of css classes that apply to the issue
+  def css_classes: (?untyped user) -> untyped
+
+  # Unassigns issues from +version+ if it's no longer shared with issue's project
+  def self.update_versions_from_sharing_change: (untyped version) -> untyped
+
+  # Unassigns issues from versions that are no longer shared
+  # after +project+ was moved
+  def self.update_versions_from_hierarchy_change: (untyped project) -> untyped
+
+  def parent_issue_id=: (untyped arg) -> untyped
+
+  def parent_issue_id: () -> untyped
+
+  alias parent_issue parent
+
+  def set_parent_id: () -> untyped
+
+  # Returns true if issue's project is a valid
+  # parent issue project
+  def valid_parent_project?: (?untyped issue) -> untyped
+
+  # Returns an issue scope based on project and scope
+  def self.cross_project_scope: (untyped project, ?untyped scope) -> untyped
+
+  def self.by_tracker: (untyped project, ?untyped with_subprojects) -> untyped
+
+  def self.by_version: (untyped project, ?untyped with_subprojects) -> untyped
+
+  def self.by_priority: (untyped project, ?untyped with_subprojects) -> untyped
+
+  def self.by_category: (untyped project, ?untyped with_subprojects) -> untyped
+
+  def self.by_assigned_to: (untyped project, ?untyped with_subprojects) -> untyped
+
+  def self.by_author: (untyped project, ?untyped with_subprojects) -> untyped
+
+  def self.by_subproject: (untyped project) -> untyped
+
+  # Query generator for selecting groups of issue counts for a project
+  # based on specific criteria
+  #
+  # Options
+  # * project - Project to search in.
+  # * with_subprojects - Includes subprojects issues if set to true.
+  # * association - Symbol. Association for grouping.
+  def self.count_and_group_by: (untyped options) -> untyped
+
+  # Returns a scope of projects that user can assign the subtask
+  def allowed_target_projects_for_subtask: (?untyped user) -> untyped
+
+  # Returns a scope of projects that user can assign the issue to
+  def allowed_target_projects: (?untyped user, ?untyped scope) -> untyped
+
+  # Returns a scope of projects that user can assign issues to
+  # If current_project is given, it will be included in the scope
+  def self.allowed_target_projects: (?untyped user, ?untyped current_project, ?untyped scope) -> untyped
+
+  # Returns a scope of trackers that user can assign the issue to
+  def allowed_target_trackers: (?untyped user) -> untyped
+
+  # Returns a scope of trackers that user can assign project issues to
+  def self.allowed_target_trackers: (untyped project, ?untyped user, ?untyped current_tracker) -> untyped
+
+  private
+
+  def user_tracker_permission?: (untyped user, untyped permission) -> untyped
+
+  def after_project_change: () -> untyped
+
+  # Callback for after the creation of an issue by copy
+  # * adds a "copied to" relation with the copied issue
+  # * copies subtasks from the copied issue
+  def after_create_from_copy: () -> untyped
+
+  def update_nested_set_attributes: () -> untyped
+
+  # Updates the nested set for when an existing issue is moved
+  def update_nested_set_attributes_on_parent_change: () -> untyped
+
+  def update_parent_attributes: () -> untyped
+
+  def recalculate_attributes_for: (untyped issue_id) -> untyped
+
+  # Update issues so their versions are not pointing to a
+  # fixed_version that is not shared with the issue's project
+  def self.update_versions: (?untyped conditions) -> untyped
+
+  def delete_selected_attachments: () -> untyped
+
+  # Callback on file attachment
+  def attachment_added: (untyped attachment) -> untyped
+
+  # Callback on attachment deletion
+  def attachment_removed: (untyped attachment) -> untyped
+
+  # Called after a relation is added
+  def relation_added: (untyped relation) -> untyped
+
+  # Called after a relation is removed
+  def relation_removed: (untyped relation) -> untyped
+
+  # Default assignment based on project or category
+  def default_assign: () -> untyped
+
+  # Updates start/due dates of following issues
+  def reschedule_following_issues: () -> untyped
+
+  # Closes duplicates if the issue is being closed
+  def close_duplicates: () -> untyped
+
+  # Make sure updated_on is updated when adding a note and set updated_on now
+  # so we can set closed_on with the same value on closing
+  def force_updated_on_change: () -> untyped
+
+  # Callback for setting closed_on when the issue is closed.
+  # The closed_on attribute stores the time of the last closing
+  # and is preserved when the issue is reopened.
+  def update_closed_on: () -> untyped
+
+  # Saves the changes in a Journal
+  # Called after_save
+  def create_journal: () -> untyped
+
+  def create_parent_issue_journal: () -> untyped
+
+  def add_auto_watcher: () -> untyped
+
+  def send_notification: () -> untyped
+
+  def clear_disabled_fields: () -> untyped
+
+  def filter_projects_scope: (?untyped scope) -> untyped
+
+  def roles_for_workflow: (untyped user) -> untyped
+end

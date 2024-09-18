@@ -1,0 +1,22 @@
+# Generated from app/models/user_import.rb with RBS::Inline
+
+class UserImport < Import
+  AUTO_MAPPABLE_FIELDS: ::Hash
+
+  def self.menu_item: () -> untyped
+
+  def self.layout: () -> untyped
+
+  def self.authorized?: (untyped user) -> untyped
+
+  # Returns the objects that were imported
+  def saved_objects: () -> untyped
+
+  def mappable_custom_fields: () -> untyped
+
+  private
+
+  def build_object: (untyped row, untyped item) -> untyped
+
+  def extend_object: (untyped row, untyped item, untyped object) -> untyped
+end

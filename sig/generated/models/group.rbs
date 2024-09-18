@@ -1,0 +1,32 @@
+# Generated from app/models/group.rb with RBS::Inline
+
+class Group < Principal
+  include Redmine::SafeAttributes
+
+  def to_s: () -> untyped
+
+  def builtin_type: () -> untyped
+
+  # Return true if the group is a builtin group
+  def builtin?: () -> untyped
+
+  # Returns true if the group can be given to a user
+  def givable?: () -> untyped
+
+  def css_classes: () -> untyped
+
+  def user_added: (untyped user) -> untyped
+
+  def user_removed: (untyped user) -> untyped
+
+  def self.human_attribute_name: (untyped attribute_key_name, *untyped args) -> untyped
+
+  def self.anonymous: () -> untyped
+
+  def self.non_member: () -> untyped
+
+  private
+
+  # Removes references that are not handled by associations
+  def remove_references_before_destroy: () -> untyped
+end

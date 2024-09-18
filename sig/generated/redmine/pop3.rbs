@@ -1,0 +1,9 @@
+# Generated from lib/redmine/pop3.rb with RBS::Inline
+
+module Redmine
+  module POP3
+    def self.check: (?untyped pop_options, ?untyped options) -> untyped
+
+    private def self.logger: () -> untyped
+  end
+end

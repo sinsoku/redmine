@@ -1,0 +1,54 @@
+# Generated from lib/plugins/acts_as_customizable/lib/acts_as_customizable.rb with RBS::Inline
+
+module Redmine
+  module Acts
+    module Customizable
+      def self.included: (untyped base) -> untyped
+
+      module ClassMethods
+        def acts_as_customizable: (?untyped options) -> untyped
+      end
+
+      module InstanceMethods
+        def self.included: (untyped base) -> untyped
+
+        def available_custom_fields: () -> untyped
+
+        # Sets the values of the object's custom fields
+        # values is an array like [{'id' => 1, 'value' => 'foo'}, {'id' => 2, 'value' => 'bar'}]
+        def custom_fields=: (untyped values) -> untyped
+
+        # Sets the values of the object's custom fields
+        # values is a hash like {'1' => 'foo', 2 => 'bar'}
+        def custom_field_values=: (untyped values) -> untyped
+
+        def custom_field_values: () -> untyped
+
+        def visible_custom_field_values: () -> untyped
+
+        def custom_field_values_changed?: () -> untyped
+
+        # Should the default custom field value be set for the given custom_value?
+        # By default, default custom field value is set for new objects only
+        def set_custom_field_default?: (untyped custom_value) -> untyped
+
+        def custom_value_for: (untyped c) -> untyped
+
+        def custom_field_value: (untyped c) -> untyped
+
+        def validate_custom_field_values: () -> untyped
+
+        def save_custom_field_values: () -> untyped
+
+        def reassign_custom_field_values: () -> untyped
+
+        def reset_custom_values!: () -> untyped
+
+        def reload: (*untyped args) -> untyped
+
+        module ClassMethods
+        end
+      end
+    end
+  end
+end

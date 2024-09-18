@@ -1,0 +1,19 @@
+# Generated from lib/redmine/export/pdf/wiki_pdf_helper.rb with RBS::Inline
+
+module Redmine
+  module Export
+    module PDF
+      module WikiPdfHelper
+        # Returns a PDF string of a set of wiki pages
+        def wiki_pages_to_pdf: (untyped pages, untyped project) -> untyped
+
+        # Returns a PDF string of a single wiki page
+        def wiki_page_to_pdf: (untyped page, untyped project) -> untyped
+
+        def write_page_hierarchy: (untyped pdf, untyped pages, ?untyped node, ?untyped level) -> untyped
+
+        def write_wiki_page: (untyped pdf, untyped page) -> untyped
+      end
+    end
+  end
+end

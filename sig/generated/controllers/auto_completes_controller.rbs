@@ -1,0 +1,15 @@
+# Generated from app/controllers/auto_completes_controller.rb with RBS::Inline
+
+class AutoCompletesController < ApplicationController
+  def issues: () -> untyped
+
+  def wiki_pages: () -> untyped
+
+  private
+
+  def find_project: () -> untyped
+
+  def format_issues_json: (untyped issues) -> untyped
+
+  def format_wiki_pages_json: (untyped wiki_pages) -> untyped
+end

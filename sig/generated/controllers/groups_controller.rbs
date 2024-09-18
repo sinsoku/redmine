@@ -1,0 +1,31 @@
+# Generated from app/controllers/groups_controller.rb with RBS::Inline
+
+class GroupsController < ApplicationController
+  def index: () -> untyped
+
+  def show: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  def new_users: () -> untyped
+
+  def add_users: () -> untyped
+
+  def remove_user: () -> untyped
+
+  def autocomplete_for_user: () -> untyped
+
+  private
+
+  def find_group: () -> untyped
+
+  def user_count_by_group_id: () -> untyped
+end

@@ -1,0 +1,28 @@
+# Generated from lib/redmine/my_page.rb with RBS::Inline
+
+module Redmine
+  module MyPage
+    include Redmine::I18n
+
+    CORE_GROUPS: ::Array
+
+    CORE_BLOCKS: ::Hash
+
+    def self.groups: () -> untyped
+
+    # Returns the available blocks
+    def self.blocks: () -> untyped
+
+    def self.block_options: (?untyped blocks_in_use) -> untyped
+
+    def self.valid_block?: (untyped block, ?untyped blocks_in_use) -> untyped
+
+    def self.find_block: (untyped block) -> untyped
+
+    # Returns the additional blocks that are defined by plugin partials
+    def self.additional_blocks: () -> untyped
+
+    # Returns the default layout for My Page
+    def self.default_layout: () -> untyped
+  end
+end

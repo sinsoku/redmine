@@ -1,0 +1,109 @@
+# Generated from lib/redmine/scm/adapters/cvs_adapter.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+      class CvsAdapter < AbstractAdapter
+        # CVS executable name
+        CVS_BIN: untyped
+
+        def self.client_command: () -> untyped
+
+        def self.sq_bin: () -> untyped
+
+        def self.client_version: () -> untyped
+
+        def self.client_available: () -> untyped
+
+        def self.scm_command_version: () -> untyped
+
+        def self.scm_version_from_command_line: () -> untyped
+
+        # Guidelines for the input:
+        #  url      -> the project-path, relative to the cvsroot (eg. module name)
+        #  root_url -> the good old, sometimes damned, CVSROOT
+        #  login    -> unnecessary
+        #  password -> unnecessary too
+        def initialize: (untyped url, ?untyped root_url, ?untyped login, ?untyped password, ?untyped path_encoding) -> untyped
+
+        def path_encoding: () -> untyped
+
+        def info: () -> untyped
+
+        def get_previous_revision: (untyped revision) -> untyped
+
+        # Returns an Entries collection
+        # or nil if the given path doesn't exist in the repository
+        # this method is used by the repository-browser (aka LIST)
+        def entries: (?untyped path, ?untyped identifier, ?untyped options) -> untyped
+
+        STARTLOG: ::String
+
+        ENDLOG: ::String
+
+        # Returns all revisions found between identifier_from and identifier_to
+        # in the repository. both identifier have to be dates or nil.
+        # these method returns nothing but yield every result in block
+        def revisions: (?untyped path, ?untyped identifier_from, ?untyped identifier_to, ?untyped options) ?{ (?) -> untyped } -> untyped
+
+        def diff: (untyped path, untyped identifier_from, ?untyped identifier_to) -> untyped
+
+        def cat: (untyped path, ?untyped identifier) -> untyped
+
+        def annotate: (untyped path, ?untyped identifier) -> untyped
+
+        private
+
+        # Returns the root url without the connexion string
+        # :pserver:anonymous@foo.bar:/path => /path
+        # :ext:cvsservername:/path => /path
+        def root_url_path: () -> untyped
+
+        # convert a date/time into the CVS-format
+        def time_to_cvstime: (untyped time) -> untyped
+
+        def time_to_cvstime_rlog: (untyped time) -> untyped
+
+        def normalize_cvs_path: (untyped path) -> untyped
+
+        def normalize_path: (untyped path) -> untyped
+
+        def path_with_proj: (untyped path) -> untyped
+
+        class Revision < Redmine::Scm::Adapters::Revision
+          # Returns the readable identifier
+          def format_identifier: () -> untyped
+        end
+
+        def scm_cmd: (*untyped args) ?{ (?) -> untyped } -> untyped
+      end
+
+      class CvsRevisionHelper
+        attr_accessor complete_rev: untyped
+
+        attr_accessor revision: untyped
+
+        attr_accessor base: untyped
+
+        attr_accessor branchid: untyped
+
+        def initialize: (untyped complete_rev) -> untyped
+
+        def branchVersion: () -> untyped
+
+        def isBranchRevision: () -> untyped
+
+        def prevRev: () -> untyped
+
+        def is_in_branch_with_symbol: (untyped branch_symbol) -> untyped
+
+        private
+
+        def buildRevision: (untyped rev) -> untyped
+
+        # Interpretiert die cvs revisionsnummern wie z.b. 1.14 oder 1.3.0.15
+        def parseRevision: () -> untyped
+      end
+    end
+  end
+end

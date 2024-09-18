@@ -1,0 +1,41 @@
+# Generated from lib/redmine/syntax_highlighting.rb with RBS::Inline
+
+module Redmine
+  module SyntaxHighlighting
+    attr_reader highlighter: untyped
+
+    def self.highlighter=: (untyped name) -> untyped
+
+    def self.highlight_by_filename: (untyped text, untyped filename) -> untyped
+
+    def self.highlight_by_language: (untyped text, untyped language) -> untyped
+
+    def self.language_supported?: (untyped language) -> untyped
+
+    def self.filename_supported?: (untyped filename) -> untyped
+
+    module Rouge
+      # Customized formatter based on Rouge::Formatters::HTMLLinewise
+      # Syntax highlighting is completed within each line.
+      class CustomHTMLLinewise < ::Rouge::Formatter
+        def initialize: (untyped formatter) -> untyped
+
+        def stream: (untyped tokens) ?{ (?) -> untyped } -> untyped
+      end
+
+      # Highlights +text+ as the content of +filename+
+      # Should not return line numbers nor outer pre tag
+      def self.highlight_by_filename: (untyped text, untyped filename) -> untyped
+
+      # Highlights +text+ using +language+ syntax
+      # Should not return outer pre tag
+      def self.highlight_by_language: (untyped text, untyped language) -> untyped
+
+      def self.language_supported?: (untyped language) -> untyped
+
+      def self.filename_supported?: (untyped filename) -> untyped
+
+      private def self.find_lexer: (untyped language) -> untyped
+    end
+  end
+end

@@ -1,0 +1,44 @@
+# Generated from app/controllers/queries_controller.rb with RBS::Inline
+
+class QueriesController < ApplicationController
+  include QueriesHelper
+
+  def index: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  # Returns the values for a query filter
+  def filter: () -> untyped
+
+  def current_menu_item: () -> untyped
+
+  def current_menu: (untyped project) -> untyped
+
+  private
+
+  def find_query: () -> untyped
+
+  def update_query_from_params: () -> untyped
+
+  def redirect_to_items: (untyped options) -> untyped
+
+  def redirect_to_issue_query: (untyped options) -> untyped
+
+  def redirect_to_time_entry_query: (untyped options) -> untyped
+
+  def redirect_to_project_query: (untyped options) -> untyped
+
+  def redirect_to_user_query: (untyped options) -> untyped
+
+  # Returns the Query subclass, IssueQuery by default
+  # for compatibility with previous behaviour
+  def query_class: () -> untyped
+end

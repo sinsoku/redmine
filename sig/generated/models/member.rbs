@@ -1,0 +1,65 @@
+# Generated from app/models/member.rb with RBS::Inline
+
+class Member < ApplicationRecord
+  alias base_reload reload
+
+  def reload: (*untyped args) -> untyped
+
+  def role: () -> untyped
+
+  def role=: () -> untyped
+
+  def name: () -> untyped
+
+  alias base_role_ids= role_ids=
+
+  def role_ids=: (untyped arg) -> untyped
+
+  def <=>: (untyped member) -> untyped
+
+  # Set member role ids ignoring any change to roles that
+  # user is not allowed to manage
+  def set_editable_role_ids: (untyped ids, ?untyped user) -> untyped
+
+  # Returns true if one of the member roles is inherited
+  def any_inherited_role?: () -> untyped
+
+  # Returns true if the member has the role and if it's inherited
+  def has_inherited_role?: (untyped role) -> untyped
+
+  # Returns an Array of Project and/or Group from which the given role
+  # was inherited, or an empty Array if the role was not inherited
+  def role_inheritance: (untyped role) -> untyped
+
+  # Returns true if the member's role is editable by user
+  def role_editable?: (untyped role, ?untyped user) -> untyped
+
+  # Returns true if the member is deletable by user
+  def deletable?: (?untyped user) -> untyped
+
+  # Destroys the member
+  def destroy: () -> untyped
+
+  # Returns true if the member is user or is a group
+  # that includes user
+  def include?: (untyped user) -> untyped
+
+  def set_issue_category_nil: () -> untyped
+
+  def remove_from_project_default_assigned_to: () -> untyped
+
+  # Returns the roles that the member is allowed to manage
+  # in the project the member belongs to
+  def managed_roles: () -> untyped
+
+  # Creates memberships for principal with the attributes, or add the roles
+  # if the membership already exists.
+  # * project_ids : one or more project ids
+  # * role_ids : ids of the roles to give to each membership
+  #
+  # Example:
+  #   Member.create_principal_memberships(user, :project_ids => [2, 5], :role_ids => [1, 3]
+  def self.create_principal_memberships: (untyped principal, untyped attributes) -> untyped
+
+  def validate_role: () -> untyped
+end

@@ -1,0 +1,29 @@
+# Generated from app/models/news.rb with RBS::Inline
+
+class News < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  def visible?: (?untyped user) -> untyped
+
+  # Returns true if the news can be commented by user
+  def commentable?: (?untyped user) -> untyped
+
+  def notified_users: () -> untyped
+
+  def recipients: () -> untyped
+
+  # Returns the users that should be cc'd when a new news is added
+  def notified_watchers_for_added_news: () -> untyped
+
+  # Returns the email addresses that should be cc'd when a new news is added
+  def cc_for_added_news: () -> untyped
+
+  # returns latest news for projects visible by user
+  def self.latest: (?untyped user, ?untyped count) -> untyped
+
+  private
+
+  def add_author_as_watcher: () -> untyped
+
+  def send_notification: () -> untyped
+end

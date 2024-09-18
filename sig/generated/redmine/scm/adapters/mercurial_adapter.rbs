@@ -1,0 +1,99 @@
+# Generated from lib/redmine/scm/adapters/mercurial_adapter.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+      class MercurialAdapter < AbstractAdapter
+        # Mercurial executable name
+        HG_BIN: untyped
+
+        HELPERS_DIR: untyped
+
+        HG_HELPER_EXT: ::String
+
+        TEMPLATE_NAME: ::String
+
+        TEMPLATE_EXTENSION: ::String
+
+        # raised if hg command exited with error, e.g. unknown revision.
+        class HgCommandAborted < CommandFailed
+        end
+
+        # raised if bad command argument detected before executing hg.
+        class HgCommandArgumentError < CommandFailed
+        end
+
+        def self.client_command: () -> untyped
+
+        def self.sq_bin: () -> untyped
+
+        def self.client_version: () -> untyped
+
+        def self.client_available: () -> untyped
+
+        def self.hgversion: () -> untyped
+
+        def self.hgversion_from_command_line: () -> untyped
+
+        def self.template_path: () -> untyped
+
+        def self.template_path_for: (untyped version) -> untyped
+
+        def path_encoding: () -> untyped
+
+        def info: () -> untyped
+
+        def tags: () -> untyped
+
+        # Returns map of {'tag' => 'nodeid', ...}
+        def tagmap: () -> untyped
+
+        def branches: () -> untyped
+
+        # Returns map of {'branch' => 'nodeid', ...}
+        def branchmap: () -> untyped
+
+        def summary: () -> untyped
+
+        def entries: (?untyped path, ?untyped identifier, ?untyped options) -> untyped
+
+        def revisions: (?untyped path, ?untyped identifier_from, ?untyped identifier_to, ?untyped options) -> untyped
+
+        # Iterates the revisions by using a template file that
+        # makes Mercurial produce a xml output.
+        def each_revision: (?untyped path, ?untyped identifier_from, ?untyped identifier_to, ?untyped options) -> untyped
+
+        # Returns list of nodes in the specified branch
+        def nodes_in_branch: (untyped branch, ?untyped options) -> untyped
+
+        def diff: (untyped path, untyped identifier_from, ?untyped identifier_to) -> untyped
+
+        def cat: (untyped path, ?untyped identifier) -> untyped
+
+        def annotate: (untyped path, ?untyped identifier) -> untyped
+
+        def valid_name?: (untyped name) -> untyped
+
+        class Revision < Redmine::Scm::Adapters::Revision
+          # Returns the readable identifier
+          def format_identifier: () -> untyped
+        end
+
+        # command options which may be processed earlier, by faulty parser in hg
+        HG_EARLY_BOOL_ARG: ::Regexp
+
+        HG_EARLY_LIST_ARG: ::Regexp
+
+        # Runs 'hg' command with the given args
+        def hg: (*untyped args) ?{ (?) -> untyped } -> untyped
+
+        # Returns correct revision identifier
+        def hgrev: (untyped identifier, ?untyped sq) -> untyped
+
+        def hgtarget: (untyped path) -> untyped
+
+        def as_ary: (untyped o) -> untyped
+      end
+    end
+  end
+end

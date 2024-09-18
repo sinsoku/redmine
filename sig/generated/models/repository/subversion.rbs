@@ -1,0 +1,28 @@
+# Generated from app/models/repository/subversion.rb with RBS::Inline
+
+class Repository::Subversion < Repository
+  def self.scm_adapter_class: () -> untyped
+
+  def self.scm_name: () -> untyped
+
+  def supports_directory_revisions?: () -> untyped
+
+  def repo_log_encoding: () -> untyped
+
+  def latest_changesets: (untyped path, untyped rev, ?untyped limit) -> untyped
+
+  # Returns a path relative to the url of the repository
+  def relative_path: (untyped path) -> untyped
+
+  def fetch_changesets: () -> untyped
+
+  def load_entries_changesets: (untyped entries) -> untyped
+
+  private
+
+  # Returns the relative url of the repository
+  # Eg: root_url = file:///var/svn/foo
+  #     url      = file:///var/svn/foo/bar
+  #     => returns /bar
+  def relative_url: () -> untyped
+end

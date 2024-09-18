@@ -1,0 +1,47 @@
+# Generated from app/models/time_entry.rb with RBS::Inline
+
+class TimeEntry < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  # Returns a SQL conditions string used to find all time entries visible by the specified user
+  def self.visible_condition: (untyped user, ?untyped options) -> untyped
+
+  # Returns true if user or current user is allowed to view the time entry
+  def visible?: (?untyped user) -> untyped
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def safe_attributes=: (untyped attrs, ?untyped user) -> untyped
+
+  def set_project_if_nil: () -> untyped
+
+  def set_author_if_nil: () -> untyped
+
+  def validate_time_entry: () -> untyped
+
+  def hours=: (untyped h) -> untyped
+
+  def hours: () -> untyped
+
+  # tyear, tmonth, tweek assigned where setting spent_on attributes
+  # these attributes make time aggregations easier
+  def spent_on=: (untyped date) -> untyped
+
+  # Returns true if the time entry can be edited by usr, otherwise false
+  def editable_by?: (untyped usr) -> untyped
+
+  # Returns the custom_field_values that can be edited by the given user
+  def editable_custom_field_values: (?untyped user) -> untyped
+
+  # Returns the custom fields that can be edited by the given user
+  def editable_custom_fields: (?untyped user) -> untyped
+
+  def visible_custom_field_values: (?untyped user) -> untyped
+
+  def assignable_users: () -> untyped
+
+  private
+
+  # Returns the hours that were logged in other time entries for the same user and the same day
+  def other_hours_with_same_user_and_day: () -> untyped
+end

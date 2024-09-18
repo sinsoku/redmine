@@ -1,0 +1,47 @@
+# Generated from app/models/principal.rb with RBS::Inline
+
+class Principal < ApplicationRecord
+  # Account statuses
+  STATUS_ANONYMOUS: ::Integer
+
+  STATUS_ACTIVE: ::Integer
+
+  STATUS_REGISTERED: ::Integer
+
+  STATUS_LOCKED: ::Integer
+
+  def reload: (*untyped args) -> untyped
+
+  def name: (?untyped formatter) -> untyped
+
+  def mail=: (*untyped args) -> untyped
+
+  def mail: () -> untyped
+
+  def active?: () -> untyped
+
+  def visible?: (?untyped user) -> untyped
+
+  # Returns true if the principal is a member of project
+  def member_of?: (untyped project) -> untyped
+
+  # Returns an array of the project ids that the principal is a member of
+  def project_ids: () -> untyped
+
+  def <=>: (untyped principal) -> untyped
+
+  # Returns an array of fields names than can be used to make an order statement for principals.
+  # Users are sorted before Groups.
+  # Examples:
+  def self.fields_for_order_statement: (?untyped table) -> untyped
+
+  # Returns the principal that matches the keyword among principals
+  def self.detect_by_keyword: (untyped principals, untyped keyword) -> untyped
+
+  def nullify_projects_default_assigned_to: () -> untyped
+
+  # Make sure we don't try to insert NULL values (see #4632)
+  def set_default_empty_values: () -> untyped
+
+  def validate_status: () -> untyped
+end

@@ -1,0 +1,27 @@
+# Generated from app/controllers/versions_controller.rb with RBS::Inline
+
+class VersionsController < ApplicationController
+  include VersionsHelper
+
+  def index: () -> untyped
+
+  def show: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def close_completed: () -> untyped
+
+  def destroy: () -> untyped
+
+  def status_by: () -> untyped
+
+  private
+
+  def retrieve_selected_tracker_ids: (untyped selectable_trackers, ?untyped default_trackers) -> untyped
+end

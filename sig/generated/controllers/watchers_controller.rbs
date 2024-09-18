@@ -1,0 +1,38 @@
+# Generated from app/controllers/watchers_controller.rb with RBS::Inline
+
+class WatchersController < ApplicationController
+  def watch: () -> untyped
+
+  def unwatch: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def append: () -> untyped
+
+  def destroy: () -> untyped
+
+  def autocomplete_for_user: () -> untyped
+
+  def autocomplete_for_mention: () -> untyped
+
+  private
+
+  def find_project: () -> untyped
+
+  def find_watchables: () -> untyped
+
+  def set_watcher: (untyped watchables, untyped user, untyped watching) -> untyped
+
+  def users_for_new_watcher: () -> untyped
+
+  def users_for_mention: () -> untyped
+
+  def format_users_json: (untyped users) -> untyped
+
+  def find_objects_from_params: () -> untyped
+
+  # Check permission for the watchable type for each watchable involved
+  def authorize_for_watchable_type: (untyped action) -> untyped
+end

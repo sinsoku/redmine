@@ -1,0 +1,4 @@
+# Generated from app/helpers/issue_categories_helper.rb with RBS::Inline
+
+module IssueCategoriesHelper
+end

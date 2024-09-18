@@ -1,0 +1,17 @@
+# Generated from app/controllers/trackers_controller.rb with RBS::Inline
+
+class TrackersController < ApplicationController
+  def index: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  def fields: () -> untyped
+end

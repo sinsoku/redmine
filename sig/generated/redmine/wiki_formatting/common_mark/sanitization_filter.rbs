@@ -1,0 +1,24 @@
+# Generated from lib/redmine/wiki_formatting/common_mark/sanitization_filter.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module CommonMark
+      # sanitizes rendered HTML using the Sanitize gem
+      class SanitizationFilter < HTML::Pipeline::SanitizationFilter
+        include Redmine::Helpers::URL
+
+        RELAXED_PROTOCOL_ATTRS: untyped
+
+        ALLOWED_CSS_PROPERTIES: untyped
+
+        def allowlist: () -> untyped
+
+        private
+
+        # customizes the allowlist defined in
+        # https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/sanitization_filter.rb
+        def customize_allowlist: (untyped allowlist) -> untyped
+      end
+    end
+  end
+end

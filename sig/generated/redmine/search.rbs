@@ -1,0 +1,64 @@
+# Generated from lib/redmine/search.rb with RBS::Inline
+
+module Redmine
+  module Search
+    def self.map: () ?{ (?) -> untyped } -> untyped
+
+    # Registers a search provider
+    def self.register: (untyped search_type, ?untyped options) -> untyped
+
+    # Returns the cache store for search results
+    # Can be configured with config.redmine_search_cache_store= in config/application.rb
+    def self.cache_store: () -> untyped
+
+    class Fetcher
+      attr_reader tokens: untyped
+
+      def initialize: (untyped question, untyped user, untyped scope, untyped projects, ?untyped options) -> untyped
+
+      # Returns the total result count
+      def result_count: () -> untyped
+
+      # Returns the result count by type
+      def result_count_by_type: () -> untyped
+
+      # Returns the results for the given offset and limit
+      def results: (untyped offset, untyped limit) -> untyped
+
+      # Returns the results ids, sorted by rank
+      def result_ids: () -> untyped
+
+      private
+
+      def project_ids: () -> untyped
+
+      def load_result_ids_from_cache: () -> untyped
+
+      def load_result_ids: () -> untyped
+    end
+
+    class Tokenizer
+      def initialize: (untyped question) -> untyped
+
+      def tokens: () -> untyped
+    end
+
+    module Controller
+      def self.included: (untyped base) -> untyped
+
+      module ClassMethods
+        # Set the default search scope for a controller or specific actions
+        # Examples:
+        #   * search_scope :issues # => sets the search scope to :issues for the whole controller
+        #   * search_scope :issues, :only => :index
+        #   * search_scope :issues, :only => [:index, :show]
+        def default_search_scope: (untyped id, ?untyped options) -> untyped
+      end
+
+      def default_search_scopes: () -> untyped
+
+      # Returns the default search scope according to the current action
+      def default_search_scope: () -> untyped
+    end
+  end
+end

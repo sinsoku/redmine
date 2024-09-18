@@ -1,0 +1,15 @@
+# Generated from lib/redmine/hook/listener.rb with RBS::Inline
+
+module Redmine
+  module Hook
+    # Base class for hook listeners.
+    class Listener
+      include Singleton
+
+      include Redmine::I18n
+
+      # Registers the listener
+      def self.inherited: (untyped child) -> untyped
+    end
+  end
+end

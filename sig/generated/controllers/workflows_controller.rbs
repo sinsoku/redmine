@@ -1,0 +1,29 @@
+# Generated from app/controllers/workflows_controller.rb with RBS::Inline
+
+class WorkflowsController < ApplicationController
+  def index: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def permissions: () -> untyped
+
+  def update_permissions: () -> untyped
+
+  def copy: () -> untyped
+
+  def duplicate: () -> untyped
+
+  private
+
+  def find_sources_and_targets: () -> untyped
+
+  def find_trackers_roles_and_statuses_for_edit: () -> untyped
+
+  def find_roles: () -> untyped
+
+  def find_trackers: () -> untyped
+
+  def find_statuses: () -> untyped
+end

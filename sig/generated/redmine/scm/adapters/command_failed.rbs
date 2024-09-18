@@ -1,0 +1,11 @@
+# Generated from lib/redmine/scm/adapters/command_failed.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+      # @private
+      class CommandFailed < StandardError
+      end
+    end
+  end
+end

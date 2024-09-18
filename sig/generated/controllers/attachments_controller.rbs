@@ -1,0 +1,62 @@
+# Generated from app/controllers/attachments_controller.rb with RBS::Inline
+
+class AttachmentsController < ApplicationController
+  include ActionView::Helpers::NumberHelper
+
+  def show: () -> untyped
+
+  def download: () -> untyped
+
+  def thumbnail: () -> untyped
+
+  def upload: () -> untyped
+
+  # Edit all the attachments of a container
+  def edit_all: () -> untyped
+
+  # Update all the attachments of a container
+  def update_all: () -> untyped
+
+  def download_all: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  # Returns the menu item that should be selected when viewing an attachment
+  def current_menu_item: () -> untyped
+
+  private
+
+  def find_attachment: () -> untyped
+
+  def find_editable_attachments: () -> untyped
+
+  def find_container: () -> untyped
+
+  def find_downloadable_attachments: () -> untyped
+
+  def container_url: () -> untyped
+
+  # Checks that the file exists and is readable
+  def file_readable: () -> untyped
+
+  def read_authorize: () -> untyped
+
+  def update_authorize: () -> untyped
+
+  def delete_authorize: () -> untyped
+
+  def detect_content_type: (untyped attachment, ?untyped is_thumb) -> untyped
+
+  def disposition: (untyped attachment) -> untyped
+
+  # Returns attachments param for #update_all
+  def update_all_params: () -> untyped
+
+  # Get an IO-like object for the request body which is usable to create a new
+  # attachment. We try to avoid having to read the whole body into memory.
+  def raw_request_body: () -> untyped
+
+  def send_file: (untyped path, ?untyped options) -> untyped
+end

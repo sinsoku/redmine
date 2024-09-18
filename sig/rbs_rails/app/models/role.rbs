@@ -1,0 +1,477 @@
+class Role < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Role, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def name: () -> String?
+
+    def name=: (String?) -> String?
+
+    def name?: () -> bool
+
+    def name_changed?: () -> bool
+
+    def name_change: () -> [ String?, String? ]
+
+    def name_will_change!: () -> void
+
+    def name_was: () -> String?
+
+    def name_previously_changed?: () -> bool
+
+    def name_previous_change: () -> Array[String?]?
+
+    def name_previously_was: () -> String?
+
+    def name_before_last_save: () -> String?
+
+    def name_change_to_be_saved: () -> Array[String?]?
+
+    def name_in_database: () -> String?
+
+    def saved_change_to_name: () -> Array[String?]?
+
+    def saved_change_to_name?: () -> bool
+
+    def will_save_change_to_name?: () -> bool
+
+    def restore_name!: () -> void
+
+    def clear_name_change: () -> void
+
+    def position: () -> Integer?
+
+    def position=: (Integer?) -> Integer?
+
+    def position?: () -> bool
+
+    def position_changed?: () -> bool
+
+    def position_change: () -> [ Integer?, Integer? ]
+
+    def position_will_change!: () -> void
+
+    def position_was: () -> Integer?
+
+    def position_previously_changed?: () -> bool
+
+    def position_previous_change: () -> Array[Integer?]?
+
+    def position_previously_was: () -> Integer?
+
+    def position_before_last_save: () -> Integer?
+
+    def position_change_to_be_saved: () -> Array[Integer?]?
+
+    def position_in_database: () -> Integer?
+
+    def saved_change_to_position: () -> Array[Integer?]?
+
+    def saved_change_to_position?: () -> bool
+
+    def will_save_change_to_position?: () -> bool
+
+    def restore_position!: () -> void
+
+    def clear_position_change: () -> void
+
+    def assignable: () -> bool?
+
+    def assignable=: (bool?) -> bool?
+
+    def assignable?: () -> bool
+
+    def assignable_changed?: () -> bool
+
+    def assignable_change: () -> [ bool?, bool? ]
+
+    def assignable_will_change!: () -> void
+
+    def assignable_was: () -> bool?
+
+    def assignable_previously_changed?: () -> bool
+
+    def assignable_previous_change: () -> Array[bool?]?
+
+    def assignable_previously_was: () -> bool?
+
+    def assignable_before_last_save: () -> bool?
+
+    def assignable_change_to_be_saved: () -> Array[bool?]?
+
+    def assignable_in_database: () -> bool?
+
+    def saved_change_to_assignable: () -> Array[bool?]?
+
+    def saved_change_to_assignable?: () -> bool
+
+    def will_save_change_to_assignable?: () -> bool
+
+    def restore_assignable!: () -> void
+
+    def clear_assignable_change: () -> void
+
+    def builtin: () -> Integer
+
+    def builtin=: (Integer) -> Integer
+
+    def builtin?: () -> bool
+
+    def builtin_changed?: () -> bool
+
+    def builtin_change: () -> [ Integer?, Integer? ]
+
+    def builtin_will_change!: () -> void
+
+    def builtin_was: () -> Integer?
+
+    def builtin_previously_changed?: () -> bool
+
+    def builtin_previous_change: () -> Array[Integer?]?
+
+    def builtin_previously_was: () -> Integer?
+
+    def builtin_before_last_save: () -> Integer?
+
+    def builtin_change_to_be_saved: () -> Array[Integer?]?
+
+    def builtin_in_database: () -> Integer?
+
+    def saved_change_to_builtin: () -> Array[Integer?]?
+
+    def saved_change_to_builtin?: () -> bool
+
+    def will_save_change_to_builtin?: () -> bool
+
+    def restore_builtin!: () -> void
+
+    def clear_builtin_change: () -> void
+
+    def permissions: () -> String?
+
+    def permissions=: (String?) -> String?
+
+    def permissions?: () -> bool
+
+    def permissions_changed?: () -> bool
+
+    def permissions_change: () -> [ String?, String? ]
+
+    def permissions_will_change!: () -> void
+
+    def permissions_was: () -> String?
+
+    def permissions_previously_changed?: () -> bool
+
+    def permissions_previous_change: () -> Array[String?]?
+
+    def permissions_previously_was: () -> String?
+
+    def permissions_before_last_save: () -> String?
+
+    def permissions_change_to_be_saved: () -> Array[String?]?
+
+    def permissions_in_database: () -> String?
+
+    def saved_change_to_permissions: () -> Array[String?]?
+
+    def saved_change_to_permissions?: () -> bool
+
+    def will_save_change_to_permissions?: () -> bool
+
+    def restore_permissions!: () -> void
+
+    def clear_permissions_change: () -> void
+
+    def issues_visibility: () -> String
+
+    def issues_visibility=: (String) -> String
+
+    def issues_visibility?: () -> bool
+
+    def issues_visibility_changed?: () -> bool
+
+    def issues_visibility_change: () -> [ String?, String? ]
+
+    def issues_visibility_will_change!: () -> void
+
+    def issues_visibility_was: () -> String?
+
+    def issues_visibility_previously_changed?: () -> bool
+
+    def issues_visibility_previous_change: () -> Array[String?]?
+
+    def issues_visibility_previously_was: () -> String?
+
+    def issues_visibility_before_last_save: () -> String?
+
+    def issues_visibility_change_to_be_saved: () -> Array[String?]?
+
+    def issues_visibility_in_database: () -> String?
+
+    def saved_change_to_issues_visibility: () -> Array[String?]?
+
+    def saved_change_to_issues_visibility?: () -> bool
+
+    def will_save_change_to_issues_visibility?: () -> bool
+
+    def restore_issues_visibility!: () -> void
+
+    def clear_issues_visibility_change: () -> void
+
+    def users_visibility: () -> String
+
+    def users_visibility=: (String) -> String
+
+    def users_visibility?: () -> bool
+
+    def users_visibility_changed?: () -> bool
+
+    def users_visibility_change: () -> [ String?, String? ]
+
+    def users_visibility_will_change!: () -> void
+
+    def users_visibility_was: () -> String?
+
+    def users_visibility_previously_changed?: () -> bool
+
+    def users_visibility_previous_change: () -> Array[String?]?
+
+    def users_visibility_previously_was: () -> String?
+
+    def users_visibility_before_last_save: () -> String?
+
+    def users_visibility_change_to_be_saved: () -> Array[String?]?
+
+    def users_visibility_in_database: () -> String?
+
+    def saved_change_to_users_visibility: () -> Array[String?]?
+
+    def saved_change_to_users_visibility?: () -> bool
+
+    def will_save_change_to_users_visibility?: () -> bool
+
+    def restore_users_visibility!: () -> void
+
+    def clear_users_visibility_change: () -> void
+
+    def time_entries_visibility: () -> String
+
+    def time_entries_visibility=: (String) -> String
+
+    def time_entries_visibility?: () -> bool
+
+    def time_entries_visibility_changed?: () -> bool
+
+    def time_entries_visibility_change: () -> [ String?, String? ]
+
+    def time_entries_visibility_will_change!: () -> void
+
+    def time_entries_visibility_was: () -> String?
+
+    def time_entries_visibility_previously_changed?: () -> bool
+
+    def time_entries_visibility_previous_change: () -> Array[String?]?
+
+    def time_entries_visibility_previously_was: () -> String?
+
+    def time_entries_visibility_before_last_save: () -> String?
+
+    def time_entries_visibility_change_to_be_saved: () -> Array[String?]?
+
+    def time_entries_visibility_in_database: () -> String?
+
+    def saved_change_to_time_entries_visibility: () -> Array[String?]?
+
+    def saved_change_to_time_entries_visibility?: () -> bool
+
+    def will_save_change_to_time_entries_visibility?: () -> bool
+
+    def restore_time_entries_visibility!: () -> void
+
+    def clear_time_entries_visibility_change: () -> void
+
+    def all_roles_managed: () -> bool
+
+    def all_roles_managed=: (bool) -> bool
+
+    def all_roles_managed?: () -> bool
+
+    def all_roles_managed_changed?: () -> bool
+
+    def all_roles_managed_change: () -> [ bool?, bool? ]
+
+    def all_roles_managed_will_change!: () -> void
+
+    def all_roles_managed_was: () -> bool?
+
+    def all_roles_managed_previously_changed?: () -> bool
+
+    def all_roles_managed_previous_change: () -> Array[bool?]?
+
+    def all_roles_managed_previously_was: () -> bool?
+
+    def all_roles_managed_before_last_save: () -> bool?
+
+    def all_roles_managed_change_to_be_saved: () -> Array[bool?]?
+
+    def all_roles_managed_in_database: () -> bool?
+
+    def saved_change_to_all_roles_managed: () -> Array[bool?]?
+
+    def saved_change_to_all_roles_managed?: () -> bool
+
+    def will_save_change_to_all_roles_managed?: () -> bool
+
+    def restore_all_roles_managed!: () -> void
+
+    def clear_all_roles_managed_change: () -> void
+
+    def settings: () -> String?
+
+    def settings=: (String?) -> String?
+
+    def settings?: () -> bool
+
+    def settings_changed?: () -> bool
+
+    def settings_change: () -> [ String?, String? ]
+
+    def settings_will_change!: () -> void
+
+    def settings_was: () -> String?
+
+    def settings_previously_changed?: () -> bool
+
+    def settings_previous_change: () -> Array[String?]?
+
+    def settings_previously_was: () -> String?
+
+    def settings_before_last_save: () -> String?
+
+    def settings_change_to_be_saved: () -> Array[String?]?
+
+    def settings_in_database: () -> String?
+
+    def saved_change_to_settings: () -> Array[String?]?
+
+    def saved_change_to_settings?: () -> bool
+
+    def will_save_change_to_settings?: () -> bool
+
+    def restore_settings!: () -> void
+
+    def clear_settings_change: () -> void
+
+    def default_time_entry_activity_id: () -> Integer?
+
+    def default_time_entry_activity_id=: (Integer?) -> Integer?
+
+    def default_time_entry_activity_id?: () -> bool
+
+    def default_time_entry_activity_id_changed?: () -> bool
+
+    def default_time_entry_activity_id_change: () -> [ Integer?, Integer? ]
+
+    def default_time_entry_activity_id_will_change!: () -> void
+
+    def default_time_entry_activity_id_was: () -> Integer?
+
+    def default_time_entry_activity_id_previously_changed?: () -> bool
+
+    def default_time_entry_activity_id_previous_change: () -> Array[Integer?]?
+
+    def default_time_entry_activity_id_previously_was: () -> Integer?
+
+    def default_time_entry_activity_id_before_last_save: () -> Integer?
+
+    def default_time_entry_activity_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def default_time_entry_activity_id_in_database: () -> Integer?
+
+    def saved_change_to_default_time_entry_activity_id: () -> Array[Integer?]?
+
+    def saved_change_to_default_time_entry_activity_id?: () -> bool
+
+    def will_save_change_to_default_time_entry_activity_id?: () -> bool
+
+    def restore_default_time_entry_activity_id!: () -> void
+
+    def clear_default_time_entry_activity_id_change: () -> void
+  end
+  include GeneratedAttributeMethods
+  def workflow_rules: () -> WorkflowRule::ActiveRecord_Associations_CollectionProxy
+  def workflow_rules=: (WorkflowRule::ActiveRecord_Associations_CollectionProxy | Array[WorkflowRule]) -> (WorkflowRule::ActiveRecord_Associations_CollectionProxy | Array[WorkflowRule])
+  def workflow_rule_ids: () -> Array[Integer]
+  def workflow_rule_ids=: (Array[Integer]) -> Array[Integer]
+  def member_roles: () -> MemberRole::ActiveRecord_Associations_CollectionProxy
+  def member_roles=: (MemberRole::ActiveRecord_Associations_CollectionProxy | Array[MemberRole]) -> (MemberRole::ActiveRecord_Associations_CollectionProxy | Array[MemberRole])
+  def member_role_ids: () -> Array[Integer]
+  def member_role_ids=: (Array[Integer]) -> Array[Integer]
+  def members: () -> Member::ActiveRecord_Associations_CollectionProxy
+  def members=: (Member::ActiveRecord_Associations_CollectionProxy | Array[Member]) -> (Member::ActiveRecord_Associations_CollectionProxy | Array[Member])
+  def member_ids: () -> Array[Integer]
+  def member_ids=: (Array[Integer]) -> Array[Integer]
+
+  def default_time_entry_activity: () -> TimeEntryActivity
+  def default_time_entry_activity=: (TimeEntryActivity?) -> TimeEntryActivity?
+  def reload_default_time_entry_activity: () -> TimeEntryActivity?
+  def build_default_time_entry_activity: (untyped) -> TimeEntryActivity
+  def create_default_time_entry_activity: (untyped) -> TimeEntryActivity
+  def create_default_time_entry_activity!: (untyped) -> TimeEntryActivity
+
+  def self.sorted: () -> ActiveRecord_Relation
+  def self.givable: () -> ActiveRecord_Relation
+
+  module GeneratedRelationMethods
+    def sorted: () -> ActiveRecord_Relation
+
+    def givable: () -> ActiveRecord_Relation
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Role, Integer]
+    include Enumerable[Role]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Role, Integer]
+  end
+end

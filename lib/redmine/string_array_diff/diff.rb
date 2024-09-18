@@ -186,6 +186,7 @@ module Redmine
   end
 end
 
+# @rbs generic unchecked out Elem
 class Array
   include Redmine::StringArrayDiff::Diffable
 end

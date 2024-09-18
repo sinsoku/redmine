@@ -1,0 +1,5 @@
+# Generated from app/models/time_entry_activity_custom_field.rb with RBS::Inline
+
+class TimeEntryActivityCustomField < CustomField
+  def type_name: () -> untyped
+end

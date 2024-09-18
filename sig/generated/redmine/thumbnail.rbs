@@ -1,0 +1,22 @@
+# Generated from lib/redmine/thumbnail.rb with RBS::Inline
+
+module Redmine
+  module Thumbnail
+    extend Redmine::Utils::Shell
+
+    CONVERT_BIN: untyped
+
+    GS_BIN: untyped
+
+    ALLOWED_TYPES: ::Array
+
+    # Generates a thumbnail for the source image to target
+    def self.generate: (untyped source, untyped target, untyped size, ?untyped is_pdf) -> untyped
+
+    def self.convert_available?: () -> untyped
+
+    def self.gs_available?: () -> untyped
+
+    def self.logger: () -> untyped
+  end
+end

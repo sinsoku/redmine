@@ -1,0 +1,21 @@
+# Generated from lib/redmine/twofa.rb with RBS::Inline
+
+module Redmine
+  module Twofa
+    def self.register_scheme: (untyped name, untyped klass) -> untyped
+
+    def self.available_schemes: () -> untyped
+
+    def self.for_twofa_scheme: (untyped name) -> untyped
+
+    def self.for_user: (untyped user) -> untyped
+
+    def self.unpair_all!: () -> untyped
+
+    def self.schemes: () -> untyped
+
+    def self.initialize_schemes: () -> untyped
+
+    def self.scan_builtin_schemes: () -> untyped
+  end
+end

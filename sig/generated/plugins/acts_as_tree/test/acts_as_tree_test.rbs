@@ -1,0 +1,67 @@
+# Generated from lib/plugins/acts_as_tree/test/acts_as_tree_test.rb with RBS::Inline
+
+class Test::Unit::TestCase
+  def assert_queries: (?untyped num) -> untyped
+
+  def assert_no_queries: () ?{ (?) -> untyped } -> untyped
+end
+
+class Mixin < ApplicationRecord
+end
+
+class TreeMixin < Mixin
+end
+
+class TreeMixinWithoutOrder < Mixin
+end
+
+class RecursivelyCascadedTreeMixin < Mixin
+end
+
+class TreeTest < Test::Unit::TestCase
+  def setup: () -> untyped
+
+  def teardown: () -> untyped
+
+  def test_children: () -> untyped
+
+  def test_parent: () -> untyped
+
+  def test_delete: () -> untyped
+
+  def test_insert: () -> untyped
+
+  def test_ancestors: () -> untyped
+
+  def test_root: () -> untyped
+
+  def test_roots: () -> untyped
+
+  def test_siblings: () -> untyped
+
+  def test_self_and_siblings: () -> untyped
+end
+
+class TreeTestWithEagerLoading < Test::Unit::TestCase
+  def setup: () -> untyped
+
+  def teardown: () -> untyped
+
+  def test_eager_association_loading: () -> untyped
+
+  def test_eager_association_loading_with_recursive_cascading_three_levels_has_many: () -> untyped
+
+  def test_eager_association_loading_with_recursive_cascading_three_levels_has_one: () -> untyped
+
+  def test_eager_association_loading_with_recursive_cascading_three_levels_belongs_to: () -> untyped
+end
+
+class TreeTestWithoutOrder < Test::Unit::TestCase
+  def setup: () -> untyped
+
+  def teardown: () -> untyped
+
+  def test_root: () -> untyped
+
+  def test_roots: () -> untyped
+end

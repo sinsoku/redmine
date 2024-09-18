@@ -1,0 +1,31 @@
+# Generated from lib/redmine/version.rb with RBS::Inline
+
+module Redmine
+  # @private
+  module VERSION
+    MAJOR: ::Integer
+
+    MINOR: ::Integer
+
+    TINY: ::Integer
+
+    # Branch values:
+    # * official release: nil
+    # * stable branch:    stable
+    # * trunk:            devel
+    BRANCH: ::String
+
+    # Retrieves the revision from the working copy
+    def self.revision: () -> untyped
+
+    REVISION: untyped
+
+    ARRAY: untyped
+
+    STRING: untyped
+
+    def self.to_a: () -> untyped
+
+    def self.to_s: () -> untyped
+  end
+end

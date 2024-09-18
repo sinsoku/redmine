@@ -1,0 +1,17 @@
+# Generated from app/helpers/versions_helper.rb with RBS::Inline
+
+module VersionsHelper
+  include Redmine::Export::Text::VersionsTextHelper
+
+  def version_anchor: (untyped version) -> untyped
+
+  def version_filtered_issues_path: (untyped version, ?untyped options) -> untyped
+
+  STATUS_BY_CRITERIAS: ::Array
+
+  def render_issue_status_by: (untyped version, untyped criteria) -> untyped
+
+  def status_by_options_for_select: (untyped value) -> untyped
+
+  def link_to_new_issue: (untyped version, untyped project) -> untyped
+end

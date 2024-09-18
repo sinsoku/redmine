@@ -1,0 +1,53 @@
+# Generated from lib/redmine/scm/adapters/bazaar_adapter.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+      class BazaarAdapter < AbstractAdapter
+        # Bazaar executable name
+        BZR_BIN: untyped
+
+        def self.client_command: () -> untyped
+
+        def self.sq_bin: () -> untyped
+
+        def self.client_version: () -> untyped
+
+        def self.client_available: () -> untyped
+
+        def self.scm_command_version: () -> untyped
+
+        def self.scm_version_from_command_line: () -> untyped
+
+        def initialize: (untyped url, ?untyped root_url, ?untyped login, ?untyped password, ?untyped path_encoding) -> untyped
+
+        def bzr_path_encodig=: (untyped encoding) -> untyped
+
+        # Get info about the repository
+        def info: () -> untyped
+
+        # Returns an Entries collection
+        # or nil if the given path doesn't exist in the repository
+        def entries: (?untyped path, ?untyped identifier, ?untyped options) -> untyped
+
+        def revisions: (?untyped path, ?untyped identifier_from, ?untyped identifier_to, ?untyped options) -> untyped
+
+        def diff: (untyped path, untyped identifier_from, ?untyped identifier_to) -> untyped
+
+        def cat: (untyped path, ?untyped identifier) -> untyped
+
+        def annotate: (untyped path, ?untyped identifier) -> untyped
+
+        def self.branch_conf_path: (untyped path) -> untyped
+
+        def append_revisions_only: () -> untyped
+
+        def scm_cmd: (*untyped args) ?{ (?) -> untyped } -> untyped
+
+        def scm_cmd_no_raise: (*untyped args) ?{ (?) -> untyped } -> untyped
+
+        def bzr_target: (untyped path) -> untyped
+      end
+    end
+  end
+end

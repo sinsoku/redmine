@@ -1,0 +1,7 @@
+# Generated from app/models/group_non_member.rb with RBS::Inline
+
+class GroupNonMember < GroupBuiltin
+  def name: () -> untyped
+
+  def builtin_type: () -> untyped
+end

@@ -1,0 +1,64 @@
+# Generated from app/models/changeset.rb with RBS::Inline
+
+class Changeset < ApplicationRecord
+  def revision=: (untyped r) -> untyped
+
+  # Returns the identifier of this changeset; depending on repository backends
+  def identifier: () -> untyped
+
+  def committed_on=: (untyped date) -> untyped
+
+  # Returns the readable identifier
+  def format_identifier: () -> untyped
+
+  def project: () -> untyped
+
+  def author: () -> untyped
+
+  def before_create_cs: () -> untyped
+
+  def scan_for_issues: () -> untyped
+
+  TIMELOG_RE: ::Regexp
+
+  def scan_comment_for_issue_ids: () -> untyped
+
+  def short_comments: () -> untyped
+
+  def long_comments: () -> untyped
+
+  def text_tag: (?untyped ref_project) -> untyped
+
+  # Returns the title used for the changeset in the activity/search results
+  def title: () -> untyped
+
+  # Returns the previous changeset
+  def previous: () -> untyped
+
+  # Returns the next changeset
+  def next: () -> untyped
+
+  # Creates a new Change from it's common parameters
+  def create_change: (untyped change) -> untyped
+
+  # Finds an issue that can be referenced by the commit message
+  def find_referenced_issue_by_id: (untyped id) -> untyped
+
+  private
+
+  # Returns true if the issue is already linked to the same commit
+  # from a different repository
+  def issue_linked_to_same_commit?: (untyped issue) -> untyped
+
+  # Updates the +issue+ according to +action+
+  def fix_issue: (untyped issue, untyped action) -> untyped
+
+  def log_time: (untyped issue, untyped hours) -> untyped
+
+  def split_comments: () -> untyped
+
+  # Strips and reencodes a commit log before insertion into the database
+  def self.normalize_comments: (untyped str, untyped encoding) -> untyped
+
+  def self.to_utf8: (untyped str, untyped encoding) -> untyped
+end

@@ -1,0 +1,19 @@
+# Generated from lib/redmine/utils/date_calculation.rb with RBS::Inline
+
+module Redmine
+  module Utils
+    module DateCalculation
+      # Returns the number of working days between from and to
+      def working_days: (untyped from, untyped to) -> untyped
+
+      # Adds working days to the given date
+      def add_working_days: (untyped date, untyped working_days) -> untyped
+
+      # Returns the date of the first day on or after the given date that is a working day
+      def next_working_date: (untyped date) -> untyped
+
+      # Returns the index of non working week days (1=monday, 7=sunday)
+      def non_working_week_days: () -> untyped
+    end
+  end
+end

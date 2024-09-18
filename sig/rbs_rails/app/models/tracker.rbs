@@ -1,0 +1,293 @@
+class Tracker < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Tracker, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def name: () -> String
+
+    def name=: (String) -> String
+
+    def name?: () -> bool
+
+    def name_changed?: () -> bool
+
+    def name_change: () -> [ String?, String? ]
+
+    def name_will_change!: () -> void
+
+    def name_was: () -> String?
+
+    def name_previously_changed?: () -> bool
+
+    def name_previous_change: () -> Array[String?]?
+
+    def name_previously_was: () -> String?
+
+    def name_before_last_save: () -> String?
+
+    def name_change_to_be_saved: () -> Array[String?]?
+
+    def name_in_database: () -> String?
+
+    def saved_change_to_name: () -> Array[String?]?
+
+    def saved_change_to_name?: () -> bool
+
+    def will_save_change_to_name?: () -> bool
+
+    def restore_name!: () -> void
+
+    def clear_name_change: () -> void
+
+    def position: () -> Integer?
+
+    def position=: (Integer?) -> Integer?
+
+    def position?: () -> bool
+
+    def position_changed?: () -> bool
+
+    def position_change: () -> [ Integer?, Integer? ]
+
+    def position_will_change!: () -> void
+
+    def position_was: () -> Integer?
+
+    def position_previously_changed?: () -> bool
+
+    def position_previous_change: () -> Array[Integer?]?
+
+    def position_previously_was: () -> Integer?
+
+    def position_before_last_save: () -> Integer?
+
+    def position_change_to_be_saved: () -> Array[Integer?]?
+
+    def position_in_database: () -> Integer?
+
+    def saved_change_to_position: () -> Array[Integer?]?
+
+    def saved_change_to_position?: () -> bool
+
+    def will_save_change_to_position?: () -> bool
+
+    def restore_position!: () -> void
+
+    def clear_position_change: () -> void
+
+    def is_in_roadmap: () -> bool
+
+    def is_in_roadmap=: (bool) -> bool
+
+    def is_in_roadmap?: () -> bool
+
+    def is_in_roadmap_changed?: () -> bool
+
+    def is_in_roadmap_change: () -> [ bool?, bool? ]
+
+    def is_in_roadmap_will_change!: () -> void
+
+    def is_in_roadmap_was: () -> bool?
+
+    def is_in_roadmap_previously_changed?: () -> bool
+
+    def is_in_roadmap_previous_change: () -> Array[bool?]?
+
+    def is_in_roadmap_previously_was: () -> bool?
+
+    def is_in_roadmap_before_last_save: () -> bool?
+
+    def is_in_roadmap_change_to_be_saved: () -> Array[bool?]?
+
+    def is_in_roadmap_in_database: () -> bool?
+
+    def saved_change_to_is_in_roadmap: () -> Array[bool?]?
+
+    def saved_change_to_is_in_roadmap?: () -> bool
+
+    def will_save_change_to_is_in_roadmap?: () -> bool
+
+    def restore_is_in_roadmap!: () -> void
+
+    def clear_is_in_roadmap_change: () -> void
+
+    def fields_bits: () -> Integer?
+
+    def fields_bits=: (Integer?) -> Integer?
+
+    def fields_bits?: () -> bool
+
+    def fields_bits_changed?: () -> bool
+
+    def fields_bits_change: () -> [ Integer?, Integer? ]
+
+    def fields_bits_will_change!: () -> void
+
+    def fields_bits_was: () -> Integer?
+
+    def fields_bits_previously_changed?: () -> bool
+
+    def fields_bits_previous_change: () -> Array[Integer?]?
+
+    def fields_bits_previously_was: () -> Integer?
+
+    def fields_bits_before_last_save: () -> Integer?
+
+    def fields_bits_change_to_be_saved: () -> Array[Integer?]?
+
+    def fields_bits_in_database: () -> Integer?
+
+    def saved_change_to_fields_bits: () -> Array[Integer?]?
+
+    def saved_change_to_fields_bits?: () -> bool
+
+    def will_save_change_to_fields_bits?: () -> bool
+
+    def restore_fields_bits!: () -> void
+
+    def clear_fields_bits_change: () -> void
+
+    def default_status_id: () -> Integer?
+
+    def default_status_id=: (Integer?) -> Integer?
+
+    def default_status_id?: () -> bool
+
+    def default_status_id_changed?: () -> bool
+
+    def default_status_id_change: () -> [ Integer?, Integer? ]
+
+    def default_status_id_will_change!: () -> void
+
+    def default_status_id_was: () -> Integer?
+
+    def default_status_id_previously_changed?: () -> bool
+
+    def default_status_id_previous_change: () -> Array[Integer?]?
+
+    def default_status_id_previously_was: () -> Integer?
+
+    def default_status_id_before_last_save: () -> Integer?
+
+    def default_status_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def default_status_id_in_database: () -> Integer?
+
+    def saved_change_to_default_status_id: () -> Array[Integer?]?
+
+    def saved_change_to_default_status_id?: () -> bool
+
+    def will_save_change_to_default_status_id?: () -> bool
+
+    def restore_default_status_id!: () -> void
+
+    def clear_default_status_id_change: () -> void
+
+    def description: () -> String?
+
+    def description=: (String?) -> String?
+
+    def description?: () -> bool
+
+    def description_changed?: () -> bool
+
+    def description_change: () -> [ String?, String? ]
+
+    def description_will_change!: () -> void
+
+    def description_was: () -> String?
+
+    def description_previously_changed?: () -> bool
+
+    def description_previous_change: () -> Array[String?]?
+
+    def description_previously_was: () -> String?
+
+    def description_before_last_save: () -> String?
+
+    def description_change_to_be_saved: () -> Array[String?]?
+
+    def description_in_database: () -> String?
+
+    def saved_change_to_description: () -> Array[String?]?
+
+    def saved_change_to_description?: () -> bool
+
+    def will_save_change_to_description?: () -> bool
+
+    def restore_description!: () -> void
+
+    def clear_description_change: () -> void
+  end
+  include GeneratedAttributeMethods
+  def issues: () -> Issue::ActiveRecord_Associations_CollectionProxy
+  def issues=: (Issue::ActiveRecord_Associations_CollectionProxy | Array[Issue]) -> (Issue::ActiveRecord_Associations_CollectionProxy | Array[Issue])
+  def issue_ids: () -> Array[Integer]
+  def issue_ids=: (Array[Integer]) -> Array[Integer]
+  def workflow_rules: () -> WorkflowRule::ActiveRecord_Associations_CollectionProxy
+  def workflow_rules=: (WorkflowRule::ActiveRecord_Associations_CollectionProxy | Array[WorkflowRule]) -> (WorkflowRule::ActiveRecord_Associations_CollectionProxy | Array[WorkflowRule])
+  def workflow_rule_ids: () -> Array[Integer]
+  def workflow_rule_ids=: (Array[Integer]) -> Array[Integer]
+
+  def default_status: () -> IssueStatus
+  def default_status=: (IssueStatus?) -> IssueStatus?
+  def reload_default_status: () -> IssueStatus?
+  def build_default_status: (untyped) -> IssueStatus
+  def create_default_status: (untyped) -> IssueStatus
+  def create_default_status!: (untyped) -> IssueStatus
+
+  def self.sorted: () -> ActiveRecord_Relation
+  def self.named: (untyped arg) -> ActiveRecord_Relation
+
+  module GeneratedRelationMethods
+    def sorted: () -> ActiveRecord_Relation
+
+    def named: (untyped arg) -> ActiveRecord_Relation
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Tracker, Integer]
+    include Enumerable[Tracker]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Tracker, Integer]
+  end
+end

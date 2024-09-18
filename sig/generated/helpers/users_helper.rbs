@@ -1,0 +1,25 @@
+# Generated from app/helpers/users_helper.rb with RBS::Inline
+
+module UsersHelper
+  include ApplicationHelper
+
+  def user_mail_notification_options: (untyped user) -> untyped
+
+  def default_issue_query_options: (untyped user) -> untyped
+
+  def default_project_query_options: (untyped user) -> untyped
+
+  def textarea_font_options: () -> untyped
+
+  def history_default_tab_options: () -> untyped
+
+  def auto_watch_on_options: () -> untyped
+
+  def change_status_link: (untyped user) -> untyped
+
+  def additional_emails_link: (untyped user) -> untyped
+
+  def user_emails: (untyped user) -> untyped
+
+  def user_settings_tabs: () -> untyped
+end

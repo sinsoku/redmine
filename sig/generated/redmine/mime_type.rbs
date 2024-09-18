@@ -1,0 +1,25 @@
+# Generated from lib/redmine/mime_type.rb with RBS::Inline
+
+module Redmine
+  module MimeType
+    MIME_TYPES: untyped
+
+    EXTENSIONS: untyped
+
+    # returns all full mime types for a given (top level) type
+    def self.by_type: (untyped type) -> untyped
+
+    # returns mime type for name or nil if unknown
+    def self.of: (untyped name) -> untyped
+
+    # Returns the css class associated to
+    # the mime type of name
+    def self.css_class_of: (untyped name) -> untyped
+
+    def self.main_mimetype_of: (untyped name) -> untyped
+
+    # return true if mime-type for name is type/*
+    # otherwise false
+    def self.is_type?: (untyped type, untyped name) -> untyped
+  end
+end

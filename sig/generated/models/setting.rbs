@@ -1,0 +1,77 @@
+# Generated from app/models/setting.rb with RBS::Inline
+
+class Setting < ApplicationRecord
+  PASSWORD_CHAR_CLASSES: ::Hash
+
+  DATE_FORMATS: ::Array
+
+  TIME_FORMATS: ::Array
+
+  ENCODINGS: ::Array
+
+  def value: () -> untyped
+
+  def value=: (untyped v) -> untyped
+
+  # Returns the value of the setting named name
+  def self.[]: (untyped name) -> untyped
+
+  def self.[]=: (untyped name, untyped v) -> untyped
+
+  # Updates multiple settings from params and sends a security notification if needed
+  def self.set_all_from_params: (untyped settings) -> untyped
+
+  def self.validate_all_from_params: (untyped settings) -> untyped
+
+  # Sets a setting value from params
+  def self.set_from_params: (untyped name, untyped params) -> untyped
+
+  # Returns a hash suitable for commit_update_keywords setting
+  #
+  # Example:
+  # params = {:keywords => ['fixes', 'closes'], :status_id => ["3", "5"], :done_ratio => ["", "100"]}
+  # Setting.commit_update_keywords_from_params(params)
+  # # => [{'keywords => 'fixes', 'status_id' => "3"}, {'keywords => 'closes', 'status_id' => "5", 'done_ratio' => "100"}]
+  def self.commit_update_keywords_from_params: (untyped params) -> untyped
+
+  def self.twofa_from_params: (untyped params) -> untyped
+
+  def self.twofa_required?: () -> untyped
+
+  def self.twofa_optional?: () -> untyped
+
+  def self.twofa_required_for_administrators?: () -> untyped
+
+  # Helper that returns an array based on per_page_options setting
+  def self.per_page_options_array: () -> untyped
+
+  # Helper that returns a Hash with single update keywords as keys
+  def self.commit_update_keywords_array: () -> untyped
+
+  # Checks if settings have changed since the values were read
+  # and clears the cache hash if it's the case
+  # Called once per request
+  def self.check_cache: () -> untyped
+
+  # Clears the settings cache
+  def self.clear_cache: () -> untyped
+
+  def self.define_plugin_setting: (untyped plugin) -> untyped
+
+  # Defines getter and setter for each setting
+  # Then setting values can be read using: Setting.some_setting_name
+  # or set using Setting.some_setting_name = "some value"
+  def self.define_setting: (untyped name, ?untyped options) -> untyped
+
+  def self.load_available_settings: () -> untyped
+
+  def self.load_plugin_settings: () -> untyped
+
+  private
+
+  def force_utf8_strings: (untyped arg) -> untyped
+
+  # Returns the Setting instance for the setting named name
+  # (record found in database or new record with default value)
+  def self.find_or_default: (untyped name) -> untyped
+end

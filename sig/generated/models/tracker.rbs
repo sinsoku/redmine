@@ -1,0 +1,43 @@
+# Generated from app/models/tracker.rb with RBS::Inline
+
+class Tracker < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  CORE_FIELDS_UNDISABLABLE: untyped
+
+  # Fields that can be disabled
+  # Other (future) fields should be appended, not inserted!
+  CORE_FIELDS: untyped
+
+  CORE_FIELDS_ALL: untyped
+
+  def copy_from: (untyped arg, ?untyped options) -> untyped
+
+  def to_s: () -> untyped
+
+  def <=>: (untyped tracker) -> untyped
+
+  # Returns an array of IssueStatus that are used
+  # in the tracker's workflows
+  def issue_statuses: () -> untyped
+
+  def issue_status_ids: () -> untyped
+
+  def disabled_core_fields: () -> untyped
+
+  def core_fields: () -> untyped
+
+  def core_fields=: (untyped fields) -> untyped
+
+  def copy_workflow_rules: (untyped source_tracker) -> untyped
+
+  # Returns the fields that are disabled for all the given trackers
+  def self.disabled_core_fields: (untyped trackers) -> untyped
+
+  # Returns the fields that are enabled for one tracker at least
+  def self.core_fields: (untyped trackers) -> untyped
+
+  private
+
+  def check_integrity: () -> untyped
+end

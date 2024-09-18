@@ -1,0 +1,114 @@
+# Generated from app/models/role.rb with RBS::Inline
+
+class Role < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  # Custom coder for the permissions attribute that should be an
+  # array of symbols. Rails 3 uses Psych which can be *unbelievably*
+  # slow on some platforms (eg. mingw32).
+  class PermissionsAttributeCoder
+    def self.load: (untyped str) -> untyped
+
+    def self.dump: (untyped value) -> untyped
+  end
+
+  # Built-in roles
+  BUILTIN_NON_MEMBER: ::Integer
+
+  BUILTIN_ANONYMOUS: ::Integer
+
+  ISSUES_VISIBILITY_OPTIONS: ::Array
+
+  TIME_ENTRIES_VISIBILITY_OPTIONS: ::Array
+
+  USERS_VISIBILITY_OPTIONS: ::Array
+
+  # Copies attributes from another role, arg can be an id or a Role
+  def copy_from: (untyped arg, ?untyped options) -> untyped
+
+  def permissions=: (untyped perms) -> untyped
+
+  def add_permission!: (*untyped perms) -> untyped
+
+  def remove_permission!: (*untyped perms) -> untyped
+
+  # Returns true if the role has the given permission
+  def has_permission?: (untyped perm) -> untyped
+
+  def consider_workflow?: () -> untyped
+
+  def <=>: (untyped role) -> untyped
+
+  def to_s: () -> untyped
+
+  def name: () -> untyped
+
+  # Return true if the role is a builtin role
+  def builtin?: () -> untyped
+
+  # Return true if the role is the anonymous role
+  def anonymous?: () -> untyped
+
+  # Return true if the role is a project member role
+  def member?: () -> untyped
+
+  # Return true if role is allowed to do the specified action
+  # action can be:
+  # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
+  # * a permission Symbol (eg. :edit_project)
+  def allowed_to?: (untyped action) -> untyped
+
+  # Return all the permissions that can be given to the role
+  def setable_permissions: () -> untyped
+
+  def permissions_tracker_ids: (*untyped args) -> untyped
+
+  def permissions_tracker_ids=: (untyped arg) -> untyped
+
+  # Returns true if tracker_id belongs to the list of
+  # trackers for which permission is given
+  def permissions_tracker_ids?: (untyped permission, untyped tracker_id) -> untyped
+
+  def permissions_all_trackers: () -> untyped
+
+  def permissions_all_trackers=: (untyped arg) -> untyped
+
+  # Returns true if permission is given for all trackers
+  def permissions_all_trackers?: (untyped permission) -> untyped
+
+  # Returns true if permission is given for the tracker
+  # (explicitly or for all trackers)
+  def permissions_tracker?: (untyped permission, untyped tracker) -> untyped
+
+  # Sets the trackers that are allowed for a permission.
+  # tracker_ids can be an array of tracker ids or :all for
+  # no restrictions.
+  #
+  # Examples:
+  #   role.set_permission_trackers :add_issues, [1, 3]
+  #   role.set_permission_trackers :add_issues, :all
+  def set_permission_trackers: (untyped permission, untyped tracker_ids) -> untyped
+
+  def copy_workflow_rules: (untyped source_role) -> untyped
+
+  # Find all the roles that can be given to a project member
+  def self.find_all_givable: () -> untyped
+
+  # Return the builtin 'non member' role.  If the role doesn't exist,
+  # it will be created on the fly.
+  def self.non_member: () -> untyped
+
+  # Return the builtin 'anonymous' role.  If the role doesn't exist,
+  # it will be created on the fly.
+  def self.anonymous: () -> untyped
+
+  private
+
+  def allowed_permissions: () -> untyped
+
+  def allowed_actions: () -> untyped
+
+  def check_deletable: () -> untyped
+
+  def self.find_or_create_system_role: (untyped builtin, untyped name) -> untyped
+end

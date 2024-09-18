@@ -1,0 +1,426 @@
+# Generated from app/helpers/application_helper.rb with RBS::Inline
+
+module ApplicationHelper
+  include Redmine::WikiFormatting::Macros::Definitions
+
+  include Redmine::I18n
+
+  include Redmine::Pagination::Helper
+
+  include Redmine::SudoMode::Helper
+
+  include Redmine::Themes::Helper
+
+  include Redmine::Hook::Helper
+
+  include Redmine::Helpers::URL
+
+  include IconsHelper
+
+  extend Forwardable
+
+  # Return true if user is authorized for controller/action, otherwise false
+  def authorize_for: (untyped controller, untyped action) -> untyped
+
+  # Display a link if user is authorized
+  #
+  # @param [String] name Anchor text (passed to link_to)
+  # @param [Hash] options Hash params. This will checked by authorize_for to see if the user is authorized
+  # @param [optional, Hash] html_options Options passed to link_to
+  # @param [optional, Hash] parameters_for_method_reference Extra parameters for link_to
+  def link_to_if_authorized: (untyped name, ?untyped options, ?untyped html_options, *untyped parameters_for_method_reference) -> untyped
+
+  # Displays a link to user's account page if active
+  def link_to_user: (untyped user, ?untyped options) -> untyped
+
+  # Displays a link to user's account page or group page
+  def link_to_principal: (untyped principal, ?untyped options) -> untyped
+
+  # Displays a link to edit group page if current user is admin
+  # Otherwise display only the group name
+  def link_to_group: (untyped group, ?untyped options) -> untyped
+
+  # Displays a link to +issue+ with its subject.
+  # Examples:
+  #
+  #   link_to_issue(issue)                        # => Defect #6: This is the subject
+  #   link_to_issue(issue, :truncate => 6)        # => Defect #6: This i...
+  #   link_to_issue(issue, :subject => false)     # => Defect #6
+  #   link_to_issue(issue, :project => true)      # => Foo - Defect #6
+  #   link_to_issue(issue, :subject => false, :tracker => false)     # => #6
+  def link_to_issue: (untyped issue, ?untyped options) -> untyped
+
+  # Generates a link to an attachment.
+  # Options:
+  # * :text - Link text (default to attachment filename)
+  # * :download - Force download (default: false)
+  def link_to_attachment: (untyped attachment, ?untyped options) -> untyped
+
+  # Generates a link to a SCM revision
+  # Options:
+  # * :text - Link text (default to the formatted revision)
+  def link_to_revision: (untyped revision, untyped repository, ?untyped options) -> untyped
+
+  # Generates a link to a message
+  def link_to_message: (untyped message, ?untyped options, ?untyped html_options) -> untyped
+
+  # Generates a link to a project if active
+  # Examples:
+  #
+  #   link_to_project(project)                          # => link to the specified project overview
+  #   link_to_project(project, {:only_path => false}, :class => "project") # => 3rd arg adds html options
+  #   link_to_project(project, {}, :class => "project") # => html options with default url (project overview)
+  def link_to_project: (untyped project, ?untyped options, ?untyped html_options) -> untyped
+
+  # Generates a link to a project settings if active
+  def link_to_project_settings: (untyped project, ?untyped options, ?untyped html_options) -> untyped
+
+  # Generates a link to a version
+  def link_to_version: (untyped version, ?untyped options) -> untyped
+
+  RECORD_LINK: ::Hash
+
+  def link_to_record: (untyped record) -> untyped
+
+  ATTACHMENT_CONTAINER_LINK: ::Hash
+
+  def link_to_attachment_container: (untyped attachment_container) -> untyped
+
+  # Helper that formats object for html or text rendering
+  # Options:
+  # * :html - If true, format the object as HTML (default: true)
+  # * :thousands_delimiter - If true, format the numeric object with thousands delimiter (default: false)
+  def format_object: (untyped object, *untyped args) ?{ (?) -> untyped } -> untyped
+
+  def wiki_page_path: (untyped page, ?untyped options) -> untyped
+
+  def thumbnail_tag: (untyped attachment) -> untyped
+
+  def toggle_link: (untyped name, untyped id, ?untyped options) -> untyped
+
+  def link_to_previous_month: (untyped year, untyped month, ?untyped options) -> untyped
+
+  def link_to_next_month: (untyped year, untyped month, ?untyped options) -> untyped
+
+  def link_to_month: (untyped link_name, untyped year, untyped month, ?untyped options) -> untyped
+
+  # Used to format item titles on the activity view
+  def format_activity_title: (untyped text) -> untyped
+
+  def format_activity_day: (untyped date) -> untyped
+
+  def format_activity_description: (untyped text) -> untyped
+
+  def format_version_name: (untyped version) -> untyped
+
+  def format_changeset_comments: (untyped changeset, ?untyped options) -> untyped
+
+  def due_date_distance_in_words: (untyped date) -> untyped
+
+  # Renders a tree of projects as a nested set of unordered lists
+  # The given collection may be a subset of the whole project tree
+  # (eg. some intermediate nodes are private and can not be seen)
+  def render_project_nested_lists: (untyped projects) ?{ (?) -> untyped } -> untyped
+
+  def render_page_hierarchy: (untyped pages, ?untyped node, ?untyped options) -> untyped
+
+  # Renders flash messages
+  def render_flash_messages: () -> untyped
+
+  # Renders tabs and their content
+  def render_tabs: (untyped tabs, ?untyped selected) -> untyped
+
+  # Returns the tab action depending on the tab properties
+  def get_tab_action: (untyped tab) -> untyped
+
+  # Returns the default scope for the quick search form
+  # Could be 'all', 'my_projects', 'subprojects' or nil (current project)
+  def default_search_project_scope: () -> untyped
+
+  # Returns an array of projects that are displayed in the quick-jump box
+  def projects_for_jump_box: (?untyped user) -> untyped
+
+  def render_projects_for_jump_box: (untyped projects, ?selected: untyped, ?query: untyped) -> untyped
+
+  # Renders the project quick-jump box
+  def render_project_jump_box: () -> untyped
+
+  def project_tree_options_for_select: (untyped projects, ?untyped options) -> untyped
+
+  # Yields the given block for each project with its level in the tree
+  #
+  # Wrapper for Project#project_tree
+  def project_tree: (untyped projects, ?untyped options) ?{ (?) -> untyped } -> untyped
+
+  def principals_check_box_tags: (untyped name, untyped principals) -> untyped
+
+  # Returns a string for users/groups option tags
+  def principals_options_for_select: (untyped collection, ?untyped selected) -> untyped
+
+  def option_tag: (untyped name, untyped text, untyped value, ?untyped selected, ?untyped options) -> untyped
+
+  def truncate_single_line_raw: (untyped string, untyped length) -> untyped
+
+  # Truncates at line break after 250 characters or options[:length]
+  def truncate_lines: (untyped string, ?untyped options) -> untyped
+
+  def anchor: (untyped text) -> untyped
+
+  def html_hours: (untyped text) -> untyped
+
+  def authoring: (untyped created, untyped author, ?untyped options) -> untyped
+
+  def time_tag: (untyped time) -> untyped
+
+  def syntax_highlight_lines: (untyped name, untyped content) -> untyped
+
+  def syntax_highlight: (untyped name, untyped content) -> untyped
+
+  def to_path_param: (untyped path) -> untyped
+
+  def reorder_handle: (untyped object, ?untyped options) -> untyped
+
+  def breadcrumb: (*untyped args) -> untyped
+
+  def other_formats_links: () ?{ (?) -> untyped } -> untyped
+
+  def page_header_title: () -> untyped
+
+  # Returns a h2 tag and sets the html title with the given arguments
+  def title: (*untyped args) -> untyped
+
+  # Sets the html title
+  # Returns the html title when called without arguments
+  # Current project name and app_title are automatically appended
+  # Exemples:
+  #   html_title 'Foo', 'Bar'
+  #   html_title # => 'Foo - Bar - My Project - Redmine'
+  def html_title: (*untyped args) -> untyped
+
+  def actions_dropdown: () ?{ (?) -> untyped } -> untyped
+
+  # Returns the theme, controller name, and action as css classes for the
+  # HTML body.
+  def body_css_classes: () -> untyped
+
+  def accesskey: (untyped s) -> untyped
+
+  # Formats text according to system settings.
+  # 2 ways to call this method:
+  # * with a String: textilizable(text, options)
+  # * with an object and one of its attribute: textilizable(issue, :description, options)
+  def textilizable: (*untyped args) -> untyped
+
+  def parse_non_pre_blocks: (untyped text, untyped obj, untyped macros, ?untyped options) -> untyped
+
+  # add srcset attribute to img tags if filename includes @2x, @3x, etc.
+  # to support hires displays
+  def parse_hires_images: (untyped text, untyped project, untyped obj, untyped attr, untyped only_path, untyped options) -> untyped
+
+  def parse_inline_attachments: (untyped text, untyped project, untyped obj, untyped attr, untyped only_path, untyped options) -> untyped
+
+  # Wiki links
+  #
+  # Examples:
+  #   [[mypage]]
+  #   [[mypage|mytext]]
+  # wiki links can refer other project wikis, using project name or identifier:
+  #   [[project:]] -> wiki starting page
+  #   [[project:|mytext]]
+  #   [[project:mypage]]
+  #   [[project:mypage|mytext]]
+  def parse_wiki_links: (untyped text, untyped project, untyped obj, untyped attr, untyped only_path, untyped options) -> untyped
+
+  # Redmine links
+  #
+  # Examples:
+  #   Issues:
+  #     #52 -> Link to issue #52
+  #     ##52 -> Link to issue #52, including the issue's subject
+  #   Changesets:
+  #     r52 -> Link to revision 52
+  #     commit:a85130f -> Link to scmid starting with a85130f
+  #   Documents:
+  #     document#17 -> Link to document with id 17
+  #     document:Greetings -> Link to the document with title "Greetings"
+  #     document:"Some document" -> Link to the document with title "Some document"
+  #   Versions:
+  #     version#3 -> Link to version with id 3
+  #     version:1.0.0 -> Link to version named "1.0.0"
+  #     version:"1.0 beta 2" -> Link to version named "1.0 beta 2"
+  #   Attachments:
+  #     attachment:file.zip -> Link to the attachment of the current object named file.zip
+  #   Source files:
+  #     source:some/file -> Link to the file located at /some/file in the project's repository
+  #     source:some/file@52 -> Link to the file's revision 52
+  #     source:some/file#L120 -> Link to line 120 of the file
+  #     source:some/file@52#L120 -> Link to line 120 of the file's revision 52
+  #     export:some/file -> Force the download of the file
+  #   Forums:
+  #     forum#1 -> Link to forum with id 1
+  #     forum:Support -> Link to forum named "Support"
+  #     forum:"Technical Support" -> Link to forum named "Technical Support"
+  #   Forum messages:
+  #     message#1218 -> Link to message with id 1218
+  #   Projects:
+  #     project:someproject -> Link to project named "someproject"
+  #     project#3 -> Link to project with id 3
+  #   News:
+  #     news#2 -> Link to news item with id 1
+  #     news:Greetings -> Link to news item named "Greetings"
+  #     news:"First Release" -> Link to news item named "First Release"
+  #   Users:
+  #     user:jsmith -> Link to user with login jsmith
+  #     @jsmith -> Link to user with login jsmith
+  #     user#2 -> Link to user with id 2
+  #
+  #   Links can refer other objects from other projects, using project identifier:
+  #     identifier:r52
+  #     identifier:document:"Some document"
+  #     identifier:version:1.0.0
+  #     identifier:source:some/file
+  def parse_redmine_links: (untyped text, untyped default_project, untyped obj, untyped attr, untyped only_path, untyped options) -> untyped
+
+  LINKS_RE: ::Regexp
+
+  HEADING_RE: ::Regexp
+
+  def parse_sections: (untyped text, untyped project, untyped obj, untyped attr, untyped only_path, untyped options) -> untyped
+
+  # Headings and TOC
+  # Adds ids and links to headings unless options[:headings] is set to false
+  def parse_headings: (untyped text, untyped project, untyped obj, untyped attr, untyped only_path, untyped options) -> untyped
+
+  MACROS_RE: ::Regexp
+
+  MACRO_SUB_RE: ::Regexp
+
+  # Extracts macros from text
+  def catch_macros: (untyped text) -> untyped
+
+  # Executes and replaces macros in text
+  def inject_macros: (untyped text, untyped obj, untyped macros, ?untyped execute, ?untyped options) -> untyped
+
+  TOC_RE: ::Regexp
+
+  # Renders the TOC with given headings
+  def replace_toc: (untyped text, untyped headings) -> untyped
+
+  # Same as Rails' simple_format helper without using paragraphs
+  def simple_format_without_paragraph: (untyped text) -> untyped
+
+  def lang_options_for_select: (?untyped blank) -> untyped
+
+  def labelled_form_for: (*untyped args) ?{ (?) -> untyped } -> untyped
+
+  def labelled_fields_for: (*untyped args) ?{ (?) -> untyped } -> untyped
+
+  def form_tag_html: (untyped html_options) -> untyped
+
+  # Render the error messages for the given objects
+  def error_messages_for: (*untyped objects) -> untyped
+
+  # Renders a list of error messages
+  def render_error_messages: (untyped errors) -> untyped
+
+  def delete_link: (untyped url, ?untyped options, ?untyped button_name) -> untyped
+
+  def link_to_function: (untyped name, untyped function, ?untyped html_options) -> untyped
+
+  def link_to_context_menu: () -> untyped
+
+  # Helper to render JSON in views
+  def raw_json: (untyped arg) -> untyped
+
+  def back_url_hidden_field_tag: () -> untyped
+
+  def cancel_button_tag: (untyped fallback_url) -> untyped
+
+  def check_all_links: (untyped form_name) -> untyped
+
+  def toggle_checkboxes_link: (untyped selector, ?untyped options) -> untyped
+
+  def progress_bar: (untyped pcts, ?untyped options) -> untyped
+
+  def checked_image: (?untyped checked) -> untyped
+
+  def context_menu: () -> untyped
+
+  def calendar_for: (untyped field_id) -> untyped
+
+  def include_calendar_headers_tags: () -> untyped
+
+  # Overrides Rails' stylesheet_link_tag with themes and plugins support.
+  # Examples:
+  #   stylesheet_link_tag('styles') # => picks styles.css from the current theme or defaults
+  #   stylesheet_link_tag('styles', :plugin => 'foo) # => picks styles.css from plugin's assets
+  def stylesheet_link_tag: (*untyped sources) -> untyped
+
+  # Overrides Rails' image_tag with themes and plugins support.
+  # Examples:
+  #   image_tag('image.png') # => picks image.png from the current theme or defaults
+  #   image_tag('image.png', :plugin => 'foo) # => picks image.png from plugin's assets
+  def image_tag: (untyped source, ?untyped options) -> untyped
+
+  # Overrides Rails' javascript_include_tag with plugins support
+  # Examples:
+  #   javascript_include_tag('scripts') # => picks scripts.js from defaults
+  #   javascript_include_tag('scripts', :plugin => 'foo) # => picks scripts.js from plugin's assets
+  def javascript_include_tag: (*untyped sources) -> untyped
+
+  def sidebar_content?: () -> untyped
+
+  def view_layouts_base_sidebar_hook_response: () -> untyped
+
+  def email_delivery_enabled?: () -> untyped
+
+  def sanitize_anchor_name: (untyped anchor) -> untyped
+
+  # Returns the javascript tags that are included in the html layout head
+  def javascript_heads: () -> untyped
+
+  def favicon: () -> untyped
+
+  # Returns the path to the favicon
+  def favicon_path: () -> untyped
+
+  # Returns the full URL to the favicon
+  def favicon_url: () -> untyped
+
+  def robot_exclusion_tag: () -> untyped
+
+  # Returns true if arg is expected in the API response
+  def include_in_api_response?: (untyped arg) -> untyped
+
+  # Returns options or nil if nometa param or X-Redmine-Nometa header
+  # was set in the request
+  def api_meta: (untyped options) -> untyped
+
+  def export_csv_encoding_select_tag: () -> untyped
+
+  def export_csv_separator_select_tag: () -> untyped
+
+  # Returns an array of error messages for bulk edited items (issues, time entries)
+  def bulk_edit_error_messages: (untyped items) -> untyped
+
+  def render_if_exist: (?untyped options, ?untyped locals) ?{ (?) -> untyped } -> untyped
+
+  def heads_for_auto_complete: (untyped project) -> untyped
+
+  def update_data_sources_for_auto_complete: (untyped data_sources) -> untyped
+
+  def copy_object_url_link: (untyped url) -> untyped
+
+  # Returns the markdown formatter: markdown or common_mark
+  # ToDo: Remove this when markdown will be removed
+  def markdown_formatter: () -> untyped
+
+  private
+
+  def wiki_helper: () -> untyped
+
+  # remove double quotes if any
+  def remove_double_quotes: (untyped identifier) -> untyped
+
+  def autocomplete_data_sources: (untyped project) -> untyped
+end

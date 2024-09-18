@@ -1,0 +1,41 @@
+# Generated from lib/redmine/nested_set/project_nested_set.rb with RBS::Inline
+
+module Redmine
+  module NestedSet
+    module ProjectNestedSet
+      def self.included: (untyped base) -> untyped
+
+      private
+
+      def target_lft: () -> untyped
+
+      def add_to_nested_set: (?untyped lock) -> untyped
+
+      def move_in_nested_set: () -> untyped
+
+      def destroy_children: () -> untyped
+
+      def destroy_without_nested_set_update: () -> untyped
+
+      def reload_nested_set_values: () -> untyped
+
+      def save_nested_set_values: () -> untyped
+
+      def move_possible?: (untyped project) -> untyped
+
+      def lock_nested_set: () -> untyped
+
+      def nested_set_scope: () -> untyped
+
+      def same_nested_set_scope?: (untyped project) -> untyped
+
+      module ClassMethods
+        def rebuild_tree!: () -> untyped
+
+        private
+
+        def rebuild_nodes: (?untyped parent_id) -> untyped
+      end
+    end
+  end
+end

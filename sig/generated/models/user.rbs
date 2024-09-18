@@ -1,0 +1,298 @@
+# Generated from app/models/user.rb with RBS::Inline
+
+class User < Principal
+  include Redmine::Ciphering
+
+  include Redmine::SafeAttributes
+
+  # Different ways of displaying/sorting users
+  # rubocop:disable Lint/InterpolationCheck
+  USER_FORMATS: ::Hash
+
+  MAIL_NOTIFICATION_OPTIONS: ::Array
+
+  attr_accessor password: untyped
+
+  attr_accessor password_confirmation: untyped
+
+  attr_accessor generate_password: untyped
+
+  attr_accessor last_before_login_on: untyped
+
+  attr_accessor remote_ip: untyped
+
+  LOGIN_LENGTH_LIMIT: ::Integer
+
+  MAIL_LENGTH_LIMIT: ::Integer
+
+  def set_mail_notification: () -> untyped
+
+  def update_hashed_password: () -> untyped
+
+  alias base_reload reload
+
+  def reload: (*untyped args) -> untyped
+
+  def mail: () -> untyped
+
+  def mail=: (untyped arg) -> untyped
+
+  def mail_changed?: () -> untyped
+
+  def mails: () -> untyped
+
+  # Returns the user that matches provided login and password, or nil
+  # AuthSource errors are caught, logged and nil is returned.
+  def self.try_to_login: (untyped login, untyped password, ?untyped active_only) -> untyped
+
+  # Returns the user that matches provided login and password, or nil
+  # AuthSource errors are passed through.
+  def self.try_to_login!: (untyped login, untyped password, ?untyped active_only) -> untyped
+
+  # Returns the user who matches the given autologin +key+ or nil
+  def self.try_to_autologin: (untyped key) -> untyped
+
+  def self.name_formatter: (?untyped formatter) -> untyped
+
+  # Returns an array of fields names than can be used to make an order statement for users
+  # according to how user names are displayed
+  # Examples:
+  #
+  #   User.fields_for_order_statement              => ['users.login', 'users.id']
+  #   User.fields_for_order_statement('authors')   => ['authors.login', 'authors.id']
+  def self.fields_for_order_statement: (?untyped table) -> untyped
+
+  # Return user's full name for display
+  def name: (?untyped formatter) -> untyped
+
+  def registered?: () -> untyped
+
+  def locked?: () -> untyped
+
+  def activate: () -> untyped
+
+  def register: () -> untyped
+
+  def lock: () -> untyped
+
+  def activate!: () -> untyped
+
+  def register!: () -> untyped
+
+  def lock!: () -> untyped
+
+  def update_last_login_on!: () -> untyped
+
+  # Returns true if +clear_password+ is the correct user's password, otherwise false
+  def check_password?: (untyped clear_password) -> untyped
+
+  # Generates a random salt and computes hashed_password for +clear_password+
+  # The hashed password is stored in the following form: SHA1(salt + SHA1(password))
+  def salt_password: (untyped clear_password) -> untyped
+
+  # Does the backend storage allow this user to change their password?
+  def change_password_allowed?: () -> untyped
+
+  # Returns true if the user password has expired
+  def password_expired?: () -> untyped
+
+  def must_change_password?: () -> untyped
+
+  def generate_password?: () -> untyped
+
+  # Generate and set a random password on given length
+  def random_password: (?untyped length) -> untyped
+
+  def twofa_active?: () -> untyped
+
+  def must_activate_twofa?: () -> untyped
+
+  def pref: () -> untyped
+
+  def time_zone: () -> untyped
+
+  def force_default_language?: () -> untyped
+
+  def language: () -> untyped
+
+  def wants_comments_in_reverse_order?: () -> untyped
+
+  # Return user's ATOM key (a 40 chars long string), used to access feeds
+  def atom_key: () -> untyped
+
+  # Return user's API key (a 40 chars long string), used to access the API
+  def api_key: () -> untyped
+
+  # Generates a new session token and returns its value
+  def generate_session_token: () -> untyped
+
+  def delete_session_token: (untyped value) -> untyped
+
+  # Generates a new autologin token and returns its value
+  def generate_autologin_token: () -> untyped
+
+  def delete_autologin_token: (untyped value) -> untyped
+
+  def twofa_totp_key: () -> untyped
+
+  def twofa_totp_key=: (untyped key) -> untyped
+
+  # Returns true if token is a valid session token for the user whose id is user_id
+  def self.verify_session_token: (untyped user_id, untyped token) -> untyped
+
+  # Return an array of project ids for which the user has explicitly turned mail notifications on
+  def notified_projects_ids: () -> untyped
+
+  def notified_project_ids=: (untyped ids) -> untyped
+
+  # Updates per project notifications (after_save callback)
+  def update_notified_project_ids: () -> untyped
+
+  def valid_notification_options: () -> untyped
+
+  # Only users that belong to more than 1 project can select projects for which they are notified
+  def self.valid_notification_options: (?untyped user) -> untyped
+
+  # Find a user account by matching the exact login and then a case-insensitive
+  # version.  Exact matches will be given priority.
+  def self.find_by_login: (untyped login) -> untyped
+
+  def self.find_by_atom_key: (untyped key) -> untyped
+
+  def self.find_by_api_key: (untyped key) -> untyped
+
+  # Makes find_by_mail case-insensitive
+  def self.find_by_mail: (untyped mail) -> untyped
+
+  # Returns true if the default admin account can no longer be used
+  def self.default_admin_account_changed?: () -> untyped
+
+  def to_s: () -> untyped
+
+  LABEL_BY_STATUS: ::Hash
+
+  def css_classes: () -> untyped
+
+  # Returns the current day according to user's time zone
+  def today: () -> untyped
+
+  # Returns the day of +time+ according to user's time zone
+  def time_to_date: (untyped time) -> untyped
+
+  def convert_time_to_user_timezone: (untyped time) -> untyped
+
+  def logged?: () -> untyped
+
+  def anonymous?: () -> untyped
+
+  # Returns user's membership for the given project
+  # or nil if the user is not a member of project
+  def membership: (untyped project) -> untyped
+
+  def roles: () -> untyped
+
+  # Returns the user's bult-in role
+  def builtin_role: () -> untyped
+
+  # Return user's roles for project
+  def roles_for_project: (untyped project) -> untyped
+
+  # Returns a hash of user's projects grouped by roles
+  # TODO: No longer used, should be deprecated
+  def projects_by_role: () -> untyped
+
+  # Returns a hash of project ids grouped by roles.
+  # Includes the projects that the user is a member of and the projects
+  # that grant custom permissions to the builtin groups.
+  def project_ids_by_role: () -> untyped
+
+  # Returns the ids of visible projects
+  def visible_project_ids: () -> untyped
+
+  # Returns the roles that the user is allowed to manage for the given project
+  def managed_roles: (untyped project) -> untyped
+
+  # Returns true if user is arg or belongs to arg
+  def is_or_belongs_to?: (untyped arg) -> untyped
+
+  # Return true if the user is allowed to do the specified action on a specific context
+  # Action can be:
+  # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
+  # * a permission Symbol (eg. :edit_project)
+  # Context can be:
+  # * a project : returns true if user is allowed to do the specified action on this project
+  # * an array of projects : returns true if user is allowed on every project
+  # * nil with options[:global] set : check if user has at least one role allowed for this action,
+  #   or falls back to Non Member / Anonymous permissions depending if the user is logged
+  def allowed_to?: (untyped action, untyped context, ?untyped options) ?{ (?) -> untyped } -> untyped
+
+  # Is the user allowed to do the specified action on any project?
+  # See allowed_to? for the actions and valid options.
+  #
+  # NB: this method is not used anywhere in the core codebase as of
+  # 2.5.2, but it's used by many plugins so if we ever want to remove
+  # it it has to be carefully deprecated for a version or two.
+  def allowed_to_globally?: (untyped action, ?untyped options) ?{ (?) -> untyped } -> untyped
+
+  def allowed_to_view_all_time_entries?: (untyped context) -> untyped
+
+  # Returns true if the user is allowed to delete the user's own account
+  def own_account_deletable?: () -> untyped
+
+  # Utility method to help check if a user should be notified about an
+  # event.
+  #
+  # TODO: only supports Issue events currently
+  def notify_about?: (untyped object) -> untyped
+
+  def notify_about_high_priority_issues?: () -> untyped
+
+  class CurrentUser < ActiveSupport::CurrentAttributes
+  end
+
+  def self.current=: (untyped user) -> untyped
+
+  def self.current: () -> untyped
+
+  # Returns the anonymous user.  If the anonymous user does not exist, it is created.  There can be only
+  # one anonymous user per database.
+  def self.anonymous: () -> untyped
+
+  # Salts all existing unsalted passwords
+  # It changes password storage scheme from SHA1(password) to SHA1(salt + SHA1(password))
+  # This method is used in the SaltPasswords migration and is to be kept as is
+  def self.salt_unsalted_passwords!: () -> untyped
+
+  def bookmarked_project_ids: () -> untyped
+
+  def self.prune: (?untyped age) -> untyped
+
+  def validate_password_length: () -> untyped
+
+  def validate_password_complexity: () -> untyped
+
+  def instantiate_email_address: () -> untyped
+
+  private
+
+  def generate_password_if_needed: () -> untyped
+
+  # Delete all outstanding password reset tokens on password change.
+  # Delete the autologin tokens on password change to prohibit session leakage.
+  # This helps to keep the account secure in case the associated email account
+  # was compromised.
+  def destroy_tokens: () -> untyped
+
+  # Removes references that are not handled by associations
+  # Things that are not deleted are reassociated with the anonymous user
+  def remove_references_before_destroy: () -> untyped
+
+  # Return password digest
+  def self.hash_password: (untyped clear_password) -> untyped
+
+  # Returns a 128bits random salt as a hex string (32 chars long)
+  def self.generate_salt: () -> untyped
+
+  # Send a security notification to all admins if the user has gained/lost admin privileges
+  def deliver_security_notification: () -> untyped
+end

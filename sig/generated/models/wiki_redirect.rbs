@@ -1,0 +1,9 @@
+# Generated from app/models/wiki_redirect.rb with RBS::Inline
+
+class WikiRedirect < ApplicationRecord
+  def target_page: () -> untyped
+
+  private
+
+  def set_redirects_to_wiki_id: () -> untyped
+end

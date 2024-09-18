@@ -1,0 +1,187 @@
+# Generated from lib/redmine/menu_manager.rb with RBS::Inline
+
+module Redmine
+  module MenuManager
+    # @private
+    class MenuError < StandardError
+    end
+
+    module MenuController
+      def self.included: (untyped base) -> untyped
+
+      module ClassMethods
+        # Set the menu item name for a controller or specific actions
+        # Examples:
+        #   * menu_item :tickets # => sets the menu name to :tickets for the whole controller
+        #   * menu_item :tickets, :only => :list # => sets the menu name to :tickets for the 'list' action only
+        #   * menu_item :tickets, :only => [:list, :show] # => sets the menu name to :tickets for 2 actions only
+        #
+        # The default menu item name for a controller is controller_name by default
+        # Eg. the default menu item name for ProjectsController is :projects
+        def menu_item: (untyped id, ?untyped options) -> untyped
+      end
+
+      def menu_items: () -> untyped
+
+      def current_menu: (untyped project) -> untyped
+
+      # Returns the menu item name according to the current action
+      def current_menu_item: () -> untyped
+
+      # Redirects user to the menu item
+      # Returns false if user is not authorized
+      def redirect_to_menu_item: (untyped name) -> untyped
+
+      # Redirects user to the menu item of the given project
+      # Returns false if user is not authorized
+      def redirect_to_project_menu_item: (untyped project, untyped name) -> untyped
+    end
+
+    module MenuHelper
+      # Returns the current menu item name
+      def current_menu_item: () -> untyped
+
+      # Renders the application main menu
+      def render_main_menu: (untyped project) -> untyped
+
+      def display_main_menu?: (untyped project) -> untyped
+
+      def render_menu: (untyped menu, ?untyped project) -> untyped
+
+      def render_menu_node: (untyped node, ?untyped project) -> untyped
+
+      def render_menu_node_with_children: (untyped node, ?untyped project) -> untyped
+
+      # Returns a list of unattached children menu items
+      def render_unattached_children_menu: (untyped node, untyped project) -> untyped
+
+      def render_single_menu_node: (untyped item, untyped caption, untyped url, untyped selected) -> untyped
+
+      def render_unattached_menu_item: (untyped menu_item, untyped project) -> untyped
+
+      def menu_items_for: (untyped menu, ?untyped project) -> untyped
+
+      def extract_node_details: (untyped node, ?untyped project) -> untyped
+
+      # See MenuItem#allowed?
+      def allowed_node?: (untyped node, untyped user, untyped project) -> untyped
+
+      # Prevent hash type URLs (e.g. {controller: 'foo', action: 'bar}) from being namespaced
+      # when menus are rendered from views in namespaced controllers in plugins or engines
+      def use_absolute_controller: (untyped url) -> untyped
+    end
+
+    def self.map: (untyped menu_name) -> untyped
+
+    def self.items: (untyped menu_name) -> untyped
+
+    class Mapper
+      attr_reader menu: untyped
+
+      attr_reader menu_items: untyped
+
+      def initialize: (untyped menu, untyped items) -> untyped
+
+      # Adds an item at the end of the menu. Available options:
+      # * param: the parameter name that is used for the project id (default is :id)
+      # * if: a Proc that is called before rendering the item, the item is displayed only if it returns true
+      # * caption that can be:
+      #   * a localized string Symbol
+      #   * a String
+      #   * a Proc that can take the project as argument
+      # * before, after: specify where the menu item should be inserted (eg. :after => :activity)
+      # * parent: menu item will be added as a child of another named menu (eg. :parent => :issues)
+      # * children: a Proc that is called before rendering the item. The Proc should return an array of MenuItems, which will be added as children to this item.
+      #   eg. :children => Proc.new {|project| [Redmine::MenuManager::MenuItem.new(...)] }
+      # * last: menu item will stay at the end (eg. :last => true)
+      # * html_options: a hash of html options that are passed to link_to
+      def push: (untyped name, untyped url, ?untyped options) -> untyped
+
+      # Removes a menu item
+      def delete: (untyped name) -> untyped
+
+      # Checks if a menu item exists
+      def exists?: (untyped name) -> untyped
+
+      def find: (untyped name) -> untyped
+
+      def position_of: (untyped name) -> untyped
+    end
+
+    class MenuNode
+      include Enumerable
+
+      attr_accessor parent: untyped
+
+      attr_reader last_items_count: untyped
+
+      attr_reader name: untyped
+
+      def initialize: (untyped name, ?untyped content) -> untyped
+
+      def children: () -> untyped
+
+      # Returns the number of descendants + 1
+      def size: () -> untyped
+
+      def each: () -> untyped
+
+      # Adds a child at first position
+      def prepend: (untyped child) -> untyped
+
+      # Adds a child at given position
+      def add_at: (untyped child, untyped position) -> untyped
+
+      # Adds a child as last child
+      def add_last: (untyped child) -> untyped
+
+      # Adds a child
+      def add: (untyped child) -> untyped
+
+      alias << add
+
+      # Removes a child
+      def remove!: (untyped child) -> untyped
+
+      # Returns the position for this node in it's parent
+      def position: () -> untyped
+
+      # Returns the root for this node
+      def root: () -> untyped
+    end
+
+    class MenuItem < MenuNode
+      include Redmine::I18n
+
+      attr_reader name: untyped
+
+      attr_reader url: untyped
+
+      attr_reader param: untyped
+
+      attr_reader condition: untyped
+
+      attr_reader parent: untyped
+
+      attr_reader child_menus: untyped
+
+      attr_reader last: untyped
+
+      attr_reader permission: untyped
+
+      attr_reader icon: untyped
+
+      def initialize: (untyped name, untyped url, ?untyped options) -> untyped
+
+      def caption: (?untyped project) -> untyped
+
+      def html_options: (?untyped options) -> untyped
+
+      # Checks if a user is allowed to access the menu item by:
+      #
+      # * Checking the permission or the url target (project only)
+      # * Checking the conditions of the item
+      def allowed?: (untyped user, untyped project) -> untyped
+    end
+  end
+end

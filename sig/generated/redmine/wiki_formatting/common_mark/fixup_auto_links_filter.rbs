@@ -1,0 +1,21 @@
+# Generated from lib/redmine/wiki_formatting/common_mark/fixup_auto_links_filter.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module CommonMark
+      # fixes:
+      # - autolinked email addresses that are actually references to users:
+      #   user:<a href="mailto:user@example.org">user@example.org</a>
+      #   @<a href="mailto:user@example.org">user@example.org</a>
+      # - autolinked hi res image names that look like email addresses:
+      #   <a href="mailto:printscreen@2x.png">printscreen@2x.png</a>
+      class FixupAutoLinksFilter < HTML::Pipeline::Filter
+        USER_LINK_PREFIX: ::Regexp
+
+        HIRES_IMAGE: ::Regexp
+
+        def call: () -> untyped
+      end
+    end
+  end
+end

@@ -1,0 +1,13 @@
+# Generated from app/controllers/reports_controller.rb with RBS::Inline
+
+class ReportsController < ApplicationController
+  include ReportsHelper
+
+  def issue_report: () -> untyped
+
+  def issue_report_details: () -> untyped
+
+  private
+
+  def find_issue_statuses: () -> untyped
+end

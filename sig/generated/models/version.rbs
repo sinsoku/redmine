@@ -1,0 +1,155 @@
+# Generated from app/models/version.rb with RBS::Inline
+
+module FixedIssuesExtension
+  # Returns the total estimated time for this version
+  # (sum of leaves estimated_hours)
+  def estimated_hours: () -> untyped
+
+  # Returns the total estimated remaining time for this version
+  # (sum of leaves remaining_estimated_hours)
+  def estimated_remaining_hours: () -> untyped
+
+  # Returns the total amount of open issues for this version.
+  def open_count: () -> untyped
+
+  # Returns the total amount of closed issues for this version.
+  def closed_count: () -> untyped
+
+  # Returns the completion percentage of this version based on the amount of open/closed issues
+  # and the time spent on the open issues.
+  def completed_percent: () -> untyped
+
+  # Returns the percentage of issues that have been marked as 'closed'.
+  def closed_percent: () -> untyped
+
+  private
+
+  def load_counts: () -> untyped
+
+  # Returns the average estimated time of assigned issues
+  # or 1 if no issue has an estimated time
+  # Used to weight unestimated issues in progress calculation
+  def estimated_average: () -> untyped
+
+  # Returns the total progress of open or closed issues.  The returned percentage takes into account
+  # the amount of estimated time set for this version.
+  #
+  # Examples:
+  # issues_progress(true)   => returns the progress percentage for open issues.
+  # issues_progress(false)  => returns the progress percentage for closed issues.
+  def issues_progress: (untyped open) -> untyped
+end
+
+class Version < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  VERSION_STATUSES: ::Array
+
+  VERSION_SHARINGS: ::Array
+
+  def safe_attributes=: (untyped attrs, ?untyped user) -> untyped
+
+  # Returns true if +user+ or current user is allowed to view the version
+  def visible?: (?untyped user) -> untyped
+
+  # Returns the custom_field_values that can be edited by the given user
+  def editable_custom_field_values: (?untyped user) -> untyped
+
+  def visible_custom_field_values: (?untyped user) -> untyped
+
+  # Version files have same visibility as project files
+  def attachments_visible?: (*untyped args) -> untyped
+
+  def attachments_deletable?: (?untyped usr) -> untyped
+
+  alias base_reload reload
+
+  def reload: (*untyped args) -> untyped
+
+  def start_date: () -> untyped
+
+  def due_date: () -> untyped
+
+  def due_date=: (untyped arg) -> untyped
+
+  # Returns the total estimated time for this version
+  # (sum of leaves estimated_hours)
+  def estimated_hours: () -> untyped
+
+  # Returns the total estimated remaining time for this version
+  # (sum of leaves estimated_remaining_hours)
+  def estimated_remaining_hours: () -> untyped
+
+  # Returns the total reported time for this version
+  def spent_hours: () -> untyped
+
+  def closed?: () -> untyped
+
+  def open?: () -> untyped
+
+  # Returns true if the version is completed: closed or due date reached and no open issues
+  def completed?: () -> untyped
+
+  def behind_schedule?: () -> untyped
+
+  # Returns the completion percentage of this version based on the amount of open/closed issues
+  # and the time spent on the open issues.
+  def completed_percent: () -> untyped
+
+  # Returns the percentage of issues that have been marked as 'closed'.
+  def closed_percent: () -> untyped
+
+  # Returns true if the version is overdue: due date reached and some open issues
+  def overdue?: () -> untyped
+
+  # Returns assigned issues count
+  def issues_count: () -> untyped
+
+  # Returns the total amount of open issues for this version.
+  def open_issues_count: () -> untyped
+
+  # Returns the total amount of closed issues for this version.
+  def closed_issues_count: () -> untyped
+
+  def visible_fixed_issues: () -> untyped
+
+  def wiki_page: () -> untyped
+
+  def to_s: () -> untyped
+
+  def to_s_with_project: () -> untyped
+
+  # Versions are sorted by effective_date and name
+  # Those with no effective_date are at the end, sorted by name
+  def <=>: (untyped version) -> untyped
+
+  # Sort versions by status (open, locked then closed versions)
+  def self.sort_by_status: (untyped versions) -> untyped
+
+  def css_classes: () -> untyped
+
+  def self.fields_for_order_statement: (?untyped table) -> untyped
+
+  # Returns the sharings that +user+ can set the version to
+  def allowed_sharings: (?untyped user) -> untyped
+
+  # Returns true if the version is shared, otherwise false
+  def shared?: () -> untyped
+
+  def deletable?: () -> untyped
+
+  def default_project_version: () -> untyped
+
+  def default_project_version=: (untyped arg) -> untyped
+
+  private
+
+  # Update the issue's fixed versions. Used if a version's sharing changes.
+  def update_issues_from_sharing_change: () -> untyped
+
+  def update_default_project_version: () -> untyped
+
+  def referenced_by_a_custom_field?: () -> untyped
+
+  def nullify_projects_default_version: () -> untyped
+end

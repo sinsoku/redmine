@@ -1,0 +1,63 @@
+# Generated from app/models/enumeration.rb with RBS::Inline
+
+class Enumeration < ApplicationRecord
+  include Redmine::SubclassFactory
+
+  def self.default: () -> untyped
+
+  # Overloaded on concrete classes
+  def option_name: () -> untyped
+
+  def check_default: () -> untyped
+
+  # Overloaded on concrete classes
+  def objects_count: () -> untyped
+
+  def in_use?: () -> untyped
+
+  # Is this enumeration overriding a system level enumeration?
+  def is_override?: () -> untyped
+
+  alias destroy_without_reassign destroy
+
+  # Destroy the enumeration
+  # If a enumeration is specified, objects are reassigned
+  def destroy: (?untyped reassign_to) -> untyped
+
+  def <=>: (untyped enumeration) -> untyped
+
+  def to_s: () -> untyped
+
+  # Returns the Subclasses of Enumeration.  Each Subclass needs to be
+  # required in development mode.
+  #
+  # Note: subclasses is protected in ActiveRecord
+  def self.get_subclasses: () -> untyped
+
+  # Does the +new+ Hash override the previous Enumeration?
+  def self.overriding_change?: (untyped new, untyped previous) -> untyped
+
+  # Does the +new+ Hash have the same custom values as the previous Enumeration?
+  def self.same_custom_values?: (untyped new, untyped previous) -> untyped
+
+  # Are the new and previous fields equal?
+  def self.same_active_state?: (untyped new, untyped previous) -> untyped
+
+  private
+
+  def check_integrity: () -> untyped
+
+  def update_children_name: () -> untyped
+
+  # Overrides Redmine::Acts::Positioned#set_default_position so that enumeration overrides
+  # get the same position as the overridden enumeration
+  def set_default_position: () -> untyped
+
+  # Overrides Redmine::Acts::Positioned#update_position so that overrides get the same
+  # position as the overridden enumeration
+  def update_position: () -> untyped
+
+  # Overrides Redmine::Acts::Positioned#remove_position so that enumeration overrides
+  # get the same position as the overridden enumeration
+  def remove_position: () -> untyped
+end

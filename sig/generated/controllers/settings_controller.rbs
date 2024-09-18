@@ -1,0 +1,9 @@
+# Generated from app/controllers/settings_controller.rb with RBS::Inline
+
+class SettingsController < ApplicationController
+  def index: () -> untyped
+
+  def edit: () -> untyped
+
+  def plugin: () -> untyped
+end

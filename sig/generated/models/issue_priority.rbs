@@ -1,0 +1,27 @@
+# Generated from app/models/issue_priority.rb with RBS::Inline
+
+class IssuePriority < Enumeration
+  OptionName: ::Symbol
+
+  def option_name: () -> untyped
+
+  def objects_count: () -> untyped
+
+  def transfer_relations: (untyped to) -> untyped
+
+  def css_classes: () -> untyped
+
+  # Clears position_name for all priorities
+  # Called from migration 20121026003537_populate_enumerations_position_name
+  def self.clear_position_names: () -> untyped
+
+  def self.default_or_middle: () -> untyped
+
+  def high?: () -> untyped
+
+  def low?: () -> untyped
+
+  # Updates position_name for active priorities
+  # Called from migration 20121026003537_populate_enumerations_position_name
+  def self.compute_position_names: () -> untyped
+end

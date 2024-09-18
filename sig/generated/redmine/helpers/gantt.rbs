@@ -1,0 +1,175 @@
+# Generated from lib/redmine/helpers/gantt.rb with RBS::Inline
+
+module Redmine
+  module Helpers
+    # Simple class to handle gantt chart data
+    class Gantt
+      class MaxLinesLimitReached < StandardError
+      end
+
+      include ERB::Util
+
+      include Redmine::I18n
+
+      include Redmine::Utils::DateCalculation
+
+      # Relation types that are rendered
+      DRAW_TYPES: untyped
+
+      UNAVAILABLE_COLUMNS: ::Array
+
+      # Some utility methods for the PDF export
+      # @private
+      class PDF
+        MaxCharactorsForSubject: ::Integer
+
+        TotalWidth: ::Integer
+
+        LeftPaneWidth: ::Integer
+
+        def self.right_pane_width: () -> untyped
+      end
+
+      attr_reader year_from: untyped
+
+      attr_reader month_from: untyped
+
+      attr_reader date_from: untyped
+
+      attr_reader date_to: untyped
+
+      attr_reader zoom: untyped
+
+      attr_reader months: untyped
+
+      attr_reader truncated: untyped
+
+      attr_reader max_rows: untyped
+
+      attr_accessor query: untyped
+
+      attr_accessor project: untyped
+
+      attr_accessor view: untyped
+
+      def initialize: (?untyped options) -> untyped
+
+      def common_params: () -> untyped
+
+      def params: () -> untyped
+
+      def params_previous: () -> untyped
+
+      def params_next: () -> untyped
+
+      # Returns the number of rows that will be rendered on the Gantt chart
+      def number_of_rows: () -> untyped
+
+      # Returns the number of rows that will be used to list a project on
+      # the Gantt chart.  This will recurse for each subproject.
+      def number_of_rows_on_project: (untyped project) -> untyped
+
+      # Renders the subjects of the Gantt chart, the left side.
+      def subjects: (?untyped options) -> untyped
+
+      # Renders the lines of the Gantt chart, the right side
+      def lines: (?untyped options) -> untyped
+
+      # Renders the selected column of the Gantt chart, the right side of subjects.
+      def selected_column_content: (?untyped options) -> untyped
+
+      # Returns issues that will be rendered
+      def issues: () -> untyped
+
+      # Returns a hash of the relations between the issues that are present on the gantt
+      # and that should be displayed, grouped by issue ids.
+      def relations: () -> untyped
+
+      # Return all the project nodes that will be displayed
+      def projects: () -> untyped
+
+      # Returns the issues that belong to +project+
+      def project_issues: (untyped project) -> untyped
+
+      # Returns the distinct versions of the issues that belong to +project+
+      def project_versions: (untyped project) -> untyped
+
+      # Returns the issues that belong to +project+ and are assigned to +version+
+      def version_issues: (untyped project, untyped version) -> untyped
+
+      def render: (?untyped options) -> untyped
+
+      def render_project: (untyped project, ?untyped options) -> untyped
+
+      def render_version: (untyped project, untyped version, ?untyped options) -> untyped
+
+      def render_issues: (untyped issues, ?untyped options) -> untyped
+
+      def render_object_row: (untyped object, untyped options) -> untyped
+
+      def render_end: (?untyped options) -> untyped
+
+      def increment_indent: (untyped options, ?untyped factor) -> untyped
+
+      def decrement_indent: (untyped options, ?untyped factor) -> untyped
+
+      def subject_for_project: (untyped project, untyped options) -> untyped
+
+      def line_for_project: (untyped project, untyped options) -> untyped
+
+      def subject_for_version: (untyped version, untyped options) -> untyped
+
+      def line_for_version: (untyped version, untyped options) -> untyped
+
+      def subject_for_issue: (untyped issue, untyped options) -> untyped
+
+      def line_for_issue: (untyped issue, untyped options) -> untyped
+
+      def column_content_for_issue: (untyped issue, untyped options) -> untyped
+
+      def subject: (untyped label, untyped options, ?untyped object) -> untyped
+
+      def line: (untyped start_date, untyped end_date, untyped done_ratio, untyped markers, untyped label, untyped options, ?untyped object) -> untyped
+
+      # Generates a gantt image
+      # Only defined if MiniMagick is avalaible
+      def to_image: (?untyped format) -> untyped
+
+      def to_pdf: () -> untyped
+
+      private
+
+      def coordinates: (untyped start_date, untyped end_date, untyped progress, ?untyped zoom) -> untyped
+
+      def calc_progress_date: (untyped start_date, untyped end_date, untyped progress) -> untyped
+
+      def self.sort_issues!: (untyped issues) -> untyped
+
+      def self.sort_issue_logic: (untyped issue) -> untyped
+
+      def self.sort_versions!: (untyped versions) -> untyped
+
+      def pdf_new_page?: (untyped options) -> untyped
+
+      def html_subject_content: (untyped object) -> untyped
+
+      def html_subject: (untyped params, untyped subject, untyped object) -> untyped
+
+      def pdf_subject: (untyped params, untyped subject, ?untyped options) -> untyped
+
+      def image_subject: (untyped params, untyped subject, ?untyped options) -> untyped
+
+      def issue_relations: (untyped issue) -> untyped
+
+      def html_task: (untyped params, untyped coords, untyped markers, untyped label, untyped object) -> untyped
+
+      def pdf_task: (untyped params, untyped coords, untyped markers, untyped label, untyped object) -> untyped
+
+      def image_task: (untyped params, untyped coords, untyped markers, untyped label, untyped object) -> untyped
+
+      # Escape the passed string as a text argument in a draw rule for
+      # mini_magick. Note that the returned string is not shell-safe on its own.
+      def magick_text: (untyped str) -> untyped
+    end
+  end
+end

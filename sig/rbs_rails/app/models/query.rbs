@@ -1,0 +1,471 @@
+class Query < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Query, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def project_id: () -> Integer?
+
+    def project_id=: (Integer?) -> Integer?
+
+    def project_id?: () -> bool
+
+    def project_id_changed?: () -> bool
+
+    def project_id_change: () -> [ Integer?, Integer? ]
+
+    def project_id_will_change!: () -> void
+
+    def project_id_was: () -> Integer?
+
+    def project_id_previously_changed?: () -> bool
+
+    def project_id_previous_change: () -> Array[Integer?]?
+
+    def project_id_previously_was: () -> Integer?
+
+    def project_id_before_last_save: () -> Integer?
+
+    def project_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def project_id_in_database: () -> Integer?
+
+    def saved_change_to_project_id: () -> Array[Integer?]?
+
+    def saved_change_to_project_id?: () -> bool
+
+    def will_save_change_to_project_id?: () -> bool
+
+    def restore_project_id!: () -> void
+
+    def clear_project_id_change: () -> void
+
+    def name: () -> String
+
+    def name=: (String) -> String
+
+    def name?: () -> bool
+
+    def name_changed?: () -> bool
+
+    def name_change: () -> [ String?, String? ]
+
+    def name_will_change!: () -> void
+
+    def name_was: () -> String?
+
+    def name_previously_changed?: () -> bool
+
+    def name_previous_change: () -> Array[String?]?
+
+    def name_previously_was: () -> String?
+
+    def name_before_last_save: () -> String?
+
+    def name_change_to_be_saved: () -> Array[String?]?
+
+    def name_in_database: () -> String?
+
+    def saved_change_to_name: () -> Array[String?]?
+
+    def saved_change_to_name?: () -> bool
+
+    def will_save_change_to_name?: () -> bool
+
+    def restore_name!: () -> void
+
+    def clear_name_change: () -> void
+
+    def filters: () -> String?
+
+    def filters=: (String?) -> String?
+
+    def filters?: () -> bool
+
+    def filters_changed?: () -> bool
+
+    def filters_change: () -> [ String?, String? ]
+
+    def filters_will_change!: () -> void
+
+    def filters_was: () -> String?
+
+    def filters_previously_changed?: () -> bool
+
+    def filters_previous_change: () -> Array[String?]?
+
+    def filters_previously_was: () -> String?
+
+    def filters_before_last_save: () -> String?
+
+    def filters_change_to_be_saved: () -> Array[String?]?
+
+    def filters_in_database: () -> String?
+
+    def saved_change_to_filters: () -> Array[String?]?
+
+    def saved_change_to_filters?: () -> bool
+
+    def will_save_change_to_filters?: () -> bool
+
+    def restore_filters!: () -> void
+
+    def clear_filters_change: () -> void
+
+    def user_id: () -> Integer
+
+    def user_id=: (Integer) -> Integer
+
+    def user_id?: () -> bool
+
+    def user_id_changed?: () -> bool
+
+    def user_id_change: () -> [ Integer?, Integer? ]
+
+    def user_id_will_change!: () -> void
+
+    def user_id_was: () -> Integer?
+
+    def user_id_previously_changed?: () -> bool
+
+    def user_id_previous_change: () -> Array[Integer?]?
+
+    def user_id_previously_was: () -> Integer?
+
+    def user_id_before_last_save: () -> Integer?
+
+    def user_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def user_id_in_database: () -> Integer?
+
+    def saved_change_to_user_id: () -> Array[Integer?]?
+
+    def saved_change_to_user_id?: () -> bool
+
+    def will_save_change_to_user_id?: () -> bool
+
+    def restore_user_id!: () -> void
+
+    def clear_user_id_change: () -> void
+
+    def column_names: () -> String?
+
+    def column_names=: (String?) -> String?
+
+    def column_names?: () -> bool
+
+    def column_names_changed?: () -> bool
+
+    def column_names_change: () -> [ String?, String? ]
+
+    def column_names_will_change!: () -> void
+
+    def column_names_was: () -> String?
+
+    def column_names_previously_changed?: () -> bool
+
+    def column_names_previous_change: () -> Array[String?]?
+
+    def column_names_previously_was: () -> String?
+
+    def column_names_before_last_save: () -> String?
+
+    def column_names_change_to_be_saved: () -> Array[String?]?
+
+    def column_names_in_database: () -> String?
+
+    def saved_change_to_column_names: () -> Array[String?]?
+
+    def saved_change_to_column_names?: () -> bool
+
+    def will_save_change_to_column_names?: () -> bool
+
+    def restore_column_names!: () -> void
+
+    def clear_column_names_change: () -> void
+
+    def sort_criteria: () -> String?
+
+    def sort_criteria=: (String?) -> String?
+
+    def sort_criteria?: () -> bool
+
+    def sort_criteria_changed?: () -> bool
+
+    def sort_criteria_change: () -> [ String?, String? ]
+
+    def sort_criteria_will_change!: () -> void
+
+    def sort_criteria_was: () -> String?
+
+    def sort_criteria_previously_changed?: () -> bool
+
+    def sort_criteria_previous_change: () -> Array[String?]?
+
+    def sort_criteria_previously_was: () -> String?
+
+    def sort_criteria_before_last_save: () -> String?
+
+    def sort_criteria_change_to_be_saved: () -> Array[String?]?
+
+    def sort_criteria_in_database: () -> String?
+
+    def saved_change_to_sort_criteria: () -> Array[String?]?
+
+    def saved_change_to_sort_criteria?: () -> bool
+
+    def will_save_change_to_sort_criteria?: () -> bool
+
+    def restore_sort_criteria!: () -> void
+
+    def clear_sort_criteria_change: () -> void
+
+    def group_by: () -> String?
+
+    def group_by=: (String?) -> String?
+
+    def group_by?: () -> bool
+
+    def group_by_changed?: () -> bool
+
+    def group_by_change: () -> [ String?, String? ]
+
+    def group_by_will_change!: () -> void
+
+    def group_by_was: () -> String?
+
+    def group_by_previously_changed?: () -> bool
+
+    def group_by_previous_change: () -> Array[String?]?
+
+    def group_by_previously_was: () -> String?
+
+    def group_by_before_last_save: () -> String?
+
+    def group_by_change_to_be_saved: () -> Array[String?]?
+
+    def group_by_in_database: () -> String?
+
+    def saved_change_to_group_by: () -> Array[String?]?
+
+    def saved_change_to_group_by?: () -> bool
+
+    def will_save_change_to_group_by?: () -> bool
+
+    def restore_group_by!: () -> void
+
+    def clear_group_by_change: () -> void
+
+    def type: () -> String?
+
+    def type=: (String?) -> String?
+
+    def type?: () -> bool
+
+    def type_changed?: () -> bool
+
+    def type_change: () -> [ String?, String? ]
+
+    def type_will_change!: () -> void
+
+    def type_was: () -> String?
+
+    def type_previously_changed?: () -> bool
+
+    def type_previous_change: () -> Array[String?]?
+
+    def type_previously_was: () -> String?
+
+    def type_before_last_save: () -> String?
+
+    def type_change_to_be_saved: () -> Array[String?]?
+
+    def type_in_database: () -> String?
+
+    def saved_change_to_type: () -> Array[String?]?
+
+    def saved_change_to_type?: () -> bool
+
+    def will_save_change_to_type?: () -> bool
+
+    def restore_type!: () -> void
+
+    def clear_type_change: () -> void
+
+    def visibility: () -> Integer?
+
+    def visibility=: (Integer?) -> Integer?
+
+    def visibility?: () -> bool
+
+    def visibility_changed?: () -> bool
+
+    def visibility_change: () -> [ Integer?, Integer? ]
+
+    def visibility_will_change!: () -> void
+
+    def visibility_was: () -> Integer?
+
+    def visibility_previously_changed?: () -> bool
+
+    def visibility_previous_change: () -> Array[Integer?]?
+
+    def visibility_previously_was: () -> Integer?
+
+    def visibility_before_last_save: () -> Integer?
+
+    def visibility_change_to_be_saved: () -> Array[Integer?]?
+
+    def visibility_in_database: () -> Integer?
+
+    def saved_change_to_visibility: () -> Array[Integer?]?
+
+    def saved_change_to_visibility?: () -> bool
+
+    def will_save_change_to_visibility?: () -> bool
+
+    def restore_visibility!: () -> void
+
+    def clear_visibility_change: () -> void
+
+    def options: () -> String?
+
+    def options=: (String?) -> String?
+
+    def options?: () -> bool
+
+    def options_changed?: () -> bool
+
+    def options_change: () -> [ String?, String? ]
+
+    def options_will_change!: () -> void
+
+    def options_was: () -> String?
+
+    def options_previously_changed?: () -> bool
+
+    def options_previous_change: () -> Array[String?]?
+
+    def options_previously_was: () -> String?
+
+    def options_before_last_save: () -> String?
+
+    def options_change_to_be_saved: () -> Array[String?]?
+
+    def options_in_database: () -> String?
+
+    def saved_change_to_options: () -> Array[String?]?
+
+    def saved_change_to_options?: () -> bool
+
+    def will_save_change_to_options?: () -> bool
+
+    def restore_options!: () -> void
+
+    def clear_options_change: () -> void
+
+    def description: () -> String?
+
+    def description=: (String?) -> String?
+
+    def description?: () -> bool
+
+    def description_changed?: () -> bool
+
+    def description_change: () -> [ String?, String? ]
+
+    def description_will_change!: () -> void
+
+    def description_was: () -> String?
+
+    def description_previously_changed?: () -> bool
+
+    def description_previous_change: () -> Array[String?]?
+
+    def description_previously_was: () -> String?
+
+    def description_before_last_save: () -> String?
+
+    def description_change_to_be_saved: () -> Array[String?]?
+
+    def description_in_database: () -> String?
+
+    def saved_change_to_description: () -> Array[String?]?
+
+    def saved_change_to_description?: () -> bool
+
+    def will_save_change_to_description?: () -> bool
+
+    def restore_description!: () -> void
+
+    def clear_description_change: () -> void
+  end
+  include GeneratedAttributeMethods
+
+  def project: () -> Project
+  def project=: (Project?) -> Project?
+  def reload_project: () -> Project?
+  def build_project: (untyped) -> Project
+  def create_project: (untyped) -> Project
+  def create_project!: (untyped) -> Project
+  def user: () -> User
+  def user=: (User?) -> User?
+  def reload_user: () -> User?
+  def build_user: (untyped) -> User
+  def create_user: (untyped) -> User
+  def create_user!: (untyped) -> User
+
+  def self.sorted: () -> ActiveRecord_Relation
+  def self.only_public: () -> ActiveRecord_Relation
+
+  module GeneratedRelationMethods
+    def sorted: () -> ActiveRecord_Relation
+
+    def only_public: () -> ActiveRecord_Relation
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Query, Integer]
+    include Enumerable[Query]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Query, Integer]
+  end
+end

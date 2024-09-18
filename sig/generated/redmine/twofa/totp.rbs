@@ -1,0 +1,21 @@
+# Generated from lib/redmine/twofa/totp.rb with RBS::Inline
+
+module Redmine
+  module Twofa
+    class Totp < Base
+      def init_pairing!: () -> untyped
+
+      def destroy_pairing_without_verify!: () -> untyped
+
+      def verify_otp!: (untyped code) -> untyped
+
+      def provisioning_uri: () -> untyped
+
+      def init_pairing_view_variables: () -> untyped
+
+      private
+
+      def totp: () -> untyped
+    end
+  end
+end

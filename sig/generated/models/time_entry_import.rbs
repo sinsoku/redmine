@@ -1,0 +1,32 @@
+# Generated from app/models/time_entry_import.rb with RBS::Inline
+
+class TimeEntryImport < Import
+  AUTO_MAPPABLE_FIELDS: ::Hash
+
+  def self.menu_item: () -> untyped
+
+  def self.authorized?: (untyped user) -> untyped
+
+  # Returns the objects that were imported
+  def saved_objects: () -> untyped
+
+  def mappable_custom_fields: () -> untyped
+
+  def allowed_target_projects: () -> untyped
+
+  def allowed_target_activities: () -> untyped
+
+  def allowed_target_users: () -> untyped
+
+  def project: () -> untyped
+
+  def activity: () -> untyped
+
+  def user_value: () -> untyped
+
+  private
+
+  def build_object: (untyped row, untyped item) -> untyped
+
+  def issue_project: (untyped issue_id) -> untyped
+end

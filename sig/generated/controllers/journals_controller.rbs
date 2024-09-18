@@ -1,0 +1,19 @@
+# Generated from app/controllers/journals_controller.rb with RBS::Inline
+
+class JournalsController < ApplicationController
+  include QueriesHelper
+
+  def index: () -> untyped
+
+  def diff: () -> untyped
+
+  def new: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  private
+
+  def find_journal: () -> untyped
+end

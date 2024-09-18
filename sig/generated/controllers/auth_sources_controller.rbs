@@ -1,0 +1,25 @@
+# Generated from app/controllers/auth_sources_controller.rb with RBS::Inline
+
+class AuthSourcesController < ApplicationController
+  def index: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def test_connection: () -> untyped
+
+  def destroy: () -> untyped
+
+  def autocomplete_for_new_user: () -> untyped
+
+  private
+
+  def build_new_auth_source: () -> untyped
+
+  def find_auth_source: () -> untyped
+end

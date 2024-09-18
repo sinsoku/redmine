@@ -1,0 +1,381 @@
+# Generated from app/models/query.rb with RBS::Inline
+
+class QueryColumn
+  attr_accessor name: untyped
+
+  attr_accessor totalable: untyped
+
+  attr_accessor default_order: untyped
+
+  attr_writer sortable: untyped
+
+  attr_writer groupable: untyped
+
+  include Redmine::I18n
+
+  def initialize: (untyped name, ?untyped options) -> untyped
+
+  def caption: () -> untyped
+
+  def groupable?: () -> untyped
+
+  # Returns true if the column is sortable, otherwise false
+  def sortable?: () -> untyped
+
+  def sortable: () -> untyped
+
+  def inline?: () -> untyped
+
+  def frozen?: () -> untyped
+
+  def value: (untyped object) -> untyped
+
+  def value_object: (untyped object) -> untyped
+
+  # Returns the group that object belongs to when grouping query results
+  def group_value: (untyped object) -> untyped
+
+  def css_classes: () -> untyped
+
+  def group_by_statement: () -> untyped
+end
+
+class TimestampQueryColumn < QueryColumn
+  def groupable?: () -> untyped
+
+  def group_by_statement: () -> untyped
+
+  def group_value: (untyped object) -> untyped
+end
+
+class WatcherQueryColumn < QueryColumn
+  def value_object: (untyped object) -> untyped
+end
+
+class QueryAssociationColumn < QueryColumn
+  def initialize: (untyped association, untyped attribute, ?untyped options) -> untyped
+
+  def value_object: (untyped object) -> untyped
+
+  def css_classes: () -> untyped
+end
+
+class QueryCustomFieldColumn < QueryColumn
+  def initialize: (untyped custom_field, ?untyped options) -> untyped
+
+  def groupable?: () -> untyped
+
+  def group_by_statement: () -> untyped
+
+  def caption: () -> untyped
+
+  def custom_field: () -> untyped
+
+  def value_object: (untyped object) -> untyped
+
+  def value: (untyped object) -> untyped
+
+  def css_classes: () -> untyped
+end
+
+class QueryAssociationCustomFieldColumn < QueryCustomFieldColumn
+  def initialize: (untyped association, untyped custom_field, ?untyped options) -> untyped
+
+  def value_object: (untyped object) -> untyped
+
+  def css_classes: () -> untyped
+
+  # TODO: support grouping by association custom field
+  def groupable?: () -> untyped
+end
+
+class QueryFilter
+  include Redmine::I18n
+
+  def initialize: (untyped field, untyped options) -> untyped
+
+  def []: (untyped arg) -> untyped
+
+  def values: () -> untyped
+
+  def remote: () -> untyped
+end
+
+class Query < ApplicationRecord
+  class StatementInvalid < ::ActiveRecord::StatementInvalid
+  end
+
+  class QueryError < StandardError
+  end
+
+  include Redmine::SubclassFactory
+
+  VISIBILITY_PRIVATE: ::Integer
+
+  VISIBILITY_ROLES: ::Integer
+
+  VISIBILITY_PUBLIC: ::Integer
+
+  # to be implemented in subclasses that have a way to determine a default
+  # query for the given options
+  def self.default: (**untyped _) -> untyped
+
+  # Scope of visible queries, can be used from subclasses only.
+  # Unlike other visible scopes, a class methods is used as it
+  # let handle inheritance more nicely than scope DSL.
+  def self.visible: (*untyped args) -> untyped
+
+  # Returns true if the query is visible to +user+ or the current user.
+  def visible?: (?untyped user) -> untyped
+
+  def is_private?: () -> untyped
+
+  def is_public?: () -> untyped
+
+  # Returns true if the query is available for all projects
+  def is_global?: () -> untyped
+
+  def queried_table_name: () -> untyped
+
+  # Builds the query from the given params
+  def build_from_params: (untyped params, ?untyped defaults) -> untyped
+
+  # Builds a new query from the given params and attributes
+  def self.build_from_params: (untyped params, ?untyped attributes) -> untyped
+
+  def as_params: () -> untyped
+
+  def validate_query_filters: () -> untyped
+
+  def add_filter_error: (untyped field, untyped message) -> untyped
+
+  def editable_by?: (untyped user) -> untyped
+
+  def trackers: () -> untyped
+
+  # Returns a hash of localized labels for all filter operators
+  def self.operators_labels: () -> untyped
+
+  # Returns a representation of the available filters for JSON serialization
+  def available_filters_as_json: () -> untyped
+
+  def all_projects: () -> untyped
+
+  def all_projects_values: () -> untyped
+
+  def project_values: () -> untyped
+
+  def subproject_values: () -> untyped
+
+  def principals: () -> untyped
+
+  def users: () -> untyped
+
+  def author_values: () -> untyped
+
+  def assigned_to_values: () -> untyped
+
+  def fixed_version_values: () -> untyped
+
+  # Returns a scope of issue statuses that are available as columns for filters
+  def issue_statuses_values: () -> untyped
+
+  def watcher_values: () -> untyped
+
+  # Returns a scope of issue custom fields that are available as columns or filters
+  def issue_custom_fields: () -> untyped
+
+  # Returns a scope of project custom fields that are available as columns or filters
+  def project_custom_fields: () -> untyped
+
+  # Returns a scope of time entry custom fields that are available as columns or filters
+  def time_entry_custom_fields: () -> untyped
+
+  # Returns a scope of project statuses that are available as columns or filters
+  def project_statuses_values: () -> untyped
+
+  # Adds available filters
+  def initialize_available_filters: () -> untyped
+
+  # Adds an available filter
+  def add_available_filter: (untyped field, untyped options) -> untyped
+
+  # Removes an available filter
+  def delete_available_filter: (untyped field) -> untyped
+
+  # Return a hash of available filters
+  def available_filters: () -> untyped
+
+  def add_filter: (untyped field, untyped operator, ?untyped values) -> untyped
+
+  def add_short_filter: (untyped field, untyped expression) -> untyped
+
+  # Add multiple filters using +add_filter+
+  def add_filters: (untyped fields, untyped operators, untyped values) -> untyped
+
+  def has_filter?: (untyped field) -> untyped
+
+  def type_for: (untyped field) -> untyped
+
+  def operator_for: (untyped field) -> untyped
+
+  def values_for: (untyped field) -> untyped
+
+  def value_for: (untyped field, ?untyped index) -> untyped
+
+  def label_for: (untyped field) -> untyped
+
+  def self.add_available_column: (untyped column) -> untyped
+
+  # Returns an array of columns that can be used to group the results
+  def groupable_columns: () -> untyped
+
+  # Returns a Hash of columns and the key for sorting
+  def sortable_columns: () -> untyped
+
+  def columns: () -> untyped
+
+  def inline_columns: () -> untyped
+
+  def block_columns: () -> untyped
+
+  def available_inline_columns: () -> untyped
+
+  def available_block_columns: () -> untyped
+
+  def available_totalable_columns: () -> untyped
+
+  def default_columns_names: () -> untyped
+
+  def default_totalable_names: () -> untyped
+
+  def default_display_type: () -> untyped
+
+  def column_names=: (untyped names) -> untyped
+
+  def has_column?: (untyped column) -> untyped
+
+  def has_custom_field_column?: () -> untyped
+
+  def has_default_columns?: () -> untyped
+
+  def totalable_columns: () -> untyped
+
+  def totalable_names=: (untyped names) -> untyped
+
+  def totalable_names: () -> untyped
+
+  def default_sort_criteria: () -> untyped
+
+  def sort_criteria=: (untyped arg) -> untyped
+
+  def sort_criteria: () -> untyped
+
+  def sort_criteria_key: (untyped index) -> untyped
+
+  def sort_criteria_order: (untyped index) -> untyped
+
+  def sort_clause: () -> untyped
+
+  # Returns the SQL sort order that should be prepended for grouping
+  def group_by_sort_order: () -> untyped
+
+  # Returns true if the query is a grouped query
+  def grouped?: () -> untyped
+
+  def group_by_column: () -> untyped
+
+  def group_by_statement: () -> untyped
+
+  def project_statement: () -> untyped
+
+  def statement: () -> untyped
+
+  # Returns the result count by group or nil if query is not grouped
+  def result_count_by_group: () -> untyped
+
+  # Returns the sum of values for the given column
+  def total_for: (untyped column) -> untyped
+
+  # Returns a hash of the sum of the given column for each group,
+  # or nil if the query is not grouped
+  def total_by_group_for: (untyped column) -> untyped
+
+  def totals: () -> untyped
+
+  def totals_by_group: () -> untyped
+
+  def css_classes: () -> untyped
+
+  def display_type: () -> untyped
+
+  def display_type=: (untyped type) -> untyped
+
+  def available_display_types: () -> untyped
+
+  private
+
+  def grouped_query: () ?{ (?) -> untyped } -> untyped
+
+  def total_with_scope: (untyped column, untyped scope) -> untyped
+
+  def base_scope: () -> untyped
+
+  def base_group_scope: () -> untyped
+
+  def total_for_custom_field: (untyped custom_field, untyped scope) ?{ (?) -> untyped } -> untyped
+
+  def map_total: (untyped total) ?{ (?) -> untyped } -> untyped
+
+  def sql_for_custom_field: (untyped field, untyped operator, untyped value, untyped custom_field_id) -> untyped
+
+  def sql_for_chained_custom_field: (untyped field, untyped operator, untyped value, untyped custom_field_id, untyped chained_custom_field_id) -> untyped
+
+  def sql_for_custom_field_attribute: (untyped field, untyped operator, untyped value, untyped custom_field_id, untyped attribute) -> untyped
+
+  # Helper method to generate the WHERE sql for a +field+, +operator+ and a +value+
+  def sql_for_field: (untyped field, untyped operator, untyped value, untyped db_table, untyped db_field, ?untyped is_custom_filter) -> untyped
+
+  # Returns a SQL LIKE statement with wildcards
+  #
+  # valid options:
+  # * :match - use NOT LIKE if false
+  # * :starts_with - use LIKE 'value%' if true
+  # * :ends_with - use LIKE '%value' if true
+  # * :all_words - use OR instead of AND if false
+  #   (ignored if :starts_with or :ends_with is true)
+  def sql_contains: (untyped db_field, untyped value, ?untyped options) -> untyped
+
+  # rubocop:disable Lint/IneffectiveAccessModifier
+  def self.tokenized_like_conditions: (untyped db_field, untyped value, **untyped options) -> untyped
+
+  # Adds a filter for the given custom field
+  def add_custom_field_filter: (untyped field, ?untyped assoc) -> untyped
+
+  # Adds filters for custom fields associated to the custom field target class
+  # Eg. having a version custom field "Milestone" for issues and a date custom field "Release date"
+  # for versions, it will add an issue filter on Milestone'e Release date.
+  def add_chained_custom_field_filters: (untyped field) -> untyped
+
+  # Adds filters for the given custom fields scope
+  def add_custom_fields_filters: (untyped scope, ?untyped assoc) -> untyped
+
+  # Adds filters for the given associations custom fields
+  def add_associations_custom_fields_filters: (*untyped associations) -> untyped
+
+  def quoted_time: (untyped time, untyped is_custom_filter) -> untyped
+
+  def date_for_user_time_zone: (untyped y, untyped m, untyped d) -> untyped
+
+  # Returns a SQL clause for a date or datetime field.
+  def date_clause: (untyped table, untyped field, untyped from, untyped to, untyped is_custom_filter) -> untyped
+
+  # Returns a SQL clause for a date or datetime field using relative dates.
+  def relative_date_clause: (untyped table, untyped field, untyped days_from, untyped days_to, untyped is_custom_filter) -> untyped
+
+  # Returns a Date or Time from the given filter value
+  def parse_date: (untyped arg) -> untyped
+
+  # Additional joins required for the given sort options
+  def joins_for_order_statement: (untyped order_options) -> untyped
+end

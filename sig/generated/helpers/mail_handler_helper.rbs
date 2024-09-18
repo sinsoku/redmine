@@ -1,0 +1,4 @@
+# Generated from app/helpers/mail_handler_helper.rb with RBS::Inline
+
+module MailHandlerHelper
+end

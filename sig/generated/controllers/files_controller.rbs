@@ -1,0 +1,11 @@
+# Generated from app/controllers/files_controller.rb with RBS::Inline
+
+class FilesController < ApplicationController
+  include SortHelper
+
+  def index: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+end
