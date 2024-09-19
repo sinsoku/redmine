@@ -1,9 +1,9 @@
 # Generated from app/models/auth_source_ldap.rb with RBS::Inline
 
 class AuthSourceLdap < AuthSource
-  NETWORK_EXCEPTIONS: ::Array
+  NETWORK_EXCEPTIONS: Array[__todo__]
 
-  LDAP_MODES: ::Array
+  LDAP_MODES: Array[__todo__]
 
   def initialize: (?untyped attributes, *untyped args) -> untyped
 

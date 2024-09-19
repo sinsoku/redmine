@@ -78,11 +78,11 @@ module ApplicationHelper
   # Generates a link to a version
   def link_to_version: (untyped version, ?untyped options) -> untyped
 
-  RECORD_LINK: ::Hash
+  RECORD_LINK: Hash[__todo__, __todo__]
 
   def link_to_record: (untyped record) -> untyped
 
-  ATTACHMENT_CONTAINER_LINK: ::Hash
+  ATTACHMENT_CONTAINER_LINK: Array[__todo__]
 
   def link_to_attachment_container: (untyped attachment_container) -> untyped
 

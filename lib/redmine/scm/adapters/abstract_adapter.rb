@@ -306,7 +306,7 @@ module Redmine
         end
       end
 
-      class Entries < Array
+      class Entries < Array #[__todo__]
         def sort_by_name
           dup.sort! do |x, y|
             if x.kind == y.kind
@@ -362,7 +362,7 @@ module Redmine
         end
       end
 
-      class Revisions < Array
+      class Revisions < Array #[__todo__]
         def latest
           sort do |x, y|
             unless x.time.nil? or y.time.nil?

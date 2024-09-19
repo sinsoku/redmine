@@ -43,7 +43,7 @@ class IssueImport < Import
     'relation_follows' =>  'label_follows',
     'relation_copied_to' => 'label_copied_to',
     'relation_copied_from' => 'label_copied_from'
-  }
+  } #: Hash[__todo__, __todo__]
 
   def self.menu_item
     :issues

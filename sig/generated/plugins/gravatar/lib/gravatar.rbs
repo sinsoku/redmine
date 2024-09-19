@@ -7,7 +7,7 @@ module GravatarHelper
   #
   #   # Allow racier gravatars
   #   GravatarHelper::DEFAULT_OPTIONS[:rating] = 'R'
-  DEFAULT_OPTIONS: ::Hash
+  DEFAULT_OPTIONS: Hash[__todo__, __todo__]
 
   # The methods that will be made available to your views.
   module PublicMethods

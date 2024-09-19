@@ -232,7 +232,7 @@ module ApplicationHelper
           project_wiki_page_path(wiki_page.project, wiki_page.title)
         )
       end
-  }
+  } #: Hash[__todo__, __todo__]
 
   def link_to_record(record)
     if link = RECORD_LINK[record.class.name]
@@ -247,7 +247,7 @@ module ApplicationHelper
        lambda {|project| link_to(l(:project_module_files), project_files_path(project))},
     'Version' =>
        lambda {|version| link_to(l(:project_module_files), project_files_path(version.project))},
-  }
+  } #: Array[__todo__]
 
   def link_to_attachment_container(attachment_container)
     if link = ATTACHMENT_CONTAINER_LINK[attachment_container.class.name] ||

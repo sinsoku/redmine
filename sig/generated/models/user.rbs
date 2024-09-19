@@ -7,9 +7,9 @@ class User < Principal
 
   # Different ways of displaying/sorting users
   # rubocop:disable Lint/InterpolationCheck
-  USER_FORMATS: ::Hash
+  USER_FORMATS: Hash[__todo__, __todo__]
 
-  MAIL_NOTIFICATION_OPTIONS: ::Array
+  MAIL_NOTIFICATION_OPTIONS: Array[__todo__]
 
   attr_accessor password: untyped
 
@@ -169,7 +169,7 @@ class User < Principal
 
   def to_s: () -> untyped
 
-  LABEL_BY_STATUS: ::Hash
+  LABEL_BY_STATUS: Hash[__todo__, __todo__]
 
   def css_classes: () -> untyped
 

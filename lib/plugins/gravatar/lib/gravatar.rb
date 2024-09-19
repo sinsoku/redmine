@@ -33,7 +33,7 @@ module GravatarHelper
 
     # The class to assign to the img tag for the gravatar.
     :class => 'gravatar',
-  }
+  } #: Hash[__todo__, __todo__]
 
   # The methods that will be made available to your views.
   module PublicMethods

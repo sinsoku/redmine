@@ -353,7 +353,7 @@ module Redmine
     end
 
     class MenuNode
-      include Enumerable
+      include Enumerable #[__todo__]
       attr_accessor :parent
       attr_reader :last_items_count, :name
 
@@ -376,6 +376,7 @@ module Redmine
         @children.inject(1) {|sum, node| sum + node.size}
       end
 
+      # @rbs () { (__todo__) -> void } -> void
       def each(...)
         yield self
         children {|child| child.each(...)}

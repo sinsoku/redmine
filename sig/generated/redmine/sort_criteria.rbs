@@ -1,7 +1,7 @@
 # Generated from lib/redmine/sort_criteria.rb with RBS::Inline
 
 module Redmine
-  class SortCriteria < Array
+  class SortCriteria < Array[__todo__]
     def initialize: (?untyped arg) -> untyped
 
     def to_param: () -> untyped

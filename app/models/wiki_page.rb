@@ -66,7 +66,7 @@ class WikiPage < ApplicationRecord
   scope :with_updated_on, lambda {preload(:content_without_text)}
 
   # Wiki pages that are protected by default
-  DEFAULT_PROTECTED_PAGES = %w(sidebar)
+  DEFAULT_PROTECTED_PAGES = %w(sidebar) #: Array[String]
 
   safe_attributes 'parent_id', 'parent_title', 'title', 'redirect_existing_links', 'wiki_id',
                   :if => lambda {|page, user| page.new_record? || user.allowed_to?(:rename_wiki_pages, page.project)}

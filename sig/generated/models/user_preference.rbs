@@ -3,11 +3,11 @@
 class UserPreference < ApplicationRecord
   include Redmine::SafeAttributes
 
-  TEXTAREA_FONT_OPTIONS: ::Array
+  TEXTAREA_FONT_OPTIONS: Array[__todo__]
 
-  DEFAULT_TOOLBAR_LANGUAGE_OPTIONS: ::Array
+  DEFAULT_TOOLBAR_LANGUAGE_OPTIONS: Array[__todo__]
 
-  AUTO_WATCH_ON_OPTIONS: ::Array
+  AUTO_WATCH_ON_OPTIONS: Array[__todo__]
 
   def initialize: (?untyped attributes, *untyped args) -> untyped
 

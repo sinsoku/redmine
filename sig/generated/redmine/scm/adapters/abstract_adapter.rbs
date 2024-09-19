@@ -110,7 +110,7 @@ module Redmine
         def parse_xml: (untyped xml) -> untyped
       end
 
-      class Entries < Array
+      class Entries < Array[__todo__]
         def sort_by_name: () -> untyped
 
         def revisions: () -> untyped
@@ -148,7 +148,7 @@ module Redmine
         def author: () -> untyped
       end
 
-      class Revisions < Array
+      class Revisions < Array[__todo__]
         def latest: () -> untyped
       end
 

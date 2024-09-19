@@ -8,7 +8,7 @@ module Redmine
 
     GS_BIN: untyped
 
-    ALLOWED_TYPES: ::Array
+    ALLOWED_TYPES: Array[__todo__]
 
     # Generates a thumbnail for the source image to target
     def self.generate: (untyped source, untyped target, untyped size, ?untyped is_pdf) -> untyped

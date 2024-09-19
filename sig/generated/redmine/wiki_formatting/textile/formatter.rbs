@@ -17,7 +17,7 @@ module Redmine
         alias inline_restore_redmine_links restore_redmine_links
 
         # auto_link rule after textile rules so that it doesn't break !image_url! tags
-        RULES: ::Array
+        RULES: Array[__todo__]
 
         def initialize: (*untyped args) -> untyped
 

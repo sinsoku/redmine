@@ -23,7 +23,7 @@ class Setting < ApplicationRecord
     'lowercase'     => /[a-z]/,
     'digits'        => /[0-9]/,
     'special_chars' => /[[:ascii:]&&[:graph:]&&[:^alnum:]]/
-  }
+  } #: Hash[__todo__, __todo__]
 
   DATE_FORMATS = [
     '%Y-%m-%d',
@@ -35,12 +35,12 @@ class Setting < ApplicationRecord
     '%d %B %Y',
     '%b %d, %Y',
     '%B %d, %Y'
-  ]
+  ] #: Array[__todo__]
 
   TIME_FORMATS = [
     '%H:%M',
     '%I:%M %p'
-  ]
+  ] #: Array[__todo__]
 
   ENCODINGS =  %w(US-ASCII
                   windows-1250
@@ -80,7 +80,7 @@ class Setting < ApplicationRecord
                   EUC-KR
                   Big5
                   Big5-HKSCS
-                  TIS-620)
+                  TIS-620) #: Array[__todo__]
 
   cattr_accessor :available_settings
   self.available_settings ||= {}

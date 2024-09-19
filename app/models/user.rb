@@ -71,7 +71,7 @@ class User < Principal
       :order => %w(login id),
       :setting_order => 8
     },
-  }
+  } #: Hash[__todo__, __todo__]
   # rubocop:enable Lint/InterpolationCheck
 
   MAIL_NOTIFICATION_OPTIONS = [
@@ -81,7 +81,7 @@ class User < Principal
     ['only_assigned', :label_user_mail_option_only_assigned],
     ['only_owner', :label_user_mail_option_only_owner],
     ['none', :label_user_mail_option_none]
-  ]
+  ] #: Array[__todo__]
 
   has_and_belongs_to_many :groups,
                           :join_table   => "#{table_name_prefix}groups_users#{table_name_suffix}",
@@ -555,7 +555,7 @@ class User < Principal
     STATUS_ACTIVE     => 'active',
     STATUS_REGISTERED => 'registered',
     STATUS_LOCKED     => 'locked'
-  }
+  } #: Hash[__todo__, __todo__]
 
   def css_classes
     "user #{LABEL_BY_STATUS[status]}"

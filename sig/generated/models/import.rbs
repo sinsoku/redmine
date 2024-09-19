@@ -1,9 +1,9 @@
 # Generated from app/models/import.rb with RBS::Inline
 
 class Import < ApplicationRecord
-  DATE_FORMATS: ::Array
+  DATE_FORMATS: Array[__todo__]
 
-  AUTO_MAPPABLE_FIELDS: ::Hash
+  AUTO_MAPPABLE_FIELDS: Hash[__todo__, __todo__]
 
   def self.menu_item: () -> untyped
 

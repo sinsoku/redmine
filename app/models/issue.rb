@@ -58,7 +58,7 @@ class Issue < ApplicationRecord
 
   acts_as_mentionable :attributes => ['description']
 
-  DONE_RATIO_OPTIONS = %w(issue_field issue_status)
+  DONE_RATIO_OPTIONS = %w(issue_field issue_status) #: Array[__todo__]
 
   attr_reader :transition_warning
   attr_writer :deleted_attachment_ids

@@ -2,7 +2,7 @@
 
 module Redmine
   # Class used to parse unified diffs
-  class UnifiedDiff < Array
+  class UnifiedDiff < Array[__todo__]
     attr_reader diff_type: untyped
 
     attr_reader diff_style: untyped

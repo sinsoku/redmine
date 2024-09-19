@@ -4,9 +4,9 @@ module Redmine
   module MyPage
     include Redmine::I18n
 
-    CORE_GROUPS: ::Array
+    CORE_GROUPS: Array[__todo__]
 
-    CORE_BLOCKS: ::Hash
+    CORE_BLOCKS: Hash[__todo__, __todo__]
 
     def self.groups: () -> untyped
 

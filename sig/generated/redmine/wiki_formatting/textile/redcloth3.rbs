@@ -5,7 +5,7 @@ class RedCloth3 < String
 
   VERSION: ::String
 
-  DEFAULT_RULES: ::Array
+  DEFAULT_RULES: Array[__todo__]
 
   #
   #  Two accessor for setting security restrictions.
@@ -147,18 +147,18 @@ class RedCloth3 < String
   HYPERLINK: ::String
 
   # Text markup tags, don't conflict with block tags
-  SIMPLE_HTML_TAGS: ::Array
+  SIMPLE_HTML_TAGS: Array[__todo__]
 
-  QTAGS: ::Array
+  QTAGS: Array[__todo__]
 
   QTAGS_JOIN: untyped
 
   # Elements to handle
-  GLYPHS: ::Array
+  GLYPHS: Array[__todo__]
 
-  H_ALGN_VALS: ::Hash
+  H_ALGN_VALS: Hash[__todo__, __todo__]
 
-  V_ALGN_VALS: ::Hash
+  V_ALGN_VALS: Hash[__todo__, __todo__]
 
   #
   #  Flexible HTML escaping
@@ -316,11 +316,11 @@ class RedCloth3 < String
   def textile_popup_help: (untyped name, untyped windowW, untyped windowH) -> untyped
 
   # HTML cleansing stuff
-  BASIC_TAGS: ::Hash
+  BASIC_TAGS: Hash[__todo__, __todo__]
 
   def clean_html: (untyped text, ?untyped tags) -> untyped
 
-  ALLOWED_TAGS: ::Array
+  ALLOWED_TAGS: Array[__todo__]
 
   def escape_html_tags: (untyped text) -> untyped
 

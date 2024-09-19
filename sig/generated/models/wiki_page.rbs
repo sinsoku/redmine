@@ -8,7 +8,7 @@ class WikiPage < ApplicationRecord
   attr_writer deleted_attachment_ids: untyped
 
   # Wiki pages that are protected by default
-  DEFAULT_PROTECTED_PAGES: ::Array
+  DEFAULT_PROTECTED_PAGES: Array[String]
 
   def initialize: (?untyped attributes, *untyped args) -> untyped
 

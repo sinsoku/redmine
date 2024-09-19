@@ -19,7 +19,7 @@
 
 module Redmine
   # Class used to parse unified diffs
-  class UnifiedDiff < Array
+  class UnifiedDiff < Array #[__todo__]
     attr_reader :diff_type, :diff_style
 
     def initialize(diff, options={})

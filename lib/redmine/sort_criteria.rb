@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module Redmine
-  class SortCriteria < Array
+  class SortCriteria < Array #[__todo__]
     def initialize(arg=nil)
       super()
       if arg.is_a?(Array)

@@ -43,9 +43,9 @@ end
 class Version < ApplicationRecord
   include Redmine::SafeAttributes
 
-  VERSION_STATUSES: ::Array
+  VERSION_STATUSES: Array[__todo__]
 
-  VERSION_SHARINGS: ::Array
+  VERSION_SHARINGS: Array[__todo__]
 
   def safe_attributes=: (untyped attrs, ?untyped user) -> untyped
 

@@ -109,7 +109,7 @@ module Redmine
     end
 
     class MenuNode
-      include Enumerable
+      include Enumerable[__todo__]
 
       attr_accessor parent: untyped
 
@@ -124,7 +124,8 @@ module Redmine
       # Returns the number of descendants + 1
       def size: () -> untyped
 
-      def each: () -> untyped
+      # @rbs () { (__todo__) -> void } -> void
+      def each: () { (__todo__) -> void } -> void
 
       # Adds a child at first position
       def prepend: (untyped child) -> untyped

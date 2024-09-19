@@ -1,7 +1,7 @@
 # Generated from app/helpers/custom_fields_helper.rb with RBS::Inline
 
 module CustomFieldsHelper
-  CUSTOM_FIELDS_TABS: ::Array
+  CUSTOM_FIELDS_TABS: Array[__todo__]
 
   def render_custom_fields_tabs: (untyped types) -> untyped
 

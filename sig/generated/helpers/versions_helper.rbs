@@ -7,7 +7,7 @@ module VersionsHelper
 
   def version_filtered_issues_path: (untyped version, ?untyped options) -> untyped
 
-  STATUS_BY_CRITERIAS: ::Array
+  STATUS_BY_CRITERIAS: Array[__todo__]
 
   def render_issue_status_by: (untyped version, untyped criteria) -> untyped
 

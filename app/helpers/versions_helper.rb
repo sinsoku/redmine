@@ -50,7 +50,7 @@ module VersionsHelper
     end
   end
 
-  STATUS_BY_CRITERIAS = %w(tracker status priority author assigned_to category)
+  STATUS_BY_CRITERIAS = %w(tracker status priority author assigned_to category) #: Array[__todo__]
 
   def render_issue_status_by(version, criteria)
     criteria = 'tracker' unless STATUS_BY_CRITERIAS.include?(criteria)

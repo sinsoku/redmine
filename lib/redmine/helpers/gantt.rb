@@ -34,7 +34,7 @@ module Redmine
         IssueRelation::TYPE_PRECEDES => {:landscape_margin => 20, :color => '#628FEA'}
       }.freeze
 
-      UNAVAILABLE_COLUMNS = [:tracker, :id, :subject]
+      UNAVAILABLE_COLUMNS = [:tracker, :id, :subject] #: Array[__todo__]
 
       # Some utility methods for the PDF export
       # @private

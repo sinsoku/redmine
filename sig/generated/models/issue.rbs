@@ -9,7 +9,7 @@ class Issue < ApplicationRecord
 
   include Redmine::NestedSet::IssueNestedSet
 
-  DONE_RATIO_OPTIONS: ::Array
+  DONE_RATIO_OPTIONS: Array[__todo__]
 
   attr_reader transition_warning: untyped
 

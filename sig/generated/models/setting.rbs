@@ -1,13 +1,13 @@
 # Generated from app/models/setting.rb with RBS::Inline
 
 class Setting < ApplicationRecord
-  PASSWORD_CHAR_CLASSES: ::Hash
+  PASSWORD_CHAR_CLASSES: Hash[__todo__, __todo__]
 
-  DATE_FORMATS: ::Array
+  DATE_FORMATS: Array[__todo__]
 
-  TIME_FORMATS: ::Array
+  TIME_FORMATS: Array[__todo__]
 
-  ENCODINGS: ::Array
+  ENCODINGS: Array[__todo__]
 
   def value: () -> untyped
 

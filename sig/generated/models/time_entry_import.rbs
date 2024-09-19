@@ -1,7 +1,7 @@
 # Generated from app/models/time_entry_import.rb with RBS::Inline
 
 class TimeEntryImport < Import
-  AUTO_MAPPABLE_FIELDS: ::Hash
+  AUTO_MAPPABLE_FIELDS: Hash[__todo__, __todo__]
 
   def self.menu_item: () -> untyped
 

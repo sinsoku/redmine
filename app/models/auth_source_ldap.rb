@@ -27,7 +27,7 @@ class AuthSourceLdap < AuthSource
     Errno::ECONNABORTED, Errno::ECONNREFUSED, Errno::ECONNRESET,
     Errno::EHOSTDOWN, Errno::EHOSTUNREACH,
     SocketError
-  ]
+  ] #: Array[__todo__]
 
   validates_presence_of :host, :port, :attr_login
   validates_length_of :name, :host, :maximum => 60, :allow_nil => true
@@ -45,7 +45,7 @@ class AuthSourceLdap < AuthSource
     :ldap,
     :ldaps_verify_none,
     :ldaps_verify_peer
-  ]
+  ] #: Array[__todo__]
 
   def initialize(attributes=nil, *args)
     super

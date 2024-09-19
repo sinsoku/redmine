@@ -16,7 +16,7 @@ module Redmine
       # Relation types that are rendered
       DRAW_TYPES: untyped
 
-      UNAVAILABLE_COLUMNS: ::Array
+      UNAVAILABLE_COLUMNS: Array[__todo__]
 
       # Some utility methods for the PDF export
       # @private
