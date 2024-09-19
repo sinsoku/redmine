@@ -37,5 +37,6 @@ class AuthSource < ApplicationRecord
   def self.allow_password_changes?: () -> untyped
 
   # Try to authenticate a user not yet registered against available sources
-  def self.authenticate: (untyped login, untyped password) -> untyped
+  # @rbs (String, String) -> Hash[Symbol, untyped]?
+  def self.authenticate: (String, String) -> Hash[Symbol, untyped]?
 end
