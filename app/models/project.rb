@@ -256,6 +256,7 @@ class Project < ApplicationRecord
       Principal.active.joins(:members).where("#{Member.table_name}.project_id = ?", id).distinct
   end
 
+  # @rbs () -> User::ActiveRecord_Relation | ...
   def users
     @users ||=
       User.active.joins(:members).where("#{Member.table_name}.project_id = ?", id).distinct
@@ -345,6 +346,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs (*__todo__) -> Project | ...
   def self.find(*args)
     if args.first && args.first.is_a?(String) && !/^\d*$/.match?(args.first)
       project = find_by_identifier(*args)

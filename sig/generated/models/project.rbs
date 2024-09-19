@@ -51,7 +51,9 @@ class Project < ApplicationRecord
 
   def principals: () -> untyped
 
-  def users: () -> untyped
+  # @rbs () -> User::ActiveRecord_Relation | ...
+  def users: () -> User::ActiveRecord_Relation
+           | ...
 
   # Returns the Systemwide and project specific activities
   def activities: (?untyped include_inactive) -> untyped
@@ -81,7 +83,9 @@ class Project < ApplicationRecord
   #   project.project_condition(false) => "projects.id = 1"
   def project_condition: (untyped with_subprojects) -> untyped
 
-  def self.find: (*untyped args) -> untyped
+  # @rbs (*__todo__) -> Project | ...
+  def self.find: (*__todo__) -> Project
+               | ...
 
   def self.find_by_param: (*untyped args) -> untyped
 

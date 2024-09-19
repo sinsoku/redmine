@@ -13,7 +13,9 @@ class Member < ApplicationRecord
 
   alias base_role_ids= role_ids=
 
-  def role_ids=: (untyped arg) -> untyped
+  # @rbs (Array[_ToI]) -> Array[Integer] | ...
+  def role_ids=: (Array[_ToI]) -> Array[Integer]
+               | ...
 
   def <=>: (untyped member) -> untyped
 

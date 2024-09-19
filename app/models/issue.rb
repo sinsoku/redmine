@@ -343,6 +343,7 @@ class Issue < ApplicationRecord
   end
 
   # Sets the status.
+  # @rbs (IssueStatus) -> IssueStatus | ...
   def status=(status)
     if status != self.status
       @workflow_rule_by_attribute = nil
@@ -377,6 +378,7 @@ class Issue < ApplicationRecord
   # * the status was the default for the previous tracker
   # * or if the status was not part of the new tracker statuses
   # * or the status was nil
+  # @rbs (Tracker) -> Tracker | ...
   def tracker=(tracker)
     tracker_was = self.tracker
     association(:tracker).writer(tracker)
@@ -411,6 +413,7 @@ class Issue < ApplicationRecord
   #   project if it exists, or clear it if it doesn't.
   # * for new issue, set the fixed_version to the project default version
   #   if it's a valid fixed_version.
+  # @rbs (Project, bool) -> Project | ...
   def project=(project, keep_tracker=false)
     project_was = self.project
     association(:project).writer(project)

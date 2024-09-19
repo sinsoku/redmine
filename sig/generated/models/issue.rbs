@@ -78,7 +78,9 @@ class Issue < ApplicationRecord
   def status_id=: (untyped status_id) -> untyped
 
   # Sets the status.
-  def status=: (untyped status) -> untyped
+  # @rbs (IssueStatus) -> IssueStatus | ...
+  def status=: (IssueStatus) -> IssueStatus
+             | ...
 
   def priority_id=: (untyped pid) -> untyped
 
@@ -93,7 +95,9 @@ class Issue < ApplicationRecord
   # * the status was the default for the previous tracker
   # * or if the status was not part of the new tracker statuses
   # * or the status was nil
-  def tracker=: (untyped tracker) -> untyped
+  # @rbs (Tracker) -> Tracker | ...
+  def tracker=: (Tracker) -> Tracker
+              | ...
 
   def project_id=: (untyped project_id) -> untyped
 
@@ -108,7 +112,9 @@ class Issue < ApplicationRecord
   #   project if it exists, or clear it if it doesn't.
   # * for new issue, set the fixed_version to the project default version
   #   if it's a valid fixed_version.
-  def project=: (untyped project, ?untyped keep_tracker) -> untyped
+  # @rbs (Project, bool) -> Project | ...
+  def project=: (Project, bool) -> Project
+              | ...
 
   def description=: (untyped arg) -> untyped
 

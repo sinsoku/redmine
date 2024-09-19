@@ -61,6 +61,7 @@ class Member < ApplicationRecord
   end
 
   alias :base_role_ids= :role_ids=
+  # @rbs (Array[_ToI]) -> Array[Integer] | ...
   def role_ids=(arg)
     ids = (arg || []).collect(&:to_i) - [0]
     # Keep inherited roles
