@@ -1,0 +1,6 @@
+module Test
+  module Unit
+    class TestCase
+    end
+  end
+end

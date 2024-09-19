@@ -1,0 +1,4 @@
+module ActionMailer
+  class MailDeliveryJob
+  end
+end

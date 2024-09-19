@@ -1,0 +1,10 @@
+module Propshaft
+  class Asset
+  end
+
+  class LoadPath
+  end
+
+  module Helper
+  end
+end

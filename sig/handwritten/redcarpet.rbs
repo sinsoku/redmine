@@ -1,0 +1,6 @@
+module Redcarpet
+  module Render
+    class HTML
+    end
+  end
+end

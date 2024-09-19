@@ -1,0 +1,4 @@
+module Rouge
+  class Formatter
+  end
+end
