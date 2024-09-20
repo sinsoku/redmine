@@ -1,0 +1,4 @@
+# Generated from app/helpers/news_helper.rb with RBS::Inline
+
+module NewsHelper
+end

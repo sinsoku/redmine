@@ -1,0 +1,6 @@
+# Generated from app/helpers/email_addresses_helper.rb with RBS::Inline
+
+module EmailAddressesHelper
+  # Returns a link to enable or disable notifications for the address
+  def toggle_email_address_notify_link: (untyped address) -> untyped
+end

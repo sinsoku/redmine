@@ -1,0 +1,13 @@
+# Generated from lib/redmine/wiki_formatting/common_mark/external_links_filter.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module CommonMark
+      # adds class="external" to external links, and class="email" to mailto
+      # links
+      class ExternalLinksFilter < HTML::Pipeline::Filter
+        def call: () -> untyped
+      end
+    end
+  end
+end

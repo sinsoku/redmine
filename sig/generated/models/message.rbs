@@ -1,0 +1,31 @@
+# Generated from app/models/message.rb with RBS::Inline
+
+class Message < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  def visible?: (?untyped user) -> untyped
+
+  def cannot_reply_to_locked_topic: () -> untyped
+
+  def update_messages_board: () -> untyped
+
+  def reset_counters!: () -> untyped
+
+  def sticky=: (untyped arg) -> untyped
+
+  def sticky?: () -> untyped
+
+  def project: () -> untyped
+
+  def editable_by?: (untyped usr) -> untyped
+
+  def destroyable_by?: (untyped usr) -> untyped
+
+  def notified_users: () -> untyped
+
+  private
+
+  def add_author_as_watcher: () -> untyped
+
+  def send_notification: () -> untyped
+end

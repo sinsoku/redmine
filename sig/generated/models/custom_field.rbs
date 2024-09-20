@@ -1,0 +1,92 @@
+# Generated from app/models/custom_field.rb with RBS::Inline
+
+class CustomField < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  include Redmine::SubclassFactory
+
+  def visible_by?: (untyped project, ?untyped user) -> untyped
+
+  def copy_from: (untyped arg, ?untyped options) -> untyped
+
+  def format: () -> untyped
+
+  def field_format=: (untyped arg) -> untyped
+
+  def set_searchable: () -> untyped
+
+  def validate_custom_field: () -> untyped
+
+  def possible_custom_value_options: (untyped custom_value) -> untyped
+
+  def possible_values_options: (?untyped object) -> untyped
+
+  def possible_values: () -> untyped
+
+  # Makes possible_values accept a multiline string
+  def possible_values=: (untyped arg) -> untyped
+
+  def set_custom_field_value: (untyped custom_field_value, untyped value) -> untyped
+
+  def cast_value: (untyped value) -> untyped
+
+  def value_from_keyword: (untyped keyword, untyped customized) -> untyped
+
+  # Returns the options hash used to build a query filter for the field
+  def query_filter_options: (untyped query) -> untyped
+
+  def totalable?: () -> untyped
+
+  def full_width_layout?: () -> untyped
+
+  def full_text_formatting?: () -> untyped
+
+  def thousands_delimiter?: () -> untyped
+
+  # Returns a ORDER BY clause that can used to sort customized
+  # objects by their value of the custom field.
+  # Returns nil if the custom field can not be used for sorting.
+  def order_statement: () -> untyped
+
+  # Returns a GROUP BY clause that can used to group by custom value
+  # Returns nil if the custom field can not be used for grouping.
+  def group_statement: () -> untyped
+
+  def join_for_order_statement: () -> untyped
+
+  def visibility_by_project_condition: (?untyped project_key, ?untyped user, ?untyped id_column) -> untyped
+
+  def <=>: (untyped field) -> untyped
+
+  # Returns the class that values represent
+  def value_class: () -> untyped
+
+  def self.customized_class: () -> untyped
+
+  # to move in project_custom_field
+  def self.for_all: () -> untyped
+
+  def type_name: () -> untyped
+
+  # Returns the error messages for the given value
+  # or an empty array if value is a valid value for the custom field
+  def validate_custom_value: (untyped custom_value) -> untyped
+
+  # Returns the error messages for the default custom field value
+  def validate_field_value: (untyped value) -> untyped
+
+  # Returns true if value is a valid value for the custom field
+  def valid_field_value?: (untyped value) -> untyped
+
+  def after_save_custom_value: (untyped custom_value) -> untyped
+
+  def format_in?: (*untyped args) -> untyped
+
+  def self.human_attribute_name: (untyped attribute_key_name, *untyped args) -> untyped
+
+  def css_classes: () -> untyped
+
+  # Removes multiple values for the custom field after setting the multiple attribute to false
+  # We kepp the value with the highest id for each customized object
+  def handle_multiplicity_change: () -> untyped
+end

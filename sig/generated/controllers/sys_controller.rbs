@@ -1,0 +1,13 @@
+# Generated from app/controllers/sys_controller.rb with RBS::Inline
+
+class SysController < ActionController::Base
+  include ActiveSupport::SecurityUtils
+
+  def projects: () -> untyped
+
+  def create_project_repository: () -> untyped
+
+  def fetch_changesets: () -> untyped
+
+  def check_enabled: () -> untyped
+end

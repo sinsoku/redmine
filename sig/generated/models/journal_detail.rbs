@@ -1,0 +1,13 @@
+# Generated from app/models/journal_detail.rb with RBS::Inline
+
+class JournalDetail < ApplicationRecord
+  def custom_field: () -> untyped
+
+  def value=: (untyped arg) -> untyped
+
+  def old_value=: (untyped arg) -> untyped
+
+  private
+
+  def normalize: (untyped v) -> untyped
+end

@@ -1,0 +1,36 @@
+# Generated from app/models/token.rb with RBS::Inline
+
+class Token < ApplicationRecord
+  attr_reader actions: untyped
+
+  def self.add_action: (untyped name, untyped options) -> untyped
+
+  def generate_new_token: () -> untyped
+
+  # Return true if token has expired
+  def expired?: () -> untyped
+
+  def max_instances: () -> untyped
+
+  def self.invalid_when_created_before: (?untyped action) -> untyped
+
+  # Delete all expired tokens
+  def self.destroy_expired: () -> untyped
+
+  # Returns the active user who owns the key for the given action
+  def self.find_active_user: (untyped action, untyped key, ?untyped validity_days) -> untyped
+
+  # Returns the user who owns the key for the given action
+  def self.find_user: (untyped action, untyped key, ?untyped validity_days) -> untyped
+
+  # Returns the token for action and key with an optional
+  # validity duration (in number of days)
+  def self.find_token: (untyped action, untyped key, ?untyped validity_days) -> untyped
+
+  def self.generate_token_value: () -> untyped
+
+  private
+
+  # Removes obsolete tokens (same user and action)
+  def delete_previous_tokens: () -> untyped
+end

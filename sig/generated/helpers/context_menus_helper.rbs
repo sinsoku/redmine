@@ -1,0 +1,9 @@
+# Generated from app/helpers/context_menus_helper.rb with RBS::Inline
+
+module ContextMenusHelper
+  def context_menu_link: (untyped name, untyped url, ?untyped options) -> untyped
+
+  def bulk_update_custom_field_context_menu_link: (untyped field, untyped text, untyped value) -> untyped
+
+  def bulk_update_time_entry_custom_field_context_menu_link: (untyped field, untyped text, untyped value) -> untyped
+end

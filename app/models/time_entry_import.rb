@@ -25,7 +25,7 @@ class TimeEntryImport < Import
     'spent_on' => 'field_spent_on',
     'hours' => 'field_hours',
     'comments' => 'field_comments'
-  }
+  } #: Hash[__todo__, __todo__]
 
   def self.menu_item
     :time_entries

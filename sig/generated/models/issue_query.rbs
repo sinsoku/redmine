@@ -1,0 +1,109 @@
+# Generated from app/models/issue_query.rb with RBS::Inline
+
+class IssueQuery < Query
+  ESTIMATED_REMAINING_HOURS_SQL: untyped
+
+  def self.default: (?project: untyped, ?user: untyped) -> untyped
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def draw_relations: () -> untyped
+
+  def draw_relations=: (untyped arg) -> untyped
+
+  def draw_progress_line: () -> untyped
+
+  def draw_progress_line=: (untyped arg) -> untyped
+
+  def draw_selected_columns: () -> untyped
+
+  def draw_selected_columns=: (untyped arg) -> untyped
+
+  def build_from_params: (untyped params, ?untyped defaults) -> untyped
+
+  def initialize_available_filters: () -> untyped
+
+  def available_columns: () -> untyped
+
+  def default_columns_names: () -> untyped
+
+  def default_totalable_names: () -> untyped
+
+  def default_sort_criteria: () -> untyped
+
+  def base_scope: () -> untyped
+
+  # Returns the issue count
+  def issue_count: () -> untyped
+
+  # Returns sum of all the issue's estimated_hours
+  def total_for_estimated_hours: (untyped scope) -> untyped
+
+  def total_for_estimated_remaining_hours: (untyped scope) -> untyped
+
+  # Returns sum of all the issue's time entries hours
+  def total_for_spent_hours: (untyped scope) -> untyped
+
+  # Returns the issues
+  # Valid options are :order, :offset, :limit, :include, :conditions
+  def issues: (?untyped options) -> untyped
+
+  # Returns the issues ids
+  def issue_ids: (?untyped options) -> untyped
+
+  # Returns the journals
+  # Valid options are :order, :offset, :limit
+  def journals: (?untyped options) -> untyped
+
+  # Returns the versions
+  # Valid options are :conditions
+  def versions: (?untyped options) -> untyped
+
+  def sql_for_notes_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_updated_by_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_last_updated_by_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_spent_time_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_watcher_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_member_of_group_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_assigned_to_role_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_author_group_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_author_role_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_fixed_version_status_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_fixed_version_due_date_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_is_private_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_attachment_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_attachment_description_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_parent_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_child_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_updated_on_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_issue_id_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def sql_for_relations: (untyped field, untyped operator, untyped value, ?untyped options) -> untyped
+
+  def sql_for_project_status_field: (untyped field, untyped operator, untyped value, ?untyped options) -> untyped
+
+  def sql_for_any_searchable_field: (untyped field, untyped operator, untyped value) -> untyped
+
+  def find_assigned_to_id_filter_values: (untyped values) -> untyped
+
+  alias find_author_id_filter_values find_assigned_to_id_filter_values
+
+  def joins_for_order_statement: (untyped order_options) -> untyped
+end

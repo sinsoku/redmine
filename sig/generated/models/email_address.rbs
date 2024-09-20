@@ -1,0 +1,37 @@
+# Generated from app/models/email_address.rb with RBS::Inline
+
+class EmailAddress < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  def address=: (untyped arg) -> untyped
+
+  def destroy: () -> untyped
+
+  # Returns true if the email domain is allowed regarding allowed/denied
+  # domains defined in application settings, otherwise false
+  def self.valid_domain?: (untyped domain_or_email) -> untyped
+
+  # Returns true if domain belongs to domains list.
+  def self.domain_in?: (untyped domain, untyped domains) -> untyped
+
+  private
+
+  # send a security notification to user that a new email address was added
+  def deliver_security_notification_create: () -> untyped
+
+  # send a security notification to user that an email has been changed (notified/not notified)
+  def deliver_security_notification_update: () -> untyped
+
+  # send a security notification to user that an email address was deleted
+  def deliver_security_notification_destroy: () -> untyped
+
+  # generic method to send security notifications for email addresses
+  def deliver_security_notification: (?untyped options) -> untyped
+
+  # Delete all outstanding password reset tokens on email change.
+  # This helps to keep the account secure in case the associated email account
+  # was compromised.
+  def destroy_tokens: () -> untyped
+
+  def validate_email_domain: () -> untyped
+end

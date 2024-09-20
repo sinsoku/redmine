@@ -1,0 +1,14 @@
+# Generated from lib/redmine/subclass_factory.rb with RBS::Inline
+
+module Redmine
+  module SubclassFactory
+    def self.included: (untyped base) -> untyped
+
+    module ClassMethods
+      def get_subclass: (untyped class_name) -> untyped
+
+      # Returns an instance of the given subclass name
+      def new_subclass_instance: (untyped class_name, *untyped args) -> untyped
+    end
+  end
+end

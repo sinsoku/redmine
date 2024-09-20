@@ -1,0 +1,15 @@
+# Generated from app/models/issue_category.rb with RBS::Inline
+
+class IssueCategory < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  alias destroy_without_reassign destroy
+
+  # Destroy the category
+  # If a category is specified, issues are reassigned to this category
+  def destroy: (?untyped reassign_to) -> untyped
+
+  def <=>: (untyped category) -> untyped
+
+  def to_s: () -> untyped
+end

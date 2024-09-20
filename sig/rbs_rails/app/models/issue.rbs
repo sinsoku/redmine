@@ -1,0 +1,974 @@
+class Issue < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Issue, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def tracker_id: () -> Integer
+
+    def tracker_id=: (Integer) -> Integer
+
+    def tracker_id?: () -> bool
+
+    def tracker_id_changed?: () -> bool
+
+    def tracker_id_change: () -> [ Integer?, Integer? ]
+
+    def tracker_id_will_change!: () -> void
+
+    def tracker_id_was: () -> Integer?
+
+    def tracker_id_previously_changed?: () -> bool
+
+    def tracker_id_previous_change: () -> Array[Integer?]?
+
+    def tracker_id_previously_was: () -> Integer?
+
+    def tracker_id_before_last_save: () -> Integer?
+
+    def tracker_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def tracker_id_in_database: () -> Integer?
+
+    def saved_change_to_tracker_id: () -> Array[Integer?]?
+
+    def saved_change_to_tracker_id?: () -> bool
+
+    def will_save_change_to_tracker_id?: () -> bool
+
+    def restore_tracker_id!: () -> void
+
+    def clear_tracker_id_change: () -> void
+
+    def project_id: () -> Integer
+
+    def project_id=: (Integer) -> Integer
+
+    def project_id?: () -> bool
+
+    def project_id_changed?: () -> bool
+
+    def project_id_change: () -> [ Integer?, Integer? ]
+
+    def project_id_will_change!: () -> void
+
+    def project_id_was: () -> Integer?
+
+    def project_id_previously_changed?: () -> bool
+
+    def project_id_previous_change: () -> Array[Integer?]?
+
+    def project_id_previously_was: () -> Integer?
+
+    def project_id_before_last_save: () -> Integer?
+
+    def project_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def project_id_in_database: () -> Integer?
+
+    def saved_change_to_project_id: () -> Array[Integer?]?
+
+    def saved_change_to_project_id?: () -> bool
+
+    def will_save_change_to_project_id?: () -> bool
+
+    def restore_project_id!: () -> void
+
+    def clear_project_id_change: () -> void
+
+    def subject: () -> String
+
+    def subject=: (String) -> String
+
+    def subject?: () -> bool
+
+    def subject_changed?: () -> bool
+
+    def subject_change: () -> [ String?, String? ]
+
+    def subject_will_change!: () -> void
+
+    def subject_was: () -> String?
+
+    def subject_previously_changed?: () -> bool
+
+    def subject_previous_change: () -> Array[String?]?
+
+    def subject_previously_was: () -> String?
+
+    def subject_before_last_save: () -> String?
+
+    def subject_change_to_be_saved: () -> Array[String?]?
+
+    def subject_in_database: () -> String?
+
+    def saved_change_to_subject: () -> Array[String?]?
+
+    def saved_change_to_subject?: () -> bool
+
+    def will_save_change_to_subject?: () -> bool
+
+    def restore_subject!: () -> void
+
+    def clear_subject_change: () -> void
+
+    def description: () -> String?
+
+    def description=: (String?) -> String?
+
+    def description?: () -> bool
+
+    def description_changed?: () -> bool
+
+    def description_change: () -> [ String?, String? ]
+
+    def description_will_change!: () -> void
+
+    def description_was: () -> String?
+
+    def description_previously_changed?: () -> bool
+
+    def description_previous_change: () -> Array[String?]?
+
+    def description_previously_was: () -> String?
+
+    def description_before_last_save: () -> String?
+
+    def description_change_to_be_saved: () -> Array[String?]?
+
+    def description_in_database: () -> String?
+
+    def saved_change_to_description: () -> Array[String?]?
+
+    def saved_change_to_description?: () -> bool
+
+    def will_save_change_to_description?: () -> bool
+
+    def restore_description!: () -> void
+
+    def clear_description_change: () -> void
+
+    def due_date: () -> Date?
+
+    def due_date=: (Date?) -> Date?
+
+    def due_date?: () -> bool
+
+    def due_date_changed?: () -> bool
+
+    def due_date_change: () -> [ Date?, Date? ]
+
+    def due_date_will_change!: () -> void
+
+    def due_date_was: () -> Date?
+
+    def due_date_previously_changed?: () -> bool
+
+    def due_date_previous_change: () -> Array[Date?]?
+
+    def due_date_previously_was: () -> Date?
+
+    def due_date_before_last_save: () -> Date?
+
+    def due_date_change_to_be_saved: () -> Array[Date?]?
+
+    def due_date_in_database: () -> Date?
+
+    def saved_change_to_due_date: () -> Array[Date?]?
+
+    def saved_change_to_due_date?: () -> bool
+
+    def will_save_change_to_due_date?: () -> bool
+
+    def restore_due_date!: () -> void
+
+    def clear_due_date_change: () -> void
+
+    def category_id: () -> Integer?
+
+    def category_id=: (Integer?) -> Integer?
+
+    def category_id?: () -> bool
+
+    def category_id_changed?: () -> bool
+
+    def category_id_change: () -> [ Integer?, Integer? ]
+
+    def category_id_will_change!: () -> void
+
+    def category_id_was: () -> Integer?
+
+    def category_id_previously_changed?: () -> bool
+
+    def category_id_previous_change: () -> Array[Integer?]?
+
+    def category_id_previously_was: () -> Integer?
+
+    def category_id_before_last_save: () -> Integer?
+
+    def category_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def category_id_in_database: () -> Integer?
+
+    def saved_change_to_category_id: () -> Array[Integer?]?
+
+    def saved_change_to_category_id?: () -> bool
+
+    def will_save_change_to_category_id?: () -> bool
+
+    def restore_category_id!: () -> void
+
+    def clear_category_id_change: () -> void
+
+    def status_id: () -> Integer
+
+    def status_id=: (Integer) -> Integer
+
+    def status_id?: () -> bool
+
+    def status_id_changed?: () -> bool
+
+    def status_id_change: () -> [ Integer?, Integer? ]
+
+    def status_id_will_change!: () -> void
+
+    def status_id_was: () -> Integer?
+
+    def status_id_previously_changed?: () -> bool
+
+    def status_id_previous_change: () -> Array[Integer?]?
+
+    def status_id_previously_was: () -> Integer?
+
+    def status_id_before_last_save: () -> Integer?
+
+    def status_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def status_id_in_database: () -> Integer?
+
+    def saved_change_to_status_id: () -> Array[Integer?]?
+
+    def saved_change_to_status_id?: () -> bool
+
+    def will_save_change_to_status_id?: () -> bool
+
+    def restore_status_id!: () -> void
+
+    def clear_status_id_change: () -> void
+
+    def assigned_to_id: () -> Integer?
+
+    def assigned_to_id=: (Integer?) -> Integer?
+
+    def assigned_to_id?: () -> bool
+
+    def assigned_to_id_changed?: () -> bool
+
+    def assigned_to_id_change: () -> [ Integer?, Integer? ]
+
+    def assigned_to_id_will_change!: () -> void
+
+    def assigned_to_id_was: () -> Integer?
+
+    def assigned_to_id_previously_changed?: () -> bool
+
+    def assigned_to_id_previous_change: () -> Array[Integer?]?
+
+    def assigned_to_id_previously_was: () -> Integer?
+
+    def assigned_to_id_before_last_save: () -> Integer?
+
+    def assigned_to_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def assigned_to_id_in_database: () -> Integer?
+
+    def saved_change_to_assigned_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_assigned_to_id?: () -> bool
+
+    def will_save_change_to_assigned_to_id?: () -> bool
+
+    def restore_assigned_to_id!: () -> void
+
+    def clear_assigned_to_id_change: () -> void
+
+    def priority_id: () -> Integer
+
+    def priority_id=: (Integer) -> Integer
+
+    def priority_id?: () -> bool
+
+    def priority_id_changed?: () -> bool
+
+    def priority_id_change: () -> [ Integer?, Integer? ]
+
+    def priority_id_will_change!: () -> void
+
+    def priority_id_was: () -> Integer?
+
+    def priority_id_previously_changed?: () -> bool
+
+    def priority_id_previous_change: () -> Array[Integer?]?
+
+    def priority_id_previously_was: () -> Integer?
+
+    def priority_id_before_last_save: () -> Integer?
+
+    def priority_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def priority_id_in_database: () -> Integer?
+
+    def saved_change_to_priority_id: () -> Array[Integer?]?
+
+    def saved_change_to_priority_id?: () -> bool
+
+    def will_save_change_to_priority_id?: () -> bool
+
+    def restore_priority_id!: () -> void
+
+    def clear_priority_id_change: () -> void
+
+    def fixed_version_id: () -> Integer?
+
+    def fixed_version_id=: (Integer?) -> Integer?
+
+    def fixed_version_id?: () -> bool
+
+    def fixed_version_id_changed?: () -> bool
+
+    def fixed_version_id_change: () -> [ Integer?, Integer? ]
+
+    def fixed_version_id_will_change!: () -> void
+
+    def fixed_version_id_was: () -> Integer?
+
+    def fixed_version_id_previously_changed?: () -> bool
+
+    def fixed_version_id_previous_change: () -> Array[Integer?]?
+
+    def fixed_version_id_previously_was: () -> Integer?
+
+    def fixed_version_id_before_last_save: () -> Integer?
+
+    def fixed_version_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def fixed_version_id_in_database: () -> Integer?
+
+    def saved_change_to_fixed_version_id: () -> Array[Integer?]?
+
+    def saved_change_to_fixed_version_id?: () -> bool
+
+    def will_save_change_to_fixed_version_id?: () -> bool
+
+    def restore_fixed_version_id!: () -> void
+
+    def clear_fixed_version_id_change: () -> void
+
+    def author_id: () -> Integer
+
+    def author_id=: (Integer) -> Integer
+
+    def author_id?: () -> bool
+
+    def author_id_changed?: () -> bool
+
+    def author_id_change: () -> [ Integer?, Integer? ]
+
+    def author_id_will_change!: () -> void
+
+    def author_id_was: () -> Integer?
+
+    def author_id_previously_changed?: () -> bool
+
+    def author_id_previous_change: () -> Array[Integer?]?
+
+    def author_id_previously_was: () -> Integer?
+
+    def author_id_before_last_save: () -> Integer?
+
+    def author_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def author_id_in_database: () -> Integer?
+
+    def saved_change_to_author_id: () -> Array[Integer?]?
+
+    def saved_change_to_author_id?: () -> bool
+
+    def will_save_change_to_author_id?: () -> bool
+
+    def restore_author_id!: () -> void
+
+    def clear_author_id_change: () -> void
+
+    def lock_version: () -> Integer
+
+    def lock_version=: (Integer) -> Integer
+
+    def lock_version?: () -> bool
+
+    def lock_version_changed?: () -> bool
+
+    def lock_version_change: () -> [ Integer?, Integer? ]
+
+    def lock_version_will_change!: () -> void
+
+    def lock_version_was: () -> Integer?
+
+    def lock_version_previously_changed?: () -> bool
+
+    def lock_version_previous_change: () -> Array[Integer?]?
+
+    def lock_version_previously_was: () -> Integer?
+
+    def lock_version_before_last_save: () -> Integer?
+
+    def lock_version_change_to_be_saved: () -> Array[Integer?]?
+
+    def lock_version_in_database: () -> Integer?
+
+    def saved_change_to_lock_version: () -> Array[Integer?]?
+
+    def saved_change_to_lock_version?: () -> bool
+
+    def will_save_change_to_lock_version?: () -> bool
+
+    def restore_lock_version!: () -> void
+
+    def clear_lock_version_change: () -> void
+
+    def created_on: () -> ActiveSupport::TimeWithZone?
+
+    def created_on=: (ActiveSupport::TimeWithZone?) -> ActiveSupport::TimeWithZone?
+
+    def created_on?: () -> bool
+
+    def created_on_changed?: () -> bool
+
+    def created_on_change: () -> [ ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone? ]
+
+    def created_on_will_change!: () -> void
+
+    def created_on_was: () -> ActiveSupport::TimeWithZone?
+
+    def created_on_previously_changed?: () -> bool
+
+    def created_on_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def created_on_previously_was: () -> ActiveSupport::TimeWithZone?
+
+    def created_on_before_last_save: () -> ActiveSupport::TimeWithZone?
+
+    def created_on_change_to_be_saved: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def created_on_in_database: () -> ActiveSupport::TimeWithZone?
+
+    def saved_change_to_created_on: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def saved_change_to_created_on?: () -> bool
+
+    def will_save_change_to_created_on?: () -> bool
+
+    def restore_created_on!: () -> void
+
+    def clear_created_on_change: () -> void
+
+    def updated_on: () -> ActiveSupport::TimeWithZone?
+
+    def updated_on=: (ActiveSupport::TimeWithZone?) -> ActiveSupport::TimeWithZone?
+
+    def updated_on?: () -> bool
+
+    def updated_on_changed?: () -> bool
+
+    def updated_on_change: () -> [ ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone? ]
+
+    def updated_on_will_change!: () -> void
+
+    def updated_on_was: () -> ActiveSupport::TimeWithZone?
+
+    def updated_on_previously_changed?: () -> bool
+
+    def updated_on_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def updated_on_previously_was: () -> ActiveSupport::TimeWithZone?
+
+    def updated_on_before_last_save: () -> ActiveSupport::TimeWithZone?
+
+    def updated_on_change_to_be_saved: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def updated_on_in_database: () -> ActiveSupport::TimeWithZone?
+
+    def saved_change_to_updated_on: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def saved_change_to_updated_on?: () -> bool
+
+    def will_save_change_to_updated_on?: () -> bool
+
+    def restore_updated_on!: () -> void
+
+    def clear_updated_on_change: () -> void
+
+    def start_date: () -> Date?
+
+    def start_date=: (Date?) -> Date?
+
+    def start_date?: () -> bool
+
+    def start_date_changed?: () -> bool
+
+    def start_date_change: () -> [ Date?, Date? ]
+
+    def start_date_will_change!: () -> void
+
+    def start_date_was: () -> Date?
+
+    def start_date_previously_changed?: () -> bool
+
+    def start_date_previous_change: () -> Array[Date?]?
+
+    def start_date_previously_was: () -> Date?
+
+    def start_date_before_last_save: () -> Date?
+
+    def start_date_change_to_be_saved: () -> Array[Date?]?
+
+    def start_date_in_database: () -> Date?
+
+    def saved_change_to_start_date: () -> Array[Date?]?
+
+    def saved_change_to_start_date?: () -> bool
+
+    def will_save_change_to_start_date?: () -> bool
+
+    def restore_start_date!: () -> void
+
+    def clear_start_date_change: () -> void
+
+    def done_ratio: () -> Integer
+
+    def done_ratio=: (Integer) -> Integer
+
+    def done_ratio?: () -> bool
+
+    def done_ratio_changed?: () -> bool
+
+    def done_ratio_change: () -> [ Integer?, Integer? ]
+
+    def done_ratio_will_change!: () -> void
+
+    def done_ratio_was: () -> Integer?
+
+    def done_ratio_previously_changed?: () -> bool
+
+    def done_ratio_previous_change: () -> Array[Integer?]?
+
+    def done_ratio_previously_was: () -> Integer?
+
+    def done_ratio_before_last_save: () -> Integer?
+
+    def done_ratio_change_to_be_saved: () -> Array[Integer?]?
+
+    def done_ratio_in_database: () -> Integer?
+
+    def saved_change_to_done_ratio: () -> Array[Integer?]?
+
+    def saved_change_to_done_ratio?: () -> bool
+
+    def will_save_change_to_done_ratio?: () -> bool
+
+    def restore_done_ratio!: () -> void
+
+    def clear_done_ratio_change: () -> void
+
+    def estimated_hours: () -> Float?
+
+    def estimated_hours=: (Float?) -> Float?
+
+    def estimated_hours?: () -> bool
+
+    def estimated_hours_changed?: () -> bool
+
+    def estimated_hours_change: () -> [ Float?, Float? ]
+
+    def estimated_hours_will_change!: () -> void
+
+    def estimated_hours_was: () -> Float?
+
+    def estimated_hours_previously_changed?: () -> bool
+
+    def estimated_hours_previous_change: () -> Array[Float?]?
+
+    def estimated_hours_previously_was: () -> Float?
+
+    def estimated_hours_before_last_save: () -> Float?
+
+    def estimated_hours_change_to_be_saved: () -> Array[Float?]?
+
+    def estimated_hours_in_database: () -> Float?
+
+    def saved_change_to_estimated_hours: () -> Array[Float?]?
+
+    def saved_change_to_estimated_hours?: () -> bool
+
+    def will_save_change_to_estimated_hours?: () -> bool
+
+    def restore_estimated_hours!: () -> void
+
+    def clear_estimated_hours_change: () -> void
+
+    def parent_id: () -> Integer?
+
+    def parent_id=: (Integer?) -> Integer?
+
+    def parent_id?: () -> bool
+
+    def parent_id_changed?: () -> bool
+
+    def parent_id_change: () -> [ Integer?, Integer? ]
+
+    def parent_id_will_change!: () -> void
+
+    def parent_id_was: () -> Integer?
+
+    def parent_id_previously_changed?: () -> bool
+
+    def parent_id_previous_change: () -> Array[Integer?]?
+
+    def parent_id_previously_was: () -> Integer?
+
+    def parent_id_before_last_save: () -> Integer?
+
+    def parent_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def parent_id_in_database: () -> Integer?
+
+    def saved_change_to_parent_id: () -> Array[Integer?]?
+
+    def saved_change_to_parent_id?: () -> bool
+
+    def will_save_change_to_parent_id?: () -> bool
+
+    def restore_parent_id!: () -> void
+
+    def clear_parent_id_change: () -> void
+
+    def root_id: () -> Integer?
+
+    def root_id=: (Integer?) -> Integer?
+
+    def root_id?: () -> bool
+
+    def root_id_changed?: () -> bool
+
+    def root_id_change: () -> [ Integer?, Integer? ]
+
+    def root_id_will_change!: () -> void
+
+    def root_id_was: () -> Integer?
+
+    def root_id_previously_changed?: () -> bool
+
+    def root_id_previous_change: () -> Array[Integer?]?
+
+    def root_id_previously_was: () -> Integer?
+
+    def root_id_before_last_save: () -> Integer?
+
+    def root_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def root_id_in_database: () -> Integer?
+
+    def saved_change_to_root_id: () -> Array[Integer?]?
+
+    def saved_change_to_root_id?: () -> bool
+
+    def will_save_change_to_root_id?: () -> bool
+
+    def restore_root_id!: () -> void
+
+    def clear_root_id_change: () -> void
+
+    def lft: () -> Integer?
+
+    def lft=: (Integer?) -> Integer?
+
+    def lft?: () -> bool
+
+    def lft_changed?: () -> bool
+
+    def lft_change: () -> [ Integer?, Integer? ]
+
+    def lft_will_change!: () -> void
+
+    def lft_was: () -> Integer?
+
+    def lft_previously_changed?: () -> bool
+
+    def lft_previous_change: () -> Array[Integer?]?
+
+    def lft_previously_was: () -> Integer?
+
+    def lft_before_last_save: () -> Integer?
+
+    def lft_change_to_be_saved: () -> Array[Integer?]?
+
+    def lft_in_database: () -> Integer?
+
+    def saved_change_to_lft: () -> Array[Integer?]?
+
+    def saved_change_to_lft?: () -> bool
+
+    def will_save_change_to_lft?: () -> bool
+
+    def restore_lft!: () -> void
+
+    def clear_lft_change: () -> void
+
+    def rgt: () -> Integer?
+
+    def rgt=: (Integer?) -> Integer?
+
+    def rgt?: () -> bool
+
+    def rgt_changed?: () -> bool
+
+    def rgt_change: () -> [ Integer?, Integer? ]
+
+    def rgt_will_change!: () -> void
+
+    def rgt_was: () -> Integer?
+
+    def rgt_previously_changed?: () -> bool
+
+    def rgt_previous_change: () -> Array[Integer?]?
+
+    def rgt_previously_was: () -> Integer?
+
+    def rgt_before_last_save: () -> Integer?
+
+    def rgt_change_to_be_saved: () -> Array[Integer?]?
+
+    def rgt_in_database: () -> Integer?
+
+    def saved_change_to_rgt: () -> Array[Integer?]?
+
+    def saved_change_to_rgt?: () -> bool
+
+    def will_save_change_to_rgt?: () -> bool
+
+    def restore_rgt!: () -> void
+
+    def clear_rgt_change: () -> void
+
+    def is_private: () -> bool
+
+    def is_private=: (bool) -> bool
+
+    def is_private?: () -> bool
+
+    def is_private_changed?: () -> bool
+
+    def is_private_change: () -> [ bool?, bool? ]
+
+    def is_private_will_change!: () -> void
+
+    def is_private_was: () -> bool?
+
+    def is_private_previously_changed?: () -> bool
+
+    def is_private_previous_change: () -> Array[bool?]?
+
+    def is_private_previously_was: () -> bool?
+
+    def is_private_before_last_save: () -> bool?
+
+    def is_private_change_to_be_saved: () -> Array[bool?]?
+
+    def is_private_in_database: () -> bool?
+
+    def saved_change_to_is_private: () -> Array[bool?]?
+
+    def saved_change_to_is_private?: () -> bool
+
+    def will_save_change_to_is_private?: () -> bool
+
+    def restore_is_private!: () -> void
+
+    def clear_is_private_change: () -> void
+
+    def closed_on: () -> ActiveSupport::TimeWithZone?
+
+    def closed_on=: (ActiveSupport::TimeWithZone?) -> ActiveSupport::TimeWithZone?
+
+    def closed_on?: () -> bool
+
+    def closed_on_changed?: () -> bool
+
+    def closed_on_change: () -> [ ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone? ]
+
+    def closed_on_will_change!: () -> void
+
+    def closed_on_was: () -> ActiveSupport::TimeWithZone?
+
+    def closed_on_previously_changed?: () -> bool
+
+    def closed_on_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def closed_on_previously_was: () -> ActiveSupport::TimeWithZone?
+
+    def closed_on_before_last_save: () -> ActiveSupport::TimeWithZone?
+
+    def closed_on_change_to_be_saved: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def closed_on_in_database: () -> ActiveSupport::TimeWithZone?
+
+    def saved_change_to_closed_on: () -> Array[ActiveSupport::TimeWithZone?]?
+
+    def saved_change_to_closed_on?: () -> bool
+
+    def will_save_change_to_closed_on?: () -> bool
+
+    def restore_closed_on!: () -> void
+
+    def clear_closed_on_change: () -> void
+  end
+  include GeneratedAttributeMethods
+  def journals: () -> Journal::ActiveRecord_Associations_CollectionProxy
+  def journals=: (Journal::ActiveRecord_Associations_CollectionProxy | Array[Journal]) -> (Journal::ActiveRecord_Associations_CollectionProxy | Array[Journal])
+  def journal_ids: () -> Array[Integer]
+  def journal_ids=: (Array[Integer]) -> Array[Integer]
+  def time_entries: () -> TimeEntry::ActiveRecord_Associations_CollectionProxy
+  def time_entries=: (TimeEntry::ActiveRecord_Associations_CollectionProxy | Array[TimeEntry]) -> (TimeEntry::ActiveRecord_Associations_CollectionProxy | Array[TimeEntry])
+  def time_entry_ids: () -> Array[Integer]
+  def time_entry_ids=: (Array[Integer]) -> Array[Integer]
+  def relations_from: () -> IssueRelation::ActiveRecord_Associations_CollectionProxy
+  def relations_from=: (IssueRelation::ActiveRecord_Associations_CollectionProxy | Array[IssueRelation]) -> (IssueRelation::ActiveRecord_Associations_CollectionProxy | Array[IssueRelation])
+  def relations_from_ids: () -> Array[Integer]
+  def relations_from_ids=: (Array[Integer]) -> Array[Integer]
+  def relations_to: () -> IssueRelation::ActiveRecord_Associations_CollectionProxy
+  def relations_to=: (IssueRelation::ActiveRecord_Associations_CollectionProxy | Array[IssueRelation]) -> (IssueRelation::ActiveRecord_Associations_CollectionProxy | Array[IssueRelation])
+  def relations_to_ids: () -> Array[Integer]
+  def relations_to_ids=: (Array[Integer]) -> Array[Integer]
+  def attachments: () -> Attachment::ActiveRecord_Associations_CollectionProxy
+  def attachments=: (Attachment::ActiveRecord_Associations_CollectionProxy | Array[Attachment]) -> (Attachment::ActiveRecord_Associations_CollectionProxy | Array[Attachment])
+  def attachment_ids: () -> Array[Integer]
+  def attachment_ids=: (Array[Integer]) -> Array[Integer]
+  def custom_values: () -> CustomValue::ActiveRecord_Associations_CollectionProxy
+  def custom_values=: (CustomValue::ActiveRecord_Associations_CollectionProxy | Array[CustomValue]) -> (CustomValue::ActiveRecord_Associations_CollectionProxy | Array[CustomValue])
+  def custom_value_ids: () -> Array[Integer]
+  def custom_value_ids=: (Array[Integer]) -> Array[Integer]
+  def watchers: () -> Watcher::ActiveRecord_Associations_CollectionProxy
+  def watchers=: (Watcher::ActiveRecord_Associations_CollectionProxy | Array[Watcher]) -> (Watcher::ActiveRecord_Associations_CollectionProxy | Array[Watcher])
+  def watcher_ids: () -> Array[Integer]
+  def watcher_ids=: (Array[Integer]) -> Array[Integer]
+  def watcher_users: () -> Principal::ActiveRecord_Associations_CollectionProxy
+  def watcher_users=: (Principal::ActiveRecord_Associations_CollectionProxy | Array[Principal]) -> (Principal::ActiveRecord_Associations_CollectionProxy | Array[Principal])
+  def watcher_user_ids: () -> Array[Integer]
+  def watcher_user_ids=: (Array[Integer]) -> Array[Integer]
+
+  def parent: () -> Issue
+  def parent=: (Issue?) -> Issue?
+  def reload_parent: () -> Issue?
+  def build_parent: (untyped) -> Issue
+  def create_parent: (untyped) -> Issue
+  def create_parent!: (untyped) -> Issue
+  def project: () -> Project
+  def project=: (Project?) -> Project?
+  def reload_project: () -> Project?
+  def build_project: (untyped) -> Project
+  def create_project: (untyped) -> Project
+  def create_project!: (untyped) -> Project
+  def tracker: () -> Tracker
+  def tracker=: (Tracker?) -> Tracker?
+  def reload_tracker: () -> Tracker?
+  def build_tracker: (untyped) -> Tracker
+  def create_tracker: (untyped) -> Tracker
+  def create_tracker!: (untyped) -> Tracker
+  def status: () -> IssueStatus
+  def status=: (IssueStatus?) -> IssueStatus?
+  def reload_status: () -> IssueStatus?
+  def build_status: (untyped) -> IssueStatus
+  def create_status: (untyped) -> IssueStatus
+  def create_status!: (untyped) -> IssueStatus
+  def author: () -> User
+  def author=: (User?) -> User?
+  def reload_author: () -> User?
+  def build_author: (untyped) -> User
+  def create_author: (untyped) -> User
+  def create_author!: (untyped) -> User
+  def assigned_to: () -> Principal
+  def assigned_to=: (Principal?) -> Principal?
+  def reload_assigned_to: () -> Principal?
+  def build_assigned_to: (untyped) -> Principal
+  def create_assigned_to: (untyped) -> Principal
+  def create_assigned_to!: (untyped) -> Principal
+  def fixed_version: () -> Version
+  def fixed_version=: (Version?) -> Version?
+  def reload_fixed_version: () -> Version?
+  def build_fixed_version: (untyped) -> Version
+  def create_fixed_version: (untyped) -> Version
+  def create_fixed_version!: (untyped) -> Version
+  def priority: () -> IssuePriority
+  def priority=: (IssuePriority?) -> IssuePriority?
+  def reload_priority: () -> IssuePriority?
+  def build_priority: (untyped) -> IssuePriority
+  def create_priority: (untyped) -> IssuePriority
+  def create_priority!: (untyped) -> IssuePriority
+  def category: () -> IssueCategory
+  def category=: (IssueCategory?) -> IssueCategory?
+  def reload_category: () -> IssueCategory?
+  def build_category: (untyped) -> IssueCategory
+  def create_category: (untyped) -> IssueCategory
+  def create_category!: (untyped) -> IssueCategory
+
+  def self.recently_updated: () -> ActiveRecord_Relation
+
+  module GeneratedRelationMethods
+    def recently_updated: () -> ActiveRecord_Relation
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Issue, Integer]
+    include Enumerable[Issue]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[Issue, Integer]
+  end
+end

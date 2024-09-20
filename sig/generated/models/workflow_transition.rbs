@@ -1,0 +1,5 @@
+# Generated from app/models/workflow_transition.rb with RBS::Inline
+
+class WorkflowTransition < WorkflowRule
+  def self.replace_transitions: (untyped trackers, untyped roles, untyped transitions) -> untyped
+end

@@ -1,0 +1,11 @@
+# Generated from lib/redmine/utils/shell.rb with RBS::Inline
+
+module Redmine
+  module Utils
+    module Shell
+      def shell_quote: (untyped str) -> untyped
+
+      def shell_quote_command: (untyped command) -> untyped
+    end
+  end
+end

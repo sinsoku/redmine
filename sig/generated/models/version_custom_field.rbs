@@ -1,0 +1,7 @@
+# Generated from app/models/version_custom_field.rb with RBS::Inline
+
+class VersionCustomField < CustomField
+  def type_name: () -> untyped
+
+  def visible_by?: (untyped project, ?untyped user) -> untyped
+end

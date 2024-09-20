@@ -1,0 +1,13 @@
+# Generated from lib/redmine/wiki_formatting/section_helper.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module SectionHelper
+      def get_section: (untyped index) -> untyped
+
+      def update_section: (untyped index, untyped update, ?untyped hash) -> untyped
+
+      def extract_sections: (untyped index) -> untyped
+    end
+  end
+end

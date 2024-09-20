@@ -1,0 +1,19 @@
+# Generated from app/models/workflow_permission.rb with RBS::Inline
+
+class WorkflowPermission < WorkflowRule
+  # Returns the workflow permissions for the given trackers and roles
+  # grouped by status_id
+  #
+  # Example:
+  #   WorkflowPermission.rules_by_status_id trackers, roles
+  #   # => {1 => {'start_date' => 'required', 'due_date' => 'readonly'}}
+  def self.rules_by_status_id: (untyped trackers, untyped roles) -> untyped
+
+  # Replaces the workflow permissions for the given trackers and roles
+  #
+  # Example:
+  #   WorkflowPermission.replace_permissions trackers, roles, {'1' => {'start_date' => 'required', 'due_date' => 'readonly'}}
+  def self.replace_permissions: (untyped trackers, untyped roles, untyped permissions) -> untyped
+
+  def validate_field_name: () -> untyped
+end

@@ -1,0 +1,166 @@
+# Generated from app/models/repository.rb with RBS::Inline
+
+class ScmFetchError < StandardError
+end
+
+class Repository < ApplicationRecord
+  include Redmine::Ciphering
+
+  include Redmine::SafeAttributes
+
+  # Maximum length for repository identifiers
+  IDENTIFIER_MAX_LENGTH: ::Integer
+
+  def repo_create_validation: () -> untyped
+
+  def self.human_attribute_name: (untyped attribute_key_name, *untyped args) -> untyped
+
+  # Removes leading and trailing whitespace
+  def url=: (untyped arg) -> untyped
+
+  # Removes leading and trailing whitespace
+  def root_url=: (untyped arg) -> untyped
+
+  def password: () -> untyped
+
+  def password=: (untyped arg) -> untyped
+
+  def scm_adapter: () -> untyped
+
+  def scm: () -> untyped
+
+  def scm_name: () -> untyped
+
+  def name: () -> untyped
+
+  def identifier=: (untyped identifier) -> untyped
+
+  def identifier_frozen?: () -> untyped
+
+  def identifier_param: () -> untyped
+
+  def <=>: (untyped repository) -> untyped
+
+  def self.find_by_identifier_param: (untyped param) -> untyped
+
+  # TODO: should return an empty hash instead of nil to avoid many ||{}
+  def extra_info: () -> untyped
+
+  def merge_extra_info: (untyped arg) -> untyped
+
+  def report_last_commit: () -> untyped
+
+  def supports_cat?: () -> untyped
+
+  def supports_annotate?: () -> untyped
+
+  def supports_history?: () -> untyped
+
+  def supports_directory_revisions?: () -> untyped
+
+  def supports_revision_graph?: () -> untyped
+
+  def entry: (?untyped path, ?untyped identifier) -> untyped
+
+  def scm_entries: (?untyped path, ?untyped identifier) -> untyped
+
+  def entries: (?untyped path, ?untyped identifier) -> untyped
+
+  def branches: () -> untyped
+
+  def tags: () -> untyped
+
+  def default_branch: () -> untyped
+
+  def properties: (untyped path, ?untyped identifier) -> untyped
+
+  def cat: (untyped path, ?untyped identifier) -> untyped
+
+  def diff: (untyped path, untyped rev, untyped rev_to) -> untyped
+
+  def diff_format_revisions: (untyped cs, untyped cs_to, ?untyped sep) -> untyped
+
+  # Returns a path relative to the url of the repository
+  def relative_path: (untyped path) -> untyped
+
+  # Finds and returns a revision with a number or the beginning of a hash
+  def find_changeset_by_name: (untyped name) -> untyped
+
+  def latest_changeset: () -> untyped
+
+  # Returns the latest changesets for +path+
+  # Default behaviour is to search in cached changesets
+  def latest_changesets: (untyped path, untyped rev, ?untyped limit) -> untyped
+
+  def scan_changesets_for_issue_ids: () -> untyped
+
+  # Returns an array of committers usernames and associated user_id
+  def committers: () -> untyped
+
+  # Maps committers username to a user ids
+  def committer_ids=: (untyped h) -> untyped
+
+  # Returns the Redmine User corresponding to the given +committer+
+  # It will return nil if the committer is not yet mapped and if no User
+  # with the same username or email was found
+  def find_committer_user: (untyped committer) -> untyped
+
+  def repo_log_encoding: () -> untyped
+
+  # Fetches new changesets for all repositories of active projects
+  # Can be called periodically by an external script
+  # eg. ruby script/runner "Repository.fetch_changesets"
+  def self.fetch_changesets: () -> untyped
+
+  # scan changeset comments to find related and fixed issues for all repositories
+  def self.scan_changesets_for_issue_ids: () -> untyped
+
+  def self.scm_name: () -> untyped
+
+  def self.available_scm: () -> untyped
+
+  def self.factory: (untyped klass_name, *untyped args) -> untyped
+
+  def self.repository_class: (untyped class_name) -> untyped
+
+  def self.scm_adapter_class: () -> untyped
+
+  def self.scm_command: () -> untyped
+
+  def self.scm_version_string: () -> untyped
+
+  def self.scm_available: () -> untyped
+
+  def set_as_default?: () -> untyped
+
+  # Returns a hash with statistics by author in the following form:
+  # {
+  #   "John Smith" => { :commits => 45, :changes => 324 },
+  #   "Bob" => { ... }
+  # }
+  #
+  # Notes:
+  # - this hash honnors the users mapping defined for the repository
+  def stats_by_author: () -> untyped
+
+  # Returns a scope of changesets that come from the same commit as the given changeset
+  # in different repositories that point to the same backend
+  def same_commits_in_scope: (untyped scope, untyped changeset) -> untyped
+
+  def valid_name?: (untyped name) -> untyped
+
+  # Validates repository url based against an optional regular expression
+  # that can be set in the Redmine configuration file.
+  def validate_repository_path: (?untyped attribute) -> untyped
+
+  def normalize_identifier: () -> untyped
+
+  def check_default: () -> untyped
+
+  def load_entries_changesets: (untyped entries) -> untyped
+
+  private
+
+  # Deletes repository data
+  def clear_changesets: () -> untyped
+end

@@ -1,0 +1,107 @@
+class Changeset < ::ApplicationRecord
+  class HABTM_Parents < ::ActiveRecord::Base
+    extend _ActiveRecord_Relation_ClassMethods[Changeset::HABTM_Parents, ActiveRecord_Relation, top]
+
+    module GeneratedAttributeMethods
+      def changeset_id: () -> Integer
+
+      def changeset_id=: (Integer) -> Integer
+
+      def changeset_id?: () -> bool
+
+      def changeset_id_changed?: () -> bool
+
+      def changeset_id_change: () -> [ Integer?, Integer? ]
+
+      def changeset_id_will_change!: () -> void
+
+      def changeset_id_was: () -> Integer?
+
+      def changeset_id_previously_changed?: () -> bool
+
+      def changeset_id_previous_change: () -> Array[Integer?]?
+
+      def changeset_id_previously_was: () -> Integer?
+
+      def changeset_id_before_last_save: () -> Integer?
+
+      def changeset_id_change_to_be_saved: () -> Array[Integer?]?
+
+      def changeset_id_in_database: () -> Integer?
+
+      def saved_change_to_changeset_id: () -> Array[Integer?]?
+
+      def saved_change_to_changeset_id?: () -> bool
+
+      def will_save_change_to_changeset_id?: () -> bool
+
+      def restore_changeset_id!: () -> void
+
+      def clear_changeset_id_change: () -> void
+
+      def parent_id: () -> Integer
+
+      def parent_id=: (Integer) -> Integer
+
+      def parent_id?: () -> bool
+
+      def parent_id_changed?: () -> bool
+
+      def parent_id_change: () -> [ Integer?, Integer? ]
+
+      def parent_id_will_change!: () -> void
+
+      def parent_id_was: () -> Integer?
+
+      def parent_id_previously_changed?: () -> bool
+
+      def parent_id_previous_change: () -> Array[Integer?]?
+
+      def parent_id_previously_was: () -> Integer?
+
+      def parent_id_before_last_save: () -> Integer?
+
+      def parent_id_change_to_be_saved: () -> Array[Integer?]?
+
+      def parent_id_in_database: () -> Integer?
+
+      def saved_change_to_parent_id: () -> Array[Integer?]?
+
+      def saved_change_to_parent_id?: () -> bool
+
+      def will_save_change_to_parent_id?: () -> bool
+
+      def restore_parent_id!: () -> void
+
+      def clear_parent_id_change: () -> void
+    end
+    include GeneratedAttributeMethods
+
+    def left_side: () -> Changeset?
+    def left_side=: (Changeset?) -> Changeset?
+    def reload_left_side: () -> Changeset?
+    def build_left_side: (untyped) -> Changeset
+    def create_left_side: (untyped) -> Changeset
+    def create_left_side!: (untyped) -> Changeset
+    def parent: () -> Changeset?
+    def parent=: (Changeset?) -> Changeset?
+    def reload_parent: () -> Changeset?
+    def build_parent: (untyped) -> Changeset
+    def create_parent: (untyped) -> Changeset
+    def create_parent!: (untyped) -> Changeset
+
+    module GeneratedRelationMethods
+    end
+
+    class ActiveRecord_Relation < ::ActiveRecord::Relation
+      include GeneratedRelationMethods
+      include _ActiveRecord_Relation[Changeset::HABTM_Parents, top]
+      include Enumerable[Changeset::HABTM_Parents]
+    end
+
+    class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+      include GeneratedRelationMethods
+      include _ActiveRecord_Relation[Changeset::HABTM_Parents, top]
+    end
+  end
+end

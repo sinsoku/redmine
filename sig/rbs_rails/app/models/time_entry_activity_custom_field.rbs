@@ -1,0 +1,712 @@
+class TimeEntryActivityCustomField < ::CustomField
+  extend _ActiveRecord_Relation_ClassMethods[TimeEntryActivityCustomField, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def type: () -> String
+
+    def type=: (String) -> String
+
+    def type?: () -> bool
+
+    def type_changed?: () -> bool
+
+    def type_change: () -> [ String?, String? ]
+
+    def type_will_change!: () -> void
+
+    def type_was: () -> String?
+
+    def type_previously_changed?: () -> bool
+
+    def type_previous_change: () -> Array[String?]?
+
+    def type_previously_was: () -> String?
+
+    def type_before_last_save: () -> String?
+
+    def type_change_to_be_saved: () -> Array[String?]?
+
+    def type_in_database: () -> String?
+
+    def saved_change_to_type: () -> Array[String?]?
+
+    def saved_change_to_type?: () -> bool
+
+    def will_save_change_to_type?: () -> bool
+
+    def restore_type!: () -> void
+
+    def clear_type_change: () -> void
+
+    def name: () -> String
+
+    def name=: (String) -> String
+
+    def name?: () -> bool
+
+    def name_changed?: () -> bool
+
+    def name_change: () -> [ String?, String? ]
+
+    def name_will_change!: () -> void
+
+    def name_was: () -> String?
+
+    def name_previously_changed?: () -> bool
+
+    def name_previous_change: () -> Array[String?]?
+
+    def name_previously_was: () -> String?
+
+    def name_before_last_save: () -> String?
+
+    def name_change_to_be_saved: () -> Array[String?]?
+
+    def name_in_database: () -> String?
+
+    def saved_change_to_name: () -> Array[String?]?
+
+    def saved_change_to_name?: () -> bool
+
+    def will_save_change_to_name?: () -> bool
+
+    def restore_name!: () -> void
+
+    def clear_name_change: () -> void
+
+    def field_format: () -> String
+
+    def field_format=: (String) -> String
+
+    def field_format?: () -> bool
+
+    def field_format_changed?: () -> bool
+
+    def field_format_change: () -> [ String?, String? ]
+
+    def field_format_will_change!: () -> void
+
+    def field_format_was: () -> String?
+
+    def field_format_previously_changed?: () -> bool
+
+    def field_format_previous_change: () -> Array[String?]?
+
+    def field_format_previously_was: () -> String?
+
+    def field_format_before_last_save: () -> String?
+
+    def field_format_change_to_be_saved: () -> Array[String?]?
+
+    def field_format_in_database: () -> String?
+
+    def saved_change_to_field_format: () -> Array[String?]?
+
+    def saved_change_to_field_format?: () -> bool
+
+    def will_save_change_to_field_format?: () -> bool
+
+    def restore_field_format!: () -> void
+
+    def clear_field_format_change: () -> void
+
+    def possible_values: () -> String?
+
+    def possible_values=: (String?) -> String?
+
+    def possible_values?: () -> bool
+
+    def possible_values_changed?: () -> bool
+
+    def possible_values_change: () -> [ String?, String? ]
+
+    def possible_values_will_change!: () -> void
+
+    def possible_values_was: () -> String?
+
+    def possible_values_previously_changed?: () -> bool
+
+    def possible_values_previous_change: () -> Array[String?]?
+
+    def possible_values_previously_was: () -> String?
+
+    def possible_values_before_last_save: () -> String?
+
+    def possible_values_change_to_be_saved: () -> Array[String?]?
+
+    def possible_values_in_database: () -> String?
+
+    def saved_change_to_possible_values: () -> Array[String?]?
+
+    def saved_change_to_possible_values?: () -> bool
+
+    def will_save_change_to_possible_values?: () -> bool
+
+    def restore_possible_values!: () -> void
+
+    def clear_possible_values_change: () -> void
+
+    def regexp: () -> String?
+
+    def regexp=: (String?) -> String?
+
+    def regexp?: () -> bool
+
+    def regexp_changed?: () -> bool
+
+    def regexp_change: () -> [ String?, String? ]
+
+    def regexp_will_change!: () -> void
+
+    def regexp_was: () -> String?
+
+    def regexp_previously_changed?: () -> bool
+
+    def regexp_previous_change: () -> Array[String?]?
+
+    def regexp_previously_was: () -> String?
+
+    def regexp_before_last_save: () -> String?
+
+    def regexp_change_to_be_saved: () -> Array[String?]?
+
+    def regexp_in_database: () -> String?
+
+    def saved_change_to_regexp: () -> Array[String?]?
+
+    def saved_change_to_regexp?: () -> bool
+
+    def will_save_change_to_regexp?: () -> bool
+
+    def restore_regexp!: () -> void
+
+    def clear_regexp_change: () -> void
+
+    def min_length: () -> Integer?
+
+    def min_length=: (Integer?) -> Integer?
+
+    def min_length?: () -> bool
+
+    def min_length_changed?: () -> bool
+
+    def min_length_change: () -> [ Integer?, Integer? ]
+
+    def min_length_will_change!: () -> void
+
+    def min_length_was: () -> Integer?
+
+    def min_length_previously_changed?: () -> bool
+
+    def min_length_previous_change: () -> Array[Integer?]?
+
+    def min_length_previously_was: () -> Integer?
+
+    def min_length_before_last_save: () -> Integer?
+
+    def min_length_change_to_be_saved: () -> Array[Integer?]?
+
+    def min_length_in_database: () -> Integer?
+
+    def saved_change_to_min_length: () -> Array[Integer?]?
+
+    def saved_change_to_min_length?: () -> bool
+
+    def will_save_change_to_min_length?: () -> bool
+
+    def restore_min_length!: () -> void
+
+    def clear_min_length_change: () -> void
+
+    def max_length: () -> Integer?
+
+    def max_length=: (Integer?) -> Integer?
+
+    def max_length?: () -> bool
+
+    def max_length_changed?: () -> bool
+
+    def max_length_change: () -> [ Integer?, Integer? ]
+
+    def max_length_will_change!: () -> void
+
+    def max_length_was: () -> Integer?
+
+    def max_length_previously_changed?: () -> bool
+
+    def max_length_previous_change: () -> Array[Integer?]?
+
+    def max_length_previously_was: () -> Integer?
+
+    def max_length_before_last_save: () -> Integer?
+
+    def max_length_change_to_be_saved: () -> Array[Integer?]?
+
+    def max_length_in_database: () -> Integer?
+
+    def saved_change_to_max_length: () -> Array[Integer?]?
+
+    def saved_change_to_max_length?: () -> bool
+
+    def will_save_change_to_max_length?: () -> bool
+
+    def restore_max_length!: () -> void
+
+    def clear_max_length_change: () -> void
+
+    def is_required: () -> bool
+
+    def is_required=: (bool) -> bool
+
+    def is_required?: () -> bool
+
+    def is_required_changed?: () -> bool
+
+    def is_required_change: () -> [ bool?, bool? ]
+
+    def is_required_will_change!: () -> void
+
+    def is_required_was: () -> bool?
+
+    def is_required_previously_changed?: () -> bool
+
+    def is_required_previous_change: () -> Array[bool?]?
+
+    def is_required_previously_was: () -> bool?
+
+    def is_required_before_last_save: () -> bool?
+
+    def is_required_change_to_be_saved: () -> Array[bool?]?
+
+    def is_required_in_database: () -> bool?
+
+    def saved_change_to_is_required: () -> Array[bool?]?
+
+    def saved_change_to_is_required?: () -> bool
+
+    def will_save_change_to_is_required?: () -> bool
+
+    def restore_is_required!: () -> void
+
+    def clear_is_required_change: () -> void
+
+    def is_for_all: () -> bool
+
+    def is_for_all=: (bool) -> bool
+
+    def is_for_all?: () -> bool
+
+    def is_for_all_changed?: () -> bool
+
+    def is_for_all_change: () -> [ bool?, bool? ]
+
+    def is_for_all_will_change!: () -> void
+
+    def is_for_all_was: () -> bool?
+
+    def is_for_all_previously_changed?: () -> bool
+
+    def is_for_all_previous_change: () -> Array[bool?]?
+
+    def is_for_all_previously_was: () -> bool?
+
+    def is_for_all_before_last_save: () -> bool?
+
+    def is_for_all_change_to_be_saved: () -> Array[bool?]?
+
+    def is_for_all_in_database: () -> bool?
+
+    def saved_change_to_is_for_all: () -> Array[bool?]?
+
+    def saved_change_to_is_for_all?: () -> bool
+
+    def will_save_change_to_is_for_all?: () -> bool
+
+    def restore_is_for_all!: () -> void
+
+    def clear_is_for_all_change: () -> void
+
+    def is_filter: () -> bool
+
+    def is_filter=: (bool) -> bool
+
+    def is_filter?: () -> bool
+
+    def is_filter_changed?: () -> bool
+
+    def is_filter_change: () -> [ bool?, bool? ]
+
+    def is_filter_will_change!: () -> void
+
+    def is_filter_was: () -> bool?
+
+    def is_filter_previously_changed?: () -> bool
+
+    def is_filter_previous_change: () -> Array[bool?]?
+
+    def is_filter_previously_was: () -> bool?
+
+    def is_filter_before_last_save: () -> bool?
+
+    def is_filter_change_to_be_saved: () -> Array[bool?]?
+
+    def is_filter_in_database: () -> bool?
+
+    def saved_change_to_is_filter: () -> Array[bool?]?
+
+    def saved_change_to_is_filter?: () -> bool
+
+    def will_save_change_to_is_filter?: () -> bool
+
+    def restore_is_filter!: () -> void
+
+    def clear_is_filter_change: () -> void
+
+    def position: () -> Integer?
+
+    def position=: (Integer?) -> Integer?
+
+    def position?: () -> bool
+
+    def position_changed?: () -> bool
+
+    def position_change: () -> [ Integer?, Integer? ]
+
+    def position_will_change!: () -> void
+
+    def position_was: () -> Integer?
+
+    def position_previously_changed?: () -> bool
+
+    def position_previous_change: () -> Array[Integer?]?
+
+    def position_previously_was: () -> Integer?
+
+    def position_before_last_save: () -> Integer?
+
+    def position_change_to_be_saved: () -> Array[Integer?]?
+
+    def position_in_database: () -> Integer?
+
+    def saved_change_to_position: () -> Array[Integer?]?
+
+    def saved_change_to_position?: () -> bool
+
+    def will_save_change_to_position?: () -> bool
+
+    def restore_position!: () -> void
+
+    def clear_position_change: () -> void
+
+    def searchable: () -> bool?
+
+    def searchable=: (bool?) -> bool?
+
+    def searchable?: () -> bool
+
+    def searchable_changed?: () -> bool
+
+    def searchable_change: () -> [ bool?, bool? ]
+
+    def searchable_will_change!: () -> void
+
+    def searchable_was: () -> bool?
+
+    def searchable_previously_changed?: () -> bool
+
+    def searchable_previous_change: () -> Array[bool?]?
+
+    def searchable_previously_was: () -> bool?
+
+    def searchable_before_last_save: () -> bool?
+
+    def searchable_change_to_be_saved: () -> Array[bool?]?
+
+    def searchable_in_database: () -> bool?
+
+    def saved_change_to_searchable: () -> Array[bool?]?
+
+    def saved_change_to_searchable?: () -> bool
+
+    def will_save_change_to_searchable?: () -> bool
+
+    def restore_searchable!: () -> void
+
+    def clear_searchable_change: () -> void
+
+    def default_value: () -> String?
+
+    def default_value=: (String?) -> String?
+
+    def default_value?: () -> bool
+
+    def default_value_changed?: () -> bool
+
+    def default_value_change: () -> [ String?, String? ]
+
+    def default_value_will_change!: () -> void
+
+    def default_value_was: () -> String?
+
+    def default_value_previously_changed?: () -> bool
+
+    def default_value_previous_change: () -> Array[String?]?
+
+    def default_value_previously_was: () -> String?
+
+    def default_value_before_last_save: () -> String?
+
+    def default_value_change_to_be_saved: () -> Array[String?]?
+
+    def default_value_in_database: () -> String?
+
+    def saved_change_to_default_value: () -> Array[String?]?
+
+    def saved_change_to_default_value?: () -> bool
+
+    def will_save_change_to_default_value?: () -> bool
+
+    def restore_default_value!: () -> void
+
+    def clear_default_value_change: () -> void
+
+    def editable: () -> bool?
+
+    def editable=: (bool?) -> bool?
+
+    def editable?: () -> bool
+
+    def editable_changed?: () -> bool
+
+    def editable_change: () -> [ bool?, bool? ]
+
+    def editable_will_change!: () -> void
+
+    def editable_was: () -> bool?
+
+    def editable_previously_changed?: () -> bool
+
+    def editable_previous_change: () -> Array[bool?]?
+
+    def editable_previously_was: () -> bool?
+
+    def editable_before_last_save: () -> bool?
+
+    def editable_change_to_be_saved: () -> Array[bool?]?
+
+    def editable_in_database: () -> bool?
+
+    def saved_change_to_editable: () -> Array[bool?]?
+
+    def saved_change_to_editable?: () -> bool
+
+    def will_save_change_to_editable?: () -> bool
+
+    def restore_editable!: () -> void
+
+    def clear_editable_change: () -> void
+
+    def visible: () -> bool
+
+    def visible=: (bool) -> bool
+
+    def visible?: () -> bool
+
+    def visible_changed?: () -> bool
+
+    def visible_change: () -> [ bool?, bool? ]
+
+    def visible_will_change!: () -> void
+
+    def visible_was: () -> bool?
+
+    def visible_previously_changed?: () -> bool
+
+    def visible_previous_change: () -> Array[bool?]?
+
+    def visible_previously_was: () -> bool?
+
+    def visible_before_last_save: () -> bool?
+
+    def visible_change_to_be_saved: () -> Array[bool?]?
+
+    def visible_in_database: () -> bool?
+
+    def saved_change_to_visible: () -> Array[bool?]?
+
+    def saved_change_to_visible?: () -> bool
+
+    def will_save_change_to_visible?: () -> bool
+
+    def restore_visible!: () -> void
+
+    def clear_visible_change: () -> void
+
+    def multiple: () -> bool?
+
+    def multiple=: (bool?) -> bool?
+
+    def multiple?: () -> bool
+
+    def multiple_changed?: () -> bool
+
+    def multiple_change: () -> [ bool?, bool? ]
+
+    def multiple_will_change!: () -> void
+
+    def multiple_was: () -> bool?
+
+    def multiple_previously_changed?: () -> bool
+
+    def multiple_previous_change: () -> Array[bool?]?
+
+    def multiple_previously_was: () -> bool?
+
+    def multiple_before_last_save: () -> bool?
+
+    def multiple_change_to_be_saved: () -> Array[bool?]?
+
+    def multiple_in_database: () -> bool?
+
+    def saved_change_to_multiple: () -> Array[bool?]?
+
+    def saved_change_to_multiple?: () -> bool
+
+    def will_save_change_to_multiple?: () -> bool
+
+    def restore_multiple!: () -> void
+
+    def clear_multiple_change: () -> void
+
+    def format_store: () -> String?
+
+    def format_store=: (String?) -> String?
+
+    def format_store?: () -> bool
+
+    def format_store_changed?: () -> bool
+
+    def format_store_change: () -> [ String?, String? ]
+
+    def format_store_will_change!: () -> void
+
+    def format_store_was: () -> String?
+
+    def format_store_previously_changed?: () -> bool
+
+    def format_store_previous_change: () -> Array[String?]?
+
+    def format_store_previously_was: () -> String?
+
+    def format_store_before_last_save: () -> String?
+
+    def format_store_change_to_be_saved: () -> Array[String?]?
+
+    def format_store_in_database: () -> String?
+
+    def saved_change_to_format_store: () -> Array[String?]?
+
+    def saved_change_to_format_store?: () -> bool
+
+    def will_save_change_to_format_store?: () -> bool
+
+    def restore_format_store!: () -> void
+
+    def clear_format_store_change: () -> void
+
+    def description: () -> String?
+
+    def description=: (String?) -> String?
+
+    def description?: () -> bool
+
+    def description_changed?: () -> bool
+
+    def description_change: () -> [ String?, String? ]
+
+    def description_will_change!: () -> void
+
+    def description_was: () -> String?
+
+    def description_previously_changed?: () -> bool
+
+    def description_previous_change: () -> Array[String?]?
+
+    def description_previously_was: () -> String?
+
+    def description_before_last_save: () -> String?
+
+    def description_change_to_be_saved: () -> Array[String?]?
+
+    def description_in_database: () -> String?
+
+    def saved_change_to_description: () -> Array[String?]?
+
+    def saved_change_to_description?: () -> bool
+
+    def will_save_change_to_description?: () -> bool
+
+    def restore_description!: () -> void
+
+    def clear_description_change: () -> void
+  end
+  include GeneratedAttributeMethods
+  def enumerations: () -> CustomFieldEnumeration::ActiveRecord_Associations_CollectionProxy
+  def enumerations=: (CustomFieldEnumeration::ActiveRecord_Associations_CollectionProxy | Array[CustomFieldEnumeration]) -> (CustomFieldEnumeration::ActiveRecord_Associations_CollectionProxy | Array[CustomFieldEnumeration])
+  def enumeration_ids: () -> Array[Integer]
+  def enumeration_ids=: (Array[Integer]) -> Array[Integer]
+  def custom_values: () -> CustomValue::ActiveRecord_Associations_CollectionProxy
+  def custom_values=: (CustomValue::ActiveRecord_Associations_CollectionProxy | Array[CustomValue]) -> (CustomValue::ActiveRecord_Associations_CollectionProxy | Array[CustomValue])
+  def custom_value_ids: () -> Array[Integer]
+  def custom_value_ids=: (Array[Integer]) -> Array[Integer]
+
+  module GeneratedRelationMethods
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[TimeEntryActivityCustomField, Integer]
+    include Enumerable[TimeEntryActivityCustomField]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[TimeEntryActivityCustomField, Integer]
+  end
+end

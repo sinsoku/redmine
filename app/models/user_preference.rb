@@ -42,9 +42,9 @@ class UserPreference < ApplicationRecord
     'toolbar_language_options',
     'auto_watch_on')
 
-  TEXTAREA_FONT_OPTIONS = ['monospace', 'proportional']
-  DEFAULT_TOOLBAR_LANGUAGE_OPTIONS = %w[c cpp csharp css diff go groovy html java javascript objc perl php python r ruby sass scala shell sql swift xml yaml]
-  AUTO_WATCH_ON_OPTIONS = %w[issue_created issue_contributed_to]
+  TEXTAREA_FONT_OPTIONS = ['monospace', 'proportional'] #: Array[__todo__]
+  DEFAULT_TOOLBAR_LANGUAGE_OPTIONS = %w[c cpp csharp css diff go groovy html java javascript objc perl php python r ruby sass scala shell sql swift xml yaml] #: Array[__todo__]
+  AUTO_WATCH_ON_OPTIONS = %w[issue_created issue_contributed_to] #: Array[__todo__]
 
   def initialize(attributes=nil, *args)
     super

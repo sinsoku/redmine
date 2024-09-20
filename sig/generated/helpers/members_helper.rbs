@@ -1,0 +1,8 @@
+# Generated from app/helpers/members_helper.rb with RBS::Inline
+
+module MembersHelper
+  def render_principals_for_new_members: (untyped project, ?untyped limit) -> untyped
+
+  # Returns inheritance information for an inherited member role
+  def render_role_inheritance: (untyped member, untyped role) -> untyped
+end

@@ -1,0 +1,57 @@
+# Generated from lib/redmine/nested_set/traversing.rb with RBS::Inline
+
+module Redmine
+  module NestedSet
+    module Traversing
+      def self.included: (untyped base) -> untyped
+
+      # Returns true if the element has no parent
+      def root?: () -> untyped
+
+      # Returns true if the element has a parent
+      def child?: () -> untyped
+
+      # Returns true if the element has no children
+      def leaf?: () -> untyped
+
+      # Returns the root element (ancestor with no parent)
+      def root: () -> untyped
+
+      # Returns the children
+      def children: () -> untyped
+
+      # Returns the descendants that have no children
+      def leaves: () -> untyped
+
+      # Returns the siblings
+      def siblings: () -> untyped
+
+      # Returns the ancestors
+      def ancestors: () -> untyped
+
+      # Returns the element and its ancestors
+      def self_and_ancestors: () -> untyped
+
+      # Returns true if the element is an ancestor of other
+      def is_ancestor_of?: (untyped other) -> untyped
+
+      # Returns true if the element equals other or is an ancestor of other
+      def is_or_is_ancestor_of?: (untyped other) -> untyped
+
+      # Returns the descendants
+      def descendants: () -> untyped
+
+      # Returns the element and its descendants
+      def self_and_descendants: () -> untyped
+
+      # Returns true if the element is a descendant of other
+      def is_descendant_of?: (untyped other) -> untyped
+
+      # Returns true if the element equals other or is a descendant of other
+      def is_or_is_descendant_of?: (untyped other) -> untyped
+
+      # Returns the ancestors, the element and its descendants
+      def hierarchy: () -> untyped
+    end
+  end
+end

@@ -1,0 +1,11 @@
+# Generated from app/controllers/project_enumerations_controller.rb with RBS::Inline
+
+class ProjectEnumerationsController < ApplicationController
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  def update_params: () -> untyped
+end

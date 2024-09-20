@@ -1,0 +1,40 @@
+# Generated from lib/redmine/export/pdf/issues_pdf_helper.rb with RBS::Inline
+
+module Redmine
+  module Export
+    module PDF
+      module IssuesPdfHelper
+        include ActionView::Helpers::NumberHelper
+
+        # Returns a PDF string of a single issue
+        def issue_to_pdf: (untyped issue, ?untyped assoc) -> untyped
+
+        # Returns a PDF string of a list of issues
+        def issues_to_pdf: (untyped issues, untyped project, untyped query) -> untyped
+
+        def pdf_format_text: (untyped object, untyped attribute) -> untyped
+
+        def is_cjk?: () -> untyped
+
+        # fetch row values
+        def fetch_row_values: (untyped issue, untyped query, untyped level) -> untyped
+
+        # calculate columns width
+        def calc_col_width: (untyped issues, untyped query, untyped table_width, untyped pdf) -> untyped
+
+        def render_table_header: (untyped pdf, untyped query, untyped col_width, untyped row_height, untyped table_width) -> untyped
+
+        # returns the maximum height of MultiCells
+        def get_issues_to_pdf_write_cells: (untyped pdf, untyped col_values, untyped col_widths, ?untyped head) -> untyped
+
+        # Renders MultiCells and returns the maximum height used
+        def issues_to_pdf_write_cells: (untyped pdf, untyped col_values, untyped col_widths, untyped row_height, ?untyped head) -> untyped
+
+        # Draw lines to close the row (MultiCell border drawing in not uniform)
+        #
+        #  parameter "col_id_width" is not used. it is kept for compatibility.
+        def issues_to_pdf_draw_borders: (untyped pdf, untyped top_x, untyped top_y, untyped lower_y, untyped col_id_width, untyped col_widths, ?untyped rtl) -> untyped
+      end
+    end
+  end
+end

@@ -1,0 +1,20 @@
+# Generated from app/models/time_entry_activity.rb with RBS::Inline
+
+class TimeEntryActivity < Enumeration
+  OptionName: ::Symbol
+
+  def self.default: (?untyped project) -> untyped
+
+  # Returns the available activities for the time entry
+  def self.available_activities: (?untyped project) -> untyped
+
+  def option_name: () -> untyped
+
+  def objects: () -> untyped
+
+  def objects_count: () -> untyped
+
+  def transfer_relations: (untyped to) -> untyped
+
+  def self.default_activity_id: (?untyped user, ?untyped project) -> untyped
+end

@@ -1,0 +1,7 @@
+# Generated from app/helpers/admin_helper.rb with RBS::Inline
+
+module AdminHelper
+  def project_status_options_for_select: (untyped selected) -> untyped
+
+  def plugin_data_for_updates: (untyped plugins) -> untyped
+end

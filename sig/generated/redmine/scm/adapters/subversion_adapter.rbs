@@ -1,0 +1,52 @@
+# Generated from lib/redmine/scm/adapters/subversion_adapter.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+      class SubversionAdapter < AbstractAdapter
+        # SVN executable name
+        SVN_BIN: untyped
+
+        def self.client_command: () -> untyped
+
+        def self.sq_bin: () -> untyped
+
+        def self.client_version: () -> untyped
+
+        def self.client_available: () -> untyped
+
+        def self.svn_binary_version: () -> untyped
+
+        def self.scm_version_from_command_line: () -> untyped
+
+        # Get info about the svn repository
+        def info: () -> untyped
+
+        # Returns an Entries collection
+        # or nil if the given path doesn't exist in the repository
+        def entries: (?untyped path, ?untyped identifier, ?untyped options) -> untyped
+
+        def properties: (untyped path, ?untyped identifier) -> untyped
+
+        def revisions: (?untyped path, ?untyped identifier_from, ?untyped identifier_to, ?untyped options) -> untyped
+
+        def diff: (untyped path, untyped identifier_from, ?untyped identifier_to) -> untyped
+
+        def cat: (untyped path, ?untyped identifier) -> untyped
+
+        def annotate: (untyped path, ?untyped identifier) -> untyped
+
+        private
+
+        def credentials_string: () -> untyped
+
+        # Helper that iterates over the child elements of a xml node
+        # MiniXml returns a hash when a single child is found
+        # or an array of hashes for multiple children
+        def each_xml_element: (untyped node, untyped name) -> untyped
+
+        def target: (?untyped path) -> untyped
+      end
+    end
+  end
+end

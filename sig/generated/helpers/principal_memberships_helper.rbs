@@ -1,0 +1,15 @@
+# Generated from app/helpers/principal_memberships_helper.rb with RBS::Inline
+
+module PrincipalMembershipsHelper
+  def render_principal_memberships: (untyped principal) -> untyped
+
+  def call_table_header_hook: (untyped principal) -> untyped
+
+  def call_table_row_hook: (untyped principal, untyped membership) -> untyped
+
+  def new_principal_membership_path: (untyped principal, *untyped args) -> untyped
+
+  def edit_principal_membership_path: (untyped principal, *untyped args) -> untyped
+
+  def principal_membership_path: (untyped principal, untyped membership, *untyped args) -> untyped
+end

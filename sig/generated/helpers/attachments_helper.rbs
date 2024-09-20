@@ -1,0 +1,23 @@
+# Generated from app/helpers/attachments_helper.rb with RBS::Inline
+
+module AttachmentsHelper
+  def container_attachments_edit_path: (untyped container) -> untyped
+
+  def container_attachments_path: (untyped container) -> untyped
+
+  def container_attachments_download_path: (untyped container) -> untyped
+
+  # Displays view/delete links to the attachments of the given object
+  # Options:
+  #   :author -- author names are not displayed if set to false
+  #   :thumbails -- display thumbnails if enabled in settings
+  def link_to_attachments: (untyped container, ?untyped options) -> untyped
+
+  def render_pagination: () -> untyped
+
+  def render_api_attachment: (untyped attachment, untyped api, ?untyped options) -> untyped
+
+  def render_api_attachment_attributes: (untyped attachment, untyped api) -> untyped
+
+  def render_file_content: (untyped attachment, untyped content) -> untyped
+end

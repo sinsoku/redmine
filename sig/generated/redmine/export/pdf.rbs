@@ -1,0 +1,43 @@
+# Generated from lib/redmine/export/pdf.rb with RBS::Inline
+
+module Redmine
+  module Export
+    module PDF
+      class ITCPDF < RBPDF
+        include Redmine::I18n
+
+        attr_accessor footer_date: untyped
+
+        def initialize: (untyped lang, ?untyped orientation) -> untyped
+
+        def SetFontStyle: (untyped style, untyped size) -> untyped
+
+        def SetFont: (untyped family, ?untyped style, ?untyped size, ?untyped fontfile) -> untyped
+
+        def fix_text_encoding: (untyped txt) -> untyped
+
+        def formatted_text: (untyped text) -> untyped
+
+        def RDMCell: (untyped w, ?untyped h, ?untyped txt, ?untyped border, ?untyped ln, ?untyped align, ?untyped fill, ?untyped link) -> untyped
+
+        def RDMMultiCell: (untyped w, ?untyped h, ?untyped txt, ?untyped border, ?untyped align, ?untyped fill, ?untyped ln) -> untyped
+
+        def RDMwriteFormattedCell: (untyped w, untyped h, untyped x, untyped y, ?untyped txt, ?untyped attachments, ?untyped border, ?untyped ln, ?untyped fill) -> untyped
+
+        def RDMwriteHTMLCell: (untyped w, untyped h, untyped x, untyped y, ?untyped txt, ?untyped attachments, ?untyped border, ?untyped ln, ?untyped fill) -> untyped
+
+        def get_image_filename: (untyped attrname) -> untyped
+
+        def get_sever_url: (untyped url) -> untyped
+
+        def Footer: () -> untyped
+      end
+
+      class RDMPdfEncoding
+        def self.rdm_from_utf8: (untyped txt, untyped encoding) -> untyped
+
+        def self.attach: (untyped attachments, untyped filename, untyped encoding) -> untyped
+      end
+    end
+  end
+end

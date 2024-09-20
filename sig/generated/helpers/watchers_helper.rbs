@@ -1,0 +1,13 @@
+# Generated from app/helpers/watchers_helper.rb with RBS::Inline
+
+module WatchersHelper
+  def watcher_link: (untyped objects, untyped user) -> untyped
+
+  # Returns the css class used to identify watch links for a given +object+
+  def watcher_css: (untyped objects) -> untyped
+
+  # Returns a comma separated list of users watching the given object
+  def watchers_list: (untyped object) -> untyped
+
+  def watchers_checkboxes: (untyped object, untyped users, ?untyped checked) -> untyped
+end

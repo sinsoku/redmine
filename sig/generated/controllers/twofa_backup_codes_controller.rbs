@@ -1,0 +1,17 @@
+# Generated from app/controllers/twofa_backup_codes_controller.rb with RBS::Inline
+
+class TwofaBackupCodesController < ApplicationController
+  include TwofaHelper
+
+  def init: () -> untyped
+
+  def confirm: () -> untyped
+
+  def create: () -> untyped
+
+  def show: () -> untyped
+
+  private
+
+  def twofa_setup: () -> untyped
+end

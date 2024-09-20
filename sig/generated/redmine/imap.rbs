@@ -1,0 +1,9 @@
+# Generated from lib/redmine/imap.rb with RBS::Inline
+
+module Redmine
+  module IMAP
+    def self.check: (?untyped imap_options, ?untyped options) -> untyped
+
+    private def self.logger: () -> untyped
+  end
+end

@@ -1,0 +1,146 @@
+# Generated from app/models/attachment.rb with RBS::Inline
+
+class Attachment < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  # Returns an unsaved copy of the attachment
+  def copy: (?untyped attributes) -> untyped
+
+  def validate_max_file_size: () -> untyped
+
+  def validate_file_extension: () -> untyped
+
+  def file=: (untyped incoming_file) -> untyped
+
+  def file: () -> untyped
+
+  def filename=: (untyped arg) -> untyped
+
+  # Copies the temporary file to its final location
+  # and computes its hash
+  def files_to_final_location: () -> untyped
+
+  # Deletes the file from the file system if it's not referenced by other attachments
+  def delete_from_disk: () -> untyped
+
+  # Returns file's location on disk
+  def diskfile: () -> untyped
+
+  def title: () -> untyped
+
+  def increment_download: () -> untyped
+
+  def project: () -> untyped
+
+  def visible?: (?untyped user) -> untyped
+
+  def editable?: (?untyped user) -> untyped
+
+  def deletable?: (?untyped user) -> untyped
+
+  def image?: () -> untyped
+
+  def thumbnailable?: () -> untyped
+
+  # Returns the full path the attachment thumbnail, or nil
+  # if the thumbnail cannot be generated.
+  def thumbnail: (?untyped options) -> untyped
+
+  # Deletes all thumbnails
+  def self.clear_thumbnails: () -> untyped
+
+  def is_text?: () -> untyped
+
+  def is_markdown?: () -> untyped
+
+  def is_textile?: () -> untyped
+
+  def is_image?: () -> untyped
+
+  def is_diff?: () -> untyped
+
+  def is_pdf?: () -> untyped
+
+  def is_video?: () -> untyped
+
+  def is_audio?: () -> untyped
+
+  def previewable?: () -> untyped
+
+  # Returns true if the file is readable
+  def readable?: () -> untyped
+
+  # Returns the attachment token
+  def token: () -> untyped
+
+  # Finds an attachment that matches the given token and that has no container
+  def self.find_by_token: (untyped token) -> untyped
+
+  # Bulk attaches a set of files to an object
+  #
+  # Returns a Hash of the results:
+  # :files => array of the attached files
+  # :unsaved => array of the files that could not be attached
+  def self.attach_files: (untyped obj, untyped attachments) -> untyped
+
+  # Updates the filename and description of a set of attachments
+  # with the given hash of attributes. Returns true if all
+  # attachments were updated.
+  #
+  # Example:
+  #   Attachment.update_attachments(attachments, {
+  #     4 => {:filename => 'foo'},
+  #     7 => {:filename => 'bar', :description => 'file description'}
+  #   })
+  def self.update_attachments: (untyped attachments, untyped params) -> untyped
+
+  def self.latest_attach: (untyped attachments, untyped filename) -> untyped
+
+  def self.prune: (?untyped age) -> untyped
+
+  def self.archive_attachments: (untyped attachments) -> untyped
+
+  # Moves an existing attachment to its target directory
+  def move_to_target_directory!: () -> untyped
+
+  # Moves existing attachments that are stored at the root of the files
+  # directory (ie. created before Redmine 2.3) to their target subdirectories
+  def self.move_from_root_to_target_directory: () -> untyped
+
+  # Updates digests to SHA256 for all attachments that have a MD5 digest
+  # (ie. created before Redmine 3.4)
+  def self.update_digests_to_sha256: () -> untyped
+
+  # Updates attachment digest to SHA256
+  def update_digest_to_sha256!: () -> untyped
+
+  # Returns true if the extension is allowed regarding allowed/denied
+  # extensions defined in application settings, otherwise false
+  def self.valid_extension?: (untyped extension) -> untyped
+
+  # Returns true if extension belongs to extensions list.
+  def self.extension_in?: (untyped extension, untyped extensions) -> untyped
+
+  # Returns true if attachment's extension belongs to extensions list.
+  def extension_in?: (untyped extensions) -> untyped
+
+  # returns either MD5 or SHA256 depending on the way self.digest was computed
+  def digest_type: () -> untyped
+
+  private
+
+  def reuse_existing_file_if_possible: () -> untyped
+
+  # Physically deletes the file from the file system
+  def delete_from_disk!: () -> untyped
+
+  def thumbnail_path: (untyped size) -> untyped
+
+  def sanitize_filename: (untyped value) -> untyped
+
+  # Returns the subdirectory in which the attachment will be saved
+  def target_directory: () -> untyped
+
+  # Claims a unique ASCII or hashed filename, yields the open file handle
+  def self.create_diskfile: (untyped filename, ?untyped directory) ?{ (?) -> untyped } -> untyped
+end

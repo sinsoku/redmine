@@ -1,0 +1,5 @@
+# Generated from app/models/issue_priority_custom_field.rb with RBS::Inline
+
+class IssuePriorityCustomField < CustomField
+  def type_name: () -> untyped
+end

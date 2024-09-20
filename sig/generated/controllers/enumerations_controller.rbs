@@ -1,0 +1,23 @@
+# Generated from app/controllers/enumerations_controller.rb with RBS::Inline
+
+class EnumerationsController < ApplicationController
+  def index: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  def build_new_enumeration: () -> untyped
+
+  def find_enumeration: () -> untyped
+
+  def enumeration_params: () -> untyped
+end

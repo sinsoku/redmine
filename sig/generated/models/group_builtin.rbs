@@ -1,0 +1,15 @@
+# Generated from app/models/group_builtin.rb with RBS::Inline
+
+class GroupBuiltin < Group
+  def validate_uniqueness: () -> untyped
+
+  def builtin?: () -> untyped
+
+  def destroy: () -> untyped
+
+  def user_added: (untyped user) -> untyped
+
+  def self.load_instance: () -> untyped
+
+  def self.create_instance: () -> untyped
+end

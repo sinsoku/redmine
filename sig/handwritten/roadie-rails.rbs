@@ -1,0 +1,6 @@
+module Roadie
+  module Rails
+    module Automatic
+    end
+  end
+end

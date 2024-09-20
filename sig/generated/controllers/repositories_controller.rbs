@@ -1,0 +1,83 @@
+# Generated from app/controllers/repositories_controller.rb with RBS::Inline
+
+class ChangesetNotFound < StandardError
+end
+
+class InvalidRevisionParam < StandardError
+end
+
+class RepositoriesController < ApplicationController
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def committers: () -> untyped
+
+  def destroy: () -> untyped
+
+  def show: () -> untyped
+
+  def fetch_changesets: () -> untyped
+
+  def changes: () -> untyped
+
+  def revisions: () -> untyped
+
+  def raw: () -> untyped
+
+  def entry: () -> untyped
+
+  def entry_and_raw: (untyped is_raw) -> untyped
+
+  def is_entry_text_data?: (untyped ent, untyped path) -> untyped
+
+  def annotate: () -> untyped
+
+  def revision: () -> untyped
+
+  # Adds a related issue to a changeset
+  # POST /projects/:project_id/repository/(:repository_id/)revisions/:rev/issues
+  def add_related_issue: () -> untyped
+
+  # Removes a related issue from a changeset
+  # DELETE /projects/:project_id/repository/(:repository_id/)revisions/:rev/issues/:issue_id
+  def remove_related_issue: () -> untyped
+
+  def diff: () -> untyped
+
+  def stats: () -> untyped
+
+  # Returns JSON data for repository graphs
+  def graph: () -> untyped
+
+  private
+
+  def build_new_repository_from_params: () -> untyped
+
+  def find_repository: () -> untyped
+
+  REV_PARAM_RE: ::Regexp
+
+  def find_project_repository: () -> untyped
+
+  def find_changeset: () -> untyped
+
+  def show_error_not_found: () -> untyped
+
+  # Handler for Redmine::Scm::Adapters::CommandFailed exception
+  def show_error_command_failed: (untyped exception) -> untyped
+
+  def graph_commits_per_month: (untyped repository) -> untyped
+
+  def graph_commits_per_author: (untyped repository) -> untyped
+
+  def disposition: (untyped path) -> untyped
+
+  def send_file: (untyped path, ?untyped options) -> untyped
+
+  def valid_name?: (untyped rev) -> untyped
+end

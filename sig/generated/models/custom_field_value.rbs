@@ -1,0 +1,31 @@
+# Generated from app/models/custom_field_value.rb with RBS::Inline
+
+class CustomFieldValue
+  attr_accessor custom_field: untyped
+
+  attr_accessor customized: untyped
+
+  attr_accessor value_was: untyped
+
+  attr_reader value: untyped
+
+  def initialize: (?untyped attributes) -> untyped
+
+  def custom_field_id: () -> untyped
+
+  def true?: () -> untyped
+
+  def editable?: () -> untyped
+
+  def visible?: () -> untyped
+
+  def required?: () -> untyped
+
+  def to_s: () -> untyped
+
+  def value=: (untyped v) -> untyped
+
+  def value_present?: () -> untyped
+
+  def validate_value: () -> untyped
+end

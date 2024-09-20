@@ -1,0 +1,12 @@
+# Generated from lib/redmine/activity.rb with RBS::Inline
+
+module Redmine
+  module Activity
+    def self.map: () ?{ (?) -> untyped } -> untyped
+
+    # Registers an activity provider
+    def self.register: (untyped event_type, ?untyped options) -> untyped
+
+    def self.delete: (untyped event_type) -> untyped
+  end
+end

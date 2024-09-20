@@ -1,0 +1,56 @@
+# Generated from app/models/repository/mercurial.rb with RBS::Inline
+
+class Repository::Mercurial < Repository
+  # number of changesets to fetch at once
+  FETCH_AT_ONCE: ::Integer
+
+  def self.human_attribute_name: (untyped attribute_key_name, *untyped args) -> untyped
+
+  def self.scm_adapter_class: () -> untyped
+
+  def self.scm_name: () -> untyped
+
+  def supports_directory_revisions?: () -> untyped
+
+  def supports_revision_graph?: () -> untyped
+
+  def repo_log_encoding: () -> untyped
+
+  # Returns the readable identifier for the given mercurial changeset
+  def self.format_changeset_identifier: (untyped changeset) -> untyped
+
+  # Returns the identifier for the given Mercurial changeset
+  def self.changeset_identifier: (untyped changeset) -> untyped
+
+  def diff_format_revisions: (untyped cs, untyped cs_to, ?untyped sep) -> untyped
+
+  def modify_entry_lastrev_identifier: (untyped entry) -> untyped
+
+  def entry: (?untyped path, ?untyped identifier) -> untyped
+
+  def scm_entries: (?untyped path, ?untyped identifier) -> untyped
+
+  # Finds and returns a revision with a number or the beginning of a hash
+  def find_changeset_by_name: (untyped name) -> untyped
+
+  # Returns the latest changesets for +path+; sorted by revision number
+  #
+  # Because :order => 'id DESC' is defined at 'has_many',
+  # there is no need to set 'order'.
+  # But, MySQL test fails.
+  # Sqlite3 and PostgreSQL pass.
+  # Is this MySQL bug?
+  def latest_changesets: (untyped path, untyped rev, ?untyped limit) -> untyped
+
+  def is_short_id_in_db?: () -> untyped
+
+  def scmid_for_inserting_db: (untyped scmid) -> untyped
+
+  def nodes_in_branch: (untyped rev, untyped branch_limit) -> untyped
+
+  def tag_scmid: (untyped rev) -> untyped
+
+  def latest_changesets_cond: (untyped path, untyped rev, untyped limit) -> untyped
+
+  def fetch_changesets: () -> untyped
+end

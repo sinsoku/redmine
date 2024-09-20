@@ -1,0 +1,21 @@
+# Generated from app/controllers/principal_memberships_controller.rb with RBS::Inline
+
+class PrincipalMembershipsController < ApplicationController
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  def find_principal: () -> untyped
+
+  def find_membership: () -> untyped
+
+  def redirect_to_principal: (untyped principal) -> untyped
+end

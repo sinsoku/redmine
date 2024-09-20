@@ -1,0 +1,243 @@
+class JournalDetail < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[JournalDetail, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def journal_id: () -> Integer
+
+    def journal_id=: (Integer) -> Integer
+
+    def journal_id?: () -> bool
+
+    def journal_id_changed?: () -> bool
+
+    def journal_id_change: () -> [ Integer?, Integer? ]
+
+    def journal_id_will_change!: () -> void
+
+    def journal_id_was: () -> Integer?
+
+    def journal_id_previously_changed?: () -> bool
+
+    def journal_id_previous_change: () -> Array[Integer?]?
+
+    def journal_id_previously_was: () -> Integer?
+
+    def journal_id_before_last_save: () -> Integer?
+
+    def journal_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def journal_id_in_database: () -> Integer?
+
+    def saved_change_to_journal_id: () -> Array[Integer?]?
+
+    def saved_change_to_journal_id?: () -> bool
+
+    def will_save_change_to_journal_id?: () -> bool
+
+    def restore_journal_id!: () -> void
+
+    def clear_journal_id_change: () -> void
+
+    def property: () -> String
+
+    def property=: (String) -> String
+
+    def property?: () -> bool
+
+    def property_changed?: () -> bool
+
+    def property_change: () -> [ String?, String? ]
+
+    def property_will_change!: () -> void
+
+    def property_was: () -> String?
+
+    def property_previously_changed?: () -> bool
+
+    def property_previous_change: () -> Array[String?]?
+
+    def property_previously_was: () -> String?
+
+    def property_before_last_save: () -> String?
+
+    def property_change_to_be_saved: () -> Array[String?]?
+
+    def property_in_database: () -> String?
+
+    def saved_change_to_property: () -> Array[String?]?
+
+    def saved_change_to_property?: () -> bool
+
+    def will_save_change_to_property?: () -> bool
+
+    def restore_property!: () -> void
+
+    def clear_property_change: () -> void
+
+    def prop_key: () -> String
+
+    def prop_key=: (String) -> String
+
+    def prop_key?: () -> bool
+
+    def prop_key_changed?: () -> bool
+
+    def prop_key_change: () -> [ String?, String? ]
+
+    def prop_key_will_change!: () -> void
+
+    def prop_key_was: () -> String?
+
+    def prop_key_previously_changed?: () -> bool
+
+    def prop_key_previous_change: () -> Array[String?]?
+
+    def prop_key_previously_was: () -> String?
+
+    def prop_key_before_last_save: () -> String?
+
+    def prop_key_change_to_be_saved: () -> Array[String?]?
+
+    def prop_key_in_database: () -> String?
+
+    def saved_change_to_prop_key: () -> Array[String?]?
+
+    def saved_change_to_prop_key?: () -> bool
+
+    def will_save_change_to_prop_key?: () -> bool
+
+    def restore_prop_key!: () -> void
+
+    def clear_prop_key_change: () -> void
+
+    def old_value: () -> String?
+
+    def old_value=: (String?) -> String?
+
+    def old_value?: () -> bool
+
+    def old_value_changed?: () -> bool
+
+    def old_value_change: () -> [ String?, String? ]
+
+    def old_value_will_change!: () -> void
+
+    def old_value_was: () -> String?
+
+    def old_value_previously_changed?: () -> bool
+
+    def old_value_previous_change: () -> Array[String?]?
+
+    def old_value_previously_was: () -> String?
+
+    def old_value_before_last_save: () -> String?
+
+    def old_value_change_to_be_saved: () -> Array[String?]?
+
+    def old_value_in_database: () -> String?
+
+    def saved_change_to_old_value: () -> Array[String?]?
+
+    def saved_change_to_old_value?: () -> bool
+
+    def will_save_change_to_old_value?: () -> bool
+
+    def restore_old_value!: () -> void
+
+    def clear_old_value_change: () -> void
+
+    def value: () -> String?
+
+    def value=: (String?) -> String?
+
+    def value?: () -> bool
+
+    def value_changed?: () -> bool
+
+    def value_change: () -> [ String?, String? ]
+
+    def value_will_change!: () -> void
+
+    def value_was: () -> String?
+
+    def value_previously_changed?: () -> bool
+
+    def value_previous_change: () -> Array[String?]?
+
+    def value_previously_was: () -> String?
+
+    def value_before_last_save: () -> String?
+
+    def value_change_to_be_saved: () -> Array[String?]?
+
+    def value_in_database: () -> String?
+
+    def saved_change_to_value: () -> Array[String?]?
+
+    def saved_change_to_value?: () -> bool
+
+    def will_save_change_to_value?: () -> bool
+
+    def restore_value!: () -> void
+
+    def clear_value_change: () -> void
+  end
+  include GeneratedAttributeMethods
+
+  def journal: () -> Journal
+  def journal=: (Journal?) -> Journal?
+  def reload_journal: () -> Journal?
+  def build_journal: (untyped) -> Journal
+  def create_journal: (untyped) -> Journal
+  def create_journal!: (untyped) -> Journal
+
+  module GeneratedRelationMethods
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[JournalDetail, Integer]
+    include Enumerable[JournalDetail]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[JournalDetail, Integer]
+  end
+end

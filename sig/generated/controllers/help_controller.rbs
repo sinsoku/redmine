@@ -1,0 +1,7 @@
+# Generated from app/controllers/help_controller.rb with RBS::Inline
+
+class HelpController < ApplicationController
+  def show_wiki_syntax: () -> untyped
+
+  def show_code_highlighting: () -> untyped
+end

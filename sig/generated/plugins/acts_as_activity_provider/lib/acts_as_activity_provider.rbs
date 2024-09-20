@@ -1,0 +1,22 @@
+# Generated from lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb with RBS::Inline
+
+module Redmine
+  module Acts
+    module ActivityProvider
+      def self.included: (untyped base) -> untyped
+
+      module ClassMethods
+        def acts_as_activity_provider: (?untyped options) -> untyped
+      end
+
+      module InstanceMethods
+        def self.included: (untyped base) -> untyped
+
+        module ClassMethods
+          # Returns events of type event_type visible by user that occurred between from and to
+          def find_events: (untyped event_type, untyped user, untyped from, untyped to, untyped options) -> untyped
+        end
+      end
+    end
+  end
+end

@@ -1,0 +1,15 @@
+# Generated from lib/redmine/scm/base.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    class Base
+      def self.all: () -> untyped
+
+      # Add a new SCM adapter and repository
+      def self.add: (untyped scm_name) -> untyped
+
+      # Remove a SCM adapter from Redmine's list of supported scms
+      def self.delete: (untyped scm_name) -> untyped
+    end
+  end
+end

@@ -95,6 +95,9 @@ end
 group :development do
   gem 'listen', '~> 3.3'
   gem 'yard', require: false
+  gem 'steep', require: false
+  gem 'rbs_rails', require: false
+  gem 'rbs-inline', require: false
 end
 
 group :test do

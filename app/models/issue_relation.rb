@@ -19,7 +19,7 @@
 
 class IssueRelation < ApplicationRecord
   # Class used to represent the relations of an issue
-  class Relations < Array
+  class Relations < Array #[__todo__]
     include Redmine::I18n
 
     def initialize(issue, *args)

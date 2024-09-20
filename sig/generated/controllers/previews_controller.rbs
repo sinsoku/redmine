@@ -1,0 +1,13 @@
+# Generated from app/controllers/previews_controller.rb with RBS::Inline
+
+class PreviewsController < ApplicationController
+  def issue: () -> untyped
+
+  def news: () -> untyped
+
+  def text: () -> untyped
+
+  private
+
+  def find_project: () -> untyped
+end

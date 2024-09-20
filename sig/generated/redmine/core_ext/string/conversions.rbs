@@ -1,0 +1,16 @@
+# Generated from lib/redmine/core_ext/string/conversions.rb with RBS::Inline
+
+module Redmine
+  # @private
+  module CoreExt
+    # @private
+    module String
+      # Custom string conversions
+      # @private
+      module Conversions
+        # Parses hours format and returns a float
+        def to_hours: () -> untyped
+      end
+    end
+  end
+end

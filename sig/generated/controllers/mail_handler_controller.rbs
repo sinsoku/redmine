@@ -1,0 +1,15 @@
+# Generated from app/controllers/mail_handler_controller.rb with RBS::Inline
+
+class MailHandlerController < ActionController::Base
+  include ActiveSupport::SecurityUtils
+
+  # Displays the email submission form
+  def new: () -> untyped
+
+  # Submits an incoming email to MailHandler
+  def index: () -> untyped
+
+  private
+
+  def check_credential: () -> untyped
+end

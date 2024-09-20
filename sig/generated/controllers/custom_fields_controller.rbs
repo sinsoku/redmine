@@ -1,0 +1,21 @@
+# Generated from app/controllers/custom_fields_controller.rb with RBS::Inline
+
+class CustomFieldsController < ApplicationController
+  def index: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  def build_new_custom_field: () -> untyped
+
+  def find_custom_field: () -> untyped
+end

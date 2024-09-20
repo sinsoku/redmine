@@ -1,3 +1,5 @@
+# rbs_inline: disabled
+# refs: https://github.com/soutaro/rbs-inline/issues/105
 require 'rubygems'
 require 'erb'  # to get "h"
 require 'active_support'  # to get "returning"

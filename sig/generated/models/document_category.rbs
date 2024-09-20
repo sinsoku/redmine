@@ -1,0 +1,13 @@
+# Generated from app/models/document_category.rb with RBS::Inline
+
+class DocumentCategory < Enumeration
+  OptionName: ::Symbol
+
+  def option_name: () -> untyped
+
+  def objects_count: () -> untyped
+
+  def transfer_relations: (untyped to) -> untyped
+
+  def self.default: () -> untyped
+end

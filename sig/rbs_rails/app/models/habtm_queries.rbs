@@ -1,0 +1,107 @@
+class Role < ::ApplicationRecord
+  class HABTM_Queries < ::ActiveRecord::Base
+    extend _ActiveRecord_Relation_ClassMethods[Role::HABTM_Queries, ActiveRecord_Relation, top]
+
+    module GeneratedAttributeMethods
+      def query_id: () -> Integer
+
+      def query_id=: (Integer) -> Integer
+
+      def query_id?: () -> bool
+
+      def query_id_changed?: () -> bool
+
+      def query_id_change: () -> [ Integer?, Integer? ]
+
+      def query_id_will_change!: () -> void
+
+      def query_id_was: () -> Integer?
+
+      def query_id_previously_changed?: () -> bool
+
+      def query_id_previous_change: () -> Array[Integer?]?
+
+      def query_id_previously_was: () -> Integer?
+
+      def query_id_before_last_save: () -> Integer?
+
+      def query_id_change_to_be_saved: () -> Array[Integer?]?
+
+      def query_id_in_database: () -> Integer?
+
+      def saved_change_to_query_id: () -> Array[Integer?]?
+
+      def saved_change_to_query_id?: () -> bool
+
+      def will_save_change_to_query_id?: () -> bool
+
+      def restore_query_id!: () -> void
+
+      def clear_query_id_change: () -> void
+
+      def role_id: () -> Integer
+
+      def role_id=: (Integer) -> Integer
+
+      def role_id?: () -> bool
+
+      def role_id_changed?: () -> bool
+
+      def role_id_change: () -> [ Integer?, Integer? ]
+
+      def role_id_will_change!: () -> void
+
+      def role_id_was: () -> Integer?
+
+      def role_id_previously_changed?: () -> bool
+
+      def role_id_previous_change: () -> Array[Integer?]?
+
+      def role_id_previously_was: () -> Integer?
+
+      def role_id_before_last_save: () -> Integer?
+
+      def role_id_change_to_be_saved: () -> Array[Integer?]?
+
+      def role_id_in_database: () -> Integer?
+
+      def saved_change_to_role_id: () -> Array[Integer?]?
+
+      def saved_change_to_role_id?: () -> bool
+
+      def will_save_change_to_role_id?: () -> bool
+
+      def restore_role_id!: () -> void
+
+      def clear_role_id_change: () -> void
+    end
+    include GeneratedAttributeMethods
+
+    def left_side: () -> Role?
+    def left_side=: (Role?) -> Role?
+    def reload_left_side: () -> Role?
+    def build_left_side: (untyped) -> Role
+    def create_left_side: (untyped) -> Role
+    def create_left_side!: (untyped) -> Role
+    def query: () -> Query?
+    def query=: (Query?) -> Query?
+    def reload_query: () -> Query?
+    def build_query: (untyped) -> Query
+    def create_query: (untyped) -> Query
+    def create_query!: (untyped) -> Query
+
+    module GeneratedRelationMethods
+    end
+
+    class ActiveRecord_Relation < ::ActiveRecord::Relation
+      include GeneratedRelationMethods
+      include _ActiveRecord_Relation[Role::HABTM_Queries, top]
+      include Enumerable[Role::HABTM_Queries]
+    end
+
+    class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+      include GeneratedRelationMethods
+      include _ActiveRecord_Relation[Role::HABTM_Queries, top]
+    end
+  end
+end

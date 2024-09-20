@@ -1,0 +1,15 @@
+# Generated from lib/redmine/wiki_formatting/markdown/helper.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module Markdown
+      module Helper
+        def wikitoolbar_for: (untyped field_id, ?untyped preview_url) -> untyped
+
+        def initial_page_content: (untyped page) -> untyped
+
+        def heads_for_wiki_formatter: () -> untyped
+      end
+    end
+  end
+end

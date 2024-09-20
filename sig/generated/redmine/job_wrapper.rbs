@@ -1,0 +1,7 @@
+# Generated from lib/redmine/job_wrapper.rb with RBS::Inline
+
+module Redmine
+  module JobWrapper
+    def keep_current_user: () -> untyped
+  end
+end

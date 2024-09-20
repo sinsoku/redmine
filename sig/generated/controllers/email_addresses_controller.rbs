@@ -1,0 +1,19 @@
+# Generated from app/controllers/email_addresses_controller.rb with RBS::Inline
+
+class EmailAddressesController < ApplicationController
+  def index: () -> untyped
+
+  def create: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  def find_user: () -> untyped
+
+  def find_email_address: () -> untyped
+
+  def require_admin_or_current_user: () -> untyped
+end

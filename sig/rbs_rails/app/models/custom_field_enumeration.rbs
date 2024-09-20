@@ -1,0 +1,210 @@
+class CustomFieldEnumeration < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[CustomFieldEnumeration, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def custom_field_id: () -> Integer
+
+    def custom_field_id=: (Integer) -> Integer
+
+    def custom_field_id?: () -> bool
+
+    def custom_field_id_changed?: () -> bool
+
+    def custom_field_id_change: () -> [ Integer?, Integer? ]
+
+    def custom_field_id_will_change!: () -> void
+
+    def custom_field_id_was: () -> Integer?
+
+    def custom_field_id_previously_changed?: () -> bool
+
+    def custom_field_id_previous_change: () -> Array[Integer?]?
+
+    def custom_field_id_previously_was: () -> Integer?
+
+    def custom_field_id_before_last_save: () -> Integer?
+
+    def custom_field_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def custom_field_id_in_database: () -> Integer?
+
+    def saved_change_to_custom_field_id: () -> Array[Integer?]?
+
+    def saved_change_to_custom_field_id?: () -> bool
+
+    def will_save_change_to_custom_field_id?: () -> bool
+
+    def restore_custom_field_id!: () -> void
+
+    def clear_custom_field_id_change: () -> void
+
+    def name: () -> String
+
+    def name=: (String) -> String
+
+    def name?: () -> bool
+
+    def name_changed?: () -> bool
+
+    def name_change: () -> [ String?, String? ]
+
+    def name_will_change!: () -> void
+
+    def name_was: () -> String?
+
+    def name_previously_changed?: () -> bool
+
+    def name_previous_change: () -> Array[String?]?
+
+    def name_previously_was: () -> String?
+
+    def name_before_last_save: () -> String?
+
+    def name_change_to_be_saved: () -> Array[String?]?
+
+    def name_in_database: () -> String?
+
+    def saved_change_to_name: () -> Array[String?]?
+
+    def saved_change_to_name?: () -> bool
+
+    def will_save_change_to_name?: () -> bool
+
+    def restore_name!: () -> void
+
+    def clear_name_change: () -> void
+
+    def active: () -> bool
+
+    def active=: (bool) -> bool
+
+    def active?: () -> bool
+
+    def active_changed?: () -> bool
+
+    def active_change: () -> [ bool?, bool? ]
+
+    def active_will_change!: () -> void
+
+    def active_was: () -> bool?
+
+    def active_previously_changed?: () -> bool
+
+    def active_previous_change: () -> Array[bool?]?
+
+    def active_previously_was: () -> bool?
+
+    def active_before_last_save: () -> bool?
+
+    def active_change_to_be_saved: () -> Array[bool?]?
+
+    def active_in_database: () -> bool?
+
+    def saved_change_to_active: () -> Array[bool?]?
+
+    def saved_change_to_active?: () -> bool
+
+    def will_save_change_to_active?: () -> bool
+
+    def restore_active!: () -> void
+
+    def clear_active_change: () -> void
+
+    def position: () -> Integer
+
+    def position=: (Integer) -> Integer
+
+    def position?: () -> bool
+
+    def position_changed?: () -> bool
+
+    def position_change: () -> [ Integer?, Integer? ]
+
+    def position_will_change!: () -> void
+
+    def position_was: () -> Integer?
+
+    def position_previously_changed?: () -> bool
+
+    def position_previous_change: () -> Array[Integer?]?
+
+    def position_previously_was: () -> Integer?
+
+    def position_before_last_save: () -> Integer?
+
+    def position_change_to_be_saved: () -> Array[Integer?]?
+
+    def position_in_database: () -> Integer?
+
+    def saved_change_to_position: () -> Array[Integer?]?
+
+    def saved_change_to_position?: () -> bool
+
+    def will_save_change_to_position?: () -> bool
+
+    def restore_position!: () -> void
+
+    def clear_position_change: () -> void
+  end
+  include GeneratedAttributeMethods
+
+  def custom_field: () -> CustomField
+  def custom_field=: (CustomField?) -> CustomField?
+  def reload_custom_field: () -> CustomField?
+  def build_custom_field: (untyped) -> CustomField
+  def create_custom_field: (untyped) -> CustomField
+  def create_custom_field!: (untyped) -> CustomField
+
+  def self.active: () -> ActiveRecord_Relation
+
+  module GeneratedRelationMethods
+    def active: () -> ActiveRecord_Relation
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[CustomFieldEnumeration, Integer]
+    include Enumerable[CustomFieldEnumeration]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[CustomFieldEnumeration, Integer]
+  end
+end

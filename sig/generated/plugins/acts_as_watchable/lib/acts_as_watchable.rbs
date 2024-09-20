@@ -1,0 +1,52 @@
+# Generated from lib/plugins/acts_as_watchable/lib/acts_as_watchable.rb with RBS::Inline
+
+# ActsAsWatchable
+module Redmine
+  module Acts
+    module Watchable
+      def self.included: (untyped base) -> untyped
+
+      module ClassMethods
+        def acts_as_watchable: (?untyped options) -> untyped
+      end
+
+      module InstanceMethods
+        def self.included: (untyped base) -> untyped
+
+        # Returns an array of users that are proposed as watchers
+        def addable_watcher_users: () -> untyped
+
+        # array of watchers that the given user is allowed to see
+        def visible_watcher_users: (?untyped user) -> untyped
+
+        # true if user can be added as a watcher
+        def valid_watcher?: (untyped user) -> untyped
+
+        # Adds user as a watcher
+        def add_watcher: (untyped user) -> untyped
+
+        # Removes user from the watchers list
+        def remove_watcher: (untyped user) -> untyped
+
+        # Adds/removes watcher
+        def set_watcher: (untyped user, ?untyped watching) -> untyped
+
+        # Overrides watcher_user_ids= to make user_ids uniq
+        def watcher_user_ids=: (untyped user_ids) -> untyped
+
+        # Returns true if object is watched by +principal+, that is
+        # either by a given group,
+        # or by a given user or any of their groups
+        def watched_by?: (untyped principal) -> untyped
+
+        def notified_watchers: () -> untyped
+
+        # Returns an array of watchers' email addresses
+        def watcher_recipients: () -> untyped
+
+        module ClassMethods
+        end
+      end
+    end
+  end
+end

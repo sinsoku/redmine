@@ -1,0 +1,27 @@
+# Generated from lib/redmine/helpers/time_report.rb with RBS::Inline
+
+module Redmine
+  module Helpers
+    class TimeReport
+      attr_reader criteria: untyped
+
+      attr_reader columns: untyped
+
+      attr_reader hours: untyped
+
+      attr_reader total_hours: untyped
+
+      attr_reader periods: untyped
+
+      def initialize: (untyped project, untyped criteria, untyped columns, untyped time_entry_scope) -> untyped
+
+      def available_criteria: () -> untyped
+
+      private
+
+      def run: () -> untyped
+
+      def load_available_criteria: () -> untyped
+    end
+  end
+end

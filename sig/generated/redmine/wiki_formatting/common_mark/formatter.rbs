@@ -1,0 +1,20 @@
+# Generated from lib/redmine/wiki_formatting/common_mark/formatter.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module CommonMark
+      # configuration of the rendering pipeline
+      PIPELINE_CONFIG: untyped
+
+      MarkdownPipeline: untyped
+
+      class Formatter
+        include Redmine::WikiFormatting::SectionHelper
+
+        def initialize: (untyped text) -> untyped
+
+        def to_html: (*untyped args) -> untyped
+      end
+    end
+  end
+end

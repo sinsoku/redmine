@@ -1,0 +1,11 @@
+# Generated from app/helpers/workflows_helper.rb with RBS::Inline
+
+module WorkflowsHelper
+  def options_for_workflow_select: (untyped name, untyped objects, untyped selected, ?untyped options) -> untyped
+
+  def field_required?: (untyped field) -> untyped
+
+  def field_permission_tag: (untyped permissions, untyped status, untyped field, untyped roles) -> untyped
+
+  def transition_tag: (untyped transition_count, untyped old_status, untyped new_status, untyped name) -> untyped
+end

@@ -1,0 +1,5 @@
+# Generated from app/helpers/gantt_helper.rb with RBS::Inline
+
+module GanttHelper
+  def gantt_zoom_link: (untyped gantt, untyped in_or_out) -> untyped
+end

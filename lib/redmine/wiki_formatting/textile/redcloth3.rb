@@ -170,7 +170,7 @@ class RedCloth3 < String
     include Redmine::Helpers::URL
 
     VERSION = '3.0.4'
-    DEFAULT_RULES = [:textile, :markdown]
+    DEFAULT_RULES = [:textile, :markdown] #: Array[__todo__]
 
     #
     # Two accessor for setting security restrictions.
@@ -358,7 +358,7 @@ class RedCloth3 < String
       'tt', 'b', 'i', 'big', 'small', 'em', 'strong', 'dfn', 'code',
       'samp', 'kbd', 'var', 'cite', 'abbr', 'acronym', 'a', 'img', 'br',
       'br', 'map', 'q', 'sub', 'sup', 'span', 'bdo'
-    ]
+    ] #: Array[__todo__]
 
     QTAGS = [
       ['**', 'b', :limit],
@@ -371,7 +371,7 @@ class RedCloth3 < String
       ['+', 'ins', :limit],
       ['^', 'sup', :limit],
       ['~', 'sub', :limit]
-    ]
+    ] #: Array[__todo__]
     QTAGS_JOIN = QTAGS.map {|rc, ht, rtype| Regexp::quote rc}.join('|')
 
     QTAGS.collect! do |rc, ht, rtype|
@@ -420,20 +420,20 @@ class RedCloth3 < String
       #   [ /\b ?[(\[]TM[\])]/i, '&#8482;' ], # trademark
       #   [ /\b ?[(\[]R[\])]/i, '&#174;' ], # registered
       #   [ /\b ?[(\[]C[\])]/i, '&#169;' ] # copyright
-    ]
+    ] #: Array[__todo__]
 
     H_ALGN_VALS = {
         '<' => 'left',
         '=' => 'center',
         '>' => 'right',
         '<>' => 'justify'
-    }
+    } #: Hash[__todo__, __todo__]
 
     V_ALGN_VALS = {
         '^' => 'top',
         '-' => 'middle',
         '~' => 'bottom'
-    }
+    } #: Hash[__todo__, __todo__]
 
     #
     # Flexible HTML escaping
@@ -1181,7 +1181,7 @@ class RedCloth3 < String
         'h5' => nil,
         'h6' => nil,
         'blockquote' => ['cite']
-    }
+    } #: Hash[__todo__, __todo__]
 
     def clean_html(text, tags = BASIC_TAGS)
         text.gsub!("<![CDATA[", '')
@@ -1208,7 +1208,7 @@ class RedCloth3 < String
         end
     end
 
-    ALLOWED_TAGS = %w(pre code kbd notextile)
+    ALLOWED_TAGS = %w(pre code kbd notextile) #: Array[__todo__]
     def escape_html_tags(text)
         text.gsub!(%r{<(\/?([!\w][^ >\t\f\r\n]*)[^<>\n]*)(>?)}) do |m|
             all, tag, close = $1, $2, $3

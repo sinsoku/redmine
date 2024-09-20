@@ -21,7 +21,7 @@ module Redmine
   module MyPage
     include Redmine::I18n
 
-    CORE_GROUPS = ['top', 'left', 'right']
+    CORE_GROUPS = ['top', 'left', 'right'] #: Array[__todo__]
 
     CORE_BLOCKS = {
       'issuesassignedtome' => {:label => :label_assigned_to_me_issues},
@@ -34,7 +34,7 @@ module Redmine
       'documents' => {:label => :label_document_plural},
       'timelog' => {:label => :label_spent_time},
       'activity' => {:label => :label_activity}
-    }
+    } #: Hash[__todo__, __todo__]
 
     def self.groups
       CORE_GROUPS.dup.freeze

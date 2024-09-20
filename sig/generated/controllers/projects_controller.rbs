@@ -1,0 +1,52 @@
+# Generated from app/controllers/projects_controller.rb with RBS::Inline
+
+class ProjectsController < ApplicationController
+  include QueriesHelper
+
+  include ProjectsQueriesHelper
+
+  # Lists visible projects
+  def index: () -> untyped
+
+  def autocomplete: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def copy: () -> untyped
+
+  # Show @project
+  def show: () -> untyped
+
+  def settings: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def archive: () -> untyped
+
+  def unarchive: () -> untyped
+
+  def bookmark: () -> untyped
+
+  def close: () -> untyped
+
+  def reopen: () -> untyped
+
+  # Delete @project
+  def destroy: () -> untyped
+
+  # Delete selected projects
+  def bulk_destroy: () -> untyped
+
+  private
+
+  # Returns the ProjectEntry scope for index
+  def project_scope: (?untyped options) -> untyped
+
+  def retrieve_project_query: () -> untyped
+
+  def retrieve_default_query: () -> untyped
+end

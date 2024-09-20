@@ -1,0 +1,10 @@
+# Generated from lib/redmine/wiki_formatting/markdown/html_parser.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module Markdown
+      class HtmlParser < Redmine::WikiFormatting::HtmlParser
+      end
+    end
+  end
+end

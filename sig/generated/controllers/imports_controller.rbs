@@ -1,0 +1,35 @@
+# Generated from app/controllers/imports_controller.rb with RBS::Inline
+
+class ImportsController < ApplicationController
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def show: () -> untyped
+
+  def settings: () -> untyped
+
+  def mapping: () -> untyped
+
+  def run: () -> untyped
+
+  def current_menu: (untyped project) -> untyped
+
+  private
+
+  def find_import: () -> untyped
+
+  def update_from_params: () -> untyped
+
+  def max_items_per_request: () -> untyped
+
+  def import_layout: () -> untyped
+
+  def menu_items: () -> untyped
+
+  def authorize_import: () -> untyped
+
+  def import_type: () -> untyped
+
+  def auto_map_fields: () -> untyped
+end

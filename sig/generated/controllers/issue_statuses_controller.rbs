@@ -1,0 +1,17 @@
+# Generated from app/controllers/issue_statuses_controller.rb with RBS::Inline
+
+class IssueStatusesController < ApplicationController
+  def index: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  def update_issue_done_ratio: () -> untyped
+end

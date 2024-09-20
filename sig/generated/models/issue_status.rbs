@@ -1,0 +1,29 @@
+# Generated from app/models/issue_status.rb with RBS::Inline
+
+class IssueStatus < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  # Update all the +Issues+ setting their done_ratio to the value of their +IssueStatus+
+  def self.update_issue_done_ratios: () -> untyped
+
+  # Returns an array of all statuses the given role can switch to
+  def new_statuses_allowed_to: (untyped roles, untyped tracker, ?untyped author, ?untyped assignee) -> untyped
+
+  alias find_new_statuses_allowed_to new_statuses_allowed_to
+
+  def self.new_statuses_allowed: (untyped status, untyped roles, untyped tracker, ?untyped author, ?untyped assignee) -> untyped
+
+  def <=>: (untyped status) -> untyped
+
+  def to_s: () -> untyped
+
+  private
+
+  # Updates issues closed_on attribute when an existing status is set as closed.
+  def handle_is_closed_change: () -> untyped
+
+  def check_integrity: () -> untyped
+
+  # Deletes associated workflows
+  def delete_workflow_rules: () -> untyped
+end

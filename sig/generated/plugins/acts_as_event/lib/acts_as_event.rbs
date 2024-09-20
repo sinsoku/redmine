@@ -1,0 +1,29 @@
+# Generated from lib/plugins/acts_as_event/lib/acts_as_event.rb with RBS::Inline
+
+module Redmine
+  module Acts
+    module Event
+      def self.included: (untyped base) -> untyped
+
+      module ClassMethods
+        def acts_as_event: (?untyped options) -> untyped
+      end
+
+      module InstanceMethods
+        def self.included: (untyped base) -> untyped
+
+        def event_date: () -> untyped
+
+        def event_group: () -> untyped
+
+        def event_url: (?untyped options) -> untyped
+
+        # Returns the mail addresses of users that should be notified
+        def recipients: () -> untyped
+
+        module ClassMethods
+        end
+      end
+    end
+  end
+end

@@ -1,0 +1,7 @@
+# Generated from app/helpers/roles_helper.rb with RBS::Inline
+
+module RolesHelper
+  include ApplicationHelper
+
+  def permissions_to_csv: (untyped roles, untyped permissions) -> untyped
+end

@@ -1,0 +1,31 @@
+# Generated from lib/redmine/acts/mentionable.rb with RBS::Inline
+
+module Redmine
+  module Acts
+    module Mentionable
+      def self.included: (untyped base) -> untyped
+
+      module ClassMethods
+        def acts_as_mentionable: (?untyped options) -> untyped
+
+        attr_accessor mentioned_users: untyped
+      end
+
+      module InstanceMethods
+        def self.included: (untyped base) -> untyped
+
+        def notified_mentions: () -> untyped
+
+        private
+
+        def parse_mentions: () -> untyped
+
+        def get_mentioned_users: (untyped old_content, untyped new_content) -> untyped
+
+        def scan_for_mentioned_users: (untyped content) -> untyped
+
+        MENTION_PATTERN: ::Regexp
+      end
+    end
+  end
+end

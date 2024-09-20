@@ -1,0 +1,17 @@
+# Generated from lib/redmine/wiki_formatting/links_helper.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module LinksHelper
+      AUTO_LINK_RE: ::Regexp
+
+      # Destructively replaces urls into clickable links
+      def auto_link!: (untyped text) -> untyped
+
+      # Destructively replaces email addresses into clickable links
+      def auto_mailto!: (untyped text) -> untyped
+
+      def restore_redmine_links: (untyped html) -> untyped
+    end
+  end
+end

@@ -1,0 +1,35 @@
+# Generated from app/helpers/my_helper.rb with RBS::Inline
+
+module MyHelper
+  # Renders the blocks
+  def render_blocks: (untyped blocks, untyped user, ?untyped options) -> untyped
+
+  # Renders a single block
+  def render_block: (untyped block, untyped user) -> untyped
+
+  # Renders a single block content
+  def render_block_content: (untyped block, untyped user) -> untyped
+
+  # Returns the select tag used to add a block to My page
+  def block_select_tag: (untyped user) -> untyped
+
+  def render_calendar_block: (untyped block, untyped settings) -> untyped
+
+  def render_documents_block: (untyped block, untyped settings) -> untyped
+
+  def render_issuesassignedtome_block: (untyped block, untyped settings) -> untyped
+
+  def render_issuesreportedbyme_block: (untyped block, untyped settings) -> untyped
+
+  def render_issuesupdatedbyme_block: (untyped block, untyped settings) -> untyped
+
+  def render_issueswatched_block: (untyped block, untyped settings) -> untyped
+
+  def render_issuequery_block: (untyped block, untyped settings) -> untyped
+
+  def render_news_block: (untyped block, untyped settings) -> untyped
+
+  def render_timelog_block: (untyped block, untyped settings) -> untyped
+
+  def render_activity_block: (untyped block, untyped settings) -> untyped
+end

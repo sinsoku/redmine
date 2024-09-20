@@ -1,0 +1,48 @@
+# Generated from lib/redmine/hook.rb with RBS::Inline
+
+module Redmine
+  module Hook
+    # Adds a listener class.
+    # Automatically called when a class inherits from Redmine::Hook::Listener.
+    def self.add_listener: (untyped klass) -> untyped
+
+    # Returns all the listener instances.
+    def self.listeners: () -> untyped
+
+    # Returns the listener instances for the given hook.
+    def self.hook_listeners: (untyped hook) -> untyped
+
+    # Clears all the listeners.
+    def self.clear_listeners: () -> untyped
+
+    # Clears all the listeners instances.
+    def self.clear_listeners_instances: () -> untyped
+
+    # Calls a hook.
+    # Returns the listeners response.
+    def self.call_hook: (untyped hook, ?untyped context) -> untyped
+
+    # Helper module included in ApplicationHelper and ActionController so that
+    # hooks can be called in views like this:
+    #
+    #   <%= call_hook(:some_hook) %>
+    #   <%= call_hook(:another_hook, :foo => 'bar') %>
+    #
+    # Or in controllers like:
+    #   call_hook(:some_hook)
+    #   call_hook(:another_hook, :foo => 'bar')
+    #
+    # Hooks added to views will be concatenated into a string. Hooks added to
+    # controllers will return an array of results.
+    #
+    # Several objects are automatically added to the call context:
+    #
+    # * project => current project
+    # * request => Request instance
+    # * controller => current Controller instance
+    # * hook_caller => object that called the hook
+    module Helper
+      def call_hook: (untyped hook, ?untyped context) -> untyped
+    end
+  end
+end

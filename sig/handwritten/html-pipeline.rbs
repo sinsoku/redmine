@@ -1,0 +1,12 @@
+module HTML
+  module Pipeline
+    class Filter
+    end
+
+    class SanitizationFilter
+    end
+
+    class TextFilter
+    end
+  end
+end

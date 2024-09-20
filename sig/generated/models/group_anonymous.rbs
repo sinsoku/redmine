@@ -1,0 +1,7 @@
+# Generated from app/models/group_anonymous.rb with RBS::Inline
+
+class GroupAnonymous < GroupBuiltin
+  def name: () -> untyped
+
+  def builtin_type: () -> untyped
+end

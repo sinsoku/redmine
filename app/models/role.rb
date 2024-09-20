@@ -41,17 +41,17 @@ class Role < ApplicationRecord
     ['all', :label_issues_visibility_all],
     ['default', :label_issues_visibility_public],
     ['own', :label_issues_visibility_own]
-  ]
+  ] #: Array[__todo__]
 
   TIME_ENTRIES_VISIBILITY_OPTIONS = [
     ['all', :label_time_entries_visibility_all],
     ['own', :label_time_entries_visibility_own]
-  ]
+  ] #: Array[__todo__]
 
   USERS_VISIBILITY_OPTIONS = [
     ['all', :label_users_visibility_all],
     ['members_of_visible_projects', :label_users_visibility_members_of_visible_projects]
-  ]
+  ] #: Array[__todo__]
 
   scope :sorted, lambda {order(:builtin, :position)}
   scope :givable, lambda {order(:position).where(:builtin => 0)}

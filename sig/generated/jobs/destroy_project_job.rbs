@@ -1,0 +1,19 @@
+# Generated from app/jobs/destroy_project_job.rb with RBS::Inline
+
+class DestroyProjectJob < ApplicationJob
+  include Redmine::I18n
+
+  def self.schedule: (untyped project, ?user: untyped) -> untyped
+
+  def perform: (untyped project_id, untyped user_id, untyped remote_ip) -> untyped
+
+  private
+
+  def delete_project: () -> untyped
+
+  def success: (untyped message) -> untyped
+
+  def failure: () -> untyped
+
+  def info: (untyped msg) -> untyped
+end

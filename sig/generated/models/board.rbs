@@ -1,0 +1,25 @@
+# Generated from app/models/board.rb with RBS::Inline
+
+class Board < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  def visible?: (?untyped user) -> untyped
+
+  def reload: (*untyped args) -> untyped
+
+  def to_s: () -> untyped
+
+  # Returns a scope for the board topics (messages without parent)
+  def topics: () -> untyped
+
+  def valid_parents: () -> untyped
+
+  def reset_counters!: () -> untyped
+
+  # Updates topics_count, messages_count and last_message_id attributes for +board_id+
+  def self.reset_counters!: (untyped board_id) -> untyped
+
+  def self.board_tree: (untyped boards, ?untyped parent_id, ?untyped level) -> untyped
+
+  def validate_board: () -> untyped
+end

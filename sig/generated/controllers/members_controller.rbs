@@ -1,0 +1,23 @@
+# Generated from app/controllers/members_controller.rb with RBS::Inline
+
+class MembersController < ApplicationController
+  def index: () -> untyped
+
+  def show: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  def autocomplete: () -> untyped
+
+  private
+
+  def redirect_to_settings_in_projects: () -> untyped
+end

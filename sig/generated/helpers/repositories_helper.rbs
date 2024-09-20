@@ -1,0 +1,45 @@
+# Generated from app/helpers/repositories_helper.rb with RBS::Inline
+
+module RepositoriesHelper
+  def format_revision: (untyped revision) -> untyped
+
+  def truncate_at_line_break: (untyped text, ?untyped length) -> untyped
+
+  def render_pagination: () -> untyped
+
+  def render_properties: (untyped properties) -> untyped
+
+  def render_changeset_changes: () -> untyped
+
+  def render_changes_tree: (untyped tree) -> untyped
+
+  def repository_field_tags: (untyped form, untyped repository) -> untyped
+
+  def scm_select_tag: (untyped repository) -> untyped
+
+  def with_leading_slash: (untyped path) -> untyped
+
+  def subversion_field_tags: (untyped form, untyped repository) -> untyped
+
+  def mercurial_field_tags: (untyped form, untyped repository) -> untyped
+
+  def git_field_tags: (untyped form, untyped repository) -> untyped
+
+  def cvs_field_tags: (untyped form, untyped repository) -> untyped
+
+  def bazaar_field_tags: (untyped form, untyped repository) -> untyped
+
+  def filesystem_field_tags: (untyped form, untyped repository) -> untyped
+
+  def scm_path_info_tag: (untyped repository) -> untyped
+
+  def scm_path_info: (untyped repository) -> untyped
+
+  def scm_log_encoding_tag: (untyped form, untyped repository) -> untyped
+
+  def scm_path_encoding_tag: (untyped form, untyped repository) -> untyped
+
+  def index_commits: (untyped commits, untyped heads) -> untyped
+
+  def index_head: (untyped space, untyped commit, untyped commits_by_scmid) -> untyped
+end

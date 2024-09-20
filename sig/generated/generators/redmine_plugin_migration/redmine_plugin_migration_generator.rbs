@@ -1,0 +1,9 @@
+# Generated from lib/generators/redmine_plugin_migration/redmine_plugin_migration_generator.rb with RBS::Inline
+
+class RedminePluginMigrationGenerator < Rails::Generators::NamedBase
+  include Rails::Generators::Migration
+
+  def self.next_migration_number: (untyped dirname) -> untyped
+
+  def create_migration_file: () -> untyped
+end

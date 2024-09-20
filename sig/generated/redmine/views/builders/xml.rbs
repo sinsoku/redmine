@@ -1,0 +1,18 @@
+# Generated from lib/redmine/views/builders/xml.rb with RBS::Inline
+
+module Redmine
+  module Views
+    module Builders
+      class Xml < ::Builder::XmlMarkup
+        def initialize: (untyped request, untyped response) -> untyped
+
+        def output: () -> untyped
+
+        # Overrides Builder::XmlBase#tag! to format timestamps in ISO 8601
+        def tag!: (untyped sym, *untyped args) ?{ (?) -> untyped } -> untyped
+
+        def array: (untyped name, ?untyped options) ?{ (?) -> untyped } -> untyped
+      end
+    end
+  end
+end

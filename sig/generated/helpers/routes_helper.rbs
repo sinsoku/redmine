@@ -1,0 +1,29 @@
+# Generated from app/helpers/routes_helper.rb with RBS::Inline
+
+module RoutesHelper
+  # Returns the path to project issues or to the cross-project
+  # issue list if project is nil
+  def _project_issues_path: (untyped project, *untyped args) -> untyped
+
+  def _project_issues_url: (untyped project, *untyped args) -> untyped
+
+  def _project_news_path: (untyped project, *untyped args) -> untyped
+
+  def _new_project_issue_path: (untyped project, *untyped args) -> untyped
+
+  def _project_calendar_path: (untyped project, *untyped args) -> untyped
+
+  def _project_gantt_path: (untyped project, *untyped args) -> untyped
+
+  def _time_entries_path: (untyped project, untyped issue, *untyped args) -> untyped
+
+  def _report_time_entries_path: (untyped project, untyped issue, *untyped args) -> untyped
+
+  def _new_time_entry_path: (untyped project, untyped issue, *untyped args) -> untyped
+
+  # Returns the path to bulk update issues or to issue path
+  # if only one issue is selected for bulk update
+  def _bulk_update_issues_path: (untyped issue, *untyped args) -> untyped
+
+  def board_path: (untyped board, *untyped args) -> untyped
+end

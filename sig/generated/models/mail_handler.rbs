@@ -1,0 +1,138 @@
+# Generated from app/models/mail_handler.rb with RBS::Inline
+
+class MailHandler < ActionMailer::Base
+  include ActionView::Helpers::SanitizeHelper
+
+  include Redmine::I18n
+
+  class UnauthorizedAction < StandardError
+  end
+
+  class NotAllowedInProject < UnauthorizedAction
+  end
+
+  class InsufficientPermissions < UnauthorizedAction
+  end
+
+  class LockedTopic < UnauthorizedAction
+  end
+
+  class MissingInformation < StandardError
+  end
+
+  class MissingContainer < StandardError
+  end
+
+  attr_reader email: untyped
+
+  attr_reader user: untyped
+
+  attr_reader handler_options: untyped
+
+  def self.receive: (untyped raw_mail, ?untyped options) -> untyped
+
+  # Receives an email and rescues any exception
+  def self.safe_receive: (*untyped args) -> untyped
+
+  # Extracts MailHandler options from environment variables
+  # Use when receiving emails with rake tasks
+  def self.extract_options_from_env: (untyped env) -> untyped
+
+  def logger: () -> untyped
+
+  # Processes incoming emails
+  # Returns the created object (eg. an issue, a message) or false
+  def receive: (untyped email, ?untyped options) -> untyped
+
+  private
+
+  MESSAGE_ID_RE: ::Regexp
+
+  ISSUE_REPLY_SUBJECT_RE: ::Regexp
+
+  MESSAGE_REPLY_SUBJECT_RE: ::Regexp
+
+  def dispatch: () -> untyped
+
+  def dispatch_to_default: () -> untyped
+
+  # Creates a new issue
+  def receive_issue: () -> untyped
+
+  # Adds a note to an existing issue
+  def receive_issue_reply: (untyped issue_id, ?untyped from_journal) -> untyped
+
+  # Reply will be added to the issue
+  def receive_journal_reply: (untyped journal_id) -> untyped
+
+  # Receives a reply to a forum message
+  def receive_message_reply: (untyped message_id) -> untyped
+
+  # Receives a reply to a news entry
+  def receive_news_reply: (untyped news_id) -> untyped
+
+  # Receives a reply to a comment to a news entry
+  def receive_comment_reply: (untyped comment_id) -> untyped
+
+  def add_attachments: (untyped obj) -> untyped
+
+  # Returns false if the +attachment+ of the incoming email should be ignored
+  def accept_attachment?: (untyped attachment) -> untyped
+
+  # Adds To and Cc as watchers of the given object if the sender has the
+  # appropriate permission
+  def add_watchers: (untyped obj) -> untyped
+
+  def get_keyword: (untyped attr, ?untyped options) -> untyped
+
+  # Destructively extracts the value for +attr+ in +text+
+  # Returns nil if no matching keyword found
+  def extract_keyword!: (untyped text, untyped attr, ?untyped format) -> untyped
+
+  def get_project_from_receiver_addresses: () -> untyped
+
+  def target_project: () -> untyped
+
+  # Returns a Hash of issue attributes extracted from keywords in the email body
+  def issue_attributes_from_keywords: (untyped issue) -> untyped
+
+  def get_keyword_bool: (untyped attr) -> untyped
+
+  # Returns a Hash of issue custom field values extracted from keywords in the email body
+  def custom_field_values_from_keywords: (untyped customized) -> untyped
+
+  # Returns the text content of the email.
+  # If the value of Setting.mail_handler_preferred_body_part is 'html',
+  # it returns text converted from the text/html part of the email.
+  # Otherwise, it returns text/plain part.
+  def plain_text_body: () -> untyped
+
+  def email_parts_to_text: (untyped parts) -> untyped
+
+  def cleaned_up_text_body: () -> untyped
+
+  def cleaned_up_subject: () -> untyped
+
+  def self.assign_string_attribute_with_limit: (untyped object, untyped attribute, untyped value, ?untyped limit) -> untyped
+
+  # Converts a HTML email body to text
+  def self.html_body_to_text: (untyped html) -> untyped
+
+  # Converts a plain/text email body to text
+  def self.plain_text_body_to_text: (untyped text) -> untyped
+
+  # Returns a User from an email address and a full name
+  def self.new_user_from_attributes: (untyped email_address, ?untyped fullname) -> untyped
+
+  # Creates a User for the +email+ sender
+  # Returns the user or nil if it could not be created
+  def create_user_from_email: () -> untyped
+
+  # Adds the newly created user to default group
+  def add_user_to_group: (untyped default_group) -> untyped
+
+  # Removes the email body of text after the truncation configurations.
+  def cleanup_body: (untyped body) -> untyped
+
+  def find_assignee_from_keyword: (untyped keyword, untyped issue) -> untyped
+end

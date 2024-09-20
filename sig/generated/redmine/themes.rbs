@@ -1,0 +1,69 @@
+# Generated from lib/redmine/themes.rb with RBS::Inline
+
+module Redmine
+  module Themes
+    # Return an array of installed themes
+    def self.themes: () -> untyped
+
+    # Rescan themes directory
+    def self.rescan: () -> untyped
+
+    # Return theme for given id, or nil if it's not found
+    def self.theme: (untyped id, ?untyped options) -> untyped
+
+    # Class used to represent a theme
+    class Theme
+      attr_reader path: untyped
+
+      attr_reader name: untyped
+
+      attr_reader dir: untyped
+
+      def initialize: (untyped path) -> untyped
+
+      # Directory name used as the theme id
+      def id: () -> untyped
+
+      def ==: (untyped theme) -> untyped
+
+      def <=>: (untyped theme) -> untyped
+
+      def stylesheets: () -> untyped
+
+      def images: () -> untyped
+
+      def javascripts: () -> untyped
+
+      def favicons: () -> untyped
+
+      def favicon: () -> untyped
+
+      def favicon?: () -> untyped
+
+      def stylesheet_path: (untyped source) -> untyped
+
+      def image_path: (untyped source) -> untyped
+
+      def javascript_path: (untyped source) -> untyped
+
+      def favicon_path: () -> untyped
+
+      def asset_prefix: () -> untyped
+
+      def asset_paths: () -> untyped
+
+      private
+
+      def assets: (untyped dir, ?untyped ext) -> untyped
+    end
+
+    module Helper
+      def current_theme: () -> untyped
+
+      # Returns the header tags for the current theme
+      def heads_for_theme: () -> untyped
+    end
+
+    def self.scan_themes: () -> untyped
+  end
+end

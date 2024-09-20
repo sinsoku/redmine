@@ -1,0 +1,36 @@
+# Generated from app/models/wiki.rb with RBS::Inline
+
+class Wiki < ApplicationRecord
+  include Redmine::SafeAttributes
+
+  def visible?: (?untyped user) -> untyped
+
+  # Returns the wiki page that acts as the sidebar content
+  # or nil if no such page exists
+  def sidebar: () -> untyped
+
+  # find the page with the given title
+  # if page doesn't exist, return a new page
+  def find_or_new_page: (untyped title) -> untyped
+
+  # find the page with the given title
+  def find_page: (untyped title, ?untyped options) -> untyped
+
+  # Returns true if the last page was found with a redirect
+  def page_found_with_redirect?: () -> untyped
+
+  # Deletes all redirects from/to the wiki
+  def delete_redirects: () -> untyped
+
+  # Finds a page by title
+  # The given string can be of one of the forms: "title" or "project:title"
+  # Examples:
+  #   Wiki.find_page("bar", project => foo)
+  #   Wiki.find_page("foo:bar")
+  def self.find_page: (untyped title, ?untyped options) -> untyped
+
+  def self.create_default: (untyped project) -> untyped
+
+  # turn a string into a valid page title
+  def self.titleize: (untyped title) -> untyped
+end

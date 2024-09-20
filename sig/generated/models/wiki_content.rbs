@@ -1,0 +1,32 @@
+# Generated from app/models/wiki_content.rb with RBS::Inline
+
+class WikiContent < ApplicationRecord
+  def initialize: (*untyped args) -> untyped
+
+  def visible?: (?untyped user) -> untyped
+
+  def project: () -> untyped
+
+  def attachments: () -> untyped
+
+  def notified_users: () -> untyped
+
+  # Returns the mail addresses of users that should be notified
+  def recipients: () -> untyped
+
+  # Return true if the content is the current page content
+  def current_version?: () -> untyped
+
+  # Reverts the record to a previous version
+  def revert_to!: (untyped version) -> untyped
+
+  private
+
+  def create_version: () -> untyped
+
+  # Notifies users that a wiki page was created
+  def send_notification_create: () -> untyped
+
+  # Notifies users that a wiki page was updated
+  def send_notification_update: () -> untyped
+end

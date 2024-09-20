@@ -1,0 +1,131 @@
+# Generated from app/helpers/issues_helper.rb with RBS::Inline
+
+module IssuesHelper
+  include ApplicationHelper
+
+  include Redmine::Export::PDF::IssuesPdfHelper
+
+  include IssueStatusesHelper
+
+  def issue_list: (untyped issues) ?{ (?) -> untyped } -> untyped
+
+  def grouped_issue_list: (untyped issues, untyped query) ?{ (?) -> untyped } -> untyped
+
+  # Renders a HTML/CSS tooltip
+  #
+  # To use, a trigger div is needed.  This is a div with the class of "tooltip"
+  # that contains this method wrapped in a span with the class of "tip"
+  #
+  #    <div class="tooltip"><%= link_to_issue(issue) %>
+  #      <span class="tip"><%= render_issue_tooltip(issue) %></span>
+  #    </div>
+  def render_issue_tooltip: (untyped issue) -> untyped
+
+  def issue_heading: (untyped issue) -> untyped
+
+  def render_issue_subject_with_tree: (untyped issue) -> untyped
+
+  def render_descendants_tree: (untyped issue) -> untyped
+
+  # Renders descendants stats (total descendants (open - closed)) with query links
+  def render_descendants_stats: (untyped issue) -> untyped
+
+  # Renders relations stats (total relations (open - closed)) with query links
+  def render_relations_stats: (untyped issue, untyped relations) -> untyped
+
+  # Renders issues stats (total relations (open - closed)) with query links
+  def render_issues_stats: (?untyped open_issues, ?untyped closed_issues, ?untyped issues_path_attr) -> untyped
+
+  # Renders the list of related issues on the issue details view
+  def render_issue_relations: (untyped issue, untyped relations) -> untyped
+
+  def issue_estimated_hours_details: (untyped issue) -> untyped
+
+  def issue_spent_hours_details: (untyped issue) -> untyped
+
+  def issue_due_date_details: (untyped issue) -> untyped
+
+  # Returns a link for adding a new subtask to the given issue
+  def link_to_new_subtask: (untyped issue) -> untyped
+
+  def url_for_new_subtask: (untyped issue) -> untyped
+
+  def trackers_options_for_select: (untyped issue) -> untyped
+
+  def trackers_for_select: (untyped issue) -> untyped
+
+  class IssueFieldsRows
+    include ActionView::Helpers::TagHelper
+
+    def initialize: () -> untyped
+
+    def left: (*untyped args) -> untyped
+
+    def right: (*untyped args) -> untyped
+
+    def size: () -> untyped
+
+    def to_html: () -> untyped
+
+    def cells: (untyped label, untyped text, ?untyped options) -> untyped
+  end
+
+  def issue_fields_rows: () -> untyped
+
+  def render_half_width_custom_fields_rows: (untyped issue) -> untyped
+
+  def render_full_width_custom_fields_rows: (untyped issue) -> untyped
+
+  # Returns the path for updating the issue form
+  # with project as the current project
+  def update_issue_form_path: (untyped project, untyped issue) -> untyped
+
+  # Returns the number of descendants for an array of issues
+  def issues_descendant_count: (untyped issues) -> untyped
+
+  def issues_destroy_confirmation_message: (untyped issues) -> untyped
+
+  # Returns an array of users that are proposed as watchers
+  # on the new issue form
+  def users_for_new_issue_watchers: (untyped issue) -> untyped
+
+  def email_issue_attributes: (untyped issue, untyped user, untyped html) -> untyped
+
+  def render_email_issue_attributes: (untyped issue, untyped user, ?untyped html) -> untyped
+
+  class MultipleValuesDetail < Struct[untyped]
+    attr_accessor property(): untyped
+
+    attr_accessor prop_key(): untyped
+
+    attr_accessor custom_field(): untyped
+
+    attr_accessor old_value(): untyped
+
+    attr_accessor value(): untyped
+
+    def self.new: (?untyped property, ?untyped prop_key, ?untyped custom_field, ?untyped old_value, ?untyped value) -> instance
+                | (?property: untyped, ?prop_key: untyped, ?custom_field: untyped, ?old_value: untyped, ?value: untyped) -> instance
+  end
+
+  # Returns the textual representation of a journal details
+  # as an array of strings
+  def details_to_strings: (untyped details, ?untyped no_html, ?untyped options) -> untyped
+
+  # Returns the textual representation of a single journal detail
+  def show_detail: (untyped detail, ?untyped no_html, ?untyped options) -> untyped
+
+  # Find the name of an associated record stored in the field attribute
+  # For project, return the associated record only if is visible for the current User
+  def find_name_by_reflection: (untyped field, untyped id) -> untyped
+
+  # Renders issue children recursively
+  def render_api_issue_children: (untyped issue, untyped api) -> untyped
+
+  # Issue history tabs
+  def issue_history_tabs: () -> untyped
+
+  def issue_history_default_tab: () -> untyped
+
+  def projects_for_select: (untyped issue) -> untyped
+end

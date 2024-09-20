@@ -1,0 +1,15 @@
+# Generated from app/helpers/journals_helper.rb with RBS::Inline
+
+module JournalsHelper
+  # Returns the attachments of a journal that are displayed as thumbnails
+  def journal_thumbnail_attachments: (untyped journal) -> untyped
+
+  # Returns the action links for an issue journal
+  def render_journal_actions: (untyped issue, untyped journal, ?untyped options) -> untyped
+
+  def render_notes: (untyped issue, untyped journal, ?untyped options) -> untyped
+
+  def render_private_notes_indicator: (untyped journal) -> untyped
+
+  def render_journal_update_info: (untyped journal) -> untyped
+end

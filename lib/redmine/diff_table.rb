@@ -19,7 +19,7 @@
 
 # Class that represents a file diff
 module Redmine
-  class DiffTable < Array
+  class DiffTable < Array #[__todo__]
     attr_reader :file_name, :previous_file_name
 
     # Initialize with a Diff file and the type of Diff View

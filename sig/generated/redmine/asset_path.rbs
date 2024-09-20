@@ -1,0 +1,75 @@
+# Generated from lib/redmine/asset_path.rb with RBS::Inline
+
+module Redmine
+  class AssetPath
+    attr_reader paths: untyped
+
+    attr_reader prefix: untyped
+
+    attr_reader version: untyped
+
+    def initialize: (untyped base_dir, untyped paths, ?untyped prefix) -> untyped
+
+    def update: (transition_map: untyped, assets: untyped) -> untyped
+
+    def each_file: () -> untyped
+
+    private
+
+    class Transition < Struct[untyped]
+      attr_accessor src(): untyped
+
+      attr_accessor dest(): untyped
+
+      def self.new: (?src: untyped, ?dest: untyped) -> instance
+                  | ({ ?src: untyped, ?dest: untyped }) -> instance
+    end
+
+    class AssetPathMap < Struct[untyped]
+      attr_accessor src(): untyped
+
+      attr_accessor dest(): untyped
+
+      attr_accessor logical_src(): untyped
+
+      attr_accessor logical_dest(): untyped
+
+      def self.new: (?src: untyped, ?dest: untyped, ?logical_src: untyped, ?logical_dest: untyped) -> instance
+                  | ({ ?src: untyped, ?dest: untyped, ?logical_src: untyped, ?logical_dest: untyped }) -> instance
+    end
+
+    def without_dotfiles: (untyped files) -> untyped
+
+    def all_files_from_tree: (untyped path) -> untyped
+  end
+
+  class AssetLoadPath < Propshaft::LoadPath
+    attr_reader extension_paths: untyped
+
+    attr_reader default_asset_path: untyped
+
+    attr_reader transition_map: untyped
+
+    def initialize: (untyped config) -> untyped
+
+    def asset_files: () -> untyped
+
+    def assets_by_path: () -> untyped
+
+    def cache_sweeper: () -> untyped
+
+    def all_paths: () -> untyped
+
+    def clear_cache: () -> untyped
+  end
+
+  class Asset < Propshaft::Asset
+    def initialize: (untyped file, logical_path: untyped, version: untyped, transition_map: untyped) -> untyped
+
+    def content: () -> untyped
+
+    ASSET_URL_PATTERN: ::Regexp
+
+    def convert_path: (untyped input, untyped conversion) -> untyped
+  end
+end

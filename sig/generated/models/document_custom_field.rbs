@@ -1,0 +1,5 @@
+# Generated from app/models/document_custom_field.rb with RBS::Inline
+
+class DocumentCustomField < CustomField
+  def type_name: () -> untyped
+end

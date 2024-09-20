@@ -1,0 +1,11 @@
+# Generated from lib/redmine/wiki_formatting/common_mark/append_spaces_to_lines.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module CommonMark
+      class AppendSpacesToLines
+        def self.call: (untyped string) -> untyped
+      end
+    end
+  end
+end

@@ -1,0 +1,15 @@
+# Generated from lib/redmine/wiki_formatting/common_mark/helper.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module CommonMark
+      module Helper
+        def wikitoolbar_for: (untyped field_id, ?untyped preview_url) -> untyped
+
+        def initial_page_content: (untyped page) -> untyped
+
+        def heads_for_wiki_formatter: () -> untyped
+      end
+    end
+  end
+end

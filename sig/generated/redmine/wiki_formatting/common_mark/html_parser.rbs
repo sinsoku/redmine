@@ -1,0 +1,9 @@
+# Generated from lib/redmine/wiki_formatting/common_mark/html_parser.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module CommonMark
+      HtmlParser: untyped
+    end
+  end
+end

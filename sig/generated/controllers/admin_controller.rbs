@@ -1,0 +1,19 @@
+# Generated from app/controllers/admin_controller.rb with RBS::Inline
+
+class AdminController < ApplicationController
+  include QueriesHelper
+
+  def index: () -> untyped
+
+  def projects: () -> untyped
+
+  def plugins: () -> untyped
+
+  # Loads the default configuration
+  # (roles, trackers, statuses, workflow, enumerations)
+  def default_configuration: () -> untyped
+
+  def test_email: () -> untyped
+
+  def info: () -> untyped
+end

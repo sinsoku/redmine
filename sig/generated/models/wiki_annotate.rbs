@@ -1,0 +1,9 @@
+# Generated from app/models/wiki_annotate.rb with RBS::Inline
+
+class WikiAnnotate
+  attr_reader lines: untyped
+
+  attr_reader content: untyped
+
+  def initialize: (untyped content) -> untyped
+end

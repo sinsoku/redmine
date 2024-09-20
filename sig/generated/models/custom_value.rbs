@@ -1,0 +1,22 @@
+# Generated from app/models/custom_value.rb with RBS::Inline
+
+class CustomValue < ApplicationRecord
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  # Returns true if the boolean custom value is true
+  def true?: () -> untyped
+
+  def editable?: () -> untyped
+
+  def visible?: (?untyped user) -> untyped
+
+  def attachments_visible?: (untyped user) -> untyped
+
+  def required?: () -> untyped
+
+  def to_s: () -> untyped
+
+  private
+
+  def custom_field_after_save_custom_value: () -> untyped
+end

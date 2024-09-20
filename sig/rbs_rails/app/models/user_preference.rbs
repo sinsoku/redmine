@@ -1,0 +1,207 @@
+class UserPreference < ::ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[UserPreference, ActiveRecord_Relation, Integer]
+
+  module GeneratedAttributeMethods
+    def id: () -> Integer
+
+    def id=: (Integer) -> Integer
+
+    def id?: () -> bool
+
+    def id_changed?: () -> bool
+
+    def id_change: () -> [ Integer?, Integer? ]
+
+    def id_will_change!: () -> void
+
+    def id_was: () -> Integer?
+
+    def id_previously_changed?: () -> bool
+
+    def id_previous_change: () -> Array[Integer?]?
+
+    def id_previously_was: () -> Integer?
+
+    def id_before_last_save: () -> Integer?
+
+    def id_change_to_be_saved: () -> Array[Integer?]?
+
+    def id_in_database: () -> Integer?
+
+    def saved_change_to_id: () -> Array[Integer?]?
+
+    def saved_change_to_id?: () -> bool
+
+    def will_save_change_to_id?: () -> bool
+
+    def restore_id!: () -> void
+
+    def clear_id_change: () -> void
+
+    def user_id: () -> Integer
+
+    def user_id=: (Integer) -> Integer
+
+    def user_id?: () -> bool
+
+    def user_id_changed?: () -> bool
+
+    def user_id_change: () -> [ Integer?, Integer? ]
+
+    def user_id_will_change!: () -> void
+
+    def user_id_was: () -> Integer?
+
+    def user_id_previously_changed?: () -> bool
+
+    def user_id_previous_change: () -> Array[Integer?]?
+
+    def user_id_previously_was: () -> Integer?
+
+    def user_id_before_last_save: () -> Integer?
+
+    def user_id_change_to_be_saved: () -> Array[Integer?]?
+
+    def user_id_in_database: () -> Integer?
+
+    def saved_change_to_user_id: () -> Array[Integer?]?
+
+    def saved_change_to_user_id?: () -> bool
+
+    def will_save_change_to_user_id?: () -> bool
+
+    def restore_user_id!: () -> void
+
+    def clear_user_id_change: () -> void
+
+    def others: () -> String?
+
+    def others=: (String?) -> String?
+
+    def others?: () -> bool
+
+    def others_changed?: () -> bool
+
+    def others_change: () -> [ String?, String? ]
+
+    def others_will_change!: () -> void
+
+    def others_was: () -> String?
+
+    def others_previously_changed?: () -> bool
+
+    def others_previous_change: () -> Array[String?]?
+
+    def others_previously_was: () -> String?
+
+    def others_before_last_save: () -> String?
+
+    def others_change_to_be_saved: () -> Array[String?]?
+
+    def others_in_database: () -> String?
+
+    def saved_change_to_others: () -> Array[String?]?
+
+    def saved_change_to_others?: () -> bool
+
+    def will_save_change_to_others?: () -> bool
+
+    def restore_others!: () -> void
+
+    def clear_others_change: () -> void
+
+    def hide_mail: () -> bool?
+
+    def hide_mail=: (bool?) -> bool?
+
+    def hide_mail?: () -> bool
+
+    def hide_mail_changed?: () -> bool
+
+    def hide_mail_change: () -> [ bool?, bool? ]
+
+    def hide_mail_will_change!: () -> void
+
+    def hide_mail_was: () -> bool?
+
+    def hide_mail_previously_changed?: () -> bool
+
+    def hide_mail_previous_change: () -> Array[bool?]?
+
+    def hide_mail_previously_was: () -> bool?
+
+    def hide_mail_before_last_save: () -> bool?
+
+    def hide_mail_change_to_be_saved: () -> Array[bool?]?
+
+    def hide_mail_in_database: () -> bool?
+
+    def saved_change_to_hide_mail: () -> Array[bool?]?
+
+    def saved_change_to_hide_mail?: () -> bool
+
+    def will_save_change_to_hide_mail?: () -> bool
+
+    def restore_hide_mail!: () -> void
+
+    def clear_hide_mail_change: () -> void
+
+    def time_zone: () -> String?
+
+    def time_zone=: (String?) -> String?
+
+    def time_zone?: () -> bool
+
+    def time_zone_changed?: () -> bool
+
+    def time_zone_change: () -> [ String?, String? ]
+
+    def time_zone_will_change!: () -> void
+
+    def time_zone_was: () -> String?
+
+    def time_zone_previously_changed?: () -> bool
+
+    def time_zone_previous_change: () -> Array[String?]?
+
+    def time_zone_previously_was: () -> String?
+
+    def time_zone_before_last_save: () -> String?
+
+    def time_zone_change_to_be_saved: () -> Array[String?]?
+
+    def time_zone_in_database: () -> String?
+
+    def saved_change_to_time_zone: () -> Array[String?]?
+
+    def saved_change_to_time_zone?: () -> bool
+
+    def will_save_change_to_time_zone?: () -> bool
+
+    def restore_time_zone!: () -> void
+
+    def clear_time_zone_change: () -> void
+  end
+  include GeneratedAttributeMethods
+
+  def user: () -> User
+  def user=: (User?) -> User?
+  def reload_user: () -> User?
+  def build_user: (untyped) -> User
+  def create_user: (untyped) -> User
+  def create_user!: (untyped) -> User
+
+  module GeneratedRelationMethods
+  end
+
+  class ActiveRecord_Relation < ::ActiveRecord::Relation
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[UserPreference, Integer]
+    include Enumerable[UserPreference]
+  end
+
+  class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+    include GeneratedRelationMethods
+    include _ActiveRecord_Relation[UserPreference, Integer]
+  end
+end

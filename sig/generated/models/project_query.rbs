@@ -1,0 +1,34 @@
+# Generated from app/models/project_query.rb with RBS::Inline
+
+class ProjectQuery < Query
+  attr_accessor admin_projects: untyped
+
+  def self.default: (?project: untyped, ?user: untyped) -> untyped
+
+  def initialize: (?untyped attributes, *untyped args) -> untyped
+
+  def initialize_available_filters: () -> untyped
+
+  def build_from_params: (untyped params, ?untyped defaults) -> untyped
+
+  def available_columns: () -> untyped
+
+  def available_display_types: () -> untyped
+
+  def display_type: () -> untyped
+
+  def project_statuses_values: () -> untyped
+
+  def default_columns_names: () -> untyped
+
+  def default_display_type: () -> untyped
+
+  def default_sort_criteria: () -> untyped
+
+  def base_scope: () -> untyped
+
+  # Returns the project count
+  def result_count: () -> untyped
+
+  def results_scope: (?untyped options) -> untyped
+end

@@ -1,0 +1,46 @@
+# Generated from lib/redmine/acts/positioned.rb with RBS::Inline
+
+module Redmine
+  module Acts
+    module Positioned
+      def self.included: (untyped base) -> untyped
+
+      # This extension provides the capabilities for reordering objects in a list.
+      # The class needs to have a +position+ column defined as an integer on the
+      # mapped database table.
+      module ClassMethods
+        # Configuration options are:
+        #
+        # * +scope+ - restricts what is to be considered a list. Must be a symbol
+        # or an array of symbols
+        def acts_as_positioned: (?untyped options) -> untyped
+      end
+
+      module InstanceMethods
+        def self.included: (untyped base) -> untyped
+
+        private
+
+        def position_scope: () -> untyped
+
+        def position_scope_was: () -> untyped
+
+        def build_position_scope: () -> untyped
+
+        def set_default_position: () -> untyped
+
+        def update_position: () -> untyped
+
+        def insert_position: () -> untyped
+
+        def remove_position: () -> untyped
+
+        def position_scope_changed?: () -> untyped
+
+        def shift_positions: () -> untyped
+
+        def reset_positions_in_list: () -> untyped
+      end
+    end
+  end
+end

@@ -1,0 +1,17 @@
+# Generated from lib/redmine/export/csv.rb with RBS::Inline
+
+module Redmine
+  module Export
+    module CSV
+      def self.generate: () -> untyped
+
+      class Base < ::CSV
+        include Redmine::I18n
+
+        def self.generate: (?untyped options) ?{ (?) -> untyped } -> untyped
+
+        def <<: (untyped row) -> untyped
+      end
+    end
+  end
+end

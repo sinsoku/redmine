@@ -1,0 +1,70 @@
+# Generated from lib/redmine/pagination.rb with RBS::Inline
+
+module Redmine
+  module Pagination
+    class Paginator
+      attr_reader item_count: untyped
+
+      attr_reader per_page: untyped
+
+      attr_reader page: untyped
+
+      attr_reader page_param: untyped
+
+      def initialize: (*untyped args) -> untyped
+
+      def offset: () -> untyped
+
+      def first_page: () -> untyped
+
+      def previous_page: () -> untyped
+
+      def next_page: () -> untyped
+
+      def last_page: () -> untyped
+
+      def multiple_pages?: () -> untyped
+
+      def first_item: () -> untyped
+
+      def last_item: () -> untyped
+
+      def linked_pages: () -> untyped
+
+      def items_per_page: () -> untyped
+
+      def current: () -> untyped
+    end
+
+    # Paginates the given scope or model. Returns a Paginator instance and
+    # the collection of objects for the current page.
+    #
+    # Options:
+    #   :parameter     name of the page parameter
+    #
+    # Examples:
+    #   @user_pages, @users = paginate User.where(:status => 1)
+    def paginate: (untyped scope, ?untyped options) -> untyped
+
+    def paginator: (untyped item_count, ?untyped options) -> untyped
+
+    module Helper
+      include Redmine::I18n
+
+      # Renders the pagination links for the given paginator.
+      #
+      # Options:
+      #   :per_page_links    if set to false, the "Per page" links are not rendered
+      def pagination_links_full: (*untyped args) -> untyped
+
+      # Yields the given block with the text and parameters
+      # for each pagination link and returns a string that represents the links
+      def pagination_links_each: (untyped paginator, ?untyped count, ?untyped options) ?{ (?) -> untyped } -> untyped
+
+      # Renders the "Per page" links.
+      def per_page_links: (untyped paginator) ?{ (?) -> untyped } -> untyped
+
+      def per_page_options: (?untyped selected, ?untyped item_count) -> untyped
+    end
+  end
+end

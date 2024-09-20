@@ -36,8 +36,8 @@ class Import < ApplicationRecord
     '%Y/%m/%d',
     '%d.%m.%Y',
     '%d-%m-%Y'
-  ]
-  AUTO_MAPPABLE_FIELDS = {}
+  ] #: Array[__todo__]
+  AUTO_MAPPABLE_FIELDS = {} #: Hash[__todo__, __todo__]
 
   def self.menu_item
     nil

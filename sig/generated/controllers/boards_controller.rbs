@@ -1,0 +1,25 @@
+# Generated from app/controllers/boards_controller.rb with RBS::Inline
+
+class BoardsController < ApplicationController
+  include SortHelper
+
+  def index: () -> untyped
+
+  def show: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  def redirect_to_settings_in_projects: () -> untyped
+
+  def find_board_if_available: () -> untyped
+end

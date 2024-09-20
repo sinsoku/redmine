@@ -1,0 +1,13 @@
+# Generated from lib/redmine/helpers/url.rb with RBS::Inline
+
+module Redmine
+  module Helpers
+    module URL
+      # safe for resources fetched without user interaction?
+      def uri_with_safe_scheme?: (untyped uri, ?untyped schemes) -> untyped
+
+      # safe to render links to given uri?
+      def uri_with_link_safe_scheme?: (untyped uri) -> untyped
+    end
+  end
+end

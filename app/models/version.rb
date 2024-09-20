@@ -131,8 +131,8 @@ class Version < ApplicationRecord
                      :edit_permission => :manage_files,
                      :delete_permission => :manage_files
 
-  VERSION_STATUSES = %w(open locked closed)
-  VERSION_SHARINGS = %w(none descendants hierarchy tree system)
+  VERSION_STATUSES = %w(open locked closed) #: Array[__todo__]
+  VERSION_SHARINGS = %w(none descendants hierarchy tree system) #: Array[__todo__]
 
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => [:project_id], :case_sensitive => true

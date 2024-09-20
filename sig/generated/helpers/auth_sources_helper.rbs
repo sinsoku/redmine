@@ -1,0 +1,5 @@
+# Generated from app/helpers/auth_sources_helper.rb with RBS::Inline
+
+module AuthSourcesHelper
+  def auth_source_partial_name: (untyped auth_source) -> untyped
+end

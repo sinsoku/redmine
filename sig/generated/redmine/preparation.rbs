@@ -1,0 +1,7 @@
+# Generated from lib/redmine/preparation.rb with RBS::Inline
+
+module Redmine
+  module Preparation
+    def self.prepare: () -> untyped
+  end
+end

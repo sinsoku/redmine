@@ -1,0 +1,4 @@
+# Generated from app/helpers/messages_helper.rb with RBS::Inline
+
+module MessagesHelper
+end

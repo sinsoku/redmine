@@ -1,0 +1,39 @@
+# Generated from lib/redmine/helpers/calendar.rb with RBS::Inline
+
+module Redmine
+  module Helpers
+    # Simple class to compute the start and end dates of a calendar
+    class Calendar
+      include Redmine::I18n
+
+      include Redmine::Utils::DateCalculation
+
+      attr_reader startdt: untyped
+
+      attr_reader enddt: untyped
+
+      def initialize: (untyped date, ?untyped lang, ?untyped period) -> untyped
+
+      def format_month: () -> untyped
+
+      def week_number: (untyped day) -> untyped
+
+      def day_css_classes: (untyped day) -> untyped
+
+      # Sets calendar events
+      def events=: (untyped events) -> untyped
+
+      # Returns events for the given day
+      def events_on: (untyped day) -> untyped
+
+      # Calendar current month
+      def month: () -> untyped
+
+      # Return the first day of week
+      # 1 = Monday ... 7 = Sunday
+      def first_wday: () -> untyped
+
+      def last_wday: () -> untyped
+    end
+  end
+end

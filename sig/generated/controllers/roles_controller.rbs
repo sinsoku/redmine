@@ -1,0 +1,27 @@
+# Generated from app/controllers/roles_controller.rb with RBS::Inline
+
+class RolesController < ApplicationController
+  include RolesHelper
+
+  def index: () -> untyped
+
+  def show: () -> untyped
+
+  def new: () -> untyped
+
+  def create: () -> untyped
+
+  def edit: () -> untyped
+
+  def update: () -> untyped
+
+  def destroy: () -> untyped
+
+  def permissions: () -> untyped
+
+  def update_permissions: () -> untyped
+
+  private
+
+  def find_role: () -> untyped
+end

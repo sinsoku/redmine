@@ -1,0 +1,5 @@
+# Generated from app/validators/date_validator.rb with RBS::Inline
+
+class DateValidator < ActiveModel::EachValidator
+  def validate_each: (untyped record, untyped attribute, untyped value) -> untyped
+end

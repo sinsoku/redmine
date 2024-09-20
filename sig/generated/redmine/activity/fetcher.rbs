@@ -1,0 +1,37 @@
+# Generated from lib/redmine/activity/fetcher.rb with RBS::Inline
+
+module Redmine
+  module Activity
+    # Class used to retrieve activity events
+    class Fetcher
+      attr_reader user: untyped
+
+      attr_reader project: untyped
+
+      attr_reader scope: untyped
+
+      def initialize: (untyped user, ?untyped options) -> untyped
+
+      # Returns an array of available event types
+      def event_types: () -> untyped
+
+      # Yields to filter the activity scope
+      def scope_select: () ?{ (?) -> untyped } -> untyped
+
+      # Sets the scope
+      # Argument can be :all, :default or an array of event types
+      def scope=: (untyped s) -> untyped
+
+      # Resets the scope to the default scope
+      def default_scope!: () -> untyped
+
+      # Returns an array of events for the given date range
+      # sorted in reverse chronological order
+      def events: (?untyped from, ?untyped to, ?untyped options) -> untyped
+
+      private
+
+      def constantized_providers: (untyped event_type) -> untyped
+    end
+  end
+end

@@ -1,0 +1,6 @@
+# Generated from app/controllers/wikis_controller.rb with RBS::Inline
+
+class WikisController < ApplicationController
+  # Delete a project's wiki
+  def destroy: () -> untyped
+end

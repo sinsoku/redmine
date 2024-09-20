@@ -1,0 +1,295 @@
+# Generated from lib/redmine/field_format.rb with RBS::Inline
+
+module Redmine
+  module FieldFormat
+    def self.add: (untyped name, untyped klass) -> untyped
+
+    def self.delete: (untyped name) -> untyped
+
+    def self.all: () -> untyped
+
+    def self.available_formats: () -> untyped
+
+    def self.find: (untyped name) -> untyped
+
+    # Return an array of custom field formats which can be used in select_tag
+    def self.as_select: (?untyped class_name) -> untyped
+
+    # Returns an array of formats that can be used for a custom field class
+    def self.formats_for_custom_field_class: (?untyped klass) -> untyped
+
+    class Base
+      include Singleton
+
+      include Redmine::I18n
+
+      include Redmine::Helpers::URL
+
+      include ERB::Util
+
+      def self.add: (untyped name) -> untyped
+
+      def self.field_attributes: (*untyped args) -> untyped
+
+      def name: () -> untyped
+
+      def label: () -> untyped
+
+      def set_custom_field_value: (untyped custom_field, untyped custom_field_value, untyped value) -> untyped
+
+      def cast_custom_value: (untyped custom_value) -> untyped
+
+      def cast_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def cast_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def target_class: () -> untyped
+
+      def possible_custom_value_options: (untyped custom_value) -> untyped
+
+      def possible_values_options: (untyped custom_field, ?untyped object) -> untyped
+
+      def value_from_keyword: (untyped custom_field, untyped keyword, untyped object) -> untyped
+
+      def parse_keyword: (untyped custom_field, untyped keyword) ?{ (?) -> untyped } -> untyped
+
+      # Returns the validation errors for custom_field
+      # Should return an empty array if custom_field is valid
+      def validate_custom_field: (untyped custom_field) -> untyped
+
+      # Returns the validation error messages for custom_value
+      # Should return an empty array if custom_value is valid
+      # custom_value is a CustomFieldValue.
+      def validate_custom_value: (untyped custom_value) -> untyped
+
+      def validate_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      # CustomValue after_save callback
+      def after_save_custom_value: (untyped custom_field, untyped custom_value) -> untyped
+
+      def formatted_custom_value: (untyped view, untyped custom_value, ?untyped html) -> untyped
+
+      def formatted_value: (untyped view, untyped custom_field, untyped value, ?untyped customized, ?untyped html) -> untyped
+
+      def sanitize_html: (untyped html) -> untyped
+
+      # Returns an URL generated with the custom field URL pattern
+      # and variables substitution:
+      # %value% => the custom field value
+      # %id% => id of the customized object
+      # %project_id% => id of the project of the customized object if defined
+      # %project_identifier% => identifier of the project of the customized object if defined
+      # %m1%, %m2%... => capture groups matches of the custom field regexp if defined
+      def url_from_pattern: (untyped custom_field, untyped value, untyped customized) -> untyped
+
+      # Returns the URL pattern with substitution tokens removed,
+      # for validation purpose
+      def url_pattern_without_tokens: (untyped url_pattern) -> untyped
+
+      def edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+
+      def bulk_edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_field, untyped objects, untyped value, ?untyped options) -> untyped
+
+      def bulk_clear_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_field, untyped value) -> untyped
+
+      def query_filter_options: (untyped custom_field, untyped query) -> untyped
+
+      def before_custom_field_save: (untyped custom_field) -> untyped
+
+      # Returns a ORDER BY clause that can used to sort customized
+      # objects by their value of the custom field.
+      # Returns nil if the custom field can not be used for sorting.
+      def order_statement: (untyped custom_field) -> untyped
+
+      # Returns a GROUP BY clause that can used to group by custom value
+      # Returns nil if the custom field can not be used for grouping.
+      def group_statement: (untyped custom_field) -> untyped
+
+      # Returns a JOIN clause that is added to the query when sorting by custom values
+      def join_for_order_statement: (untyped custom_field) -> untyped
+
+      def join_alias: (untyped custom_field) -> untyped
+    end
+
+    class Unbounded < Base
+      def validate_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+    end
+
+    class StringFormat < Unbounded
+      def formatted_value: (untyped view, untyped custom_field, untyped value, ?untyped customized, ?untyped html) -> untyped
+    end
+
+    class TextFormat < Unbounded
+      def formatted_value: (untyped view, untyped custom_field, untyped value, ?untyped customized, ?untyped html) -> untyped
+
+      def edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+
+      def bulk_edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_field, untyped objects, untyped value, ?untyped options) -> untyped
+
+      def query_filter_options: (untyped custom_field, untyped query) -> untyped
+    end
+
+    class LinkFormat < StringFormat
+      def formatted_value: (untyped view, untyped custom_field, untyped value, ?untyped customized, ?untyped html) -> untyped
+    end
+
+    class Numeric < Unbounded
+      def order_statement: (untyped custom_field) -> untyped
+
+      # Returns totals for the given scope
+      def total_for_scope: (untyped custom_field, untyped scope) -> untyped
+
+      def cast_total_value: (untyped custom_field, untyped value) -> untyped
+    end
+
+    class IntFormat < Numeric
+      def label: () -> untyped
+
+      def cast_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def validate_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def query_filter_options: (untyped custom_field, untyped query) -> untyped
+
+      def group_statement: (untyped custom_field) -> untyped
+    end
+
+    class FloatFormat < Numeric
+      def cast_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def cast_total_value: (untyped custom_field, untyped value) -> untyped
+
+      def validate_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def query_filter_options: (untyped custom_field, untyped query) -> untyped
+    end
+
+    class DateFormat < Unbounded
+      def cast_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def validate_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+
+      def bulk_edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_field, untyped objects, untyped value, ?untyped options) -> untyped
+
+      def query_filter_options: (untyped custom_field, untyped query) -> untyped
+
+      def group_statement: (untyped custom_field) -> untyped
+    end
+
+    class List < Base
+      def edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+
+      def bulk_edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_field, untyped objects, untyped value, ?untyped options) -> untyped
+
+      def query_filter_options: (untyped custom_field, untyped query) -> untyped
+
+      # Returns the values that are available in the field filter
+      def query_filter_values: (untyped custom_field, untyped query) -> untyped
+
+      # Renders the edit tag as a select tag
+      def select_edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+
+      # Renders the edit tag as check box or radio tags
+      def check_box_edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+    end
+
+    class ListFormat < List
+      def possible_custom_value_options: (untyped custom_value) -> untyped
+
+      def possible_values_options: (untyped custom_field, ?untyped object) -> untyped
+
+      def validate_custom_field: (untyped custom_field) -> untyped
+
+      def validate_custom_value: (untyped custom_value) -> untyped
+
+      def group_statement: (untyped custom_field) -> untyped
+    end
+
+    class BoolFormat < List
+      def label: () -> untyped
+
+      def cast_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def possible_values_options: (untyped custom_field, ?untyped object) -> untyped
+
+      def group_statement: (untyped custom_field) -> untyped
+
+      def edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+
+      # Renders the edit tag as a simple check box
+      def single_check_box_edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+    end
+
+    class RecordList < List
+      def cast_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def target_class: () -> untyped
+
+      def reset_target_class: () -> untyped
+
+      def possible_custom_value_options: (untyped custom_value) -> untyped
+
+      def validate_custom_value: (untyped custom_value) -> untyped
+
+      def order_statement: (untyped custom_field) -> untyped
+
+      def group_statement: (untyped custom_field) -> untyped
+
+      def join_for_order_statement: (untyped custom_field) -> untyped
+
+      def value_join_alias: (untyped custom_field) -> untyped
+    end
+
+    class EnumerationFormat < RecordList
+      def label: () -> untyped
+
+      def target_class: () -> untyped
+
+      def possible_values_options: (untyped custom_field, ?untyped object) -> untyped
+
+      def possible_values_records: (untyped custom_field, ?untyped object) -> untyped
+
+      def value_from_keyword: (untyped custom_field, untyped keyword, untyped object) -> untyped
+    end
+
+    class UserFormat < RecordList
+      def possible_values_options: (untyped custom_field, ?untyped object) -> untyped
+
+      def possible_values_records: (untyped custom_field, ?untyped object) -> untyped
+
+      def value_from_keyword: (untyped custom_field, untyped keyword, untyped object) -> untyped
+
+      def before_custom_field_save: (untyped custom_field) -> untyped
+
+      def query_filter_values: (untyped custom_field, untyped query) -> untyped
+    end
+
+    class VersionFormat < RecordList
+      def possible_values_options: (untyped custom_field, ?untyped object) -> untyped
+
+      def before_custom_field_save: (untyped custom_field) -> untyped
+
+      def query_filter_values: (untyped custom_field, untyped query) -> untyped
+
+      def possible_values_records: (untyped custom_field, ?untyped object, ?untyped all_statuses) -> untyped
+
+      def filtered_versions_options: (untyped custom_field, untyped scope, ?untyped all_statuses) -> untyped
+    end
+
+    class AttachmentFormat < Base
+      def set_custom_field_value: (untyped custom_field, untyped custom_field_value, untyped value) -> untyped
+
+      def set_custom_field_value_by_id: (untyped custom_field, untyped custom_field_value, untyped id) -> untyped
+
+      def cast_single_value: (untyped custom_field, untyped value, ?untyped customized) -> untyped
+
+      def validate_custom_value: (untyped custom_value) -> untyped
+
+      def after_save_custom_value: (untyped custom_field, untyped custom_value) -> untyped
+
+      def edit_tag: (untyped view, untyped tag_id, untyped tag_name, untyped custom_value, ?untyped options) -> untyped
+    end
+  end
+end

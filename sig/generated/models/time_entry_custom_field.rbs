@@ -1,0 +1,9 @@
+# Generated from app/models/time_entry_custom_field.rb with RBS::Inline
+
+class TimeEntryCustomField < CustomField
+  def type_name: () -> untyped
+
+  def visible_by?: (untyped project, ?untyped user) -> untyped
+
+  def validate_custom_field: () -> untyped
+end

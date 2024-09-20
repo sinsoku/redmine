@@ -1,0 +1,32 @@
+# Generated from app/controllers/messages_controller.rb with RBS::Inline
+
+class MessagesController < ApplicationController
+  include AttachmentsHelper
+
+  REPLIES_PER_PAGE: ::Integer
+
+  # Show a topic and its replies
+  def show: () -> untyped
+
+  # Create a new topic
+  def new: () -> untyped
+
+  # Reply to a topic
+  def reply: () -> untyped
+
+  # Edit a message
+  def edit: () -> untyped
+
+  # Delete a messages
+  def destroy: () -> untyped
+
+  def quote: () -> untyped
+
+  def preview: () -> untyped
+
+  private
+
+  def find_message: () -> untyped
+
+  def find_board: () -> untyped
+end

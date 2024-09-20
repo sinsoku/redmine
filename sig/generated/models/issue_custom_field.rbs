@@ -1,0 +1,11 @@
+# Generated from app/models/issue_custom_field.rb with RBS::Inline
+
+class IssueCustomField < CustomField
+  def type_name: () -> untyped
+
+  def visible_by?: (untyped project, ?untyped user) -> untyped
+
+  def visibility_by_project_condition: (?untyped project_key, ?untyped user, ?untyped id_column) -> untyped
+
+  def validate_custom_field: () -> untyped
+end

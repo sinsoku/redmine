@@ -1,0 +1,7 @@
+# Generated from app/helpers/issue_relations_helper.rb with RBS::Inline
+
+module IssueRelationsHelper
+  def collection_for_relation_type_select: () -> untyped
+
+  def relation_error_messages: (untyped relations) -> untyped
+end

@@ -1,0 +1,11 @@
+# Generated from app/helpers/reports_helper.rb with RBS::Inline
+
+module ReportsHelper
+  def aggregate: (untyped data, untyped criteria) -> untyped
+
+  def aggregate_link: (untyped data, untyped criteria, *untyped args) -> untyped
+
+  def aggregate_path: (untyped project, untyped field, untyped row, ?untyped options) -> untyped
+
+  def issue_report_details_to_csv: (untyped field_name, untyped statuses, untyped rows, untyped data) -> untyped
+end

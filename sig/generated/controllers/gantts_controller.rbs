@@ -1,0 +1,9 @@
+# Generated from app/controllers/gantts_controller.rb with RBS::Inline
+
+class GanttsController < ApplicationController
+  include QueriesHelper
+
+  include Redmine::Export::PDF
+
+  def show: () -> untyped
+end

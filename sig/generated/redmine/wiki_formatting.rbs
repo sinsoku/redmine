@@ -1,0 +1,62 @@
+# Generated from lib/redmine/wiki_formatting.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    class StaleSectionError < StandardError
+    end
+
+    def self.map: () -> untyped
+
+    def self.register: (untyped name, *untyped args) -> untyped
+
+    def self.formatter: () -> untyped
+
+    def self.html_parser: () -> untyped
+
+    def self.formatter_for: (untyped name) -> untyped
+
+    def self.helper_for: (untyped name) -> untyped
+
+    def self.html_parser_for: (untyped name) -> untyped
+
+    def self.format_names: () -> untyped
+
+    def self.formats_for_select: () -> untyped
+
+    def self.to_html: (untyped format, untyped text, ?untyped options) -> untyped
+
+    # Returns true if the text formatter supports single section edit
+    def self.supports_section_edit?: () -> untyped
+
+    # Returns a cache key for the given text +format+, +text+, +object+ and +attribute+ or nil if no caching should be done
+    def self.cache_key_for: (untyped format, untyped text, untyped object, untyped attribute) -> untyped
+
+    # Returns the cache store used to cache HTML output
+    def self.cache_store: () -> untyped
+
+    # Default formatter module
+    module NullFormatter
+      class Formatter
+        include ActionView::Helpers::TagHelper
+
+        include ActionView::Helpers::TextHelper
+
+        include ActionView::Helpers::UrlHelper
+
+        include Redmine::WikiFormatting::LinksHelper
+
+        def initialize: (untyped text) -> untyped
+
+        def to_html: (*untyped args) -> untyped
+      end
+
+      module Helper
+        def wikitoolbar_for: (untyped field_id, ?untyped preview_url) -> untyped
+
+        def heads_for_wiki_formatter: () -> untyped
+
+        def initial_page_content: (untyped page) -> untyped
+      end
+    end
+  end
+end

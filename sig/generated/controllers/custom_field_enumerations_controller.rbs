@@ -1,0 +1,21 @@
+# Generated from app/controllers/custom_field_enumerations_controller.rb with RBS::Inline
+
+class CustomFieldEnumerationsController < ApplicationController
+  def index: () -> untyped
+
+  def create: () -> untyped
+
+  def update_each: () -> untyped
+
+  def destroy: () -> untyped
+
+  private
+
+  def find_custom_field: () -> untyped
+
+  def find_enumeration: () -> untyped
+
+  def enumeration_params: () -> untyped
+
+  def update_each_params: () -> untyped
+end

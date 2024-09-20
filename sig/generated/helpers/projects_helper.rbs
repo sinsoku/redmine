@@ -1,0 +1,31 @@
+# Generated from app/helpers/projects_helper.rb with RBS::Inline
+
+module ProjectsHelper
+  def project_settings_tabs: () -> untyped
+
+  def parent_project_select_tag: (untyped project) -> untyped
+
+  def render_project_action_links: () -> untyped
+
+  # Renders the projects index
+  def render_project_hierarchy: (untyped projects) -> untyped
+
+  # Returns a set of options for a select field, grouped by project.
+  def version_options_for_select: (untyped versions, ?untyped selected) -> untyped
+
+  def project_default_version_options: (untyped project) -> untyped
+
+  def project_default_assigned_to_options: (untyped project) -> untyped
+
+  def project_default_issue_query_options: (untyped project) -> untyped
+
+  def format_version_sharing: (untyped sharing) -> untyped
+
+  def render_boards_tree: (untyped boards, ?untyped parent, ?untyped level) ?{ (?) -> untyped } -> untyped
+
+  def render_api_includes: (untyped project, untyped api) -> untyped
+
+  def bookmark_link: (untyped project, ?untyped user) -> untyped
+
+  def grouped_project_list: (untyped projects, untyped query) ?{ (?) -> untyped } -> untyped
+end

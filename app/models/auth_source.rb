@@ -100,6 +100,7 @@ class AuthSource < ApplicationRecord
   end
 
   # Try to authenticate a user not yet registered against available sources
+  # @rbs (String, String) -> Hash[Symbol, untyped]?
   def self.authenticate(login, password)
     AuthSource.where(:onthefly_register => true).each do |source|
       begin

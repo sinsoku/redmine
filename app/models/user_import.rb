@@ -29,7 +29,7 @@ class UserImport < Import
     'password' => 'field_password',
     'must_change_passwd' => 'field_must_change_passwd',
     'status' => 'field_status'
-  }
+  } #: Array[__todo__]
 
   def self.menu_item
     :users

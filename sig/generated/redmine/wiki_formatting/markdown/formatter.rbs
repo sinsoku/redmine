@@ -1,0 +1,37 @@
+# Generated from lib/redmine/wiki_formatting/markdown/formatter.rb with RBS::Inline
+
+module Redmine
+  module WikiFormatting
+    module Markdown
+      class HTML < Redcarpet::Render::HTML
+        include ActionView::Helpers::TagHelper
+
+        include Redmine::Helpers::URL
+
+        def autolink: (untyped link, untyped link_type) -> untyped
+
+        def link: (untyped link, untyped title, untyped content) -> untyped
+
+        def block_code: (untyped code, untyped language) -> untyped
+
+        def image: (untyped link, untyped title, untyped alt_text) -> untyped
+      end
+
+      class Formatter
+        include Redmine::WikiFormatting::LinksHelper
+
+        include Redmine::WikiFormatting::SectionHelper
+
+        alias inline_restore_redmine_links restore_redmine_links
+
+        def initialize: (untyped text) -> untyped
+
+        def to_html: (*untyped args) -> untyped
+
+        private
+
+        def formatter: () -> untyped
+      end
+    end
+  end
+end

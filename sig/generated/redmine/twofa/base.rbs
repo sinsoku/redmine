@@ -1,0 +1,48 @@
+# Generated from lib/redmine/twofa/base.rb with RBS::Inline
+
+module Redmine
+  module Twofa
+    class Base
+      def self.inherited: (untyped child) -> untyped
+
+      def self.scheme_name: (?untyped klass) -> untyped
+
+      def scheme_name: () -> untyped
+
+      def initialize: (untyped user) -> untyped
+
+      def init_pairing!: () -> untyped
+
+      def confirm_pairing!: (untyped code) -> untyped
+
+      def deliver_twofa_paired: () -> untyped
+
+      def destroy_pairing!: (untyped code) -> untyped
+
+      def destroy_pairing_without_verify!: () -> untyped
+
+      def deliver_twofa_unpaired: () -> untyped
+
+      def send_code: (?controller: untyped, ?action: untyped) -> untyped
+
+      def verify!: (untyped code) -> untyped
+
+      def verify_otp!: (untyped code) -> untyped
+
+      def verify_backup_code!: (untyped code) -> untyped
+
+      def init_backup_codes!: () -> untyped
+
+      def backup_codes: () -> untyped
+
+      # this will only be used on pairing initialization
+      def init_pairing_view_variables: () -> untyped
+
+      def otp_confirm_view_variables: () -> untyped
+
+      private
+
+      def allowed_drift: () -> untyped
+    end
+  end
+end

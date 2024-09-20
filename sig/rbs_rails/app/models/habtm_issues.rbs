@@ -1,0 +1,107 @@
+class Changeset < ::ApplicationRecord
+  class HABTM_Issues < ::ActiveRecord::Base
+    extend _ActiveRecord_Relation_ClassMethods[Changeset::HABTM_Issues, ActiveRecord_Relation, top]
+
+    module GeneratedAttributeMethods
+      def changeset_id: () -> Integer
+
+      def changeset_id=: (Integer) -> Integer
+
+      def changeset_id?: () -> bool
+
+      def changeset_id_changed?: () -> bool
+
+      def changeset_id_change: () -> [ Integer?, Integer? ]
+
+      def changeset_id_will_change!: () -> void
+
+      def changeset_id_was: () -> Integer?
+
+      def changeset_id_previously_changed?: () -> bool
+
+      def changeset_id_previous_change: () -> Array[Integer?]?
+
+      def changeset_id_previously_was: () -> Integer?
+
+      def changeset_id_before_last_save: () -> Integer?
+
+      def changeset_id_change_to_be_saved: () -> Array[Integer?]?
+
+      def changeset_id_in_database: () -> Integer?
+
+      def saved_change_to_changeset_id: () -> Array[Integer?]?
+
+      def saved_change_to_changeset_id?: () -> bool
+
+      def will_save_change_to_changeset_id?: () -> bool
+
+      def restore_changeset_id!: () -> void
+
+      def clear_changeset_id_change: () -> void
+
+      def issue_id: () -> Integer
+
+      def issue_id=: (Integer) -> Integer
+
+      def issue_id?: () -> bool
+
+      def issue_id_changed?: () -> bool
+
+      def issue_id_change: () -> [ Integer?, Integer? ]
+
+      def issue_id_will_change!: () -> void
+
+      def issue_id_was: () -> Integer?
+
+      def issue_id_previously_changed?: () -> bool
+
+      def issue_id_previous_change: () -> Array[Integer?]?
+
+      def issue_id_previously_was: () -> Integer?
+
+      def issue_id_before_last_save: () -> Integer?
+
+      def issue_id_change_to_be_saved: () -> Array[Integer?]?
+
+      def issue_id_in_database: () -> Integer?
+
+      def saved_change_to_issue_id: () -> Array[Integer?]?
+
+      def saved_change_to_issue_id?: () -> bool
+
+      def will_save_change_to_issue_id?: () -> bool
+
+      def restore_issue_id!: () -> void
+
+      def clear_issue_id_change: () -> void
+    end
+    include GeneratedAttributeMethods
+
+    def left_side: () -> Changeset?
+    def left_side=: (Changeset?) -> Changeset?
+    def reload_left_side: () -> Changeset?
+    def build_left_side: (untyped) -> Changeset
+    def create_left_side: (untyped) -> Changeset
+    def create_left_side!: (untyped) -> Changeset
+    def issue: () -> Issue?
+    def issue=: (Issue?) -> Issue?
+    def reload_issue: () -> Issue?
+    def build_issue: (untyped) -> Issue
+    def create_issue: (untyped) -> Issue
+    def create_issue!: (untyped) -> Issue
+
+    module GeneratedRelationMethods
+    end
+
+    class ActiveRecord_Relation < ::ActiveRecord::Relation
+      include GeneratedRelationMethods
+      include _ActiveRecord_Relation[Changeset::HABTM_Issues, top]
+      include Enumerable[Changeset::HABTM_Issues]
+    end
+
+    class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+      include GeneratedRelationMethods
+      include _ActiveRecord_Relation[Changeset::HABTM_Issues, top]
+    end
+  end
+end

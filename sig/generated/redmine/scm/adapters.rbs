@@ -1,0 +1,8 @@
+# Generated from lib/redmine/scm/adapters.rb with RBS::Inline
+
+module Redmine
+  module Scm
+    module Adapters
+    end
+  end
+end

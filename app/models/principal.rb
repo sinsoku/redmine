@@ -150,6 +150,7 @@ class Principal < ApplicationRecord
   end
 
   # Returns an array of the project ids that the principal is a member of
+  # @rbs () -> Array[Integer] | ...
   def project_ids
     @project_ids ||= super.freeze
   end
