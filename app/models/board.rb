@@ -42,29 +42,35 @@ class Board < ApplicationRecord
     !user.nil? && user.allowed_to?(:view_messages, project)
   end
 
+  # @rbs (*nil) -> Board
   def reload(*args)
     @valid_parents = nil
     super
   end
 
+  # @rbs () -> String
   def to_s
     name
   end
 
   # Returns a scope for the board topics (messages without parent)
+  # @rbs () -> Message::ActiveRecord_AssociationRelation
   def topics
     messages.where(:parent_id => nil)
   end
 
+  # @rbs () -> Array[untyped]
   def valid_parents
     @valid_parents ||= project.boards - self_and_descendants
   end
 
+  # @rbs () -> Integer
   def reset_counters!
     self.class.reset_counters!(id)
   end
 
   # Updates topics_count, messages_count and last_message_id attributes for +board_id+
+  # @rbs () -> Integer
   def self.reset_counters!(board_id)
     board_id = board_id.to_i
     Board.where(:id => board_id).
@@ -77,6 +83,7 @@ class Board < ApplicationRecord
       )
   end
 
+  # @rbs (Board::ActiveRecord_Associations_CollectionProxy | Array[untyped], ?Integer?, ?Integer) -> Array[untyped]
   def self.board_tree(boards, parent_id=nil, level=0)
     tree = []
     boards.select {|board| board.parent_id == parent_id}.sort_by(&:position).each do |board|
@@ -93,6 +100,7 @@ class Board < ApplicationRecord
 
   protected
 
+  # @rbs () -> ActiveModel::Error?
   def validate_board
     if parent_id && parent_id_changed?
       errors.add(:parent_id, :invalid) unless valid_parents.include?(parent)

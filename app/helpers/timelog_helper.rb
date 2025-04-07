@@ -23,6 +23,7 @@ module TimelogHelper
   # Returns a collection of activities for a select field.  time_entry
   # is optional and will be used to check if the selected TimeEntryActivity
   # is active.
+  # @rbs (?TimeEntry?, ?Project?) -> Array[untyped]
   def activity_collection_for_select_options(time_entry=nil, project=nil)
     project ||= time_entry.try(:project)
     project ||= @project
@@ -40,6 +41,7 @@ module TimelogHelper
     collection
   end
 
+  # @rbs (TimeEntry) -> ActiveSupport::SafeBuffer
   def user_collection_for_select_options(time_entry)
     collection = time_entry.assignable_users
     if time_entry.user && !collection.include?(time_entry.user)
@@ -48,6 +50,7 @@ module TimelogHelper
     principals_options_for_select(collection, time_entry.user_id.to_s)
   end
 
+  # @rbs (TimeEntry) -> Integer
   def default_activity(time_entry)
     if @project
       time_entry.activity_id
@@ -56,6 +59,7 @@ module TimelogHelper
     end
   end
 
+  # @rbs (Array[untyped], String, String) -> Array[untyped]
   def select_hours(data, criteria, value)
     if value.to_s.empty?
       data.select {|row| row[criteria].blank?}
@@ -64,6 +68,7 @@ module TimelogHelper
     end
   end
 
+  # @rbs (Array[untyped]) -> (Float | Integer)
   def sum_hours(data)
     sum = 0
     data.each do |row|
@@ -72,6 +77,7 @@ module TimelogHelper
     sum
   end
 
+  # @rbs (Hash[untyped, untyped], String, ?bool) -> (String | ActiveSupport::SafeBuffer)
   def format_criteria_value(criteria_options, value, html=true)
     if value.blank?
       "[#{l(:label_none)}]"
@@ -93,6 +99,7 @@ module TimelogHelper
     end
   end
 
+  # @rbs (Redmine::Helpers::TimeReport) -> String
   def report_to_csv(report)
     Redmine::Export::CSV.generate(:encoding => params[:encoding]) do |csv|
       # Column headers
@@ -120,6 +127,7 @@ module TimelogHelper
     end
   end
 
+  # @rbs (Redmine::Export::CSV::Base, Hash[untyped, untyped], String, Array[untyped], Array[untyped], Array[untyped], ?Integer) -> Array[untyped]
   def report_criteria_to_csv(csv, available_criteria, columns, criteria, periods, hours, level=0)
     hours.collect {|h| h[criteria[level]].to_s}.uniq.each do |value|
       hours_for_value = select_hours(hours, criteria[level], value)
@@ -142,6 +150,7 @@ module TimelogHelper
     end
   end
 
+  # @rbs (Project?) -> ActiveSupport::SafeBuffer
   def cancel_button_tag_for_time_entry(project)
     fallback_path = project ? project_time_entries_path(project) : time_entries_path
     cancel_button_tag(fallback_path)

@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class WelcomeTest < Redmine::IntegrationTest
+  # @rbs () -> bool
   def test_robots
     Project.find(3).update_attribute :status, Project::STATUS_CLOSED
 
@@ -40,6 +41,7 @@ class WelcomeTest < Redmine::IntegrationTest
     assert @response.body.match(%r{^Disallow: /projects/subproject1/issues\r?$})
   end
 
+  # @rbs () -> bool
   def test_robots_when_login_is_required
     with_settings :login_required => '1' do
       get '/robots.txt'
@@ -52,6 +54,7 @@ class WelcomeTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_robots_should_not_respond_to_formats_other_than_txt
     %w(robots.json robots).each do |file|
       get "/#{file}"

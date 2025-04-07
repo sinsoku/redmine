@@ -41,6 +41,7 @@ module ActiveRecord
         # * <tt>foreign_key</tt> - specifies the column name to use for tracking of the tree (default: +parent_id+)
         # * <tt>order</tt> - makes it possible to sort the children according to this SQL snippet.
         # * <tt>counter_cache</tt> - keeps a count in a +children_count+ column if set to +true+ (default: +false+).
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_tree(options = {})
           configuration = { :foreign_key => "parent_id", :dependent => :destroy, :order => nil, :counter_cache => nil }
           configuration.update(options) if options.is_a?(Hash)
@@ -60,6 +61,7 @@ module ActiveRecord
         # Returns list of ancestors, starting from parent until root.
         #
         #   subchild1.ancestors # => [child1, root]
+        # @rbs () -> Array[untyped]
         def ancestors
           node, nodes = self, []
           nodes << node = node.parent while node.parent
@@ -69,6 +71,7 @@ module ActiveRecord
         # Returns list of descendants.
         #
         #   root.descendants # => [child1, subchild1, subchild2]
+        # @rbs (?Integer?) -> (Array[untyped] | WikiPage::ActiveRecord_Associations_CollectionProxy | Enumeration::ActiveRecord_Associations_CollectionProxy)
         def descendants(depth=nil)
           depth ||= 0
           result = children.dup
@@ -81,11 +84,13 @@ module ActiveRecord
         # Returns list of descendants and a reference to the current node.
         #
         #   root.self_and_descendants # => [root, child1, subchild1, subchild2]
+        # @rbs (?Integer?) -> Array[untyped]
         def self_and_descendants(depth=nil)
           [self] + descendants(depth)
         end
 
         # Returns the root node of the tree.
+        # @rbs () -> Message
         def root
           node = self
           node = node.parent while node.parent

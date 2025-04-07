@@ -25,6 +25,7 @@ module Redmine
       # adds class="external" to external links, and class="email" to mailto
       # links
       class ExternalLinksFilter < HTML::Pipeline::Filter
+        # @rbs () -> Nokogiri::HTML4::DocumentFragment
         def call
           doc.search("a").each do |node|
             url = node["href"]

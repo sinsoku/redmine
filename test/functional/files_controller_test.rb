@@ -20,11 +20,13 @@
 require_relative '../test_helper'
 
 class FilesControllerTest < Redmine::ControllerTest
+  # @rbs () -> String
   def setup
     @request.session[:user_id] = nil
     Setting.default_language = 'en'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get(
       :index,
@@ -41,6 +43,7 @@ class FilesControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/attachments/download/9/version_file.zip', :text => 'version_file.zip'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     @request.session[:user_id] = 2
     get(
@@ -53,6 +56,7 @@ class FilesControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'version_id'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_without_versions
     Version.delete_all
     @request.session[:user_id] = 2
@@ -66,6 +70,7 @@ class FilesControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'version_id', 0
   end
 
+  # @rbs () -> bool
   def test_create_file
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -98,6 +103,7 @@ class FilesControllerTest < Redmine::ControllerTest
     assert_mail_body_match 'testfile.txt', mail
   end
 
+  # @rbs () -> bool
   def test_create_version_file
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -122,6 +128,7 @@ class FilesControllerTest < Redmine::ControllerTest
     assert_equal Version.find(2), a.container
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_without_file
     set_tmp_attachments_directory
     @request.session[:user_id] = 2

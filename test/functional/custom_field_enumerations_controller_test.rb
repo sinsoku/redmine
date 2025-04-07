@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class CustomFieldEnumerationsControllerTest < Redmine::ControllerTest
+  # @rbs () -> CustomFieldEnumeration::ActiveRecord_Associations_CollectionProxy
   def setup
     @request.session[:user_id] = 1
     @field = GroupCustomField.create!(:name => 'List', :field_format => 'enumeration', :is_required => false)
@@ -29,6 +30,7 @@ class CustomFieldEnumerationsControllerTest < Redmine::ControllerTest
     @field.enumerations << @bar
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get(
       :index,
@@ -43,6 +45,7 @@ class CustomFieldEnumerationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'CustomFieldEnumeration.count' do
       post(
@@ -64,6 +67,7 @@ class CustomFieldEnumerationsControllerTest < Redmine::ControllerTest
     assert_equal 3, enum.position
   end
 
+  # @rbs () -> bool
   def test_create_xhr
     assert_difference 'CustomFieldEnumeration.count' do
       post(
@@ -80,6 +84,7 @@ class CustomFieldEnumerationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_each
     put(
       :update_each,
@@ -112,6 +117,7 @@ class CustomFieldEnumerationsControllerTest < Redmine::ControllerTest
     assert_equal 2, @foo.position
   end
 
+  # @rbs () -> bool
   def test_destroy
     assert_difference 'CustomFieldEnumeration.count', -1 do
       delete(
@@ -129,6 +135,7 @@ class CustomFieldEnumerationsControllerTest < Redmine::ControllerTest
     assert_equal 'Bar', enum.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_enumeration_in_use_should_display_destroy_form
     group = Group.generate!
     group.custom_field_values = {@field.id.to_s => @foo.id.to_s}
@@ -148,6 +155,7 @@ class CustomFieldEnumerationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_enumeration_in_use_should_destroy_and_reassign_values
     group = Group.generate!
     group.custom_field_values = {@field.id.to_s => @foo.id.to_s}

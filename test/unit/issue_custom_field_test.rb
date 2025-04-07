@@ -22,10 +22,12 @@ require_relative '../test_helper'
 class IssueCustomFieldTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_custom_field_with_visible_set_to_false_should_validate_roles
     set_language_if_valid 'en'
     field = IssueCustomField.new(:name => 'Field', :field_format => 'string', :visible => false)
@@ -35,6 +37,7 @@ class IssueCustomFieldTest < ActiveSupport::TestCase
     assert field.save
   end
 
+  # @rbs () -> bool
   def test_changing_visible_to_true_should_clear_roles
     field = IssueCustomField.create!(:name => 'Field', :field_format => 'string', :visible => false, :role_ids => [1, 2])
     assert_equal 2, field.roles.count

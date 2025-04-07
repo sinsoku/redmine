@@ -45,15 +45,18 @@ class IssueImport < Import
     'relation_copied_from' => 'label_copied_from'
   }
 
+  # @rbs () -> Symbol
   def self.menu_item
     :issues
   end
 
+  # @rbs (User) -> bool
   def self.authorized?(user)
     user.allowed_to?(:import_issues, nil, :global => true) && user.allowed_to?(:add_issues, nil, :global => true)
   end
 
   # Returns the objects that were imported
+  # @rbs () -> Issue::ActiveRecord_Relation
   def saved_objects
     object_ids = saved_items.pluck(:obj_id)
     objects = Issue.where(:id => object_ids).order(:id).preload(:tracker, :priority, :status)
@@ -61,10 +64,12 @@ class IssueImport < Import
 
   # Returns a scope of projects that user is allowed to
   # import issue to
+  # @rbs () -> Project::ActiveRecord_Relation
   def allowed_target_projects
     Project.allowed_to(user, :import_issues)
   end
 
+  # @rbs () -> Project
   def project
     project_id = mapping['project_id'].to_i
     allowed_target_projects.find_by_id(project_id) || allowed_target_projects.first
@@ -72,10 +77,12 @@ class IssueImport < Import
 
   # Returns a scope of trackers that user is allowed to
   # import issue to
+  # @rbs () -> Tracker::ActiveRecord_AssociationRelation
   def allowed_target_trackers
     Issue.allowed_target_trackers(project, user)
   end
 
+  # @rbs () -> Tracker?
   def tracker
     if mapping['tracker'].to_s =~ /\Avalue:(\d+)\z/
       tracker_id = $1.to_i
@@ -84,17 +91,20 @@ class IssueImport < Import
   end
 
   # Returns true if missing categories should be created during the import
+  # @rbs () -> bool
   def create_categories?
     user.allowed_to?(:manage_categories, project) &&
       mapping['create_categories'] == '1'
   end
 
   # Returns true if missing versions should be created during the import
+  # @rbs () -> bool
   def create_versions?
     user.allowed_to?(:manage_versions, project) &&
       mapping['create_versions'] == '1'
   end
 
+  # @rbs () -> IssueCustomField::ActiveRecord_Relation
   def mappable_custom_fields
     if tracker
       issue = Issue.new
@@ -110,6 +120,7 @@ class IssueImport < Import
 
   private
 
+  # @rbs (Array[untyped], ImportItem) -> Issue
   def build_object(row, item)
     issue = Issue.new
     issue.author = user
@@ -240,10 +251,12 @@ class IssueImport < Import
     issue
   end
 
+  # @rbs (Array[untyped], ImportItem, Issue) -> Issue
   def extend_object(row, item, issue)
     build_relations(row, item, issue)
   end
 
+  # @rbs (Array[untyped], ImportItem, Issue) -> Issue
   def build_relations(row, item, issue)
     IssueRelation::TYPES.each_key do |type|
       has_delay = [IssueRelation::TYPE_PRECEDES, IssueRelation::TYPE_FOLLOWS].include?(type)
@@ -298,6 +311,7 @@ class IssueImport < Import
     issue
   end
 
+  # @rbs (Array[untyped], String) -> Array[untyped]?
   def relation_values(row, name)
     content = row_value(row, name)
 
@@ -356,6 +370,7 @@ class IssueImport < Import
   end
 
   # Callback that sets issue as the parent of a previously imported issue
+  # @rbs (Issue, Integer) -> Issue
   def set_as_parent_callback(issue, child_position)
     child_id = items.where(:position => child_position).first.try(:obj_id)
     return unless child_id
@@ -368,6 +383,7 @@ class IssueImport < Import
     issue.reload
   end
 
+  # @rbs (Issue, Integer, String, String?) -> Issue
   def set_relation_callback(to_issue, from_position, type, delay)
     return if to_issue.new_record?
 

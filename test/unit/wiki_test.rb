@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class WikiTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_create
     wiki = Wiki.new(:project => Project.find(3))
     assert !wiki.save
@@ -33,12 +35,14 @@ class WikiTest < ActiveSupport::TestCase
     assert wiki.save
   end
 
+  # @rbs () -> bool
   def test_create_default
     wiki = Wiki.create_default(Project.find(1))
     assert wiki.save
     assert_equal "Wiki", wiki.start_page
   end
 
+  # @rbs () -> bool
   def test_update
     @wiki = Wiki.find(1)
     @wiki.start_page = "Another start page"
@@ -47,6 +51,7 @@ class WikiTest < ActiveSupport::TestCase
     assert_equal "Another start page", @wiki.start_page
   end
 
+  # @rbs () -> bool
   def test_find_page_should_not_be_case_sensitive
     wiki = Wiki.find(1)
     page = WikiPage.find(2)
@@ -56,6 +61,7 @@ class WikiTest < ActiveSupport::TestCase
     assert_equal page, wiki.find_page('ANOTHER page')
   end
 
+  # @rbs () -> bool
   def test_ordering_pages_should_not_be_case_sensitive
     wiki = Wiki.find(1)
     wiki.pages.destroy_all
@@ -66,18 +72,21 @@ class WikiTest < ActiveSupport::TestCase
     assert_equal %w(Aac ABc Acc ACd), wiki.pages.pluck(:title)
   end
 
+  # @rbs () -> bool
   def test_find_page_with_cyrillic_characters
     wiki = Wiki.find(1)
     page = WikiPage.find(10)
     assert_equal page, wiki.find_page('Этика_менеджмента')
   end
 
+  # @rbs () -> bool
   def test_find_page_with_backslashes
     wiki = Wiki.find(1)
     page = WikiPage.create!(:wiki => wiki, :title => '2009\\02\\09')
     assert_equal page, wiki.find_page('2009\\02\\09')
   end
 
+  # @rbs () -> bool
   def test_find_page_without_redirect
     wiki = Wiki.find(1)
     page = wiki.find_page('Another_page')
@@ -86,6 +95,7 @@ class WikiTest < ActiveSupport::TestCase
     assert_equal false, wiki.page_found_with_redirect?
   end
 
+  # @rbs () -> bool
   def test_find_page_with_redirect
     wiki = Wiki.find(1)
     WikiRedirect.create!(:wiki => wiki, :title => 'Old_title', :redirects_to => 'Another_page')
@@ -95,17 +105,20 @@ class WikiTest < ActiveSupport::TestCase
     assert_equal true, wiki.page_found_with_redirect?
   end
 
+  # @rbs () -> bool
   def test_titleize
     ja_test = 'テスト'
     assert_equal 'Page_title_with_CAPITALES', Wiki.titleize('page title with CAPITALES')
     assert_equal ja_test, Wiki.titleize(ja_test)
   end
 
+  # @rbs () -> bool
   def test_sidebar_should_return_nil_if_undefined
     @wiki = Wiki.find(1)
     assert_nil @wiki.sidebar
   end
 
+  # @rbs () -> bool
   def test_sidebar_should_return_a_wiki_page_if_defined
     @wiki = Wiki.find(1)
     page = @wiki.pages.new(:title => 'Sidebar')
@@ -116,6 +129,7 @@ class WikiTest < ActiveSupport::TestCase
     assert_equal 'Sidebar', @wiki.sidebar.title
   end
 
+  # @rbs () -> bool
   def test_destroy_should_remove_redirects_from_the_wiki
     set_tmp_attachments_directory
     WikiRedirect.create!(:wiki_id => 1, :title => 'Foo', :redirects_to_wiki_id => 2, :redirects_to => 'Bar')
@@ -124,6 +138,7 @@ class WikiTest < ActiveSupport::TestCase
     assert_equal 0, WikiRedirect.where(:wiki_id => 1).count
   end
 
+  # @rbs () -> bool
   def test_destroy_should_remove_redirects_to_the_wiki
     set_tmp_attachments_directory
     WikiRedirect.create!(:wiki_id => 2, :title => 'Foo', :redirects_to_wiki_id => 1, :redirects_to => 'Bar')

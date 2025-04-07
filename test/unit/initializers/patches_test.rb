@@ -23,6 +23,7 @@ class PatchesTest < ActiveSupport::TestCase
   include Redmine::I18n
   include ActionView::Helpers::FormHelper
 
+  # @rbs () -> String
   def setup
     Setting.default_language = 'en'
   end

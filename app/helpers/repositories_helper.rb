@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module RepositoriesHelper
+  # @rbs (Changeset) -> String
   def format_revision(revision)
     if revision.respond_to? :format_identifier
       revision.format_identifier
@@ -26,6 +27,7 @@ module RepositoriesHelper
     end
   end
 
+  # @rbs (String, ?Integer) -> String
   def truncate_at_line_break(text, length = 255)
     if text
       text.gsub(%r{^(.{#{length}}[^\n]*)\n.+$}m, '\\1...')
@@ -51,6 +53,7 @@ module RepositoriesHelper
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def render_changeset_changes
     changes = @changeset.filechanges.limit(1000).reorder('path').filter_map do |change|
       case change.action
@@ -85,6 +88,7 @@ module RepositoriesHelper
     render_changes_tree(tree[:s])
   end
 
+  # @rbs (Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_changes_tree(tree)
     return '' if tree.nil?
 
@@ -129,6 +133,7 @@ module RepositoriesHelper
     output.html_safe
   end
 
+  # @rbs (Redmine::Views::LabelledFormBuilder, Repository::Git | Repository::Mercurial | Repository::Subversion) -> ActiveSupport::SafeBuffer
   def repository_field_tags(form, repository)
     method = repository.class.name.demodulize.underscore + "_field_tags"
     if repository.is_a?(Repository) &&
@@ -137,6 +142,7 @@ module RepositoriesHelper
     end
   end
 
+  # @rbs (Repository::Git | Repository::Mercurial | Repository::Subversion) -> ActiveSupport::SafeBuffer
   def scm_select_tag(repository)
     scm_options = [["--- #{l(:actionview_instancetag_blank_option)} ---", '']]
     Redmine::Scm::Base.all.each do |scm|
@@ -155,6 +161,7 @@ module RepositoriesHelper
     path.to_s.starts_with?('/') ? path : "/#{path}"
   end
 
+  # @rbs (Redmine::Views::LabelledFormBuilder, Repository::Subversion) -> ActiveSupport::SafeBuffer
   def subversion_field_tags(form, repository)
     content_tag('p',
                 form.text_field(:url, :size => 60, :required => true,
@@ -171,6 +178,7 @@ module RepositoriesHelper
     )
   end
 
+  # @rbs (Redmine::Views::LabelledFormBuilder, Repository::Mercurial) -> ActiveSupport::SafeBuffer
   def mercurial_field_tags(form, repository)
     content_tag(
       'p',
@@ -182,6 +190,7 @@ module RepositoriesHelper
     ) + scm_path_encoding_tag(form, repository)
   end
 
+  # @rbs (Redmine::Views::LabelledFormBuilder, Repository::Git) -> ActiveSupport::SafeBuffer
   def git_field_tags(form, repository)
     content_tag(
       'p',
@@ -242,6 +251,7 @@ module RepositoriesHelper
     ) + scm_path_encoding_tag(form, repository)
   end
 
+  # @rbs (Repository::Git | Repository::Mercurial | Repository::Subversion) -> ActiveSupport::SafeBuffer
   def scm_path_info_tag(repository)
     text = scm_path_info(repository)
     if text.present?
@@ -251,6 +261,7 @@ module RepositoriesHelper
     end
   end
 
+  # @rbs (Repository::Git | Repository::Mercurial | Repository::Subversion) -> String
   def scm_path_info(repository)
     scm_name = repository.scm_name.to_s.downcase
 
@@ -270,6 +281,7 @@ module RepositoriesHelper
     content_tag('p', select)
   end
 
+  # @rbs (Redmine::Views::LabelledFormBuilder, Repository::Git | Repository::Mercurial) -> ActiveSupport::SafeBuffer
   def scm_path_encoding_tag(form, repository)
     select = form.select(
       :path_encoding,

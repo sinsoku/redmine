@@ -24,6 +24,7 @@ class GroupsHelperTest < Redmine::HelperTest
   include GroupsHelper
   include AvatarsHelper
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_render_principals_for_new_group_users
     group = Group.generate!
 
@@ -31,6 +32,7 @@ class GroupsHelperTest < Redmine::HelperTest
     assert_select_in result, 'input[name=?][value="2"]', 'user_ids[]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_render_principals_for_new_group_users_with_limited_results_should_paginate
     group = Group.generate!
 

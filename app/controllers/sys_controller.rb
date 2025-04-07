@@ -25,6 +25,7 @@ class SysController < ActionController::Base
   # Requests from repository WS clients don't contain CSRF tokens
   skip_before_action :verify_authenticity_token
 
+  # @rbs () -> String
   def projects
     p = Project.active.has_module(:repository).
           order("#{Project.table_name}.identifier").preload(:repository).to_a
@@ -34,6 +35,7 @@ class SysController < ActionController::Base
                         :include => {:repository => {:only => [:id, :url]}})
   end
 
+  # @rbs () -> (String | bool)
   def create_project_repository
     project = Project.find(params[:id])
     if project.repository
@@ -51,6 +53,7 @@ class SysController < ActionController::Base
     end
   end
 
+  # @rbs () -> bool
   def fetch_changesets
     projects = []
     scope = Project.active.has_module(:repository)
@@ -79,6 +82,7 @@ class SysController < ActionController::Base
 
   protected
 
+  # @rbs () -> bool?
   def check_enabled
     User.current = nil
     unless Setting.sys_api_enabled? && secure_compare(params[:key].to_s, Setting.sys_api_key.to_s)

@@ -34,12 +34,14 @@ class MyController < ApplicationController
   helper :queries
   helper :activities
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def index
     page
     render :action => 'page'
   end
 
   # Show user's page
+  # @rbs () -> Hash[untyped, untyped]
   def page
     @user = User.current
     @groups = @user.pref.my_page_groups
@@ -47,6 +49,7 @@ class MyController < ApplicationController
   end
 
   # Edit user's account
+  # @rbs () -> String?
   def account
     @user = User.current
     @pref = @user.pref
@@ -73,6 +76,7 @@ class MyController < ApplicationController
   end
 
   # Destroys user's account
+  # @rbs () -> String?
   def destroy
     @user = User.current
     unless @user.own_account_deletable?
@@ -91,6 +95,7 @@ class MyController < ApplicationController
   end
 
   # Manage user's password
+  # @rbs () -> String?
   def password
     @user = User.current
     unless @user.change_password_allowed?
@@ -118,6 +123,7 @@ class MyController < ApplicationController
   end
 
   # Create a new feeds key
+  # @rbs () -> String
   def reset_atom_key
     if request.post?
       if User.current.atom_token
@@ -130,11 +136,13 @@ class MyController < ApplicationController
     redirect_to my_account_path
   end
 
+  # @rbs () -> User
   def show_api_key
     @user = User.current
   end
 
   # Create a new API key
+  # @rbs () -> String
   def reset_api_key
     if request.post?
       if User.current.api_token
@@ -147,6 +155,7 @@ class MyController < ApplicationController
     redirect_to my_account_path
   end
 
+  # @rbs () -> Array[untyped]
   def update_page
     @user = User.current
     block_settings = params[:settings] || {}
@@ -161,6 +170,7 @@ class MyController < ApplicationController
   # Add a block to user's page
   # The block is added on top of the page
   # params[:block] : id of the block to add
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)?
   def add_block
     @user = User.current
     @block = params[:block]
@@ -177,6 +187,7 @@ class MyController < ApplicationController
 
   # Remove a block to user's page
   # params[:block] : id of the block to remove
+  # @rbs () -> String?
   def remove_block
     @user = User.current
     @block = params[:block]
@@ -191,6 +202,7 @@ class MyController < ApplicationController
   # Change blocks order on user's page
   # params[:group] : group to order (top, left or right)
   # params[:blocks] : array of block ids of the group
+  # @rbs () -> bool
   def order_blocks
     @user = User.current
     @user.pref.order_blocks params[:group], params[:blocks]

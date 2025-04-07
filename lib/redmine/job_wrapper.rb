@@ -19,6 +19,7 @@
 
 module Redmine
   module JobWrapper
+    # @rbs () -> (AnonymousUser | User)
     def keep_current_user
       current_user = User.current
       yield

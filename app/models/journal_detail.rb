@@ -20,22 +20,26 @@
 class JournalDetail < ApplicationRecord
   belongs_to :journal
 
+  # @rbs () -> IssueCustomField?
   def custom_field
     if property == 'cf'
       @custom_field ||= CustomField.find_by_id(prop_key)
     end
   end
 
+  # @rbs ((Integer | Date | String | bool | Float)?) -> (Integer | String | Float)?
   def value=(arg)
     write_attribute :value, normalize(arg)
   end
 
+  # @rbs ((Integer | String | Date | bool | Float)?) -> (Integer | String | Float)?
   def old_value=(arg)
     write_attribute :old_value, normalize(arg)
   end
 
   private
 
+  # @rbs ((Integer | Date | String | bool | Float)?) -> (Integer | String | Float)?
   def normalize(v)
     case v
     when true

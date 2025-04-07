@@ -21,6 +21,7 @@ class ProjectEnumerationsController < ApplicationController
   before_action :find_project_by_project_id
   before_action :authorize
 
+  # @rbs () -> String
   def update
     if @project.update_or_create_time_entry_activities(update_params)
       flash[:notice] = l(:notice_successful_update)
@@ -29,6 +30,7 @@ class ProjectEnumerationsController < ApplicationController
     redirect_to settings_project_path(@project, :tab => 'activities')
   end
 
+  # @rbs () -> String
   def destroy
     @project.time_entry_activities.each do |time_entry_activity|
       time_entry_activity.destroy(time_entry_activity.parent)
@@ -39,6 +41,7 @@ class ProjectEnumerationsController < ApplicationController
 
   private
 
+  # @rbs () -> ActionController::Parameters
   def update_params
     params.
       permit(:enumerations => [:parent_id, :active, {:custom_field_values => {}}]).

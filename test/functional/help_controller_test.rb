@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class HelpControllerTest < Redmine::ControllerTest
+  # @rbs () -> Hash[untyped, untyped]
   def test_get_help_wiki_syntax
     formatters = {
       :textile => "Wiki Syntax Quick Reference",
@@ -36,6 +37,7 @@ class HelpControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_get_help_wiki_syntax_detailed
     formatters = {
       :textile => "Wiki formatting",
@@ -54,6 +56,7 @@ class HelpControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_help_wiki_syntax_should_return_lang_if_available
     user = User.find(2)
     user.language = 'de'
@@ -66,6 +69,7 @@ class HelpControllerTest < Redmine::ControllerTest
     assert_select 'h1', :text => "Wiki Syntax Schnellreferenz (CommonMark Markdown (GitHub Flavored))"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_help_wiki_syntax_should_fallback_to_english
     user = User.find(2)
     user.language = 'ro'
@@ -78,6 +82,7 @@ class HelpControllerTest < Redmine::ControllerTest
     assert_select 'h1', :text => "Wiki Syntax Quick Reference (CommonMark Markdown (GitHub Flavored))"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_help_code_highlighting
     get :show_code_highlighting
     assert_response :success

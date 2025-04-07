@@ -22,6 +22,7 @@ require_relative '../../../test_helper'
 class MenuManagerTest < Redmine::IntegrationTest
   include Redmine::I18n
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_project_menu_with_specific_locale
     get '/projects/ecookbook/issues',
         :headers => {'HTTP_ACCEPT_LANGUAGE' => 'fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3'}
@@ -32,6 +33,7 @@ class MenuManagerTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Redmine::MenuManager::MenuItem
   def test_project_menu_with_additional_menu_items
     Setting.default_language = 'en'
     assert_no_difference 'Redmine::MenuManager.items(:project_menu).size' do
@@ -72,6 +74,7 @@ class MenuManagerTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_project_menu_should_display_repository_tab_when_exists_repository
     project = Project.find('ecookbook')
     repos = project.repositories
@@ -100,6 +103,7 @@ class MenuManagerTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_main_menu_should_select_projects_tab_on_project_list
     get '/projects'
     assert_select '#main-menu' do
@@ -108,11 +112,13 @@ class MenuManagerTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_main_menu_should_not_show_up_on_account
     get '/login'
     assert_select '#main-menu', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_body_should_have_main_menu_css_class_if_main_menu_is_present
     get '/projects'
     assert_select 'body.has-main-menu'
@@ -120,6 +126,7 @@ class MenuManagerTest < Redmine::IntegrationTest
     assert_select 'body.has-main-menu', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_cross_project_menu_should_hide_item_if_module_is_not_enabled_for_any_project
     user = User.find_by_login('dlopper')
     assert_equal [1, 3, 4, 6], Project.visible(user).ids.sort
@@ -146,12 +153,14 @@ class MenuManagerTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_cross_project_menu_should_link_to_global_activity
     log_user('dlopper', 'foo')
     get '/queries/3/edit'
     assert_select 'a.activity[href=?]', '/activity'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_project_menu_should_show_roadmap_if_subprojects_have_versions
     Version.delete_all
     # Create a version in the project "eCookbook Subproject 1"
@@ -168,6 +177,7 @@ class MenuManagerTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_project_menu_should_show_roadmap_if_project_has_shared_version
     Version.delete_all
     project = Project.generate!(:parent_id => 2)

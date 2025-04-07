@@ -26,6 +26,7 @@ module AdminHelper
                         [l(:project_status_scheduled_for_deletion), '10']], selected.to_s)
   end
 
+  # @rbs (Array[untyped]) -> Hash[untyped, untyped]
   def plugin_data_for_updates(plugins)
     data = {"v" => Redmine::VERSION.to_s, "p" => {}}
     plugins.each do |plugin|

@@ -37,6 +37,7 @@ module Redmine
       # Valid options:
       # * <tt>:file</tt>: the configuration file to load (default: config/configuration.yml)
       # * <tt>:env</tt>: the environment to load the configuration for (default: Rails.env)
+      # @rbs (?Hash[untyped, untyped]) -> Hash[untyped, untyped]
       def load(options={})
         filename = options[:file] || File.join(Rails.root, 'config', 'configuration.yml')
         env = options[:env] || Rails.env
@@ -75,12 +76,14 @@ module Redmine
       end
 
       # Returns a configuration setting
+      # @rbs (String) -> (Integer | bool | String)?
       def [](name)
         load unless @config
         @config[name]
       end
 
       # Yields a block with the specified hash configuration settings
+      # @rbs (Hash[untyped, untyped]) -> Hash[untyped, untyped]
       def with(settings)
         settings.stringify_keys!
         load unless @config
@@ -92,6 +95,7 @@ module Redmine
 
       private
 
+      # @rbs (Pathname, String) -> Hash[untyped, untyped]
       def load_from_yaml(filename, env)
         yaml = nil
         begin
@@ -115,6 +119,7 @@ module Redmine
         conf
       end
 
+      # @rbs (String) -> void
       def load_deprecated_email_configuration(env)
         deprecated_email_conf = File.join(Rails.root, 'config', 'email.yml')
         if File.file?(deprecated_email_conf)
@@ -124,6 +129,7 @@ module Redmine
       end
 
       # Checks the validness of regular expressions set for repository paths at startup
+      # @rbs () -> void
       def check_regular_expressions
         @config.each do |name, value|
           if value.present? && /^scm_.+_path_regexp$/.match?(name)

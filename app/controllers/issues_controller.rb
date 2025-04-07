@@ -42,6 +42,7 @@ class IssuesController < ApplicationController
   helper :repositories
   helper :timelog
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | Array[untyped] | String | bool)?
   def index
     use_session = !request.format.csv?
     retrieve_default_query(use_session)
@@ -92,6 +93,7 @@ class IssuesController < ApplicationController
     render_404
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)?
   def show
     if !api_request? || include_in_api_response?('journals')
       @journals = @issue.visible_journals_with_index
@@ -136,6 +138,7 @@ class IssuesController < ApplicationController
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def new
     respond_to do |format|
       format.html {render :action => 'new', :layout => !request.xhr?}
@@ -143,6 +146,7 @@ class IssuesController < ApplicationController
     end
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)?
   def create
     unless User.current.allowed_to?(:add_issues, @issue.project, :global => true)
       raise ::Unauthorized
@@ -181,6 +185,7 @@ class IssuesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
     return unless update_issue_from_params
 
@@ -190,6 +195,7 @@ class IssuesController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | String | ActiveSupport::SafeBuffer)?
   def update
     return unless update_issue_from_params
 
@@ -238,6 +244,7 @@ class IssuesController < ApplicationController
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def issue_tab
     return render_error :status => 422 unless request.xhr?
 
@@ -255,6 +262,7 @@ class IssuesController < ApplicationController
   end
 
   # Bulk edit/copy a set of issues
+  # @rbs () -> Hash[untyped, untyped]
   def bulk_edit
     @issues.sort!
     @copy = params[:copy].present?
@@ -342,6 +350,7 @@ class IssuesController < ApplicationController
     @issue_params[:custom_field_values] ||= {}
   end
 
+  # @rbs () -> (bool | String | ActiveSupport::SafeBuffer)?
   def bulk_update
     @issues.sort!
     @copy = params[:copy].present?
@@ -424,6 +433,7 @@ class IssuesController < ApplicationController
     end
   end
 
+  # @rbs () -> bool?
   def destroy
     raise Unauthorized unless @issues.all?(&:deletable?)
 
@@ -477,6 +487,7 @@ class IssuesController < ApplicationController
 
   # Overrides Redmine::MenuManager::MenuController::ClassMethods for
   # when the "New issue" tab is enabled
+  # @rbs () -> Symbol
   def current_menu_item
     if Setting.new_item_menu_tab == '1' && [:new, :create].include?(action_name.to_sym)
       :new_issue
@@ -487,11 +498,13 @@ class IssuesController < ApplicationController
 
   private
 
+  # @rbs (Query::QueryError) -> bool
   def query_error(exception)
     session.delete(:issue_query)
     super
   end
 
+  # @rbs (bool) -> void
   def retrieve_default_query(use_session)
     return if params[:query_id].present?
     return if api_request?
@@ -511,6 +524,7 @@ class IssuesController < ApplicationController
     end
   end
 
+  # @rbs () -> void
   def retrieve_previous_and_next_issue_ids
     if params[:prev_issue_id].present? || params[:next_issue_id].present?
       @prev_issue_id = params[:prev_issue_id].presence.try(:to_i)
@@ -540,6 +554,7 @@ class IssuesController < ApplicationController
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def previous_and_next_issue_ids_params
     {
       :prev_issue_id => params[:prev_issue_id],
@@ -551,6 +566,7 @@ class IssuesController < ApplicationController
 
   # Used by #edit and #update to set some common instance variables
   # from the params
+  # @rbs () -> bool
   def update_issue_from_params
     @time_entry = TimeEntry.new(:issue => @issue, :project => @issue.project)
     if params[:time_entry]
@@ -582,6 +598,7 @@ class IssuesController < ApplicationController
 
   # Used by #new and #create to build a new issue from the params
   # The new issue will be copied from an existing one if copy_from parameter is given
+  # @rbs () -> (Array[untyped] | bool)?
   def build_new_issue_from_params
     @issue = Issue.new
     if params[:copy_from]
@@ -650,6 +667,7 @@ class IssuesController < ApplicationController
   end
 
   # Saves @issue and a time_entry from the parameters
+  # @rbs () -> Array[untyped]?
   def save_issue_with_child_records
     Issue.transaction do
       if params[:time_entry] &&
@@ -685,6 +703,7 @@ class IssuesController < ApplicationController
 
   # Returns true if the issue copy should be linked
   # to the original issue
+  # @rbs (String?) -> bool
   def link_copy?(param)
     case Setting.link_copied_issue
     when 'yes'
@@ -698,6 +717,7 @@ class IssuesController < ApplicationController
 
   # Returns true if the attachments should be copied
   # from the original issue
+  # @rbs (String?) -> bool
   def copy_attachments?(param)
     case Setting.copy_attachments_on_issue_copy
     when 'yes'
@@ -710,6 +730,7 @@ class IssuesController < ApplicationController
   end
 
   # Redirects user after a successful issue creation
+  # @rbs () -> (bool | String)
   def redirect_after_create
     if params[:continue]
       url_params = {}

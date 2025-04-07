@@ -22,17 +22,20 @@ require_relative '../test_helper'
 class TimeEntryImportTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     set_language_if_valid 'en'
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_authorized
     assert  TimeEntryImport.authorized?(User.find(1)) # admins
     assert  TimeEntryImport.authorized?(User.find(2)) # has log_time permission
     assert !TimeEntryImport.authorized?(User.find(6)) # anonymous does not have log_time permission
   end
 
+  # @rbs () -> bool
   def test_maps_issue_id
     import = generate_import_with_mapping
     first, second, third, fourth = new_records(TimeEntry, 4) {import.run}
@@ -43,6 +46,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal 2, fourth.issue_id
   end
 
+  # @rbs () -> bool
   def test_maps_date
     import = generate_import_with_mapping
     first, second, third, fourth = new_records(TimeEntry, 4) {import.run}
@@ -53,6 +57,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal Date.new(2020, 1, 4), fourth.spent_on
   end
 
+  # @rbs () -> bool
   def test_maps_hours
     import = generate_import_with_mapping
     first, second, third, fourth = new_records(TimeEntry, 4) {import.run}
@@ -63,6 +68,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal 4, fourth.hours
   end
 
+  # @rbs () -> bool
   def test_maps_comments
     import = generate_import_with_mapping
     first, second, third, fourth = new_records(TimeEntry, 4) {import.run}
@@ -73,6 +79,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal 'Some Inactivity',  fourth.comments
   end
 
+  # @rbs () -> bool
   def test_maps_activity_to_column_value
     import = generate_import_with_mapping
     import.mapping['activity'] = '5'
@@ -90,6 +97,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_nil last.obj_id
   end
 
+  # @rbs () -> bool
   def test_maps_activity_to_fixed_value
     import = generate_import_with_mapping
     first, second, third, fourth = new_records(TimeEntry, 4) {import.run}
@@ -100,6 +108,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal 10, fourth.activity_id
   end
 
+  # @rbs () -> bool
   def test_maps_custom_fields
     overtime_cf = CustomField.find(10)
 
@@ -114,6 +123,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal '0', fourth.custom_field_value(overtime_cf)
   end
 
+  # @rbs () -> bool
   def test_maps_user_id_for_user_with_permissions
     Role.find_by_name('Manager').add_permission! :log_time_for_other_users
 
@@ -126,6 +136,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal 2, fourth.user_id
   end
 
+  # @rbs () -> bool
   def test_maps_user_to_column_value
     Role.find_by_name('Manager').add_permission! :log_time_for_other_users
 
@@ -140,6 +151,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal 3, fourth.user_id
   end
 
+  # @rbs () -> bool
   def test_maps_user_id_for_user_without_permissions
     # User 2 doesn't have log_time_for_other_users permission
     User.current = User.find(2)
@@ -153,6 +165,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal 2, fourth.user_id
   end
 
+  # @rbs () -> bool
   def test_imports_timelogs_for_issues_in_other_project
     import = generate_import
     import.settings = {
@@ -175,6 +188,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     assert_equal 1, fourth.project_id
   end
 
+  # @rbs () -> bool
   def test_imports_custom_field_with_user_format
     cf = TimeEntryCustomField.create! name: 'User Field', field_format: 'user'
     import = generate_import
@@ -204,6 +218,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
 
   protected
 
+  # @rbs (?String) -> TimeEntryImport
   def generate_import(fixture_name='import_time_entries.csv')
     import = TimeEntryImport.new
     import.user_id = 2
@@ -212,6 +227,7 @@ class TimeEntryImportTest < ActiveSupport::TestCase
     import
   end
 
+  # @rbs (?String) -> TimeEntryImport
   def generate_import_with_mapping(fixture_name='import_time_entries.csv')
     import = generate_import(fixture_name)
 

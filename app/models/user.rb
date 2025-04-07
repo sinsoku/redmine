@@ -157,11 +157,13 @@ class User < Principal
     end
   end)
 
+  # @rbs () -> bool
   def set_mail_notification
     self.mail_notification = Setting.default_notification_option if self.mail_notification.blank?
     true
   end
 
+  # @rbs () -> Time?
   def update_hashed_password
     # update hashed_password if password was set
     if self.password && self.auth_source_id.blank?
@@ -170,6 +172,7 @@ class User < Principal
   end
 
   alias :base_reload :reload
+  # @rbs (*nil) -> User
   def reload(*args)
     @name = nil
     @roles = nil
@@ -184,10 +187,12 @@ class User < Principal
     base_reload(*args)
   end
 
+  # @rbs () -> String?
   def mail
     email_address.try(:address)
   end
 
+  # @rbs (String) -> String
   def mail=(arg)
     email = email_address || build_email_address
     email.address = arg
@@ -197,12 +202,14 @@ class User < Principal
     email_address.try(:address_changed?)
   end
 
+  # @rbs () -> Array[untyped]
   def mails
     email_addresses.pluck(:address)
   end
 
   # Returns the user that matches provided login and password, or nil
   # AuthSource errors are caught, logged and nil is returned.
+  # @rbs (String, String, ?bool) -> User?
   def self.try_to_login(login, password, active_only=true)
     try_to_login!(login, password, active_only)
   rescue AuthSourceException => e
@@ -212,6 +219,7 @@ class User < Principal
 
   # Returns the user that matches provided login and password, or nil
   # AuthSource errors are passed through.
+  # @rbs (String, String, ?bool) -> User?
   def self.try_to_login!(login, password, active_only=true)
     login = login.to_s.strip
     password = password.to_s
@@ -242,6 +250,7 @@ class User < Principal
   end
 
   # Returns the user who matches the given autologin +key+ or nil
+  # @rbs (String) -> User
   def self.try_to_autologin(key)
     user = Token.find_active_user('autologin', key, Setting.autologin.to_i)
     if user
@@ -250,6 +259,7 @@ class User < Principal
     end
   end
 
+  # @rbs (?Symbol?) -> Hash[untyped, untyped]
   def self.name_formatter(formatter = nil)
     USER_FORMATS[formatter || Setting.user_format] || USER_FORMATS[:firstname_lastname]
   end
@@ -260,12 +270,14 @@ class User < Principal
   #
   #   User.fields_for_order_statement              => ['users.login', 'users.id']
   #   User.fields_for_order_statement('authors')   => ['authors.login', 'authors.id']
+  # @rbs (?String?) -> Array[untyped]
   def self.fields_for_order_statement(table=nil)
     table ||= table_name
     name_formatter[:order].map {|field| "#{table}.#{field}"}
   end
 
   # Return user's full name for display
+  # @rbs (?Symbol?) -> String
   def name(formatter = nil)
     f = self.class.name_formatter(formatter)
     if formatter
@@ -275,18 +287,22 @@ class User < Principal
     end
   end
 
+  # @rbs () -> bool
   def registered?
     self.status == STATUS_REGISTERED
   end
 
+  # @rbs () -> bool
   def locked?
     self.status == STATUS_LOCKED
   end
 
+  # @rbs () -> void
   def activate
     self.status = STATUS_ACTIVE
   end
 
+  # @rbs () -> void
   def register
     self.status = STATUS_REGISTERED
   end
@@ -295,18 +311,22 @@ class User < Principal
     self.status = STATUS_LOCKED
   end
 
+  # @rbs () -> bool
   def activate!
     update_attribute(:status, STATUS_ACTIVE)
   end
 
+  # @rbs () -> bool
   def register!
     update_attribute(:status, STATUS_REGISTERED)
   end
 
+  # @rbs () -> bool
   def lock!
     update_attribute(:status, STATUS_LOCKED)
   end
 
+  # @rbs () -> bool?
   def update_last_login_on!
     return if last_login_on.present? && last_login_on >= 1.minute.ago
 
@@ -314,6 +334,7 @@ class User < Principal
   end
 
   # Returns true if +clear_password+ is the correct user's password, otherwise false
+  # @rbs (String) -> bool?
   def check_password?(clear_password)
     if auth_source_id.present?
       auth_source.authenticate(self.login, clear_password)
@@ -324,6 +345,7 @@ class User < Principal
 
   # Generates a random salt and computes hashed_password for +clear_password+
   # The hashed password is stored in the following form: SHA1(salt + SHA1(password))
+  # @rbs (String) -> Time
   def salt_password(clear_password)
     self.salt = User.generate_salt
     self.hashed_password = User.hash_password("#{salt}#{User.hash_password clear_password}")
@@ -331,11 +353,13 @@ class User < Principal
   end
 
   # Does the backend storage allow this user to change their password?
+  # @rbs () -> bool
   def change_password_allowed?
     auth_source.nil? ? true : auth_source.allow_password_changes?
   end
 
   # Returns true if the user password has expired
+  # @rbs () -> bool
   def password_expired?
     period = Setting.password_max_age.to_i
     if period.zero?
@@ -346,15 +370,18 @@ class User < Principal
     end
   end
 
+  # @rbs () -> bool
   def must_change_password?
     (must_change_passwd? || password_expired?) && change_password_allowed?
   end
 
+  # @rbs () -> bool?
   def generate_password?
     ActiveRecord::Type::Boolean.new.deserialize(generate_password)
   end
 
   # Generate and set a random password on given length
+  # @rbs (?Integer) -> User
   def random_password(length=40)
     chars_list = [('A'..'Z').to_a, ('a'..'z').to_a, ('0'..'9').to_a]
     # auto-generated passwords contain special characters only when admins
@@ -377,10 +404,12 @@ class User < Principal
     self
   end
 
+  # @rbs () -> bool
   def twofa_active?
     twofa_scheme.present?
   end
 
+  # @rbs () -> bool?
   def must_activate_twofa?
     return false if twofa_active?
 
@@ -389,18 +418,22 @@ class User < Principal
     return true if Setting.twofa_optional? && groups.any?(&:twofa_required?)
   end
 
+  # @rbs () -> UserPreference
   def pref
     self.preference ||= UserPreference.new(:user => self)
   end
 
+  # @rbs () -> ActiveSupport::TimeZone?
   def time_zone
     @time_zone ||= (self.pref.time_zone.blank? ? nil : ActiveSupport::TimeZone[self.pref.time_zone])
   end
 
+  # @rbs () -> bool
   def force_default_language?
     Setting.force_default_language_for_loggedin?
   end
 
+  # @rbs () -> String?
   def language
     if force_default_language?
       Setting.default_language
@@ -409,11 +442,13 @@ class User < Principal
     end
   end
 
+  # @rbs () -> bool
   def wants_comments_in_reverse_order?
     self.pref[:comments_sorting] == 'desc'
   end
 
   # Return user's ATOM key (a 40 chars long string), used to access feeds
+  # @rbs () -> String
   def atom_key
     if atom_token.nil?
       create_atom_token(:action => 'feeds')
@@ -422,6 +457,7 @@ class User < Principal
   end
 
   # Return user's API key (a 40 chars long string), used to access the API
+  # @rbs () -> String
   def api_key
     if api_token.nil?
       create_api_token(:action => 'api')
@@ -430,34 +466,41 @@ class User < Principal
   end
 
   # Generates a new session token and returns its value
+  # @rbs () -> String
   def generate_session_token
     token = Token.create!(:user_id => id, :action => 'session')
     token.value
   end
 
+  # @rbs (String?) -> void
   def delete_session_token(value)
     Token.where(:user_id => id, :action => 'session', :value => value).delete_all
   end
 
   # Generates a new autologin token and returns its value
+  # @rbs () -> String
   def generate_autologin_token
     token = Token.create!(:user_id => id, :action => 'autologin')
     token.value
   end
 
+  # @rbs (String) -> Integer
   def delete_autologin_token(value)
     Token.where(:user_id => id, :action => 'autologin', :value => value).delete_all
   end
 
+  # @rbs () -> String
   def twofa_totp_key
     read_ciphered_attribute(:twofa_totp_key)
   end
 
+  # @rbs (String) -> String
   def twofa_totp_key=(key)
     write_ciphered_attribute(:twofa_totp_key, key)
   end
 
   # Returns true if token is a valid session token for the user whose id is user_id
+  # @rbs (Integer, String?) -> bool
   def self.verify_session_token(user_id, token)
     return false if user_id.blank? || token.blank?
 
@@ -479,16 +522,19 @@ class User < Principal
   end
 
   # Return an array of project ids for which the user has explicitly turned mail notifications on
+  # @rbs () -> Array[untyped]
   def notified_projects_ids
     @notified_projects_ids ||= memberships.select {|m| m.mail_notification?}.collect(&:project_id)
   end
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def notified_project_ids=(ids)
     @notified_projects_ids_changed = true
     @notified_projects_ids = ids.map(&:to_i).uniq.select {|n| n > 0}
   end
 
   # Updates per project notifications (after_save callback)
+  # @rbs () -> Integer?
   def update_notified_project_ids
     if @notified_projects_ids_changed
       ids = (mail_notification == 'selected' ? Array.wrap(notified_projects_ids).reject(&:blank?) : [])
@@ -498,11 +544,13 @@ class User < Principal
   end
   private :update_notified_project_ids
 
+  # @rbs (?User?) -> Array[untyped]
   def valid_notification_options
     self.class.valid_notification_options(self)
   end
 
   # Only users that belong to more than 1 project can select projects for which they are notified
+  # @rbs (?User?) -> Array[untyped]
   def self.valid_notification_options(user=nil)
     # Note that @user.membership.size would fail since AR ignores
     # :include association option when doing a count
@@ -515,6 +563,7 @@ class User < Principal
 
   # Find a user account by matching the exact login and then a case-insensitive
   # version.  Exact matches will be given priority.
+  # @rbs (String) -> User?
   def self.find_by_login(login)
     login = Redmine::CodesetUtil.replace_invalid_utf8(login.to_s)
     if login.present?
@@ -528,24 +577,29 @@ class User < Principal
     end
   end
 
+  # @rbs (String) -> User?
   def self.find_by_atom_key(key)
     Token.find_active_user('feeds', key)
   end
 
+  # @rbs (String) -> User?
   def self.find_by_api_key(key)
     Token.find_active_user('api', key)
   end
 
   # Makes find_by_mail case-insensitive
+  # @rbs (String) -> User?
   def self.find_by_mail(mail)
     having_mail(mail).first
   end
 
   # Returns true if the default admin account can no longer be used
+  # @rbs () -> bool
   def self.default_admin_account_changed?
     !User.active.find_by_login("admin").try(:check_password?, "admin")
   end
 
+  # @rbs () -> String
   def to_s
     name
   end
@@ -557,11 +611,13 @@ class User < Principal
     STATUS_LOCKED     => 'locked'
   }
 
+  # @rbs () -> String
   def css_classes
     "user #{LABEL_BY_STATUS[status]}"
   end
 
   # Returns the current day according to user's time zone
+  # @rbs () -> Date
   def today
     if time_zone.nil?
       Date.today
@@ -571,10 +627,12 @@ class User < Principal
   end
 
   # Returns the day of +time+ according to user's time zone
+  # @rbs (ActiveSupport::TimeWithZone | Time) -> Date
   def time_to_date(time)
     self.convert_time_to_user_timezone(time).to_date
   end
 
+  # @rbs (ActiveSupport::TimeWithZone | Time) -> (Time | ActiveSupport::TimeWithZone)
   def convert_time_to_user_timezone(time)
     if self.time_zone
       time.in_time_zone(self.time_zone)
@@ -583,16 +641,19 @@ class User < Principal
     end
   end
 
+  # @rbs () -> bool
   def logged?
     true
   end
 
+  # @rbs () -> bool
   def anonymous?
     !logged?
   end
 
   # Returns user's membership for the given project
   # or nil if the user is not a member of project
+  # @rbs ((Project | Integer)?) -> Member?
   def membership(project)
     project_id = project.is_a?(Project) ? project.id : project
 
@@ -603,6 +664,7 @@ class User < Principal
     @membership_by_project_id[project_id]
   end
 
+  # @rbs () -> Role::ActiveRecord_Relation
   def roles
     @roles ||=
       Role.joins(members: :project).
@@ -620,11 +682,13 @@ class User < Principal
   end
 
   # Returns the user's bult-in role
+  # @rbs () -> Role
   def builtin_role
     @builtin_role ||= Role.non_member
   end
 
   # Return user's roles for project
+  # @rbs (Project?) -> Array[untyped]
   def roles_for_project(project)
     # No role on archived projects
     return [] if project.nil? || project.archived?
@@ -640,6 +704,7 @@ class User < Principal
 
   # Returns a hash of user's projects grouped by roles
   # TODO: No longer used, should be deprecated
+  # @rbs () -> Hash[untyped, untyped]
   def projects_by_role
     return @projects_by_role if @projects_by_role
 
@@ -653,6 +718,7 @@ class User < Principal
   # Returns a hash of project ids grouped by roles.
   # Includes the projects that the user is a member of and the projects
   # that grant custom permissions to the builtin groups.
+  # @rbs () -> Hash[untyped, untyped]
   def project_ids_by_role
     # Clear project condition for when called from chained scopes
     # eg. project.children.visible(user)
@@ -691,11 +757,13 @@ class User < Principal
   end
 
   # Returns the ids of visible projects
+  # @rbs () -> Array[untyped]
   def visible_project_ids
     @visible_project_ids ||= Project.visible(self).pluck(:id)
   end
 
   # Returns the roles that the user is allowed to manage for the given project
+  # @rbs (Project) -> (Array[untyped] | Role::ActiveRecord_Associations_CollectionProxy)
   def managed_roles(project)
     if admin?
       @managed_roles ||= Role.givable.to_a
@@ -705,6 +773,7 @@ class User < Principal
   end
 
   # Returns true if user is arg or belongs to arg
+  # @rbs ((Group | User)?) -> bool
   def is_or_belongs_to?(arg)
     if arg.is_a?(User)
       self == arg
@@ -724,6 +793,7 @@ class User < Principal
   # * an array of projects : returns true if user is allowed on every project
   # * nil with options[:global] set : check if user has at least one role allowed for this action,
   #   or falls back to Non Member / Anonymous permissions depending if the user is logged
+  # @rbs (Symbol | Hash[untyped, untyped], (Project | Array[untyped])?, ?Hash[untyped, untyped]) -> bool
   def allowed_to?(action, context, options={}, &block)
     if context && context.is_a?(Project)
       return false unless context.allows_to?(action)
@@ -768,10 +838,12 @@ class User < Principal
   # NB: this method is not used anywhere in the core codebase as of
   # 2.5.2, but it's used by many plugins so if we ever want to remove
   # it it has to be carefully deprecated for a version or two.
+  # @rbs (Symbol, ?Hash[untyped, untyped]) -> bool
   def allowed_to_globally?(action, options={}, &)
     allowed_to?(action, nil, options.reverse_merge(:global => true), &)
   end
 
+  # @rbs (Project) -> bool
   def allowed_to_view_all_time_entries?(context)
     allowed_to?(:view_time_entries, context) do |role, user|
       role.time_entries_visibility == 'all'
@@ -779,6 +851,7 @@ class User < Principal
   end
 
   # Returns true if the user is allowed to delete the user's own account
+  # @rbs () -> bool
   def own_account_deletable?
     Setting.unsubscribe? &&
       (!admin? || User.active.admin.where("id <> ?", id).exists?)
@@ -812,6 +885,7 @@ class User < Principal
   # event.
   #
   # TODO: only supports Issue events currently
+  # @rbs (Issue | News) -> bool
   def notify_about?(object)
     if mail_notification == 'all'
       true
@@ -836,6 +910,7 @@ class User < Principal
     end
   end
 
+  # @rbs () -> bool
   def notify_about_high_priority_issues?
     self.pref.notify_about_high_priority_issues
   end
@@ -844,16 +919,19 @@ class User < Principal
     attribute :user
   end
 
+  # @rbs ((User | AnonymousUser)?) -> (User | AnonymousUser)?
   def self.current=(user)
     CurrentUser.user = user
   end
 
+  # @rbs () -> (AnonymousUser | User)
   def self.current
     CurrentUser.user ||= User.anonymous
   end
 
   # Returns the anonymous user.  If the anonymous user does not exist, it is created.  There can be only
   # one anonymous user per database.
+  # @rbs () -> AnonymousUser
   def self.anonymous
     anonymous_user = AnonymousUser.unscoped.find_by(:lastname => 'Anonymous')
     if anonymous_user.nil?
@@ -866,6 +944,7 @@ class User < Principal
   # Salts all existing unsalted passwords
   # It changes password storage scheme from SHA1(password) to SHA1(salt + SHA1(password))
   # This method is used in the SaltPasswords migration and is to be kept as is
+  # @rbs () -> void
   def self.salt_unsalted_passwords!
     transaction do
       User.where("salt IS NULL OR salt = ''").find_each do |user|
@@ -878,6 +957,7 @@ class User < Principal
     end
   end
 
+  # @rbs () -> Array[untyped]
   def bookmarked_project_ids
     project_ids = []
     bookmarked_project_ids = self.pref[:bookmarked_project_ids]
@@ -885,12 +965,14 @@ class User < Principal
     project_ids.map(&:to_i)
   end
 
+  # @rbs (?Integer) -> Array[untyped]
   def self.prune(age=30.days)
     User.where("created_on < ? AND status = ?", Time.now - age, STATUS_REGISTERED).destroy_all
   end
 
   protected
 
+  # @rbs () -> ActiveModel::Error?
   def validate_password_length
     return if password.blank? && generate_password?
 
@@ -900,6 +982,7 @@ class User < Principal
     end
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_password_complexity
     return if password.blank? && generate_password?
     return if password.nil?
@@ -910,12 +993,14 @@ class User < Principal
     errors.add(:password, :too_simple) if bad_passwords.any? {|p| password.casecmp?(p)}
   end
 
+  # @rbs () -> EmailAddress
   def instantiate_email_address
     email_address || build_email_address
   end
 
   private
 
+  # @rbs () -> User?
   def generate_password_if_needed
     if generate_password? && auth_source.nil?
       length = [Setting.password_min_length.to_i + 2, 10].max
@@ -927,6 +1012,7 @@ class User < Principal
   # Delete the autologin tokens on password change to prohibit session leakage.
   # This helps to keep the account secure in case the associated email account
   # was compromised.
+  # @rbs () -> Integer?
   def destroy_tokens
     if saved_change_to_hashed_password? || (saved_change_to_status? && !active?) || (saved_change_to_twofa_scheme? && twofa_scheme.present?)
       tokens = ['recovery', 'autologin', 'session']
@@ -936,6 +1022,7 @@ class User < Principal
 
   # Removes references that are not handled by associations
   # Things that are not deleted are reassociated with the anonymous user
+  # @rbs () -> Integer?
   def remove_references_before_destroy
     return if self.id.nil?
 
@@ -971,17 +1058,20 @@ class User < Principal
   # Singleton class method is public
   class << self
     # Return password digest
+    # @rbs (String) -> String
     def hash_password(clear_password)
       Digest::SHA1.hexdigest(clear_password || "")
     end
 
     # Returns a 128bits random salt as a hex string (32 chars long)
+    # @rbs () -> String
     def generate_salt
       Redmine::Utils.random_hex(16)
     end
   end
 
   # Send a security notification to all admins if the user has gained/lost admin privileges
+  # @rbs () -> Array[untyped]?
   def deliver_security_notification
     options = {
       field: :field_admin,

@@ -22,6 +22,7 @@ require_relative '../../../test_helper'
 class PaginationHelperTest < ActionView::TestCase
   include Redmine::Pagination::Helper
 
+  # @rbs () -> bool
   def test_per_page_options_should_return_usefull_values
     with_settings :per_page_options => '10, 25, 50, 100' do
       assert_equal [], per_page_options(10, 3)

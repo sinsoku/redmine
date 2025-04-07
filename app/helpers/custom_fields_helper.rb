@@ -41,15 +41,18 @@ module CustomFieldsHelper
      :label => DocumentCategory::OptionName}
   ]
 
+  # @rbs (Array[untyped]) -> ActiveSupport::SafeBuffer
   def render_custom_fields_tabs(types)
     tabs = CUSTOM_FIELDS_TABS.select {|h| types.include?(h[:name])}
     render_tabs tabs
   end
 
+  # @rbs () -> Array[untyped]
   def custom_field_type_options
     CUSTOM_FIELDS_TABS.map {|h| [l(h[:label]), h[:name]]}
   end
 
+  # @rbs ((GroupCustomField | TimeEntryCustomField | IssueCustomField | VersionCustomField | ProjectCustomField | DocumentCategoryCustomField | DocumentCustomField | IssuePriorityCustomField | TimeEntryActivityCustomField | UserCustomField)?) -> ActiveSupport::SafeBuffer
   def custom_field_title(custom_field)
     items = []
     items << [l(:label_custom_field_plural), custom_fields_path]
@@ -59,6 +62,7 @@ module CustomFieldsHelper
     title(*items)
   end
 
+  # @rbs (Redmine::Views::LabelledFormBuilder, TimeEntryCustomField | IssueCustomField | VersionCustomField | ProjectCustomField | DocumentCategoryCustomField | DocumentCustomField | GroupCustomField | IssuePriorityCustomField | TimeEntryActivityCustomField | UserCustomField) -> ActiveSupport::SafeBuffer?
   def render_custom_field_format_partial(form, custom_field)
     partial = custom_field.format.form_partial
     if partial
@@ -66,17 +70,20 @@ module CustomFieldsHelper
     end
   end
 
+  # @rbs (Symbol | String, IssueCustomField | TimeEntryCustomField | UserCustomField | VersionCustomField | ProjectCustomField | TimeEntryActivityCustomField | CustomField) -> String
   def custom_field_tag_name(prefix, custom_field)
     name = "#{prefix}[custom_field_values][#{custom_field.id}]"
     name += "[]" if custom_field.multiple?
     name
   end
 
+  # @rbs (Symbol | String, IssueCustomField | TimeEntryCustomField | UserCustomField | VersionCustomField | ProjectCustomField | TimeEntryActivityCustomField | CustomField) -> String
   def custom_field_tag_id(prefix, custom_field)
     "#{prefix}_custom_field_values_#{custom_field.id}"
   end
 
   # Return custom field html tag corresponding to its format
+  # @rbs (Symbol | String, CustomFieldValue | CustomValue) -> ActiveSupport::SafeBuffer
   def custom_field_tag(prefix, custom_value)
     cf = custom_value.custom_field
     css = cf.css_classes
@@ -100,6 +107,7 @@ module CustomFieldsHelper
   end
 
   # Return custom field name tag
+  # @rbs (IssueCustomField | TimeEntryCustomField | UserCustomField | VersionCustomField | ProjectCustomField | CustomField) -> ActiveSupport::SafeBuffer
   def custom_field_name_tag(custom_field)
     title = custom_field.description.presence
     css = title ? "field-description" : nil
@@ -107,6 +115,7 @@ module CustomFieldsHelper
   end
 
   # Return custom field label tag
+  # @rbs (Symbol | String, CustomFieldValue | CustomValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def custom_field_label_tag(name, custom_value, options={})
     required = options[:required] || custom_value.custom_field.is_required?
     for_tag_id = options.fetch(:for_tag_id, "#{name}_custom_field_values_#{custom_value.custom_field.id}")
@@ -119,6 +128,7 @@ module CustomFieldsHelper
   end
 
   # Return custom field tag with its label tag
+  # @rbs (Symbol | String, CustomFieldValue | CustomValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def custom_field_tag_with_label(name, custom_value, options={})
     tag = custom_field_tag(name, custom_value)
     tag_id = nil
@@ -130,6 +140,7 @@ module CustomFieldsHelper
   end
 
   # Returns the custom field tag for when bulk editing objects
+  # @rbs (String, TimeEntryCustomField | CustomField | IssueCustomField, ?Array[untyped]?, ?String?) -> ActiveSupport::SafeBuffer
   def custom_field_tag_for_bulk_edit(prefix, custom_field, objects=nil, value='')
     css =  custom_field.css_classes
     data = nil
@@ -151,6 +162,7 @@ module CustomFieldsHelper
   end
 
   # Returns custom field value tag
+  # @rbs (CustomFieldValue) -> (String | ActiveSupport::SafeBuffer)?
   def custom_field_value_tag(value)
     attr_value = show_value(value)
 
@@ -162,22 +174,26 @@ module CustomFieldsHelper
   end
 
   # Return a string used to display a custom value
+  # @rbs (CustomFieldValue?, ?bool) -> (String | ActiveSupport::SafeBuffer)?
   def show_value(custom_value, html=true)
     format_object(custom_value, html: html)
   end
 
   # Return a string used to display a custom value
+  # @rbs (String | Array[untyped], IssueCustomField | TimeEntryActivityCustomField | ProjectCustomField | TimeEntryCustomField | CustomField) -> (String | ActiveSupport::SafeBuffer)
   def format_value(value, custom_field)
     format_object(custom_field.format.formatted_value(self, custom_field, value, false), html: false)
   end
 
   # Return an array of custom field formats which can be used in select_tag
+  # @rbs (TimeEntryCustomField | IssueCustomField | VersionCustomField | ProjectCustomField | DocumentCategoryCustomField | DocumentCustomField | GroupCustomField | IssuePriorityCustomField | TimeEntryActivityCustomField | UserCustomField) -> Array[untyped]
   def custom_field_formats_for_select(custom_field)
     Redmine::FieldFormat.as_select(custom_field.class.customized_class.name)
   end
 
   # Yields the given block for each custom field value of object that should be
   # displayed, with the custom field and the formatted value as arguments
+  # @rbs (Project | Group | Version) -> Array[untyped]
   def render_custom_field_values(object, &)
     object.visible_custom_field_values.each do |custom_value|
       formatted = show_value(custom_value)
@@ -188,6 +204,7 @@ module CustomFieldsHelper
   end
 
   # Renders the custom_values in api views
+  # @rbs (Array[untyped], Redmine::Views::Builders::Xml | Redmine::Views::Builders::Json) -> (Hash[untyped, untyped] | String)?
   def render_api_custom_values(custom_values, api)
     api.array :custom_fields do
       custom_values.each do |custom_value|
@@ -208,6 +225,7 @@ module CustomFieldsHelper
     end unless custom_values.empty?
   end
 
+  # @rbs (Redmine::Views::LabelledFormBuilder, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def edit_tag_style_tag(form, options={})
     select_options = [[l(:label_drop_down_list), ''], [l(:label_checkboxes), 'check_box']]
     if options[:include_radio]
@@ -216,6 +234,7 @@ module CustomFieldsHelper
     form.select :edit_tag_style, select_options, :label => :label_display
   end
 
+  # @rbs (String?) -> ActiveSupport::SafeBuffer
   def select_type_radio_buttons(default_type)
     if CUSTOM_FIELDS_TABS.none? {|tab| tab[:name] == default_type}
       default_type = 'IssueCustomField'

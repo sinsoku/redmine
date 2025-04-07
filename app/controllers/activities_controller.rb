@@ -22,6 +22,7 @@ class ActivitiesController < ApplicationController
   before_action :find_optional_project_by_id, :authorize_global
   accept_atom_auth :index
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | bool)?
   def index
     @days = Setting.activity_days_default.to_i
 

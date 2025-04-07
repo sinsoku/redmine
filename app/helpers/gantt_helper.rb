@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module GanttHelper
+  # @rbs (Redmine::Helpers::Gantt, Symbol) -> ActiveSupport::SafeBuffer
   def gantt_zoom_link(gantt, in_or_out)
     case in_or_out
     when :in

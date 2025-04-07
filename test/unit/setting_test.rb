@@ -20,15 +20,18 @@
 require_relative '../test_helper'
 
 class SettingTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def teardown
     Setting.delete_all
     Setting.clear_cache
   end
 
+  # @rbs () -> bool
   def test_read_default
     Setting.delete_all
     Setting.clear_cache
@@ -38,6 +41,7 @@ class SettingTest < ActiveSupport::TestCase
     assert !Setting.login_required?
   end
 
+  # @rbs () -> bool
   def test_update
     Setting.app_title = "My title"
     assert_equal "My title", Setting.app_title
@@ -50,6 +54,7 @@ class SettingTest < ActiveSupport::TestCase
     assert_equal "My other title", Setting.find_by_name('app_title').value
   end
 
+  # @rbs () -> bool
   def test_setting_with_int_format_should_accept_numeric_only
     with_settings :session_timeout => 30 do
       Setting.session_timeout = 'foo'
@@ -59,17 +64,20 @@ class SettingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_setting_with_invalid_name_should_be_valid
     setting = Setting.new(:name => "does_not_exist", :value => "should_not_be_allowed")
     assert !setting.save
   end
 
+  # @rbs () -> bool
   def test_serialized_setting
     Setting.notified_events = ['issue_added', 'issue_updated', 'news_added']
     assert_equal ['issue_added', 'issue_updated', 'news_added'], Setting.notified_events
     assert_equal ['issue_added', 'issue_updated', 'news_added'], Setting.find_by_name('notified_events').value
   end
 
+  # @rbs () -> bool
   def test_setting_should_be_reloaded_after_clear_cache
     Setting.app_title = "My title"
     assert_equal "My title", Setting.app_title
@@ -83,6 +91,7 @@ class SettingTest < ActiveSupport::TestCase
     assert_equal "New title", Setting.app_title
   end
 
+  # @rbs () -> bool
   def test_per_page_options_array_should_be_an_empty_array_when_setting_is_blank
     with_settings :per_page_options => nil do
       assert_equal [], Setting.per_page_options_array
@@ -93,24 +102,28 @@ class SettingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_per_page_options_array_should_be_an_array_of_integers
     with_settings :per_page_options => '10, 25, 50' do
       assert_equal [10, 25, 50], Setting.per_page_options_array
     end
   end
 
+  # @rbs () -> bool
   def test_per_page_options_array_should_omit_non_numerial_values
     with_settings :per_page_options => 'a, 25, 50' do
       assert_equal [25, 50], Setting.per_page_options_array
     end
   end
 
+  # @rbs () -> bool
   def test_per_page_options_array_should_be_sorted
     with_settings :per_page_options => '25, 10, 50' do
       assert_equal [10, 25, 50], Setting.per_page_options_array
     end
   end
 
+  # @rbs () -> bool
   def test_setting_serialied_as_binary_should_be_loaded_as_utf8_encoded_strings
     yaml = <<~YAML
       ---
@@ -130,6 +143,7 @@ class SettingTest < ActiveSupport::TestCase
     Setting.clear_cache
   end
 
+  # @rbs () -> Array[untyped]
   def test_mail_from_format_should_be_validated
     with_locale 'en' do
       ['[Redmine app] <redmine@example.net>', 'redmine'].each do |invalid_mail_from|
@@ -144,6 +158,7 @@ class SettingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_default_text_formatting_for_new_installations_is_common_mark
     assert_equal 'common_mark', Setting.text_formatting
   end

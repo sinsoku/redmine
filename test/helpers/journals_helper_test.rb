@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class JournalsHelperTest < Redmine::HelperTest
   include JournalsHelper
 
+  # @rbs () -> bool
   def test_journal_thumbnail_attachments_should_return_thumbnailable_attachments
     skip unless convert_installed?
     set_tmp_attachments_directory
@@ -41,6 +42,7 @@ class JournalsHelperTest < Redmine::HelperTest
     assert_equal 'image.png', thumbnails.first.filename
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_render_journal_actions_should_return_edit_link_and_actions_dropdown
     User.current = User.find(1)
     issue = Issue.find(1)
@@ -53,6 +55,7 @@ class JournalsHelperTest < Redmine::HelperTest
     assert_select_in journal_actions, 'div[class="drdn-items"] a[class="icon icon-copy-link"]'
   end
 
+  # @rbs () -> bool
   def test_journal_thumbnail_attachments_should_be_in_the_same_order_as_the_journal_details
     skip unless convert_installed?
     set_tmp_attachments_directory

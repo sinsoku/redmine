@@ -20,16 +20,19 @@
 require_relative '../test_helper'
 
 class MembersControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 2
   end
 
+  # @rbs () -> bool
   def test_new
     get(:new, :params => {:project_id => 1})
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_propose_managed_roles_only
     role = Role.find(1)
     role.update! :all_roles_managed => false
@@ -44,12 +47,14 @@ class MembersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_xhr_new
     get(:new, :params => {:project_id => 1}, :xhr => true)
     assert_response :success
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'Member.count' do
       post(
@@ -67,6 +72,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert User.find(7).member_of?(Project.find(1))
   end
 
+  # @rbs () -> bool
   def test_create_multiple
     assert_difference 'Member.count', 3 do
       post(
@@ -84,6 +90,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert User.find(7).member_of?(Project.find(1))
   end
 
+  # @rbs () -> bool
   def test_create_should_ignore_unmanaged_roles
     role = Role.find(1)
     role.update! :all_roles_managed => false
@@ -105,6 +112,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_equal [2], member.role_ids
   end
 
+  # @rbs () -> bool
   def test_create_should_be_allowed_for_admin_without_role
     User.find(1).members.delete_all
     @request.session[:user_id] = 1
@@ -125,6 +133,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_equal [1, 2], member.role_ids
   end
 
+  # @rbs () -> bool
   def test_xhr_create
     assert_difference 'Member.count', 3 do
       post(
@@ -147,6 +156,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_include 'tab-content-members', response.body
   end
 
+  # @rbs () -> MatchData
   def test_xhr_create_with_failure
     assert_no_difference 'Member.count' do
       post(
@@ -166,17 +176,20 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_match /alert/, response.body, "Alert message not sent"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     get(:edit, :params => {:id => 2})
     assert_response :success
     assert_select 'input[name=?][value=?][checked=checked]', 'membership[role_ids][]', '2'
   end
 
+  # @rbs () -> bool
   def test_xhr_edit
     get(:edit, :params => {:id => 2}, :xhr => true)
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_update
     assert_no_difference 'Member.count' do
       put(
@@ -193,6 +206,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_redirected_to '/projects/ecookbook/settings/members'
   end
 
+  # @rbs () -> bool
   def test_update_locked_member_should_be_allowed
     User.find(3).lock!
 
@@ -211,6 +225,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_equal [1], member.role_ids
   end
 
+  # @rbs () -> bool
   def test_update_should_not_add_unmanaged_roles
     role = Role.find(1)
     role.update! :all_roles_managed => false
@@ -229,6 +244,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_equal [2, 3], member.reload.role_ids.sort
   end
 
+  # @rbs () -> bool
   def test_update_should_not_remove_unmanaged_roles
     role = Role.find(1)
     role.update! :all_roles_managed => false
@@ -247,6 +263,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_equal [1, 2], member.reload.role_ids.sort
   end
 
+  # @rbs () -> bool
   def test_xhr_update
     assert_no_difference 'Member.count' do
       put(
@@ -269,6 +286,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_include 'tab-content-members', response.body
   end
 
+  # @rbs () -> bool
   def test_destroy
     assert_difference 'Member.count', -1 do
       delete(:destroy, :params => {:id => 2})
@@ -277,6 +295,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert !User.find(3).member_of?(Project.find(1))
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_destroy_locked_member_should_be_allowed
     assert User.find(3).lock!
 
@@ -285,6 +304,7 @@ class MembersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_destroy_should_fail_with_unmanaged_roles
     role = Role.find(1)
     role.update! :all_roles_managed => false
@@ -296,6 +316,7 @@ class MembersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_destroy_should_succeed_with_managed_roles_only
     role = Role.find(1)
     role.update! :all_roles_managed => false
@@ -307,6 +328,7 @@ class MembersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_xhr_destroy
     assert_difference 'Member.count', -1 do
       delete(:destroy, :params => {:id => 2}, :xhr => true)
@@ -317,6 +339,7 @@ class MembersControllerTest < Redmine::ControllerTest
     assert_include 'tab-content-members', response.body
   end
 
+  # @rbs () -> bool
   def test_autocomplete
     get(
       :autocomplete,

@@ -27,13 +27,16 @@ class AuthSourcesController < ApplicationController
   before_action :find_auth_source, :only => [:edit, :update, :test_connection, :destroy]
   require_sudo_mode :update, :destroy
 
+  # @rbs () -> Array[untyped]
   def index
     @auth_source_pages, @auth_sources = paginate AuthSource, :per_page => 25
   end
 
+  # @rbs () -> nil
   def new
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def create
     if @auth_source.save
       flash[:notice] = l(:notice_successful_create)
@@ -43,9 +46,11 @@ class AuthSourcesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def update
     @auth_source.safe_attributes = params[:auth_source]
     if @auth_source.save
@@ -56,6 +61,7 @@ class AuthSourcesController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def test_connection
     begin
       @auth_source.test_connection
@@ -66,6 +72,7 @@ class AuthSourcesController < ApplicationController
     redirect_to auth_sources_path
   end
 
+  # @rbs () -> String
   def destroy
     unless @auth_source.users.exists?
       @auth_source.destroy
@@ -76,6 +83,7 @@ class AuthSourcesController < ApplicationController
     redirect_to auth_sources_path
   end
 
+  # @rbs () -> String
   def autocomplete_for_new_user
     results = AuthSource.search(params[:term])
     json = results.map do |result|
@@ -94,6 +102,7 @@ class AuthSourcesController < ApplicationController
 
   private
 
+  # @rbs () -> (ActionController::Parameters | bool)?
   def build_new_auth_source
     @auth_source = AuthSource.new_subclass_instance(params[:type] || 'AuthSourceLdap')
     if @auth_source
@@ -103,6 +112,7 @@ class AuthSourcesController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | AuthSourceLdap)
   def find_auth_source
     @auth_source = AuthSource.find(params[:id])
   rescue ActiveRecord::RecordNotFound

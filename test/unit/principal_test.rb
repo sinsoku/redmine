@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class PrincipalTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_active_scope_should_return_groups_and_active_users
     result = Principal.active.to_a
     assert_include Group.first, result
@@ -32,11 +34,13 @@ class PrincipalTest < ActiveSupport::TestCase
     assert_nil result.detect {|p| p.is_a?(AnonymousUser)}
   end
 
+  # @rbs () -> bool
   def test_visible_scope_for_admin_should_return_all_principals
     admin = User.generate! {|u| u.admin = true}
     assert_equal Principal.count, Principal.visible(admin).count
   end
 
+  # @rbs () -> bool
   def test_visible_scope_for_user_with_members_of_visible_projects_visibility_should_return_active_principals
     Role.non_member.update! :users_visibility => 'all'
     user = User.generate!
@@ -45,6 +49,7 @@ class PrincipalTest < ActiveSupport::TestCase
     assert_equal expected.map(&:id).sort, Principal.visible(user).pluck(:id).sort
   end
 
+  # @rbs () -> bool
   def test_visible_scope_for_user_with_members_of_visible_projects_visibility_should_return_members_of_visible_projects_and_self
     Role.non_member.update! :users_visibility => 'members_of_visible_projects'
     user = User.generate!
@@ -53,6 +58,7 @@ class PrincipalTest < ActiveSupport::TestCase
     assert_equal expected.map(&:id).sort, Principal.visible(user).pluck(:id).sort
   end
 
+  # @rbs () -> bool
   def test_member_of_scope_should_return_the_union_of_all_active_and_locked_members
     projects = Project.find([1])
     assert_equal [3, 5, 2], Principal.member_of(projects).sort.map(&:id)
@@ -60,10 +66,12 @@ class PrincipalTest < ActiveSupport::TestCase
     assert_equal [3, 5, 2, 8, 11], Principal.member_of(projects).sort.map(&:id)
   end
 
+  # @rbs () -> bool
   def test_member_of_scope_should_be_empty_for_no_projects
     assert_equal [], Principal.member_of([]).sort
   end
 
+  # @rbs () -> Array[untyped]
   def test_not_member_of_scope_should_return_users_that_have_no_memberships
     [[1], [1, 2]].each do |ids|
       projects = Project.find(ids)
@@ -73,16 +81,19 @@ class PrincipalTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_not_member_of_scope_should_accept_active_record_relation
     projects = Project.where(id: [1, 2])
     expected = (Principal.all - projects.map(&:memberships).flatten.map(&:principal)).sort
     assert_equal expected, Principal.not_member_of(projects).sort
   end
 
+  # @rbs () -> bool
   def test_not_member_of_scope_should_be_empty_for_no_projects
     assert_equal [], Principal.not_member_of([]).sort
   end
 
+  # @rbs () -> bool
   def test_sorted_scope_should_sort_users_before_groups
     scope = Principal.where(:type => ['User', 'Group'])
     users = scope.select {|p| p.is_a?(User)}.sort
@@ -144,6 +155,7 @@ class PrincipalTest < ActiveSupport::TestCase
     assert_equal user, results.first
   end
 
+  # @rbs () -> bool
   def test_like_scope_with_cyrillic_name
     user = User.generate!(:firstname => 'Соболев', :lastname => 'Денис')
     results = Principal.like('Собо')
@@ -151,6 +163,7 @@ class PrincipalTest < ActiveSupport::TestCase
     assert_equal user, results.first
   end
 
+  # @rbs () -> bool
   def test_like_scope_should_escape_query
     user = User.generate!(:firstname => 'Leonardo', :lastname => 'da Vinci')
     r = Principal.like('Vi_ci')

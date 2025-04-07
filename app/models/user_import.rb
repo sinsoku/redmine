@@ -39,6 +39,7 @@ class UserImport < Import
     'admin'
   end
 
+  # @rbs (User | AnonymousUser) -> bool
   def self.authorized?(user)
     user.admin?
   end
@@ -54,6 +55,7 @@ class UserImport < Import
 
   private
 
+  # @rbs (Array[untyped], ImportItem) -> User
   def build_object(row, item)
     object = User.new
 
@@ -116,6 +118,7 @@ class UserImport < Import
     object
   end
 
+  # @rbs (Array[untyped], ImportItem, User) -> Mailer::DeliveryJob?
   def extend_object(row, item, object)
     Mailer.deliver_account_information(object, object.password) if yes?(settings['notifications'])
   end

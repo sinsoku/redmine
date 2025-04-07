@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingAutoCompletesTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_auto_completes
     should_route 'GET /issues/auto_complete' => 'auto_completes#issues'
   end

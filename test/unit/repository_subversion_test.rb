@@ -24,6 +24,7 @@ class RepositorySubversionTest < ActiveSupport::TestCase
 
   NUM_REV = 16
 
+  # @rbs () -> bool
   def setup
     User.current = nil
     @project = Project.find(3)
@@ -32,6 +33,7 @@ class RepositorySubversionTest < ActiveSupport::TestCase
     assert @repository
   end
 
+  # @rbs () -> Array[untyped]
   def test_invalid_url
     set_language_if_valid 'en'
     ['invalid', 'http://', 'svn://', 'svn+ssh://', 'file://'].each do |url|
@@ -46,6 +48,7 @@ class RepositorySubversionTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_valid_url
     ['http://valid', 'svn://valid', 'svn+ssh://valid', 'file://valid'].each do |url|
       repo =
@@ -60,6 +63,7 @@ class RepositorySubversionTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_url_should_be_validated_against_regexp_set_in_configuration
     Redmine::Configuration.with 'scm_subversion_path_regexp' => 'file:///svnpath/[a-z]+' do
       repo = Repository::Subversion.new(:project => @project, :identifier => 'test')
@@ -76,6 +80,7 @@ class RepositorySubversionTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_url_should_be_validated_against_regexp_set_in_configuration_with_project_identifier
     Redmine::Configuration.with 'scm_subversion_path_regexp' => 'file:///svnpath/%project%(\.[a-z]+)?' do
       repo = Repository::Subversion.new(:project => @project, :identifier => 'test')
@@ -284,6 +289,7 @@ class RepositorySubversionTest < ActiveSupport::TestCase
     end
   else
     puts "Subversion test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

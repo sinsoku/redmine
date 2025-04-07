@@ -50,6 +50,7 @@ class AuthSource < ApplicationRecord
     'filter',
     'timeout')
 
+  # @rbs (String, String) -> nil
   def authenticate(login, password)
   end
 
@@ -60,10 +61,12 @@ class AuthSource < ApplicationRecord
     "Abstract"
   end
 
+  # @rbs () -> String
   def account_password
     read_ciphered_attribute(:account_password)
   end
 
+  # @rbs (String) -> String
   def account_password=(arg)
     write_ciphered_attribute(:account_password, arg)
   end
@@ -72,6 +75,7 @@ class AuthSource < ApplicationRecord
     false
   end
 
+  # @rbs (?User) -> bool
   def visible?(user=User.current)
     user.admin?
   end
@@ -90,16 +94,19 @@ class AuthSource < ApplicationRecord
     results
   end
 
+  # @rbs () -> bool
   def allow_password_changes?
     self.class.allow_password_changes?
   end
 
   # Does this auth source backend allow password changes?
+  # @rbs () -> bool
   def self.allow_password_changes?
     false
   end
 
   # Try to authenticate a user not yet registered against available sources
+  # @rbs (String, String) -> nil
   def self.authenticate(login, password)
     AuthSource.where(:onthefly_register => true).each do |source|
       begin

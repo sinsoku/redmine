@@ -72,6 +72,7 @@ class CustomField < ApplicationRecord
       where(:visible => true)
     end
   end)
+  # @rbs (Project?, ?AnonymousUser | User) -> bool
   def visible_by?(project, user=User.current)
     visible? || user.admin?
   end
@@ -104,6 +105,7 @@ class CustomField < ApplicationRecord
     'thousands_delimiter'
   )
 
+  # @rbs (IssueCustomField | TimeEntryCustomField | ProjectCustomField | VersionCustomField | CustomField, ?Hash[untyped, untyped]) -> (IssueCustomField | CustomField | TimeEntryCustomField | ProjectCustomField | VersionCustomField)
   def copy_from(arg, options={})
     return if arg.blank?
 
@@ -124,10 +126,12 @@ class CustomField < ApplicationRecord
     self
   end
 
+  # @rbs () -> (Redmine::FieldFormat::StringFormat | Redmine::FieldFormat::ListFormat | Redmine::FieldFormat::FloatFormat | Redmine::FieldFormat::DateFormat | Redmine::FieldFormat::EnumerationFormat | Redmine::FieldFormat::UserFormat | Redmine::FieldFormat::BoolFormat | Redmine::FieldFormat::IntFormat | Redmine::FieldFormat::VersionFormat | Redmine::FieldFormat::TextFormat | Redmine::FieldFormat::AttachmentFormat | Redmine::FieldFormat::Base | Redmine::FieldFormat::LinkFormat)
   def format
     @format ||= Redmine::FieldFormat.find(field_format)
   end
 
+  # @rbs (String) -> String?
   def field_format=(arg)
     # cannot change format of a saved custom field
     if new_record?
@@ -136,6 +140,7 @@ class CustomField < ApplicationRecord
     end
   end
 
+  # @rbs () -> bool
   def set_searchable
     # make sure these fields are not searchable
     self.searchable = false unless format.class.searchable_supported
@@ -144,6 +149,7 @@ class CustomField < ApplicationRecord
     true
   end
 
+  # @rbs () -> Array[untyped]?
   def validate_custom_field
     format.validate_custom_field(self).each do |attribute, message|
       errors.add attribute, message
@@ -164,10 +170,12 @@ class CustomField < ApplicationRecord
     end
   end
 
+  # @rbs (CustomValue) -> Array[untyped]
   def possible_custom_value_options(custom_value)
     format.possible_custom_value_options(custom_value)
   end
 
+  # @rbs (?(Issue | Array[untyped] | Project)?) -> Array[untyped]
   def possible_values_options(object=nil)
     if object.is_a?(Array)
       object.map {|o| format.possible_values_options(self, o)}.reduce(:&) || []
@@ -176,6 +184,7 @@ class CustomField < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def possible_values
     values = read_attribute(:possible_values)
     if values.is_a?(Array)
@@ -189,6 +198,7 @@ class CustomField < ApplicationRecord
   end
 
   # Makes possible_values accept a multiline string
+  # @rbs ((Array[untyped] | String)?) -> Array[untyped]
   def possible_values=(arg)
     if arg.is_a?(Array)
       values = arg.compact.map {|a| a.to_s.strip}.reject(&:blank?)
@@ -198,35 +208,43 @@ class CustomField < ApplicationRecord
     end
   end
 
+  # @rbs (CustomFieldValue, (String | Integer | Array[untyped] | Hash[untyped, untyped] | Date | ActiveSupport::HashWithIndifferentAccess | Float)?) -> (String | Array[untyped])
   def set_custom_field_value(custom_field_value, value)
     format.set_custom_field_value(self, custom_field_value, value)
   end
 
+  # @rbs ((String | Array[untyped])?) -> (User | Array[untyped] | String | Date | Float | Version | bool | CustomFieldEnumeration)?
   def cast_value(value)
     format.cast_value(self, value)
   end
 
+  # @rbs (String | Date, (TimeEntry | Issue | Project | User)?) -> (String | Integer | Array[untyped] | Date)?
   def value_from_keyword(keyword, customized)
     format.value_from_keyword(self, keyword, customized)
   end
 
   # Returns the options hash used to build a query filter for the field
+  # @rbs (IssueQuery | ProjectQuery | ProjectAdminQuery | TimeEntryQuery | Query) -> Hash[untyped, untyped]
   def query_filter_options(query)
     format.query_filter_options(self, query)
   end
 
+  # @rbs () -> bool
   def totalable?
     format.totalable_supported
   end
 
+  # @rbs () -> bool
   def full_width_layout?
     full_width_layout == '1'
   end
 
+  # @rbs () -> bool
   def full_text_formatting?
     text_formatting == 'full'
   end
 
+  # @rbs () -> bool
   def thousands_delimiter?
     thousands_delimiter == '1'
   end
@@ -234,6 +252,7 @@ class CustomField < ApplicationRecord
   # Returns a ORDER BY clause that can used to sort customized
   # objects by their value of the custom field.
   # Returns nil if the custom field can not be used for sorting.
+  # @rbs () -> (Arel::Nodes::SqlLiteral | Array[untyped])?
   def order_statement
     return nil if multiple?
 
@@ -242,16 +261,19 @@ class CustomField < ApplicationRecord
 
   # Returns a GROUP BY clause that can used to group by custom value
   # Returns nil if the custom field can not be used for grouping.
+  # @rbs () -> Arel::Nodes::SqlLiteral?
   def group_statement
     return nil if multiple?
 
     format.group_statement(self)
   end
 
+  # @rbs () -> String
   def join_for_order_statement
     format.join_for_order_statement(self)
   end
 
+  # @rbs (?String?, ?User | AnonymousUser, ?String?) -> String
   def visibility_by_project_condition(project_key=nil, user=User.current, id_column=nil)
     if visible? || user.admin?
       "1=1"
@@ -268,6 +290,7 @@ class CustomField < ApplicationRecord
     end
   end
 
+  # @rbs (IssueCustomField | ProjectCustomField | UserCustomField) -> Integer
   def <=>(field)
     return nil unless field.is_a?(CustomField)
 
@@ -275,10 +298,12 @@ class CustomField < ApplicationRecord
   end
 
   # Returns the class that values represent
+  # @rbs () -> Class?
   def value_class
     format.target_class if format.respond_to?(:target_class)
   end
 
+  # @rbs () -> nil
   def self.customized_class
     self.name =~ /^(.+)CustomField$/
     $1.constantize rescue nil
@@ -295,6 +320,7 @@ class CustomField < ApplicationRecord
 
   # Returns the error messages for the given value
   # or an empty array if value is a valid value for the custom field
+  # @rbs (CustomFieldValue) -> Array[untyped]
   def validate_custom_value(custom_value)
     value = custom_value.value
     errs = format.validate_custom_value(custom_value)
@@ -318,15 +344,18 @@ class CustomField < ApplicationRecord
   end
 
   # Returns the error messages for the default custom field value
+  # @rbs ((String | Array[untyped] | Integer | Float)?) -> Array[untyped]
   def validate_field_value(value)
     validate_custom_value(CustomFieldValue.new(:custom_field => self, :value => value))
   end
 
   # Returns true if value is a valid value for the custom field
+  # @rbs ((String | Array[untyped] | Integer | Float)?) -> bool
   def valid_field_value?(value)
     validate_field_value(value).empty?
   end
 
+  # @rbs (CustomValue) -> Attachment?
   def after_save_custom_value(custom_value)
     format.after_save_custom_value(self, custom_value)
   end
@@ -343,6 +372,7 @@ class CustomField < ApplicationRecord
     super(attr_name, *args)
   end
 
+  # @rbs () -> String
   def css_classes
     "#{field_format}_cf cf_#{id}"
   end
@@ -351,6 +381,7 @@ class CustomField < ApplicationRecord
 
   # Removes multiple values for the custom field after setting the multiple attribute to false
   # We kepp the value with the highest id for each customized object
+  # @rbs () -> Integer?
   def handle_multiplicity_change
     if !new_record? && multiple_before_last_save && !multiple
       ids = custom_values.

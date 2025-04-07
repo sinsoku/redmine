@@ -65,6 +65,7 @@ class DestroyProjectsJobTest < ActiveJob::TestCase
     end
   end
 
+  # @rbs () -> ActiveJob::QueueAdapters::TestAdapter
   def queue_adapter_for_test
     ActiveJob::QueueAdapters::TestAdapter.new
   end

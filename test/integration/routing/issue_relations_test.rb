@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingIssueRelationsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_issue_relations
     should_route 'GET /issues/1/relations' => 'issue_relations#index', :issue_id => '1'
     should_route 'POST /issues/1/relations' => 'issue_relations#create', :issue_id => '1'

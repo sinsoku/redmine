@@ -26,6 +26,7 @@ class IssueCategoriesController < ApplicationController
   before_action :authorize
   accept_api_auth :index, :show, :create, :update, :destroy
 
+  # @rbs () -> Array[untyped]
   def index
     respond_to do |format|
       format.html {redirect_to_settings_in_projects}
@@ -33,6 +34,7 @@ class IssueCategoriesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def show
     respond_to do |format|
       format.html {redirect_to_settings_in_projects}
@@ -40,6 +42,7 @@ class IssueCategoriesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def new
     @category = @project.issue_categories.build
     @category.safe_attributes = params[:issue_category]
@@ -50,6 +53,7 @@ class IssueCategoriesController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)?
   def create
     @category = @project.issue_categories.build
     @category.safe_attributes = params[:issue_category]
@@ -74,9 +78,11 @@ class IssueCategoriesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (String | bool | ActiveSupport::SafeBuffer)
   def update
     @category.safe_attributes = params[:issue_category]
     if @category.save
@@ -95,6 +101,7 @@ class IssueCategoriesController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def destroy
     @issue_count = @category.issues.size
     if @issue_count == 0 || params[:todo] || api_request?
@@ -114,12 +121,14 @@ class IssueCategoriesController < ApplicationController
 
   private
 
+  # @rbs () -> String
   def redirect_to_settings_in_projects
     redirect_to settings_project_path(@project, :tab => 'categories')
   end
 
   # Wrap ApplicationController's find_model_object method to set
   # @category instead of just @issue_category
+  # @rbs () -> IssueCategory?
   def find_model_object
     super
     @category = @object

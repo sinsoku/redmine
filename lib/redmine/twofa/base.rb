@@ -20,28 +20,34 @@
 module Redmine
   module Twofa
     class Base
+      # @rbs (Class) -> Class
       def self.inherited(child)
         super
         # require-ing a Base subclass will register it as a 2FA scheme
         Redmine::Twofa.register_scheme(scheme_name(child), child)
       end
 
+      # @rbs (?Class) -> String
       def self.scheme_name(klass = self)
         klass.name.demodulize.underscore
       end
 
+      # @rbs (?Class) -> String
       def scheme_name
         self.class.scheme_name
       end
 
+      # @rbs (User) -> void
       def initialize(user)
         @user = user
       end
 
+      # @rbs () -> User
       def init_pairing!
         @user
       end
 
+      # @rbs (String) -> bool
       def confirm_pairing!(code)
         # make sure an otp and not a backup code is used
         if verify_otp!(code)
@@ -53,6 +59,7 @@ module Redmine
         end
       end
 
+      # @rbs () -> void
       def deliver_twofa_paired
         ::Mailer.deliver_security_notification(
           @user,
@@ -94,11 +101,13 @@ module Redmine
         )
       end
 
+      # @rbs (?controller: String, ?action: String) -> bool
       def send_code(controller: nil, action: nil)
         # return true only if the scheme sends a code to the user
         false
       end
 
+      # @rbs (String) -> bool
       def verify!(code)
         verify_otp!(code) || verify_backup_code!(code)
       end
@@ -107,6 +116,7 @@ module Redmine
         raise 'not implemented'
       end
 
+      # @rbs (String) -> bool
       def verify_backup_code!(code)
         # backup codes are case-insensitive and white-space-insensitive
         code = code.to_s.remove(/[[:space:]]/).downcase
@@ -129,6 +139,7 @@ module Redmine
         return true
       end
 
+      # @rbs () -> Array[untyped]
       def init_backup_codes!
         backup_codes.delete_all
         tokens = []
@@ -149,15 +160,18 @@ module Redmine
         tokens
       end
 
+      # @rbs () -> Token::ActiveRecord_Relation
       def backup_codes
         Token.where(user_id: @user.id, action: 'twofa_backup_code')
       end
 
       # this will only be used on pairing initialization
+      # @rbs () -> Hash[untyped, untyped]
       def init_pairing_view_variables
         otp_confirm_view_variables
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def otp_confirm_view_variables
         {
           scheme_name: scheme_name,
@@ -167,6 +181,7 @@ module Redmine
 
       private
 
+      # @rbs () -> Integer
       def allowed_drift
         30
       end

@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class CalendarsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show
     # Ensure that an issue to which a user is assigned is in the current
     # month's calendar in order to test Gravatar
@@ -65,6 +66,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_issue_due_date
     travel_to issues(:issues_001).due_date
 
@@ -121,6 +123,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_version
     travel_to versions(:versions_002).effective_date
 
@@ -138,6 +141,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_run_custom_queries
     query = IssueQuery.create!(:name => 'Calendar Query', :description => 'Description for Calendar Query', :visibility => IssueQuery::VISIBILITY_PUBLIC)
     get(
@@ -151,6 +155,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     assert_select '#sidebar a.query.selected[title=?]', query.description, :text => query.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_cross_project_calendar
     travel_to issues(:issues_002).start_date
     get :show
@@ -169,6 +174,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_cross_project_calendar_version
     travel_to versions(:versions_002).effective_date
 
@@ -189,6 +195,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_week_number_calculation
     with_settings :start_of_week => 7 do
       get(
@@ -237,6 +244,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_custom_query_with_multiple_sort_criteria
     get(
       :show,
@@ -248,6 +256,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     assert_select 'h2', :text => 'Open issues by priority and tracker'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_custom_query_with_group_by_option
     get(
       :show,
@@ -259,6 +268,7 @@ class CalendarsControllerTest < Redmine::ControllerTest
     assert_select 'h2', :text => 'Open issues grouped by tracker'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_calendar_day_css_classes
     get(
       :show,

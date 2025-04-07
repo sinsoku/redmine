@@ -22,12 +22,14 @@ require_relative '../test_helper'
 class ProjectsControllerTest < Redmine::ControllerTest
   include Redmine::I18n
 
+  # @rbs () -> Symbol
   def setup
     @request.session[:user_id] = nil
     Setting.default_language = 'en'
     ActiveJob::Base.queue_adapter = :inline
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_by_anonymous_should_not_show_private_projects
     get :index
     assert_response :success
@@ -43,6 +45,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => /Private child of eCookbook/, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom
     get(:index, :params => {:format => 'atom'})
     assert_response :success
@@ -50,6 +53,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'feed>entry', :count => Project.visible(User.current).count
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_project_filter_is_my_projects
     @request.session[:user_id] = 2
 
@@ -69,6 +73,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_subproject_filter
     @request.session[:user_id] = 1
 
@@ -88,6 +93,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_as_list_should_format_column_value
     with_settings :text_formatting => 'textile' do
       get :index, :params => {
@@ -115,6 +121,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_as_list_should_show_my_favourite_projects
     @request.session[:user_id] = 1
     get :index, :params => {
@@ -125,6 +132,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'tr[id=?] td.name span[class=?]', 'project-5', 'icon-only icon-user my-project'
   end
 
+  # @rbs () -> bool
   def test_index_as_list_should_indent_projects
     @request.session[:user_id] = 1
     get :index, :params => {
@@ -144,6 +152,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_include 'idnt-2', child_level2
   end
 
+  # @rbs () -> bool
   def test_index_with_default_query_setting
     with_settings :project_list_defaults => {'column_names' => %w(name short_description status)} do
       get :index, :params => {
@@ -154,6 +163,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal ['Name', 'Description', 'Status'], columns_in_list
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_as_board_should_not_include_csv_export
     @request.session[:user_id] = 1
 
@@ -164,6 +174,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select '#csv-export-options', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_as_list_should_include_csv_export
     @request.session[:user_id] = 1
 
@@ -195,6 +206,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv
     with_settings :date_format => '%m/%d/%Y' do
       get :index, :params => {:format => 'csv'}
@@ -203,6 +215,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_custom_field
     @request.session[:user_id] = 1
 
@@ -226,6 +239,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_int_custom_field_total
     @request.session[:user_id] = 1
 
@@ -244,6 +258,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select ".total-for-cf-#{field.id} span.value", :text => '9'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_last_activity_date_column
     with_settings :project_list_defaults => {'column_names' => %w(name short_description last_activity_date)} do
       get :index, :params => {
@@ -259,6 +274,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'tr#project-4 td.last_activity_date', :text => ''
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query
     query = ProjectQuery.find(11)
     get :index, :params => { :query_id => query.id }
@@ -267,6 +283,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select '#sidebar a.query.selected[title=?]', query.description, :text => query.name
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_retrieve_default_query
     query = ProjectQuery.find(11)
     ProjectQuery.stubs(:default).returns query
@@ -279,6 +296,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_ignore_default_query_with_without_default
     query = ProjectQuery.find(11)
     ProjectQuery.stubs(:default).returns query
@@ -290,6 +308,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_ignore_user_default_query_if_it_is_invisible
     query = ProjectQuery.find(11)
 
@@ -309,6 +328,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'h2', text: I18n.t(:label_project_plural)
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_ignore_global_default_query_if_it_is_not_public
     query = ProjectQuery.find(11)
     with_settings default_project_query: query.id do
@@ -323,6 +343,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_autocomplete_js
     get(
       :autocomplete,
@@ -336,6 +357,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> bool
   def test_autocomplete_js_with_blank_search_term
     get(
       :autocomplete,
@@ -407,6 +429,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_by_non_admin_should_display_modules_if_default_role_is_allowed_to_select_modules
     Role.non_member.add_permission!(:add_project)
     default_role = Role.generate!(:permissions => [:view_issues])
@@ -423,6 +446,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_by_non_admin_should_enable_setting_public_if_default_role_is_allowed_to_set_public
     Role.non_member.add_permission!(:add_project)
     default_role = Role.generate!(permissions: [:add_project])
@@ -439,6 +463,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_not_display_invalid_search_link
     @request.session[:user_id] = 1
 
@@ -695,6 +720,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select_error /Subproject of is invalid/
   end
 
+  # @rbs () -> bool
   def test_create_by_non_admin_should_accept_modules_if_default_role_is_allowed_to_select_modules
     Role.non_member.add_permission!(:add_project)
     default_role = Role.generate!(:permissions => [:view_issues, :add_project])
@@ -732,6 +758,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_subproject_with_inherit_members_should_inherit_members
     Role.find_by_name('Manager').add_permission! :add_subprojects
     parent = Project.find(1)
@@ -757,6 +784,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal parent.memberships.count, project.memberships.count
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_should_preserve_modules_on_validation_failure
     with_settings :default_projects_modules => ['issue_tracking', 'repository'] do
       @request.session[:user_id] = 1
@@ -780,18 +808,21 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_by_id
     get(:show, :params => {:id => 1})
     assert_response :success
     assert_select '#header h1', :text => "eCookbook"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_by_identifier
     get(:show, :params => {:id => 'ecookbook'})
     assert_response :success
     assert_select '#header h1', :text => "eCookbook"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_empty_sidebar
     p = Project.find(1)
     p.enabled_module_names = []
@@ -801,6 +832,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select '#main.nosidebar'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_visible_custom_fields
     ProjectCustomField.find_by_name('Development status').update_attribute :visible, true
     get(:show, :params => {:id => 'ecookbook'})
@@ -808,6 +840,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'li.list_cf.cf_3', :text => /Development status/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_hidden_custom_fields
     ProjectCustomField.find_by_name('Development status').update_attribute :visible, false
     get(:show, :params => {:id => 'ecookbook'})
@@ -815,6 +848,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'li', :text => /Development status/, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_blank_custom_fields_with_multiple_values
     f1 = ProjectCustomField.generate! :field_format => 'list', :possible_values => %w(Foo Bar), :multiple => true
     f2 = ProjectCustomField.generate! :field_format => 'list', :possible_values => %w(Baz Qux), :multiple => true
@@ -825,6 +859,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'li', :text => /#{f2.name}/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_blank_text_custom_fields
     f1 = ProjectCustomField.generate! :field_format => 'text'
     get(:show, :params => {:id => 1})
@@ -832,6 +867,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'li', :text => /#{f1.name}/, :count => 0
   end
 
+  # @rbs () -> bool
   def test_show_should_not_fail_when_custom_values_are_nil
     project = Project.find_by_identifier('ecookbook')
     project.custom_values.first.update_attribute(:value, nil)
@@ -839,6 +875,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_show_archived_project_should_be_denied
     project = Project.find_by_identifier('ecookbook')
     project.archive
@@ -848,6 +885,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_not_include project.name, response.body
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_archived_project_should_show_unarchive_link_to_admins
     @request.session[:user_id] = 1
     project = Project.find_by_identifier('ecookbook')
@@ -857,12 +895,14 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => "Unarchive"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_show_private_subprojects_that_are_not_visible
     get(:show, :params => {:id => 'ecookbook'})
     assert_response :success
     assert_select 'a', :text => /Private child/, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_show_private_subprojects_that_are_visible
     @request.session[:user_id] = 2 # manager who is a member of the private subproject
     get(:show, :params => {:id => 'ecookbook'})
@@ -870,6 +910,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => /Private child/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_by_member_on_leaf_project_should_display_issue_counts
     @request.session[:user_id] = 2
     get(:show, :params => {:id => 'onlinestore'})
@@ -878,6 +919,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'table.issue-report td.total a', :text => %r{\A[1-9]\d*\z}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_subprojects_trackers_when_subprojects_issues_is_not_displayed
     project = Project.find('ecookbook')
     tracker = project.trackers.find_by(name: 'Support request')
@@ -897,6 +939,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_spent_and_estimated_time
     @request.session[:user_id] = 1
     get(:show, :params => {:id => 'ecookbook'})
@@ -906,6 +949,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings
     @request.session[:user_id] = 2 # manager
     get(:settings, :params => {:id => 1})
@@ -913,6 +957,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'project[name]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings_of_subproject
     @request.session[:user_id] = 2
     get(:settings, :params => {:id => 'private-child'})
@@ -920,6 +965,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=checkbox][name=?]', 'project[inherit_members]'
   end
 
+  # @rbs () -> bool
   def test_settings_should_be_denied_for_member_on_closed_project
     Project.find(1).close
     @request.session[:user_id] = 2 # manager
@@ -927,12 +973,14 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_settings_should_be_denied_for_anonymous_on_closed_project
     Project.find(1).close
     get(:settings, :params => {:id => 1})
     assert_response :forbidden
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings_should_accept_version_status_filter
     @request.session[:user_id] = 2
     get(
@@ -954,6 +1002,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'a#tab-versions[href=?]', '/projects/ecookbook/settings/versions?version_status=locked'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings_should_accept_version_name_filter
     @request.session[:user_id] = 2
     get(
@@ -974,6 +1023,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'a#tab-versions[href=?]', '/projects/ecookbook/settings/versions?version_name=.1&version_status='
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings_should_show_default_version_in_versions_tab
     project = Project.find(1)
     project.default_version_id = 3
@@ -995,6 +1045,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings_should_show_locked_members
     user = User.generate!
     member = User.add_to_project(user, Project.find(1))
@@ -1012,6 +1063,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select "tr#member-#{member.id}"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings_should_show_tabs_depending_on_permission
     @request.session[:user_id] = 3
     project = Project.find(1)
@@ -1030,6 +1082,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'a#tab-activities'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings_should_not_display_custom_fields_not_visible_for_user
     @request.session[:user_id] = 2
     ProjectCustomField.find_by_name('Development status').update_attribute :visible, false
@@ -1043,6 +1096,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'select#project_custom_field_values_3', :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_settings_issue_tracking
     @request.session[:user_id] = 1
     project = Project.find(1)
@@ -1065,6 +1119,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'project[default_assigned_to_id]', 1
   end
 
+  # @rbs () -> bool
   def test_update
     @request.session[:user_id] = 2 # manager
     post(
@@ -1082,6 +1137,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal 'Test changed name', project.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     @request.session[:user_id] = 2 # manager
     post(
@@ -1097,6 +1153,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_update_should_be_denied_for_member_on_closed_project
     Project.find(1).close
     @request.session[:user_id] = 2 # manager
@@ -1113,6 +1170,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal 'eCookbook', Project.find(1).name
   end
 
+  # @rbs () -> bool
   def test_update_should_be_denied_for_anonymous_on_closed_project
     Project.find(1).close
     post(
@@ -1128,6 +1186,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal 'eCookbook', Project.find(1).name
   end
 
+  # @rbs () -> MatchData
   def test_update_child_project_without_parent_permission_should_not_show_validation_error
     child = Project.generate_with_parent!
     user = User.generate!
@@ -1146,6 +1205,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_match /Successful update/, flash[:notice]
   end
 
+  # @rbs () -> bool
   def test_update_modules
     @request.session[:user_id] = 2
     Project.find(1).enabled_module_names = ['issue_tracking', 'news']
@@ -1163,6 +1223,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal ['documents', 'issue_tracking', 'repository'], Project.find(1).enabled_module_names.sort
   end
 
+  # @rbs () -> bool
   def test_update_custom_field_should_update_updated_on
     @request.session[:user_id] = 2
     project = Project.find(1)
@@ -1187,6 +1248,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_leaf_project_without_confirmation_should_show_confirmation
     @request.session[:user_id] = 1 # admin
 
@@ -1197,6 +1259,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select '.warning', :text => /Are you sure you want to delete this project/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_leaf_project_with_wrong_confirmation_should_show_confirmation
     @request.session[:user_id] = 1 # admin
 
@@ -1207,6 +1270,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select '.warning', :text => /Are you sure you want to delete this project/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_without_confirmation_should_show_confirmation_with_subprojects
     set_tmp_attachments_directory
     @request.session[:user_id] = 1 # admin
@@ -1221,6 +1285,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
                             'eCookbook Subproject 2'].join(', ')
   end
 
+  # @rbs () -> Array[untyped]
   def test_destroy_should_mark_project_and_subprojects_for_deletion
     queue_adapter_was = ActiveJob::Base.queue_adapter
     ActiveJob::Base.queue_adapter = :test
@@ -1240,6 +1305,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     ActiveJob::Base.queue_adapter = queue_adapter_was
   end
 
+  # @rbs () -> bool
   def test_destroy_with_confirmation_should_destroy_the_project_and_subprojects
     set_tmp_attachments_directory
     @request.session[:user_id] = 1 # admin
@@ -1257,6 +1323,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_nil Project.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_destroy_archived_project
     set_tmp_attachments_directory
     @request.session[:user_id] = 1 # admin
@@ -1276,6 +1343,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_nil Project.find_by_id(2)
   end
 
+  # @rbs () -> bool
   def test_destroy_with_normal_user_should_destroy
     set_tmp_attachments_directory
     @request.session[:user_id] = 2 # non-admin
@@ -1293,6 +1361,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_nil Project.find_by_id(2)
   end
 
+  # @rbs () -> bool
   def test_destroy_with_normal_user_should_destroy_closed_project
     set_tmp_attachments_directory
     @request.session[:user_id] = 2 # non-admin
@@ -1312,6 +1381,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_nil Project.find_by_id(2)
   end
 
+  # @rbs () -> bool
   def test_destroy_with_normal_user_should_not_destroy_with_subprojects
     set_tmp_attachments_directory
     @request.session[:user_id] = 2 # non-admin
@@ -1329,12 +1399,14 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert Project.find(1)
   end
 
+  # @rbs () -> bool
   def test_bulk_destroy_should_require_admin
     @request.session[:user_id] = 2 # non-admin
     delete :bulk_destroy, params: { ids: [1, 2], confirm: 'Yes' }
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_bulk_destroy_should_require_confirmation
     @request.session[:user_id] = 1 # admin
     assert_difference 'Project.count', 0 do
@@ -1345,6 +1417,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_response :ok
   end
 
+  # @rbs () -> bool
   def test_bulk_destroy_should_delete_projects
     @request.session[:user_id] = 1 # admin
     assert_difference 'Project.count', -2 do
@@ -1354,6 +1427,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_redirected_to '/admin/projects'
   end
 
+  # @rbs () -> bool
   def test_archive
     @request.session[:user_id] = 1 # admin
     post(:archive, :params => {:id => 1})
@@ -1361,6 +1435,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert !Project.find(1).active?
   end
 
+  # @rbs () -> MatchData
   def test_archive_with_failure
     @request.session[:user_id] = 1
     Project.any_instance.stubs(:archive).returns(false)
@@ -1369,6 +1444,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_match /project cannot be archived/i, flash[:error]
   end
 
+  # @rbs () -> bool
   def test_unarchive
     @request.session[:user_id] = 1 # admin
     Project.find(1).archive
@@ -1377,6 +1453,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert Project.find(1).active?
   end
 
+  # @rbs () -> bool
   def test_close
     @request.session[:user_id] = 2
     post(:close, :params => {:id => 1})
@@ -1384,6 +1461,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal Project::STATUS_CLOSED, Project.find(1).status
   end
 
+  # @rbs () -> bool
   def test_reopen
     Project.find(1).close
     @request.session[:user_id] = 2
@@ -1392,6 +1470,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert Project.find(1).active?
   end
 
+  # @rbs () -> Integer
   def test_project_breadcrumbs_should_be_limited_to_3_ancestors
     CustomField.delete_all
     parent = nil
@@ -1406,6 +1485,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_copy
     @request.session[:user_id] = 1 # admin
     orig = Project.find(1)
@@ -1416,12 +1496,14 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'project[enabled_module_names][]', 'issue_tracking', 1
   end
 
+  # @rbs () -> bool
   def test_get_copy_with_invalid_source_should_respond_with_404
     @request.session[:user_id] = 1
     get(:copy, :params => {:id => 99})
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_copy_should_preselect_custom_fields
     field1 = IssueCustomField.generate!(:is_for_all => false)
     field2 = IssueCustomField.generate!(:is_for_all => false)
@@ -1434,6 +1516,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=hidden][name=?][value=?]', 'project[issue_custom_field_ids][]', field2.id.to_s, 0
   end
 
+  # @rbs () -> bool
   def test_post_copy_should_copy_requested_items
     @request.session[:user_id] = 1 # admin
     CustomField.delete_all
@@ -1462,6 +1545,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_equal 0, project.members.count
   end
 
+  # @rbs () -> bool
   def test_post_copy_should_redirect_to_settings_when_successful
     @request.session[:user_id] = 1 # admin
     post(
@@ -1478,6 +1562,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_redirected_to :controller => 'projects', :action => 'settings', :id => 'unique-copy'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_copy_with_failure
     @request.session[:user_id] = 1
     post(
@@ -1494,6 +1579,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select_error /Identifier cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_bookmark_should_create_bookmark
     @request.session[:user_id] = 3
     post(:bookmark, :params => {:id => 'ecookbook'})
@@ -1503,6 +1589,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     refute jb.bookmark?(Project.find('onlinestore'))
   end
 
+  # @rbs () -> bool
   def test_bookmark_should_delete_bookmark
     @request.session[:user_id] = 3
     jb = Redmine::ProjectJumpBox.new(User.find(3))
@@ -1515,11 +1602,13 @@ class ProjectsControllerTest < Redmine::ControllerTest
     refute jb.bookmark?(Project.find('ecookbook'))
   end
 
+  # @rbs () -> bool
   def test_index_jump_without_project_id_should_redirect_to_active_tab
     get(:index, :params => {:jump => 'issues'})
     assert_redirected_to '/issues'
   end
 
+  # @rbs () -> bool
   def test_index_jump_should_not_redirect_to_unknown_tab
     get(
       :index,
@@ -1530,6 +1619,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_show_jump_should_redirect_to_active_tab
     get(
       :show,
@@ -1541,6 +1631,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_redirected_to '/projects/ecookbook/issues'
   end
 
+  # @rbs () -> bool
   def test_show_jump_should_not_redirect_to_inactive_tab
     get(
       :show, :params => {
@@ -1551,6 +1642,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_show_jump_should_not_redirect_to_unknown_tab
     get(
       :show,
@@ -1562,11 +1654,13 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_body_should_have_project_css_class
     get(:show, :params => {:id => 1})
     assert_select 'body.project-ecookbook'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_default_search_scope_in_global_page
     get :index
 
@@ -1576,6 +1670,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_default_search_scope_for_project_without_subprojects
     get :show, :params => {
       :id => 4,
@@ -1587,6 +1682,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_default_search_scope_for_project_with_subprojects
     get :show, :params => {
       :id => 1,

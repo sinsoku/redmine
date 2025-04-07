@@ -24,6 +24,7 @@ module Redmine
         include ActionView::Helpers::NumberHelper
 
         # Returns a PDF string of a single issue
+        # @rbs (Issue, ?Hash[untyped, untyped]) -> String
         def issue_to_pdf(issue, assoc={})
           pdf = ITCPDF.new(current_language)
           pdf.set_title("#{issue.project} - #{issue.tracker} ##{issue.id}")
@@ -251,6 +252,7 @@ module Redmine
         end
 
         # Returns a PDF string of a list of issues
+        # @rbs (Array[untyped], Project?, IssueQuery) -> String
         def issues_to_pdf(issues, project, query)
           pdf = ITCPDF.new(current_language, "L")
           title = query.new_record? ? l(:label_issue_plural) : query.name
@@ -370,6 +372,7 @@ module Redmine
           pdf.output
         end
 
+        # @rbs (Issue | Journal, Symbol) -> (ActiveSupport::SafeBuffer | String)
         def pdf_format_text(object, attribute)
           textilizable(object, attribute,
                        :only_path => false,
@@ -379,6 +382,7 @@ module Redmine
           )
         end
 
+        # @rbs () -> bool
         def is_cjk?
           case current_language.to_s.downcase
           when 'ja', 'zh-tw', 'zh', 'ko'
@@ -389,6 +393,7 @@ module Redmine
         end
 
         # fetch row values
+        # @rbs (Issue, IssueQuery, Integer) -> Array[untyped]
         def fetch_row_values(issue, query, level)
           query.inline_columns.collect do |column|
             s =
@@ -420,6 +425,7 @@ module Redmine
         end
 
         # calculate columns width
+        # @rbs (Array[untyped], IssueQuery, Float, Redmine::Export::PDF::ITCPDF) -> Array[untyped]
         def calc_col_width(issues, query, table_width, pdf)
           # calculate statistics
           #  by captions
@@ -524,6 +530,7 @@ module Redmine
           col_width
         end
 
+        # @rbs (Redmine::Export::PDF::ITCPDF, IssueQuery, Array[untyped], Integer, Float) -> void
         def render_table_header(pdf, query, col_width, row_height, table_width)
           # headers
           pdf.SetFontStyle('B', 8)
@@ -543,6 +550,7 @@ module Redmine
         end
 
         # returns the maximum height of MultiCells
+        # @rbs (Redmine::Export::PDF::ITCPDF, Array[untyped], Array[untyped], ?bool) -> Float
         def get_issues_to_pdf_write_cells(pdf, col_values, col_widths, head=false)
           heights = []
           col_values.each_with_index do |column, i|
@@ -552,6 +560,7 @@ module Redmine
         end
 
         # Renders MultiCells and returns the maximum height used
+        # @rbs (Redmine::Export::PDF::ITCPDF, Array[untyped], Array[untyped], Float, ?bool) -> void
         def issues_to_pdf_write_cells(pdf, col_values, col_widths, row_height, head=false)
           col_values.each_with_index do |column, i|
             pdf.RDMMultiCell(col_widths[i], row_height, head ? column.caption : column.strip, 1, '', 1, 0)

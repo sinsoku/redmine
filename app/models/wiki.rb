@@ -33,24 +33,28 @@ class Wiki < ApplicationRecord
 
   safe_attributes 'start_page'
 
+  # @rbs (?User) -> bool
   def visible?(user=User.current)
     !user.nil? && user.allowed_to?(:view_wiki_pages, project)
   end
 
   # Returns the wiki page that acts as the sidebar content
   # or nil if no such page exists
+  # @rbs () -> WikiPage?
   def sidebar
     @sidebar ||= find_page('Sidebar', :with_redirect => false)
   end
 
   # find the page with the given title
   # if page doesn't exist, return a new page
+  # @rbs (String?) -> WikiPage
   def find_or_new_page(title)
     title = start_page if title.blank?
     find_page(title) || WikiPage.new(:wiki => self, :title => Wiki.titleize(title))
   end
 
   # find the page with the given title
+  # @rbs (String, ?Hash[untyped, untyped]) -> WikiPage?
   def find_page(title, options = {})
     @page_found_with_redirect = false
     title = start_page if title.blank?
@@ -68,11 +72,13 @@ class Wiki < ApplicationRecord
   end
 
   # Returns true if the last page was found with a redirect
+  # @rbs () -> bool
   def page_found_with_redirect?
     @page_found_with_redirect
   end
 
   # Deletes all redirects from/to the wiki
+  # @rbs () -> Integer
   def delete_redirects
     WikiRedirect.where(:wiki_id => id).delete_all
     WikiRedirect.where(:redirects_to_wiki_id => id).delete_all
@@ -83,6 +89,7 @@ class Wiki < ApplicationRecord
   # Examples:
   #   Wiki.find_page("bar", project => foo)
   #   Wiki.find_page("foo:bar")
+  # @rbs (String, ?Hash[untyped, untyped]) -> WikiPage?
   def self.find_page(title, options = {})
     project = options[:project]
     if title.to_s =~ %r{^([^\:]+)\:(.*)$}
@@ -97,11 +104,13 @@ class Wiki < ApplicationRecord
     end
   end
 
+  # @rbs (Project) -> Wiki
   def self.create_default(project)
     create(:project => project, :start_page => 'Wiki')
   end
 
   # turn a string into a valid page title
+  # @rbs (String?) -> String?
   def self.titleize(title)
     # replace spaces with _ and remove unwanted caracters
     title = title.gsub(/\s+/, '_').delete(',./?;|:') if title

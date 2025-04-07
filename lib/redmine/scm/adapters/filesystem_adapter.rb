@@ -27,6 +27,7 @@ module Redmine
     module Adapters
       class FilesystemAdapter < AbstractAdapter
         class << self
+          # @rbs () -> bool
           def client_available
             true
           end

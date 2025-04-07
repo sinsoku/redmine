@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingFilesTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_files
     should_route 'GET /projects/foo/files' => 'files#index', :project_id => 'foo'
     should_route 'GET /projects/foo/files/new' => 'files#new', :project_id => 'foo'

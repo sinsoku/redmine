@@ -20,11 +20,13 @@
 require_relative '../test_helper'
 
 class IssueRelationsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 3
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'IssueRelation.count' do
       post(
@@ -45,6 +47,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_equal 'relates', relation.relation_type
   end
 
+  # @rbs () -> bool
   def test_create_on_invalid_issue
     assert_no_difference 'IssueRelation.count' do
       post(
@@ -62,6 +65,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_xhr
     assert_difference 'IssueRelation.count' do
       post(
@@ -86,6 +90,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_include 'Bug #1', response.body
   end
 
+  # @rbs () -> bool
   def test_create_should_accept_id_with_hash
     assert_difference 'IssueRelation.count' do
       post(
@@ -104,6 +109,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_equal 2, relation.issue_to_id
   end
 
+  # @rbs () -> bool
   def test_create_should_strip_id
     assert_difference 'IssueRelation.count' do
       post(
@@ -122,6 +128,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_equal 2, relation.issue_to_id
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_should_not_break_with_non_numerical_id
     assert_no_difference 'IssueRelation.count' do
       assert_nothing_raised do
@@ -140,6 +147,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_follows_relation_should_update_relations_list
     issue1 = Issue.generate!(:subject => 'Followed issue',
                              :start_date => Date.yesterday,
@@ -163,6 +171,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_include 'Followed issue', response.body
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_should_create_relations_with_visible_issues_only
     with_settings :cross_project_issue_relations => '1' do
       assert_nil Issue.visible(User.find(3)).find_by_id(4)
@@ -183,6 +192,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_xhr_with_failure
     assert_no_difference 'IssueRelation.count' do
       post(
@@ -203,6 +213,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_include 'Related issue cannot be blank', response.body
   end
 
+  # @rbs () -> bool
   def test_create_duplicated_follows_relations_should_not_raise_exception
     IssueRelation.create(
       :issue_from => Issue.find(1), :issue_to => Issue.find(2),
@@ -228,6 +239,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_include 'has already been taken', response.body
   end
 
+  # @rbs () -> bool
   def test_bulk_create_with_multiple_issue_to_id_issues
     assert_difference 'IssueRelation.count', +3 do
       post(
@@ -256,6 +268,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_not_include 'id=\"errorExplanation\"', response.body
   end
 
+  # @rbs () -> bool
   def test_bulk_create_should_show_errors
     with_settings :cross_project_issue_relations => '0' do
       assert_difference 'IssueRelation.count', +3 do
@@ -283,12 +296,14 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     assert_include 'Related issue doesn&#39;t belong to the same project', response.body
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_destroy
     assert_difference 'IssueRelation.count', -1 do
       delete(:destroy, :params => {:id => '2'})
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_invalid_relation
     assert_no_difference 'IssueRelation.count' do
       delete(:destroy, :params => {:id => '999'})
@@ -296,6 +311,7 @@ class IssueRelationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_xhr
     IssueRelation.create!(:relation_type => IssueRelation::TYPE_RELATES) do |r|
       r.issue_from_id = 3

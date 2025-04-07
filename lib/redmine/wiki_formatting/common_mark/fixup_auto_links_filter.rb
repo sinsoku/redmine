@@ -30,6 +30,7 @@ module Redmine
         USER_LINK_PREFIX = /(@|user:)\z/
         HIRES_IMAGE = /.+@\dx\.(bmp|gif|jpg|jpe|jpeg|png)\z/
 
+        # @rbs () -> Nokogiri::HTML4::DocumentFragment
         def call
           doc.search("a").each do |node|
             unless (url = node['href']) && url.starts_with?('mailto:')

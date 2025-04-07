@@ -254,6 +254,7 @@ class RedCloth3 < String
     #   r.to_html
     #     #=>"<h1>A &lt;b&gt;bold&lt;/b&gt; man</h1>"
     #
+    # @rbs (String, ?Array[untyped]) -> void
     def initialize(string, restrictions = [])
         restrictions.each { |r| method(:"#{r}=").call(true) }
         super(string)
@@ -266,6 +267,7 @@ class RedCloth3 < String
     #   r.to_html( true )
     #     #=>"And then? She <strong>fell</strong>!"
     #
+    # @rbs (*Symbol) -> Redmine::WikiFormatting::Textile::Formatter
     def to_html(*rules)
         rules = DEFAULT_RULES if rules.empty?
         # make our working copy
@@ -438,6 +440,7 @@ class RedCloth3 < String
     #
     # Flexible HTML escaping
     #
+    # @rbs (String?, ?Symbol) -> String?
     def htmlesc(str, mode=:Quotes)
       if str
         str.gsub!('&', '&amp;')
@@ -450,6 +453,7 @@ class RedCloth3 < String
     end
 
     # Search and replace for Textile glyphs (quotes, dashes, other symbols)
+    # @rbs (String | Redmine::WikiFormatting::Textile::Formatter) -> void
     def pgl(text)
         # GLYPHS.each do |re, resub, tog|
         #    next if tog and method( tog ).call
@@ -461,6 +465,7 @@ class RedCloth3 < String
     end
 
     # Parses Textile attribute lists and builds an HTML attribute string
+    # @rbs (String?, ?String) -> String
     def pba(text_in, element = "")
         return +'' unless text_in
 
@@ -513,6 +518,7 @@ class RedCloth3 < String
 
     STYLES_RE = /^(color|(min-|max-)?+(width|height)|border|background|padding|margin|font|text|float)(-[a-z]+)*:\s*((\d+%?|\d+px|\d+(\.\d+)?em|#[0-9a-f]+|[a-z]+)\s*)+$/i
 
+    # @rbs (String) -> String
     def sanitize_styles(str)
       styles = str.split(";").map(&:strip)
       styles.reject! do |style|
@@ -524,6 +530,7 @@ class RedCloth3 < String
     TABLE_RE = /^(?:table(_?#{S}#{A}#{C})\. ?\n)?^(#{A}#{C}\.? ?\|.*?\|)(\n\n|\Z)/m
 
     # Parses a Textile table block, building HTML from the result.
+    # @rbs (String) -> String?
     def block_textile_table(text)
         text.gsub!(TABLE_RE) do |matches|
             tatts, fullrow = $~[1..2]
@@ -556,6 +563,7 @@ class RedCloth3 < String
     LISTS_CONTENT_RE = /^([#*]+)(#{A}#{C}) (.*)$/m
 
     # Parses Textile lists and generates HTML
+    # @rbs (String) -> String?
     def block_textile_lists(text)
         text.gsub!(LISTS_RE) do |match|
             lines = match.split("\n")
@@ -601,6 +609,7 @@ class RedCloth3 < String
     QUOTES_RE = /(^>+([^\n]*?)(\n|$))+/m
     QUOTES_CONTENT_RE = /^([> ]+)(.*)$/m
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> Redmine::WikiFormatting::Textile::Formatter?
     def block_textile_quotes(text)
       text.gsub!(QUOTES_RE) do |match|
         lines = match.split("\n")
@@ -628,6 +637,7 @@ class RedCloth3 < String
         @
         (?=\W)/x
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> Redmine::WikiFormatting::Textile::Formatter?
     def inline_textile_code(text)
         text.gsub!(CODE_RE) do |m|
             before, lang, code, after = $~[1..4]
@@ -636,6 +646,7 @@ class RedCloth3 < String
         end
     end
 
+    # @rbs (String) -> String
     def lT(text)
         text.end_with?('#') ? 'o' : 'u'
     end
@@ -646,6 +657,7 @@ class RedCloth3 < String
 
     BLOCKS_GROUP_RE = /\n{2,}(?! )/m
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter | String, ?bool) -> (Redmine::WikiFormatting::Textile::Formatter | String)
     def blocks(text, deep_code = false)
         text.replace(text.split(BLOCKS_GROUP_RE).collect do |blk|
             plain = blk !~ /\A[#*> ]/
@@ -689,6 +701,7 @@ class RedCloth3 < String
         end.join("\n\n"))
     end
 
+    # @rbs (String, String, String, String) -> String
     def textile_bq(tag, atts, cite, content)
         cite, cite_title = check_refs(cite)
         cite = " cite=\"#{htmlesc cite.dup}\"" if cite
@@ -696,6 +709,7 @@ class RedCloth3 < String
         "\t<blockquote#{cite}>\n\t\t<p#{atts}>#{content}</p>\n\t</blockquote>"
     end
 
+    # @rbs (String, String, nil, String) -> String
     def textile_p(tag, atts, cite, content)
         atts = shelve(atts) if atts
         "\t<#{tag}#{atts}>#{content}</#{tag}>"
@@ -708,6 +722,7 @@ class RedCloth3 < String
     alias textile_h5 textile_p
     alias textile_h6 textile_p
 
+    # @rbs (String, String, String, nil, String) -> String
     def textile_fn_(tag, num, atts, cite, content)
         atts << " id=\"fn#{num}\" class=\"footnote\""
         content = "<sup>#{num}</sup> #{content}"
@@ -717,6 +732,7 @@ class RedCloth3 < String
 
     BLOCK_RE = /^(([a-z]+)(\d*))(#{A}#{C})\.(?::(\S+))? (.*)$/m
 
+    # @rbs (String) -> String?
     def block_textile_prefix(text)
         if text =~ BLOCK_RE
             tag, tagpre, num, atts, cite, content = $~[1..6]
@@ -774,6 +790,7 @@ class RedCloth3 < String
         ['*', '-', '_'].collect { |ch| ' ?(' + Regexp::quote(ch) + ' ?){3,}' }.join('|')
     })$/
 
+    # @rbs (String) -> String?
     def block_markdown_rule(text)
         text.gsub!(MARKDOWN_RULE_RE) do |blk|
             "<hr />"
@@ -784,6 +801,7 @@ class RedCloth3 < String
     def block_markdown_lists(text)
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> Array[untyped]
     def inline_textile_span(text)
         QTAGS.each do |qtag_rc, ht, qtag_re, rtype|
             text.gsub!(qtag_re) do |m|
@@ -825,6 +843,7 @@ class RedCloth3 < String
             (?=<|\s|$)
         /x
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> Redmine::WikiFormatting::Textile::Formatter?
     def inline_textile_link(text)
         text.gsub!(LINK_RE) do |m|
           all, pre, atts, text, title, url, proto, slash, post = $~[1..9]
@@ -907,6 +926,7 @@ class RedCloth3 < String
     TEXTILE_REFS_RE =  /(^ *)\[([^\[\n]+?)\](#{HYPERLINK})(?=\s|$)/
     MARKDOWN_REFS_RE = /(^ *)\[([^\n]+?)\]:\s+<?(#{HYPERLINK})>?(?:\s+"((?:[^"]|\\")+)")?(?=\s|$)/m
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
     def refs(text)
         @rules.each do |rule_name|
             method(rule_name).call(text) if rule_name.to_s.start_with?('refs_')
@@ -930,6 +950,7 @@ class RedCloth3 < String
         end
     end
 
+    # @rbs (String) -> Array[untyped]
     def check_refs(text)
         ret = @urlrefs[text.downcase] if text
         ret || [text, nil]
@@ -948,6 +969,7 @@ class RedCloth3 < String
             (?::#{HYPERLINK})? # optional href
         /x
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> Redmine::WikiFormatting::Textile::Formatter?
     def inline_textile_image(text)
         text.gsub!(IMAGE_RE)  do |m|
             stln, algn, atts, url, title, href, href_a1, href_a2 = $~[1..8]
@@ -988,17 +1010,20 @@ class RedCloth3 < String
         end
     end
 
+    # @rbs (String) -> String
     def shelve(val)
         @shelf << val
         " :redsh##{@shelf.length}:"
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
     def retrieve(text)
         text.gsub!(/ :redsh#(\d+):/) do
           @shelf[$1.to_i - 1] || $&
         end
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
     def incoming_entities(text)
         ## turn any incoming ampersands into a dummy character for now.
         ## This uses a negative lookahead for alphanumerics followed by a semicolon,
@@ -1007,6 +1032,7 @@ class RedCloth3 < String
         text.gsub!(/&(?![#a-z0-9]+;)/i, "x%x%")
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
     def no_textile(text)
         text.gsub!(/(^|\s)==([^=]+.*?)==(\s|$)?/,
                    '\1<notextile>\2</notextile>\3')
@@ -1014,6 +1040,7 @@ class RedCloth3 < String
                    '\1<notextile>\2</notextile>\3')
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
     def clean_white_space(text)
         # normalize line breaks
         text.gsub!("\r\n", "\n")
@@ -1028,6 +1055,7 @@ class RedCloth3 < String
         flush_left text
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter | String) -> String?
     def flush_left(text)
         if /(?![\r\n\t ])[[:cntrl:]]/.match?(text)
             text.gsub!(/(?![\r\n\t ])[[:cntrl:]]/, '')
@@ -1041,6 +1069,7 @@ class RedCloth3 < String
         end
     end
 
+    # @rbs (String | Redmine::WikiFormatting::Textile::Formatter) -> String?
     def footnote_ref(text)
         text.gsub!(/(?<=[\p{Word}\]])\[([0-9]+?)\](\s)?/,
                    '<sup><a href="#fn\1">\1</a></sup>\2')
@@ -1053,6 +1082,7 @@ class RedCloth3 < String
     HASTAG_MATCH = /(<\/?\w[^\n]*?>)/m
     ALLTAG_MATCH = /(<\/?\w[^\n]*?>)|.*?(?=<\/?\w[^\n]*?>|$)/m
 
+    # @rbs (String | Redmine::WikiFormatting::Textile::Formatter, ?Integer) -> (Redmine::WikiFormatting::Textile::Formatter | String)?
     def glyphs_textile(text, level = 0)
         if text !~ HASTAG_MATCH
             pgl text
@@ -1080,6 +1110,7 @@ class RedCloth3 < String
         end
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter | String, ?bool, ?bool) -> (String | Redmine::WikiFormatting::Textile::Formatter)
     def rip_offtags(text, escape_aftertag=true, escape_line=true)
         if text =~ /<.*>/
             ## strip and encode <pre> content
@@ -1128,6 +1159,7 @@ class RedCloth3 < String
         end
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
     def inline(text)
         [/^inline_/, /^glyphs_/].each do |meth_re|
             @rules.each do |rule_name|
@@ -1136,6 +1168,7 @@ class RedCloth3 < String
         end
     end
 
+    # @rbs (String) -> String
     def h_align(text)
         H_ALGN_VALS[text]
     end
@@ -1209,6 +1242,7 @@ class RedCloth3 < String
     end
 
     ALLOWED_TAGS = %w(pre code kbd notextile)
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
     def escape_html_tags(text)
         text.gsub!(%r{<(\/?([!\w][^ >\t\f\r\n]*)[^<>\n]*)(>?)}) do |m|
             all, tag, close = $1, $2, $3
@@ -1221,6 +1255,7 @@ class RedCloth3 < String
         end
     end
 
+    # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
     def remove_html_comments(text)
         text.gsub!(/<!--[\s\S]*?-->/, '')
     end

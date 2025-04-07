@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class IconsHelperTest < Redmine::HelperTest
   include IconsHelper
 
+  # @rbs () -> MatchData
   def test_sprite_icon_should_return_svg_with_defaults
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--edit"></use></svg>$}
     icon = sprite_icon('edit')
@@ -29,6 +30,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_sprite_icon_should_return_svg_with_label
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--edit"></use></svg><span class="icon-label">Edit</span>}
     icon = sprite_icon('edit', 'Edit')
@@ -36,6 +38,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_sprite_icon_should_return_svg_with_hidden_label_when_icon_only_is_true
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--edit"></use></svg><span class="icon-label hidden">Edit</span>}
     icon = sprite_icon('edit', 'Edit', icon_only: true)
@@ -43,6 +46,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_sprite_icon_should_return_svg_with_custom_size
     expected = %r{<svg class="s24 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--edit"></use></svg>$}
     icon = sprite_icon('edit', size: '24')
@@ -50,6 +54,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_sprite_icon_should_return_svg_with_custom_css_class
     expected = %r{<svg class="s18 icon-svg custom-class" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--edit"></use></svg>$}
     icon = sprite_icon('edit', css_class: 'custom-class')
@@ -57,6 +62,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_sprite_icon_should_return_svg_with_custom_sprite
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/custom.svg#icon--edit"></use></svg>$}
     icon = sprite_icon('edit', sprite: 'custom')
@@ -64,6 +70,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_sprite_icon_should_return_svg_with_plugin_sprite
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/plugin_assets/my_plugin/icons.svg#icon--edit"></use></svg>$}
     icon = sprite_icon('edit', plugin: 'my_plugin')
@@ -71,6 +78,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_file_icon_should_return_folder_icon_for_directory
     entry = stub(:is_dir? => true)
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--folder"></use></svg><span class="icon-label">folder_name</span>}
@@ -79,6 +87,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_file_icon_should_return_folder_icon_for_files
     entry = stub(:is_dir? => false)
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--file"></use></svg><span class="icon-label">file_name</span>}
@@ -87,6 +96,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> MatchData
   def test_file_icon_should_return_file_type_icon_for_files
     entry = stub(:is_dir? => false)
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--text-plain"></use></svg><span class="icon-label">text.txt</span>}
@@ -95,6 +105,7 @@ class IconsHelperTest < Redmine::HelperTest
     assert_match expected, icon
   end
 
+  # @rbs () -> Array[untyped]
   def test_principal_icon_should_return_group_icon_for_group_classes
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--group"></use></svg>}
 
@@ -103,25 +114,30 @@ class IconsHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_principal_icon_should_return_nil_for_non_group_classes
     assert_nil principal_icon(Principal.find(1))
   end
 
+  # @rbs () -> MatchData
   def test_activity_event_type_icon_should_return_correct_icon_for_reply_events
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--comments"></use></svg>}
     assert_match expected, activity_event_type_icon('reply')
   end
 
+  # @rbs () -> MatchData
   def test_activity_event_type_icon_should_return_correct_icon_for_time_entry_events
     expected = %r{<svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--time"></use></svg>}
     assert_match expected, activity_event_type_icon('time-entry')
   end
 
+  # @rbs () -> bool
   def test_icon_for_mime_type_should_return_specific_icon_for_known_mime_types
     assert_equal 'text-plain', icon_for_mime_type('text-plain')
     assert_equal 'application-pdf', icon_for_mime_type('application-pdf')
   end
 
+  # @rbs () -> bool
   def test_icon_for_mime_type_should_return_generic_file_icon_for_unknown_mime_types
     assert_equal 'file', icon_for_mime_type('unknown-type')
   end

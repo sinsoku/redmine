@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingMailHandlerTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_mail_handler
     should_route 'GET /mail_handler' => 'mail_handler#new'
     should_route 'POST /mail_handler' => 'mail_handler#index'

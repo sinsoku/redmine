@@ -36,6 +36,7 @@ class WikiContent < ApplicationRecord
 
   scope :without_text, lambda {select(:id, :page_id, :version, :updated_on)}
 
+  # @rbs (*Hash[untyped, untyped]) -> void
   def initialize(*args)
     super
     if new_record?
@@ -43,18 +44,22 @@ class WikiContent < ApplicationRecord
     end
   end
 
+  # @rbs (?User) -> bool
   def visible?(user=User.current)
     page.visible?(user)
   end
 
+  # @rbs () -> Project
   def project
     page.project
   end
 
+  # @rbs () -> Attachment::ActiveRecord_Associations_CollectionProxy
   def attachments
     page.nil? ? [] : page.attachments
   end
 
+  # @rbs () -> Array[untyped]
   def notified_users
     project.notified_users.reject {|user| !visible?(user)}
   end
@@ -65,11 +70,13 @@ class WikiContent < ApplicationRecord
   end
 
   # Return true if the content is the current page content
+  # @rbs () -> bool
   def current_version?
     true
   end
 
   # Reverts the record to a previous version
+  # @rbs (WikiContentVersion) -> WikiContent
   def revert_to!(version)
     if version.wiki_content_id == id
       update_columns(
@@ -84,11 +91,13 @@ class WikiContent < ApplicationRecord
 
   private
 
+  # @rbs () -> WikiContentVersion::ActiveRecord_Associations_CollectionProxy
   def create_version
     versions << WikiContentVersion.new(attributes.except("id"))
   end
 
   # Notifies users that a wiki page was created
+  # @rbs () -> Array[untyped]?
   def send_notification_create
     if Setting.notified_events.include?('wiki_content_added')
       Mailer.deliver_wiki_content_added(self)
@@ -96,6 +105,7 @@ class WikiContent < ApplicationRecord
   end
 
   # Notifies users that a wiki page was updated
+  # @rbs () -> Array[untyped]?
   def send_notification_update
     if Setting.notified_events.include?('wiki_content_updated') && saved_change_to_text?
       Mailer.deliver_wiki_content_updated(self)

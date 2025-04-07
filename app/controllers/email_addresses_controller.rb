@@ -23,11 +23,13 @@ class EmailAddressesController < ApplicationController
   before_action :find_email_address, :only => [:update, :destroy]
   require_sudo_mode :create, :update, :destroy
 
+  # @rbs () -> EmailAddress
   def index
     @addresses = @user.email_addresses.order(:id).where(:is_default => false).to_a
     @address ||= EmailAddress.new
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def create
     saved = false
     if @user.email_addresses.count <= Setting.max_additional_emails.to_i
@@ -53,6 +55,7 @@ class EmailAddressesController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def update
     if params[:notify].present?
       @address.notify = params[:notify].to_s
@@ -71,6 +74,7 @@ class EmailAddressesController < ApplicationController
     end
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def destroy
     @address.destroy
 
@@ -88,16 +92,19 @@ class EmailAddressesController < ApplicationController
 
   private
 
+  # @rbs () -> User
   def find_user
     @user = User.find(params[:user_id])
   end
 
+  # @rbs () -> (EmailAddress | bool)
   def find_email_address
     @address = @user.email_addresses.where(:is_default => false).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
+  # @rbs () -> bool?
   def require_admin_or_current_user
     unless @user == User.current
       require_admin

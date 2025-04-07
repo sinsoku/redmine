@@ -22,6 +22,7 @@ require_relative '../../../../test_helper'
 class URLTest < ActiveSupport::TestCase
   include Redmine::Helpers::URL
 
+  # @rbs () -> bool
   def test_uri_with_safe_scheme
     assert uri_with_safe_scheme?("http://example.com/")
     assert uri_with_safe_scheme?("https://example.com/")
@@ -29,6 +30,7 @@ class URLTest < ActiveSupport::TestCase
     assert uri_with_safe_scheme?("mailto:root@example.com")
   end
 
+  # @rbs () -> bool
   def test_uri_with_safe_scheme_invalid_component
     assert_not uri_with_safe_scheme?("httpx://example.com/")
     assert_not uri_with_safe_scheme?("mailto:root@")
@@ -45,6 +47,7 @@ class URLTest < ActiveSupport::TestCase
     "/javascript:alert('filename')",
   ]
 
+  # @rbs () -> Array[untyped]
   def test_uri_with_link_safe_scheme_should_recognize_safe_uris
     LINK_SAFE_URIS.each do |uri|
       assert uri_with_link_safe_scheme?(uri), "'#{uri}' should be safe"
@@ -69,6 +72,7 @@ class URLTest < ActiveSupport::TestCase
     "data:text/html;base64,foobar",
   ]
 
+  # @rbs () -> Array[untyped]
   def test_uri_with_link_safe_scheme_should_recognize_unsafe_uris
     LINK_UNSAFE_URIS.each do |uri|
       assert_not uri_with_link_safe_scheme?(uri), "'#{uri}' should not be safe"

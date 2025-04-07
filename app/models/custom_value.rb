@@ -23,6 +23,7 @@ class CustomValue < ApplicationRecord
 
   after_save :custom_field_after_save_custom_value
 
+  # @rbs (?Hash[untyped, untyped], *nil) -> void
   def initialize(attributes=nil, *args)
     super
     if new_record? && custom_field && !attributes.key?(:value) && (customized.nil? || customized.set_custom_field_default?(self))
@@ -39,6 +40,7 @@ class CustomValue < ApplicationRecord
     custom_field.editable?
   end
 
+  # @rbs (?User | AnonymousUser) -> bool
   def visible?(user=User.current)
     if custom_field.visible?
       true
@@ -49,6 +51,7 @@ class CustomValue < ApplicationRecord
     end
   end
 
+  # @rbs (User | AnonymousUser) -> bool
   def attachments_visible?(user)
     visible?(user) && customized && customized.visible?(user)
   end
@@ -57,12 +60,14 @@ class CustomValue < ApplicationRecord
     custom_field.is_required?
   end
 
+  # @rbs () -> String
   def to_s
     value.to_s
   end
 
   private
 
+  # @rbs () -> Attachment?
   def custom_field_after_save_custom_value
     custom_field.after_save_custom_value(self)
   end

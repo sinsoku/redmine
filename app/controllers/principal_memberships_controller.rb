@@ -27,6 +27,7 @@ class PrincipalMembershipsController < ApplicationController
   before_action :find_principal, :only => [:new, :create]
   before_action :find_membership, :only => [:edit, :update, :destroy]
 
+  # @rbs () -> nil
   def new
     @projects = Project.active.all
     @roles = Role.find_all_givable
@@ -36,6 +37,7 @@ class PrincipalMembershipsController < ApplicationController
     end
   end
 
+  # @rbs () -> String?
   def create
     @members = Member.create_principal_memberships(@principal, params[:membership])
     respond_to do |format|
@@ -44,10 +46,12 @@ class PrincipalMembershipsController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]
   def edit
     @roles = Role.givable.to_a
   end
 
+  # @rbs () -> String?
   def update
     @membership.attributes = params.require(:membership).permit(:role_ids => [])
     @membership.save
@@ -57,6 +61,7 @@ class PrincipalMembershipsController < ApplicationController
     end
   end
 
+  # @rbs () -> String?
   def destroy
     if @membership.deletable?
       @membership.destroy
@@ -69,6 +74,7 @@ class PrincipalMembershipsController < ApplicationController
 
   private
 
+  # @rbs () -> (User | Group)
   def find_principal
     principal_id = params[:user_id] || params[:group_id]
     @principal = Principal.find(principal_id)
@@ -76,6 +82,7 @@ class PrincipalMembershipsController < ApplicationController
     render_404
   end
 
+  # @rbs () -> (Group | User)
   def find_membership
     @membership = Member.find(params[:id])
     @principal = @membership.principal
@@ -83,6 +90,7 @@ class PrincipalMembershipsController < ApplicationController
     render_404
   end
 
+  # @rbs (User | Group) -> String
   def redirect_to_principal(principal)
     redirect_to edit_polymorphic_path(principal, :tab => 'memberships')
   end

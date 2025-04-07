@@ -21,6 +21,7 @@ class PreviewsController < ApplicationController
   before_action :find_project, :except => :text
   before_action :find_attachments
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def issue
     @issue = Issue.visible.find_by_id(params[:issue_id]) unless params[:issue_id].blank?
     if @issue
@@ -30,6 +31,7 @@ class PreviewsController < ApplicationController
     render :partial => 'common/preview'
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def news
     if params[:id].present? && news = News.visible.find_by_id(params[:id])
       @previewed = news
@@ -45,6 +47,7 @@ class PreviewsController < ApplicationController
 
   private
 
+  # @rbs () -> Project
   def find_project
     project_id = (params[:issue] && params[:issue][:project_id]) || params[:project_id]
     @project = Project.find(project_id)

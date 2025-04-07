@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class FeedsTest < Redmine::IntegrationTest
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_feeds_should_include_icon_tag
     get '/projects.atom'
     assert_response :success

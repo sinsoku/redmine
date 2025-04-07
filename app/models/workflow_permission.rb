@@ -28,6 +28,7 @@ class WorkflowPermission < WorkflowRule
   # Example:
   #   WorkflowPermission.rules_by_status_id trackers, roles
   #   # => {1 => {'start_date' => 'required', 'due_date' => 'readonly'}}
+  # @rbs (Array[untyped], Array[untyped]) -> Hash[untyped, untyped]
   def self.rules_by_status_id(trackers, roles)
     WorkflowPermission.where(:tracker_id => trackers.map(&:id), :role_id => roles.map(&:id)).inject({}) do |h, w|
       h[w.old_status_id] ||= {}
@@ -41,6 +42,7 @@ class WorkflowPermission < WorkflowRule
   #
   # Example:
   #   WorkflowPermission.replace_permissions trackers, roles, {'1' => {'start_date' => 'required', 'due_date' => 'readonly'}}
+  # @rbs (Array[untyped], Array[untyped], ActionController::Parameters) -> void
   def self.replace_permissions(trackers, roles, permissions)
     trackers = Array.wrap trackers
     roles = Array.wrap roles
@@ -63,6 +65,7 @@ class WorkflowPermission < WorkflowRule
 
   protected
 
+  # @rbs () -> ActiveModel::Error?
   def validate_field_name
     unless Tracker::CORE_FIELDS_ALL.include?(field_name) || /^\d+$/.match?(field_name.to_s)
       errors.add :field_name, :invalid

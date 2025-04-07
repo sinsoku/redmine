@@ -66,6 +66,7 @@ class FilesystemAdapterTest < ActiveSupport::TestCase
     end
   else
     puts "Filesystem test repository NOT FOUND. Skipping unit tests !!! See doc/RUNNING_TESTS."
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

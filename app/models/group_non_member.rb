@@ -18,10 +18,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class GroupNonMember < GroupBuiltin
+  # @rbs () -> String
   def name
     l(:label_group_non_member)
   end
 
+  # @rbs () -> String
   def builtin_type
     "non_member"
   end

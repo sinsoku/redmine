@@ -35,6 +35,7 @@ module Redmine
 
       # Returns the cache store for search results
       # Can be configured with config.redmine_search_cache_store= in config/application.rb
+      # @rbs () -> ActiveSupport::Cache::MemoryStore
       def cache_store
         @@cache_store ||= begin
           # if config.search_cache_store was not previously set, a no method error would be raised
@@ -49,6 +50,7 @@ module Redmine
     class Fetcher
       attr_reader :tokens
 
+      # @rbs (String, User | AnonymousUser, Array[untyped], (Project::ActiveRecord_Relation | Project | Project::ActiveRecord_Associations_CollectionProxy | Array[untyped])?, ?Hash[untyped, untyped]) -> void
       def initialize(question, user, scope, projects, options={})
         @user = user
         @question = question.strip
@@ -60,11 +62,13 @@ module Redmine
       end
 
       # Returns the total result count
+      # @rbs () -> Integer
       def result_count
         result_ids.size
       end
 
       # Returns the result count by type
+      # @rbs () -> Hash[untyped, untyped]
       def result_count_by_type
         ret = Hash.new {|h, k| h[k] = 0}
         result_ids.group_by(&:first).each do |scope, ids|
@@ -74,6 +78,7 @@ module Redmine
       end
 
       # Returns the results for the given offset and limit
+      # @rbs (Integer, Integer) -> Array[untyped]
       def results(offset, limit)
         result_ids_to_load = result_ids[offset, limit] || []
         results_by_scope = Hash.new {|h, k| h[k] = []}
@@ -87,16 +92,19 @@ module Redmine
       end
 
       # Returns the results ids, sorted by rank
+      # @rbs () -> Array[untyped]
       def result_ids
         @ranks_and_ids ||= load_result_ids_from_cache
       end
 
       private
 
+      # @rbs () -> Array[untyped]
       def project_ids
         Array.wrap(@projects).map(&:id)
       end
 
+      # @rbs () -> Array[untyped]
       def load_result_ids_from_cache
         if Redmine::Search.cache_store
           cache_key = ActiveSupport::Cache.expand_cache_key(
@@ -110,6 +118,7 @@ module Redmine
         end
       end
 
+      # @rbs () -> Array[untyped]
       def load_result_ids
         ret = []
         # get all the results ranks and ids
@@ -127,10 +136,12 @@ module Redmine
     end
 
     class Tokenizer
+      # @rbs (String) -> void
       def initialize(question)
         @question = question.to_s
       end
 
+      # @rbs () -> Array[untyped]
       def tokens
         # extract tokens from the question
         # eg. hello "bye bye" => ["hello", "bye bye"]
@@ -147,6 +158,7 @@ module Redmine
     end
 
     module Controller
+      # @rbs (Class) -> Class
       def self.included(base)
         base.extend(ClassMethods)
       end
@@ -160,6 +172,7 @@ module Redmine
         #   * search_scope :issues # => sets the search scope to :issues for the whole controller
         #   * search_scope :issues, :only => :index
         #   * search_scope :issues, :only => [:index, :show]
+        # @rbs (Symbol, ?Hash[untyped, untyped]) -> void
         def default_search_scope(id, options = {})
           if actions = options[:only]
             actions = [] << actions unless actions.is_a?(Array)
@@ -170,11 +183,13 @@ module Redmine
         end
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def default_search_scopes
         self.class.default_search_scopes
       end
 
       # Returns the default search scope according to the current action
+      # @rbs () -> String?
       def default_search_scope
         @default_search_scope ||= default_search_scopes[controller_name.to_sym][:actions][action_name.to_sym] ||
                                   default_search_scopes[controller_name.to_sym][:default]

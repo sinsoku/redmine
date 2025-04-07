@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingCalendarsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_calendars
     should_route 'GET /issues/calendar' => 'calendars#show'
     should_route 'GET /projects/foo/issues/calendar' => 'calendars#show', :project_id => 'foo'

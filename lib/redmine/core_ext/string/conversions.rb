@@ -26,6 +26,7 @@ module Redmine
       # @private
       module Conversions
         # Parses hours format and returns a float
+        # @rbs () -> Float?
         def to_hours
           s = self.dup
           s.strip!

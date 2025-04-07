@@ -20,22 +20,26 @@
 require_relative '../test_helper'
 
 class EnumerationsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     @request.session[:user_id] = 1 # admin
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
     assert_select 'table.enumerations'
   end
 
+  # @rbs () -> bool
   def test_index_should_require_admin
     @request.session[:user_id] = nil
     get :index
     assert_response :found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     get(:new, :params => {:type => 'IssuePriority'})
     assert_response :success
@@ -44,11 +48,13 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'enumeration[name]'
   end
 
+  # @rbs () -> bool
   def test_new_with_invalid_type_should_respond_with_404
     get(:new, :params => {:type => 'UnknownType'})
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'IssuePriority.count' do
       post(
@@ -66,6 +72,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_not_nil e
   end
 
+  # @rbs () -> bool
   def test_create_with_custom_field_values
     custom_field = TimeEntryActivityCustomField.generate!
     assert_difference 'TimeEntryActivity.count' do
@@ -84,6 +91,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_equal "sample", Enumeration.find_by(:name => 'Sample').custom_field_values.last.value
   end
 
+  # @rbs () -> bool
   def test_create_with_multiple_select_list_custom_fields
     custom_field = IssuePriorityCustomField.generate!(:field_format => 'list', :multiple => true, :possible_values => ['1', '2', '3', '4'])
     assert_difference 'IssuePriority.count' do
@@ -102,6 +110,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_equal ['1', '2'].sort, Enumeration.find_by(:name => 'Sample').custom_field_values.last.value.sort
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     assert_no_difference 'IssuePriority.count' do
       post(
@@ -118,17 +127,20 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     get(:edit, :params => {:id => 6})
     assert_response :success
     assert_select 'input[name=?][value=?]', 'enumeration[name]', 'High'
   end
 
+  # @rbs () -> bool
   def test_edit_invalid_should_respond_with_404
     get(:edit, :params => {:id => 999})
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_update
     assert_no_difference 'IssuePriority.count' do
       put(
@@ -147,6 +159,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_equal 'New name', e.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     assert_no_difference 'IssuePriority.count' do
       put(
@@ -164,6 +177,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_update_position
     assert_equal 2, Enumeration.find(2).position
     put(
@@ -179,6 +193,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_equal 1, Enumeration.find(2).position
   end
 
+  # @rbs () -> bool
   def test_update_custom_field_values
     custom_field = TimeEntryActivityCustomField.generate!
     enumeration = Enumeration.find(9)
@@ -196,6 +211,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_equal "sample", enumeration.reload.custom_field_values.last.value
   end
 
+  # @rbs () -> bool
   def test_destroy_enumeration_not_in_use
     assert_difference 'IssuePriority.count', -1 do
       delete(:destroy, :params => {:id => 7})
@@ -204,6 +220,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_nil Enumeration.find_by_id(7)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_enumeration_in_use
     assert_no_difference 'IssuePriority.count' do
       delete(:destroy, :params => {:id => 4})
@@ -216,6 +233,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_enumeration_in_use_with_reassignment
     issue = Issue.where(:priority_id => 4).first
     assert_difference 'IssuePriority.count', -1 do
@@ -227,6 +245,7 @@ class EnumerationsControllerTest < Redmine::ControllerTest
     assert_equal 6, issue.reload.priority_id
   end
 
+  # @rbs () -> bool
   def test_destroy_enumeration_in_use_with_blank_reassignment
     assert_no_difference 'IssuePriority.count' do
       delete(:destroy, :params => {:id => 4, :reassign_to_id => ''})

@@ -18,14 +18,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module ImportsHelper
+  # @rbs () -> String
   def import_title
     l(:"label_import_#{import_partial_prefix}")
   end
 
+  # @rbs () -> String
   def import_partial_prefix
     @import.class.name.sub('Import', '').underscore.pluralize
   end
 
+  # @rbs (IssueImport | TimeEntryImport, String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def options_for_mapping_select(import, field, options={})
     tags = "".html_safe
     blank_text = options[:required] ? "-- #{l(:actionview_instancetag_blank_option)} --" : "&nbsp;".html_safe
@@ -38,12 +41,14 @@ module ImportsHelper
     tags
   end
 
+  # @rbs (IssueImport | TimeEntryImport, String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def mapping_select_tag(import, field, options={})
     name = "import_settings[mapping][#{field}]"
     select_tag name, options_for_mapping_select(import, field, options), :id => "import_mapping_#{field}"
   end
 
   # Returns the options for the date_format setting
+  # @rbs () -> Array[untyped]
   def date_format_options
     Import::DATE_FORMATS.map do |f|
       format = f.delete('%').gsub(/[dmY]/) do

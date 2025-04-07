@@ -22,6 +22,7 @@ module Redmine
     module PDF
       module WikiPdfHelper
         # Returns a PDF string of a set of wiki pages
+        # @rbs (Array[untyped], Project) -> String
         def wiki_pages_to_pdf(pages, project)
           pdf = Redmine::Export::PDF::ITCPDF.new(current_language)
           pdf.set_title(project.name)
@@ -39,6 +40,7 @@ module Redmine
         end
 
         # Returns a PDF string of a single wiki page
+        # @rbs (WikiPage, Project) -> String
         def wiki_page_to_pdf(page, project)
           pdf = ITCPDF.new(current_language)
           pdf.set_title("#{project} - #{page.title}")
@@ -59,6 +61,7 @@ module Redmine
           pdf.output
         end
 
+        # @rbs (Redmine::Export::PDF::ITCPDF, Hash[untyped, untyped], ?Integer?, ?Integer) -> Array[untyped]
         def write_page_hierarchy(pdf, pages, node=nil, level=0)
           if pages[node]
             pages[node].each do |page|
@@ -72,6 +75,7 @@ module Redmine
           end
         end
 
+        # @rbs (Redmine::Export::PDF::ITCPDF, WikiPage) -> void
         def write_wiki_page(pdf, page)
           text =
             textilizable(

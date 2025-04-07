@@ -28,11 +28,13 @@ class SettingsController < ApplicationController
 
   require_sudo_mode :index, :edit, :plugin
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def index
     edit
     render :action => 'edit'
   end
 
+  # @rbs () -> Array[untyped]?
   def edit
     @notifiables = Redmine::Notifiable.all
     if request.post?
@@ -61,6 +63,7 @@ class SettingsController < ApplicationController
     Redmine::Themes.rescan
   end
 
+  # @rbs () -> (String | bool | Hash[untyped, untyped])?
   def plugin
     @plugin = Redmine::Plugin.find(params[:id])
     unless @plugin.configurable?

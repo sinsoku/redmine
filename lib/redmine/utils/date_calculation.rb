@@ -21,6 +21,7 @@ module Redmine
   module Utils
     module DateCalculation
       # Returns the number of working days between from and to
+      # @rbs (Date, Date) -> Integer
       def working_days(from, to)
         days = (to - from).to_i
         if days > 0
@@ -40,6 +41,7 @@ module Redmine
       end
 
       # Adds working days to the given date
+      # @rbs (Date, Integer) -> Date
       def add_working_days(date, working_days)
         if working_days > 0
           weeks = working_days / (7 - non_working_week_days.size)
@@ -60,6 +62,7 @@ module Redmine
       end
 
       # Returns the date of the first day on or after the given date that is a working day
+      # @rbs (Date) -> Date
       def next_working_date(date)
         cwday = date.cwday
         days = 0
@@ -68,6 +71,7 @@ module Redmine
       end
 
       # Returns the index of non working week days (1=monday, 7=sunday)
+      # @rbs () -> Array[untyped]
       def non_working_week_days
         @non_working_week_days ||= begin
           days = Setting.non_working_week_days

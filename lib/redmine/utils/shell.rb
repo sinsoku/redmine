@@ -22,6 +22,7 @@ module Redmine
     module Shell
       module_function
 
+      # @rbs (String) -> String
       def shell_quote(str)
         if Redmine::Platform.mswin?
           '"' + str.gsub('"', '\\"') + '"'
@@ -30,6 +31,7 @@ module Redmine
         end
       end
 
+      # @rbs (String) -> String
       def shell_quote_command(command)
         if Redmine::Platform.mswin? && RUBY_PLATFORM == 'java'
           command

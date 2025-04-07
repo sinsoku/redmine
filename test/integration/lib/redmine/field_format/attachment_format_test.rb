@@ -20,6 +20,7 @@
 require_relative '../../../../test_helper'
 
 class AttachmentFieldFormatTest < Redmine::IntegrationTest
+  # @rbs () -> bool
   def setup
     User.current = nil
     set_tmp_attachments_directory
@@ -27,6 +28,7 @@ class AttachmentFieldFormatTest < Redmine::IntegrationTest
     log_user "jsmith", "jsmith"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_include_inputs
     get '/projects/ecookbook/issues/new'
     assert_response :success
@@ -35,6 +37,7 @@ class AttachmentFieldFormatTest < Redmine::IntegrationTest
     assert_select 'input[name=?][type=hidden][value=""]', "issue[custom_field_values][#{@field.id}][blank]"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_attachment
     issue = new_record(Issue) do
       assert_difference 'Attachment.count' do
@@ -78,6 +81,7 @@ class AttachmentFieldFormatTest < Redmine::IntegrationTest
     assert_select 'h2', :text => "#{issue.tracker} ##{issue.id} » testfile.txt"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_without_attachment
     issue = new_record(Issue) do
       assert_no_difference 'Attachment.count' do
@@ -107,6 +111,7 @@ class AttachmentFieldFormatTest < Redmine::IntegrationTest
     assert_select ".cf_#{@field.id} .value a", 0
   end
 
+  # @rbs () -> bool
   def test_failure_on_create_should_preserve_attachment
     attachment = new_record(Attachment) do
       assert_no_difference 'Issue.count' do
@@ -160,6 +165,7 @@ class AttachmentFieldFormatTest < Redmine::IntegrationTest
     assert_equal custom_value, attachment.reload.container
   end
 
+  # @rbs () -> Attachment
   def test_create_with_valid_extension
     @field.extensions_allowed = "txt, log"
     @field.save!
@@ -182,6 +188,7 @@ class AttachmentFieldFormatTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Attachment
   def test_create_with_invalid_extension_should_fail
     @field.extensions_allowed = "png, jpeg"
     @field.save!

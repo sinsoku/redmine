@@ -22,6 +22,7 @@ require_relative '../../../test_helper'
 class HookTest < Redmine::IntegrationTest
   # Hooks that are manually registered later
   class ProjectBasedTemplate < Redmine::Hook::ViewListener
+    # @rbs (Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
     def view_layouts_base_html_head(context)
       # Adds a project stylesheet
       stylesheet_link_tag(context[:project].identifier) if context[:project]
@@ -29,6 +30,7 @@ class HookTest < Redmine::IntegrationTest
   end
 
   class SidebarContent < Redmine::Hook::ViewListener
+    # @rbs (Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
     def view_layouts_base_sidebar(context)
       content_tag('p', 'Sidebar hook')
     end
@@ -59,19 +61,23 @@ class HookTest < Redmine::IntegrationTest
   class ContextTestHook < Redmine::Hook::ViewListener
     cattr_accessor :context
 
+    # @rbs (Hash[untyped, untyped]) -> Hash[untyped, untyped]
     def controller_account_success_authentication_after(context)
       self.class.context = context
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def setup
     Redmine::Hook.clear_listeners
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def teardown
     Redmine::Hook.clear_listeners
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_html_head_hook_response
     Redmine::Hook.add_listener(ProjectBasedTemplate)
 
@@ -79,11 +85,13 @@ class HookTest < Redmine::IntegrationTest
     assert_select 'head link[href=?]', '/assets/ecookbook.css'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_empty_sidebar_should_be_hidden
     get '/'
     assert_select 'div#main.nosidebar'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_sidebar_with_hook_content_should_not_be_hidden
     Redmine::Hook.add_listener(SidebarContent)
 
@@ -93,6 +101,7 @@ class HookTest < Redmine::IntegrationTest
     assert_select 'div#main.nosidebar', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_hook_with_content_for_should_append_content
     Redmine::Hook.add_listener(ContentForInsideHook)
 
@@ -105,6 +114,7 @@ class HookTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_controller_hook_context_should_include_request
     Redmine::Hook.add_listener(ContextTestHook)
     post '/login', :params => {:username => 'admin', :password => 'admin'}
@@ -115,6 +125,7 @@ class HookTest < Redmine::IntegrationTest
     assert_kind_of AccountController, context[:hook_caller]
   end
 
+  # @rbs () -> bool
   def test_multiple_hooks
     Redmine::Hook.add_listener(SingleRenderOn)
     Redmine::Hook.add_listener(MultipleRenderOn)

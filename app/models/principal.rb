@@ -119,6 +119,7 @@ class Principal < ApplicationRecord
   before_create :set_default_empty_values
   before_destroy :nullify_projects_default_assigned_to
 
+  # @rbs (*nil) -> (Group | User | GroupAnonymous)
   def reload(*args)
     @project_ids = nil
     super
@@ -132,28 +133,34 @@ class Principal < ApplicationRecord
     nil
   end
 
+  # @rbs () -> nil
   def mail
     nil
   end
 
+  # @rbs () -> bool
   def active?
     self.status == STATUS_ACTIVE
   end
 
+  # @rbs (?User | AnonymousUser) -> bool
   def visible?(user=User.current)
     Principal.visible(user).find_by(:id => id) == self
   end
 
   # Returns true if the principal is a member of project
+  # @rbs (Project) -> bool
   def member_of?(project)
     project.is_a?(Project) && project_ids.include?(project.id)
   end
 
   # Returns an array of the project ids that the principal is a member of
+  # @rbs () -> Array[untyped]
   def project_ids
     @project_ids ||= super.freeze
   end
 
+  # @rbs ((User | Group | GroupAnonymous | GroupNonMember)?) -> Integer
   def <=>(principal)
     # avoid an error when sorting members without roles (#10053)
     return -1 if principal.nil?
@@ -170,6 +177,7 @@ class Principal < ApplicationRecord
   # Returns an array of fields names than can be used to make an order statement for principals.
   # Users are sorted before Groups.
   # Examples:
+  # @rbs (?nil) -> Array[untyped]
   def self.fields_for_order_statement(table=nil)
     table ||= table_name
     columns = ['type DESC'] + (User.name_formatter[:order] - ['id']) + ['lastname', 'id']
@@ -177,6 +185,7 @@ class Principal < ApplicationRecord
   end
 
   # Returns the principal that matches the keyword among principals
+  # @rbs (Array[untyped], String) -> (User | Group)?
   def self.detect_by_keyword(principals, keyword)
     keyword = keyword.to_s
     return nil if keyword.blank?
@@ -200,6 +209,7 @@ class Principal < ApplicationRecord
     principal
   end
 
+  # @rbs () -> Integer
   def nullify_projects_default_assigned_to
     Project.where(default_assigned_to: self).update_all(default_assigned_to_id: nil)
   end
@@ -207,6 +217,7 @@ class Principal < ApplicationRecord
   protected
 
   # Make sure we don't try to insert NULL values (see #4632)
+  # @rbs () -> bool
   def set_default_empty_values
     self.login ||= ''
     self.hashed_password ||= ''
@@ -215,6 +226,7 @@ class Principal < ApplicationRecord
     true
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_status
     if status_changed? && self.class.valid_statuses.present?
       unless self.class.valid_statuses.include?(status)

@@ -21,27 +21,33 @@ require 'uri'
 
 module Redmine
   module FieldFormat
+    # @rbs (String, Class) -> void
     def self.add(name, klass)
       all[name.to_s] = klass.instance
     end
 
+    # @rbs (String) -> untyped
     def self.delete(name)
       all.delete(name.to_s)
     end
 
+    # @rbs () -> Hash[untyped, untyped]
     def self.all
       @formats ||= Hash.new(Base.instance)
     end
 
+    # @rbs () -> Array[untyped]
     def self.available_formats
       all.keys
     end
 
+    # @rbs (String) -> (Redmine::FieldFormat::StringFormat | Redmine::FieldFormat::ListFormat | Redmine::FieldFormat::FloatFormat | Redmine::FieldFormat::DateFormat | Redmine::FieldFormat::EnumerationFormat | Redmine::FieldFormat::UserFormat | Redmine::FieldFormat::BoolFormat | Redmine::FieldFormat::IntFormat | Redmine::FieldFormat::VersionFormat | Redmine::FieldFormat::TextFormat | Redmine::FieldFormat::AttachmentFormat | Redmine::FieldFormat::Base | Redmine::FieldFormat::LinkFormat)
     def self.find(name)
       all[name.to_s]
     end
 
     # Return an array of custom field formats which can be used in select_tag
+    # @rbs (?String) -> Array[untyped]
     def self.as_select(class_name=nil)
       formats = all.values.select do |format|
         format.class.customized_class_names.nil? ||
@@ -53,6 +59,7 @@ module Redmine
     end
 
     # Returns an array of formats that can be used for a custom field class
+    # @rbs (?Class) -> Array[untyped]
     def self.formats_for_custom_field_class(klass=nil)
       all.values.select do |format|
         format.class.customized_class_names.nil? ||
@@ -116,14 +123,17 @@ module Redmine
 
       field_attributes :url_pattern, :full_width_layout
 
+      # @rbs () -> String
       def name
         self.class.format_name
       end
 
+      # @rbs () -> String
       def label
         "label_#{name}"
       end
 
+      # @rbs (GroupCustomField | IssueCustomField | TimeEntryCustomField | CustomField | UserCustomField | VersionCustomField | ProjectCustomField | TimeEntryActivityCustomField | IssuePriorityCustomField, CustomFieldValue, (String | Integer | Array[untyped] | Date | Float)?) -> (String | Array[untyped])
       def set_custom_field_value(custom_field, custom_field_value, value)
         if value.is_a?(Array)
           value = value.map(&:to_s).reject{|v| v==''}.uniq
@@ -143,6 +153,7 @@ module Redmine
         cast_value(custom_value.custom_field, custom_value.value, custom_value.customized)
       end
 
+      # @rbs (ProjectCustomField | IssueCustomField | CustomField | UserCustomField | TimeEntryActivityCustomField | TimeEntryCustomField, (String | Array[untyped])?, ?(Project | Issue | bool | User)?) -> (String | Float | Date | User | bool | Integer | Version | Array[untyped] | Attachment | CustomFieldEnumeration)?
       def cast_value(custom_field, value, customized=nil)
         if value.blank?
           nil
@@ -156,22 +167,27 @@ module Redmine
         end
       end
 
+      # @rbs (ProjectCustomField | IssueCustomField | TimeEntryCustomField, String?, ?(Project | Issue | bool)?) -> String
       def cast_single_value(custom_field, value, customized=nil)
         value.to_s
       end
 
+      # @rbs () -> nil
       def target_class
         nil
       end
 
+      # @rbs (CustomFieldValue | CustomValue) -> Array[untyped]
       def possible_custom_value_options(custom_value)
         possible_values_options(custom_value.custom_field, custom_value.customized)
       end
 
+      # @rbs (IssueCustomField | UserCustomField, ?(Issue | User | Project)?) -> Array[untyped]
       def possible_values_options(custom_field, object=nil)
         []
       end
 
+      # @rbs (TimeEntryCustomField | IssueCustomField | GroupCustomField | UserCustomField, String | Date, (TimeEntry | Issue | User)?) -> (String | Array[untyped] | Date)?
       def value_from_keyword(custom_field, keyword, object)
         possible_values_options = possible_values_options(custom_field, object)
         if possible_values_options.present?
@@ -189,6 +205,7 @@ module Redmine
         end
       end
 
+      # @rbs (TimeEntryCustomField | IssueCustomField | GroupCustomField, String) -> (String | Integer | Array[untyped])?
       def parse_keyword(custom_field, keyword, &)
         separator = Regexp.escape ","
         keyword = keyword.dup.to_s
@@ -216,6 +233,7 @@ module Redmine
 
       # Returns the validation errors for custom_field
       # Should return an empty array if custom_field is valid
+      # @rbs (GroupCustomField | IssueCustomField | TimeEntryCustomField | UserCustomField | ProjectCustomField | CustomField | VersionCustomField | TimeEntryActivityCustomField) -> Array[untyped]
       def validate_custom_field(custom_field)
         errors = []
         pattern = custom_field.url_pattern
@@ -228,6 +246,7 @@ module Redmine
       # Returns the validation error messages for custom_value
       # Should return an empty array if custom_value is valid
       # custom_value is a CustomFieldValue.
+      # @rbs (CustomFieldValue) -> Array[untyped]
       def validate_custom_value(custom_value)
         values = Array.wrap(custom_value.value).reject {|value| value.to_s == ''}
         errors = values.map do |value|
@@ -236,18 +255,22 @@ module Redmine
         errors.flatten.uniq
       end
 
+      # @rbs (IssueCustomField | TimeEntryCustomField | CustomField | GroupCustomField | UserCustomField | VersionCustomField | TimeEntryActivityCustomField, String, ?(Issue | TimeEntry | Group | User | Version | TimeEntryActivity)?) -> Array[untyped]
       def validate_single_value(custom_field, value, customized=nil)
         []
       end
 
       # CustomValue after_save callback
+      # @rbs (ProjectCustomField | IssueCustomField | GroupCustomField | TimeEntryCustomField | UserCustomField | TimeEntryActivityCustomField | VersionCustomField | CustomField | IssuePriorityCustomField, CustomValue) -> nil
       def after_save_custom_value(custom_field, custom_value)
       end
 
+      # @rbs (QueriesHelperTest | TimelogController | Redmine::NumericFieldFormatTest | Redmine::FieldFormatTest | UsersController | IssuesController | Redmine::LinkFieldFormatTest, CustomFieldValue | CustomValue, ?bool) -> (String | Float | Date | User | bool | Integer | ActiveSupport::SafeBuffer | Version | Attachment | Array[untyped])?
       def formatted_custom_value(view, custom_value, html=false)
         formatted_value(view, custom_value.custom_field, custom_value.value, custom_value.customized, html)
       end
 
+      # @rbs (QueriesHelperTest | Redmine::NumericFieldFormatTest | Redmine::FieldFormatTest | UsersController | Redmine::ListFieldFormatTest | CustomFieldsHelperTest | IssuesController | IssuesHelperTest, ProjectCustomField | IssueCustomField | UserCustomField | TimeEntryActivityCustomField | TimeEntryCustomField | CustomField, (String | Array[untyped])?, ?Project | Issue | bool | User, ?bool) -> (String | Float | Date | User | bool | Integer | ActiveSupport::SafeBuffer | Version | Attachment | Array[untyped])?
       def formatted_value(view, custom_field, value, customized=nil, html=false)
         casted = cast_value(custom_field, value, customized)
         if html && custom_field.url_pattern.present?
@@ -265,6 +288,7 @@ module Redmine
         end
       end
 
+      # @rbs (String | ActiveSupport::SafeBuffer) -> ActiveSupport::SafeBuffer
       def sanitize_html(html)
         Redmine::WikiFormatting::HtmlSanitizer.call(html).html_safe
       end
@@ -276,6 +300,7 @@ module Redmine
       # %project_id% => id of the project of the customized object if defined
       # %project_identifier% => identifier of the project of the customized object if defined
       # %m1%, %m2%... => capture groups matches of the custom field regexp if defined
+      # @rbs (IssueCustomField, Integer | String, Issue) -> String
       def url_from_pattern(custom_field, value, customized)
         url = custom_field.url_pattern.to_s.dup
         url.gsub!('%value%') {Addressable::URI.encode_component value.to_s}
@@ -304,20 +329,24 @@ module Redmine
 
       # Returns the URL pattern with substitution tokens removed,
       # for validation purpose
+      # @rbs (String) -> String
       def url_pattern_without_tokens(url_pattern)
         url_pattern.to_s.gsub(/%(value|id|project_id|project_identifier|m\d+)%/, '')
       end
       protected :url_pattern_without_tokens
 
+      # @rbs (CustomFieldsHelperTest, String, String, CustomFieldValue | CustomValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
         view.text_field_tag(tag_name, custom_value.value, options.merge(:id => tag_id))
       end
 
+      # @rbs (CustomFieldsHelperTest, String, String, CustomField | IssueCustomField, Array[untyped]?, String?, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def bulk_edit_tag(view, tag_id, tag_name, custom_field, objects, value, options={})
         view.text_field_tag(tag_name, value, options.merge(:id => tag_id)) +
           bulk_clear_tag(view, tag_id, tag_name, custom_field, value)
       end
 
+      # @rbs (CustomFieldsHelperTest, String, String, CustomField | IssueCustomField, String?) -> ActiveSupport::SafeBuffer
       def bulk_clear_tag(view, tag_id, tag_name, custom_field, value)
         if custom_field.is_required?
           ''.html_safe
@@ -334,16 +363,19 @@ module Redmine
       end
       protected :bulk_clear_tag
 
+      # @rbs (IssueCustomField | UserCustomField | ProjectCustomField | VersionCustomField, IssueQuery | TimeEntryQuery) -> Hash[untyped, untyped]
       def query_filter_options(custom_field, query)
         {:type => :string}
       end
 
+      # @rbs (GroupCustomField | IssueCustomField | TimeEntryCustomField | UserCustomField | ProjectCustomField | CustomField | VersionCustomField | TimeEntryActivityCustomField | IssuePriorityCustomField) -> nil
       def before_custom_field_save(custom_field)
       end
 
       # Returns a ORDER BY clause that can used to sort customized
       # objects by their value of the custom field.
       # Returns nil if the custom field can not be used for sorting.
+      # @rbs (IssueCustomField | ProjectCustomField | TimeEntryCustomField | UserCustomField | TimeEntryActivityCustomField) -> Arel::Nodes::SqlLiteral
       def order_statement(custom_field)
         # COALESCE is here to make sure that blank and NULL values are sorted equally
         Arel.sql "COALESCE(#{join_alias custom_field}.value, '')"
@@ -351,11 +383,13 @@ module Redmine
 
       # Returns a GROUP BY clause that can used to group by custom value
       # Returns nil if the custom field can not be used for grouping.
+      # @rbs (IssueCustomField | UserCustomField | TimeEntryCustomField) -> nil
       def group_statement(custom_field)
         nil
       end
 
       # Returns a JOIN clause that is added to the query when sorting by custom values
+      # @rbs (IssueCustomField | TimeEntryCustomField | ProjectCustomField | TimeEntryActivityCustomField) -> String
       def join_for_order_statement(custom_field)
         alias_name = join_alias(custom_field)
 
@@ -371,6 +405,7 @@ module Redmine
             " AND #{alias_name}_2.custom_field_id = #{alias_name}.custom_field_id)"
       end
 
+      # @rbs (IssueCustomField | ProjectCustomField | TimeEntryCustomField | UserCustomField | TimeEntryActivityCustomField) -> String
       def join_alias(custom_field)
         "cf_#{custom_field.id}"
       end
@@ -378,6 +413,7 @@ module Redmine
     end
 
     class Unbounded < Base
+      # @rbs (IssueCustomField | CustomField | GroupCustomField | UserCustomField | VersionCustomField | TimeEntryCustomField | TimeEntryActivityCustomField, String, ?(Issue | Group | User | Version | TimeEntry | TimeEntryActivity)?) -> Array[untyped]
       def validate_single_value(custom_field, value, customized=nil)
         errs = super
         value = value.to_s
@@ -400,6 +436,7 @@ module Redmine
       self.form_partial = 'custom_fields/formats/string'
       field_attributes :text_formatting
 
+      # @rbs (TimelogController | Redmine::FieldFormatTest | IssuesController, IssueCustomField | GroupCustomField | VersionCustomField | UserCustomField | TimeEntryCustomField, String?, ?Issue | bool | Group | Version | User | TimeEntry, ?bool) -> (String | ActiveSupport::SafeBuffer)
       def formatted_value(view, custom_field, value, customized=nil, html=false)
         if html
           if custom_field.url_pattern.present?
@@ -421,6 +458,7 @@ module Redmine
       self.form_partial = 'custom_fields/formats/text'
       self.change_as_diff = true
 
+      # @rbs (Redmine::FieldFormatTest, IssueCustomField | ProjectCustomField, String?, ?Issue | Project, ?bool) -> (String | ActiveSupport::SafeBuffer)
       def formatted_value(view, custom_field, value, customized=nil, html=false)
         if html
           if value.present?
@@ -437,6 +475,7 @@ module Redmine
         end
       end
 
+      # @rbs (CustomFieldsHelperTest, String, String, CustomValue | CustomFieldValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
         view.text_area_tag(tag_name, custom_value.value, options.merge(:id => tag_id, :rows => 8))
       end
@@ -457,6 +496,7 @@ module Redmine
       self.searchable_supported = false
       self.form_partial = 'custom_fields/formats/link'
 
+      # @rbs (Redmine::LinkFieldFormatTest, IssueCustomField, String, ?Issue, ?bool) -> (String | ActiveSupport::SafeBuffer)
       def formatted_value(view, custom_field, value, customized=nil, html=false)
         if html && value.present?
           if custom_field.url_pattern.present?
@@ -480,6 +520,7 @@ module Redmine
       self.totalable_supported = true
       field_attributes :thousands_delimiter
 
+      # @rbs (IssueCustomField | ProjectCustomField | TimeEntryCustomField | UserCustomField) -> Arel::Nodes::SqlLiteral
       def order_statement(custom_field)
         # Make the database cast values into numeric
         # Postgresql will raise an error if a value can not be casted!
@@ -492,6 +533,7 @@ module Redmine
       end
 
       # Returns totals for the given scope
+      # @rbs (IssueCustomField | TimeEntryCustomField | ProjectCustomField, Issue::ActiveRecord_Relation | TimeEntry::ActiveRecord_Relation | Project::ActiveRecord_Relation) -> (Hash[untyped, untyped] | Float | Integer)
       def total_for_scope(custom_field, scope)
         scope.joins(:custom_values).
           where(:custom_values => {:custom_field_id => custom_field.id}).
@@ -499,6 +541,7 @@ module Redmine
           sum("CAST(#{CustomValue.table_name}.value AS decimal(30,3))")
       end
 
+      # @rbs (IssueCustomField | TimeEntryCustomField | ProjectCustomField, Integer) -> Integer
       def cast_total_value(custom_field, value)
         cast_single_value(custom_field, value)
       end
@@ -507,24 +550,29 @@ module Redmine
     class IntFormat < Numeric
       add 'int'
 
+      # @rbs () -> String
       def label
         "label_integer"
       end
 
+      # @rbs (IssueCustomField | TimeEntryCustomField | ProjectCustomField, String | Integer, ?Issue?) -> Integer
       def cast_single_value(custom_field, value, customized=nil)
         value.to_i
       end
 
+      # @rbs (GroupCustomField | CustomField, String, ?Group?) -> Array[untyped]
       def validate_single_value(custom_field, value, customized=nil)
         errs = super
         errs << ::I18n.t('activerecord.errors.messages.not_a_number') unless /^[+-]?\d+$/.match?(value.to_s.strip)
         errs
       end
 
+      # @rbs (IssueCustomField, IssueQuery) -> Hash[untyped, untyped]
       def query_filter_options(custom_field, query)
         {:type => :integer}
       end
 
+      # @rbs (IssueCustomField | TimeEntryCustomField | ProjectCustomField) -> Arel::Nodes::SqlLiteral
       def group_statement(custom_field)
         order_statement(custom_field)
       end
@@ -533,20 +581,24 @@ module Redmine
     class FloatFormat < Numeric
       add 'float'
 
+      # @rbs (IssueCustomField | CustomField | UserCustomField, String, ?(Issue | User | bool)?) -> Float
       def cast_single_value(custom_field, value, customized=nil)
         value.to_f
       end
 
+      # @rbs (IssueCustomField, Float) -> Float
       def cast_total_value(custom_field, value)
         value.to_f.round(2)
       end
 
+      # @rbs (IssueCustomField | CustomField | UserCustomField, String, ?(Issue | User)?) -> Array[untyped]
       def validate_single_value(custom_field, value, customized=nil)
         errs = super
         errs << ::I18n.t('activerecord.errors.messages.invalid') unless Kernel.Float(value, exception: false)
         errs
       end
 
+      # @rbs (IssueCustomField | UserCustomField, IssueQuery) -> Hash[untyped, untyped]
       def query_filter_options(custom_field, query)
         {:type => :float}
       end
@@ -556,10 +608,12 @@ module Redmine
       add 'date'
       self.form_partial = 'custom_fields/formats/date'
 
+      # @rbs (IssueCustomField | UserCustomField, String, ?(Issue | User)?) -> Date
       def cast_single_value(custom_field, value, customized=nil)
         value.to_date rescue nil
       end
 
+      # @rbs (IssueCustomField | CustomField | UserCustomField, String, ?(Issue | User)?) -> Array[untyped]
       def validate_single_value(custom_field, value, customized=nil)
         if /^\d{4}-\d{2}-\d{2}$/.match?(value) && (value.to_date rescue false)
           []
@@ -568,21 +622,25 @@ module Redmine
         end
       end
 
+      # @rbs (untyped, String, String, CustomFieldValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
         view.date_field_tag(tag_name, custom_value.value, options.merge(:id => tag_id, :size => 10)) +
           view.calendar_for(tag_id)
       end
 
+      # @rbs (untyped, String, String, IssueCustomField, Array[untyped], nil, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def bulk_edit_tag(view, tag_id, tag_name, custom_field, objects, value, options={})
         view.date_field_tag(tag_name, value, options.merge(:id => tag_id, :size => 10)) +
           view.calendar_for(tag_id) +
           bulk_clear_tag(view, tag_id, tag_name, custom_field, value)
       end
 
+      # @rbs (IssueCustomField, IssueQuery | TimeEntryQuery) -> Hash[untyped, untyped]
       def query_filter_options(custom_field, query)
         {:type => :date}
       end
 
+      # @rbs (IssueCustomField | UserCustomField) -> Arel::Nodes::SqlLiteral
       def group_statement(custom_field)
         order_statement(custom_field)
       end
@@ -592,6 +650,7 @@ module Redmine
       self.multiple_supported = true
       field_attributes :edit_tag_style
 
+      # @rbs (Redmine::EnumerationFieldFormatTest | Redmine::ListFieldFormatTest | CustomFieldsHelperTest, String, String, CustomFieldValue | CustomValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
         if custom_value.custom_field.edit_tag_style == 'check_box'
           check_box_edit_tag(view, tag_id, tag_name, custom_value, options)
@@ -600,6 +659,7 @@ module Redmine
         end
       end
 
+      # @rbs (untyped, String, String, TimeEntryCustomField | IssueCustomField, Array[untyped], nil, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def bulk_edit_tag(view, tag_id, tag_name, custom_field, objects, value, options={})
         opts = []
         opts << [l(:label_no_change_option), ''] unless custom_field.multiple?
@@ -612,6 +672,7 @@ module Redmine
         )
       end
 
+      # @rbs (IssueCustomField | ProjectCustomField, IssueQuery | ProjectQuery | ProjectAdminQuery | TimeEntryQuery | Query) -> Hash[untyped, untyped]
       def query_filter_options(custom_field, query)
         {
           :type => :list_optional,
@@ -622,11 +683,13 @@ module Redmine
       protected
 
       # Returns the values that are available in the field filter
+      # @rbs (ProjectCustomField | IssueCustomField, ProjectQuery | IssueQuery | TimeEntryQuery | ProjectAdminQuery) -> Array[untyped]
       def query_filter_values(custom_field, query)
         possible_values_options(custom_field, query.project)
       end
 
       # Renders the edit tag as a select tag
+      # @rbs (Redmine::BoolFieldFormatTest | Redmine::EnumerationFieldFormatTest | Redmine::ListFieldFormatTest | CustomFieldsHelperTest, String, String, CustomFieldValue | CustomValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def select_edit_tag(view, tag_id, tag_name, custom_value, options={})
         blank_option = ''.html_safe
         unless custom_value.custom_field.multiple?
@@ -658,6 +721,7 @@ module Redmine
       end
 
       # Renders the edit tag as check box or radio tags
+      # @rbs (Redmine::BoolFieldFormatTest | Redmine::EnumerationFieldFormatTest | Redmine::ListFieldFormatTest | CustomFieldsHelperTest, String, String, CustomFieldValue | CustomValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def check_box_edit_tag(view, tag_id, tag_name, custom_value, options={})
         opts = []
         unless custom_value.custom_field.multiple? || custom_value.custom_field.is_required?
@@ -686,6 +750,7 @@ module Redmine
       self.searchable_supported = true
       self.form_partial = 'custom_fields/formats/list'
 
+      # @rbs (CustomFieldValue | CustomValue) -> Array[untyped]
       def possible_custom_value_options(custom_value)
         options = possible_values_options(custom_value.custom_field)
         missing = [custom_value.value].flatten.reject(&:blank?) - options
@@ -695,10 +760,12 @@ module Redmine
         options
       end
 
+      # @rbs (ProjectCustomField | IssueCustomField | CustomField | GroupCustomField | TimeEntryCustomField, ?(Project | Issue | Array[untyped])?) -> Array[untyped]
       def possible_values_options(custom_field, object=nil)
         custom_field.possible_values
       end
 
+      # @rbs (GroupCustomField | IssueCustomField | CustomField | ProjectCustomField | IssuePriorityCustomField | TimeEntryCustomField) -> Array[untyped]
       def validate_custom_field(custom_field)
         errors = []
         errors << [:possible_values, :blank] if custom_field.possible_values.blank?
@@ -706,6 +773,7 @@ module Redmine
         errors
       end
 
+      # @rbs (CustomFieldValue) -> Array[untyped]
       def validate_custom_value(custom_value)
         values = Array.wrap(custom_value.value).reject {|value| value.to_s == ''}
         invalid_values = values - Array.wrap(custom_value.value_was) - custom_value.custom_field.possible_values
@@ -716,6 +784,7 @@ module Redmine
         end
       end
 
+      # @rbs (IssueCustomField | ProjectCustomField | TimeEntryCustomField) -> Arel::Nodes::SqlLiteral
       def group_statement(custom_field)
         order_statement(custom_field)
       end
@@ -726,22 +795,27 @@ module Redmine
       self.multiple_supported = false
       self.form_partial = 'custom_fields/formats/bool'
 
+      # @rbs () -> String
       def label
         "label_boolean"
       end
 
+      # @rbs (IssueCustomField | TimeEntryActivityCustomField | CustomField, String, ?(Issue | bool)?) -> bool
       def cast_single_value(custom_field, value, customized=nil)
         value == '1' ? true : false
       end
 
+      # @rbs (TimeEntryCustomField | IssueCustomField | DocumentCategoryCustomField | DocumentCustomField | GroupCustomField | IssuePriorityCustomField | ProjectCustomField | TimeEntryActivityCustomField | UserCustomField | VersionCustomField | CustomField, ?(TimeEntry | Issue | Array[untyped] | TimeEntryActivity | Project)?) -> Array[untyped]
       def possible_values_options(custom_field, object=nil)
         [[::I18n.t(:general_text_Yes), '1'], [::I18n.t(:general_text_No), '0']]
       end
 
+      # @rbs (TimeEntryCustomField | TimeEntryActivityCustomField | IssueCustomField) -> Arel::Nodes::SqlLiteral
       def group_statement(custom_field)
         order_statement(custom_field)
       end
 
+      # @rbs (Redmine::BoolFieldFormatTest | CustomFieldsHelperTest, String, String, CustomFieldValue | CustomValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
         case custom_value.custom_field.edit_tag_style
         when 'check_box'
@@ -754,6 +828,7 @@ module Redmine
       end
 
       # Renders the edit tag as a simple check box
+      # @rbs (Redmine::BoolFieldFormatTest | CustomFieldsHelperTest, String, String, CustomFieldValue | CustomValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def single_check_box_edit_tag(view, tag_id, tag_name, custom_value, options={})
         s = ''.html_safe
         s << view.hidden_field_tag(tag_name, '0', :id => nil)
@@ -765,10 +840,12 @@ module Redmine
     class RecordList < List
       self.customized_class_names = %w(Issue TimeEntry Version Document Project)
 
+      # @rbs (IssueCustomField, String | Integer, ?(Issue | bool)?) -> (User | Version | CustomFieldEnumeration)?
       def cast_single_value(custom_field, value, customized=nil)
         target_class.find_by_id(value.to_i) if value.present?
       end
 
+      # @rbs () -> Class
       def target_class
         @target_class ||= self.class.name[/^(.*::)?(.+)Format$/, 2].constantize rescue nil
       end
@@ -777,6 +854,7 @@ module Redmine
         @target_class = nil
       end
 
+      # @rbs (CustomFieldValue | CustomValue) -> Array[untyped]
       def possible_custom_value_options(custom_value)
         options = possible_values_options(custom_value.custom_field, custom_value.customized)
         missing = [custom_value.value_was].flatten.reject(&:blank?) - options.map(&:last)
@@ -786,6 +864,7 @@ module Redmine
         options
       end
 
+      # @rbs (CustomFieldValue) -> Array[untyped]
       def validate_custom_value(custom_value)
         values = Array.wrap(custom_value.value).reject {|value| value.to_s == ''}
         invalid_values = values - possible_custom_value_options(custom_value).map(&:last)
@@ -796,16 +875,19 @@ module Redmine
         end
       end
 
+      # @rbs (IssueCustomField) -> Array[untyped]
       def order_statement(custom_field)
         if target_class.respond_to?(:fields_for_order_statement)
           target_class.fields_for_order_statement(value_join_alias(custom_field))
         end
       end
 
+      # @rbs (IssueCustomField) -> Arel::Nodes::SqlLiteral
       def group_statement(custom_field)
         Arel.sql "COALESCE(#{join_alias custom_field}.value, '')"
       end
 
+      # @rbs (IssueCustomField) -> String
       def join_for_order_statement(custom_field)
         alias_name = join_alias(custom_field)
 
@@ -824,6 +906,7 @@ module Redmine
             " = #{value_join_alias custom_field}.id"
       end
 
+      # @rbs (IssueCustomField) -> String
       def value_join_alias(custom_field)
         join_alias(custom_field) + "_" + custom_field.field_format
       end
@@ -836,22 +919,27 @@ module Redmine
       add 'enumeration'
       self.form_partial = 'custom_fields/formats/enumeration'
 
+      # @rbs () -> String
       def label
         "label_field_format_enumeration"
       end
 
+      # @rbs () -> Class
       def target_class
         @target_class ||= CustomFieldEnumeration
       end
 
+      # @rbs (GroupCustomField | IssueCustomField, ?(Group | Issue)?) -> Array[untyped]
       def possible_values_options(custom_field, object=nil)
         possible_values_records(custom_field, object).map {|u| [u.name, u.id.to_s]}
       end
 
+      # @rbs (GroupCustomField | IssueCustomField, ?(Group | Issue)?) -> CustomFieldEnumeration::ActiveRecord_AssociationRelation
       def possible_values_records(custom_field, object=nil)
         custom_field.enumerations.active
       end
 
+      # @rbs (IssueCustomField, String, nil) -> (Integer | Array[untyped])?
       def value_from_keyword(custom_field, keyword, object)
         parse_keyword(custom_field, keyword) do |k|
           custom_field.enumerations.where("LOWER(name) LIKE LOWER(?)", k).first.try(:id)
@@ -864,6 +952,7 @@ module Redmine
       self.form_partial = 'custom_fields/formats/user'
       field_attributes :user_role
 
+      # @rbs (IssueCustomField | TimeEntryCustomField, ?(Issue | TimeEntry | Project | Array[untyped])?) -> Array[untyped]
       def possible_values_options(custom_field, object=nil)
         users = possible_values_records(custom_field, object)
         options = users.map {|u| [u.name, u.id.to_s]}
@@ -871,6 +960,7 @@ module Redmine
         options
       end
 
+      # @rbs (IssueCustomField | TimeEntryCustomField, ?(Issue | TimeEntry | Project | Array[untyped])?) -> (User::ActiveRecord_Relation | Array[untyped])
       def possible_values_records(custom_field, object=nil)
         if object.is_a?(Array)
           projects = object.filter_map {|o| o.respond_to?(:project) ? o.project : nil}.uniq
@@ -891,6 +981,7 @@ module Redmine
         end
       end
 
+      # @rbs (TimeEntryCustomField | IssueCustomField, String, TimeEntry | Issue | Project) -> (Integer | Array[untyped])?
       def value_from_keyword(custom_field, keyword, object)
         users = possible_values_records(custom_field, object).to_a
         parse_keyword(custom_field, keyword) do |k|
@@ -898,6 +989,7 @@ module Redmine
         end
       end
 
+      # @rbs (IssueCustomField | TimeEntryCustomField) -> Array[untyped]?
       def before_custom_field_save(custom_field)
         super
         if custom_field.user_role.is_a?(Array)
@@ -905,6 +997,7 @@ module Redmine
         end
       end
 
+      # @rbs (IssueCustomField, IssueQuery) -> Array[untyped]
       def query_filter_values(custom_field, query)
         query.author_values
       end
@@ -915,12 +1008,14 @@ module Redmine
       self.form_partial = 'custom_fields/formats/version'
       field_attributes :version_status
 
+      # @rbs (IssueCustomField, ?(Issue | Project | Array[untyped])?) -> Array[untyped]
       def possible_values_options(custom_field, object=nil)
         possible_values_records(custom_field, object).sort.collect do |v|
           [v.to_s, v.id.to_s]
         end
       end
 
+      # @rbs (IssueCustomField) -> Array[untyped]?
       def before_custom_field_save(custom_field)
         super
         if custom_field.version_status.is_a?(Array)
@@ -930,6 +1025,7 @@ module Redmine
 
       protected
 
+      # @rbs (IssueCustomField, Query) -> Array[untyped]
       def query_filter_values(custom_field, query)
         versions = possible_values_records(custom_field, query.project, true)
         Version.sort_by_status(versions).collect do |s|
@@ -937,6 +1033,7 @@ module Redmine
         end
       end
 
+      # @rbs (IssueCustomField, ?(Issue | Project | Array[untyped])?, ?bool) -> Version::ActiveRecord_Relation
       def possible_values_records(custom_field, object=nil, all_statuses=false)
         if object.is_a?(Array)
           projects = object.filter_map {|o| o.respond_to?(:project) ? o.project : nil}.uniq
@@ -952,6 +1049,7 @@ module Redmine
         end
       end
 
+      # @rbs (IssueCustomField, Version::ActiveRecord_Relation, ?bool) -> Version::ActiveRecord_Relation
       def filtered_versions_options(custom_field, scope, all_statuses=false)
         if !all_statuses && custom_field.version_status.is_a?(Array)
           statuses = custom_field.version_status.map(&:to_s).reject(&:blank?)
@@ -971,6 +1069,7 @@ module Redmine
       self.bulk_edit_supported = false
       field_attributes :extensions_allowed
 
+      # @rbs (ProjectCustomField | IssueCustomField | GroupCustomField, CustomFieldValue, Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess | String) -> String
       def set_custom_field_value(custom_field, custom_field_value, value)
         attachment_present = false
 
@@ -1009,6 +1108,7 @@ module Redmine
         value
       end
 
+      # @rbs (IssueCustomField, CustomFieldValue, String) -> String
       def set_custom_field_value_by_id(custom_field, custom_field_value, id)
         attachment = Attachment.find_by_id(id)
         if attachment && attachment.container.is_a?(CustomValue) &&
@@ -1020,10 +1120,12 @@ module Redmine
       end
       private :set_custom_field_value_by_id
 
+      # @rbs (IssueCustomField, String, ?Issue) -> Attachment
       def cast_single_value(custom_field, value, customized=nil)
         Attachment.find_by_id(value.to_i) if value.present? && value.respond_to?(:to_i)
       end
 
+      # @rbs (CustomFieldValue) -> Array[untyped]
       def validate_custom_value(custom_value)
         errors = []
 
@@ -1046,6 +1148,7 @@ module Redmine
         errors.uniq
       end
 
+      # @rbs (ProjectCustomField | IssueCustomField | GroupCustomField, CustomValue) -> Attachment?
       def after_save_custom_value(custom_field, custom_value)
         if custom_value.saved_change_to_value?
           if custom_value.value.present?
@@ -1064,6 +1167,7 @@ module Redmine
         end
       end
 
+      # @rbs (untyped, String, String, CustomFieldValue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
         attachment = nil
         if custom_value.value.present?

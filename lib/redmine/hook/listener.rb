@@ -25,6 +25,7 @@ module Redmine
       include Redmine::I18n
 
       # Registers the listener
+      # @rbs (Class) -> Class
       def self.inherited(child)
         Redmine::Hook.add_listener(child)
         super

@@ -23,10 +23,12 @@ module Redmine
   module I18n
     include ActionView::Helpers::NumberHelper
 
+    # @rbs (Class | Module) -> (Class | Module)
     def self.included(base)
       base.extend Redmine::I18n
     end
 
+    # @rbs (*Symbol | Symbol | Hash[untyped, untyped] | String | String | Hash[untyped, untyped] | Symbol | String | Symbol | ActiveSupport::SafeBuffer | Symbol | Integer) -> (String | Array[untyped])
     def l(*args)
       case args.size
       when 1
@@ -44,20 +46,24 @@ module Redmine
       end
     end
 
+    # @rbs (Symbol | String, ?Hash[untyped, untyped]) -> String
     def l_or_humanize(s, options={})
       k = :"#{options[:prefix]}#{s}"
       ::I18n.t(k, :default => s.to_s.humanize)
     end
 
+    # @rbs ((Float | Rational)?) -> String
     def l_hours(hours)
       hours = hours.to_f unless hours.is_a?(Numeric)
       l((hours < 2.0 ? :label_f_hour : :label_f_hour_plural), :value => format_hours(hours))
     end
 
+    # @rbs (Float | Integer | Rational) -> String
     def l_hours_short(hours)
       l(:label_f_hour_short, :value => format_hours(hours.is_a?(Numeric) ? hours : hours.to_f))
     end
 
+    # @rbs (String | Symbol, Symbol | String, ?(Hash[untyped, untyped] | User | String)?) -> String
     def ll(lang, str, arg=nil)
       options = arg.is_a?(Hash) ? arg : {:value => arg}
       locale = lang.to_s.gsub(%r{(.+)\-(.+)$}) {"#{$1}-#{$2.upcase}"}
@@ -65,11 +71,13 @@ module Redmine
     end
 
     # Localizes the given args with user's language
+    # @rbs (User?, *Symbol | String | Hash[untyped, untyped]) -> String
     def lu(user, *args)
       lang = user.try(:language).presence || Setting.default_language
       ll(lang, *args)
     end
 
+    # @rbs ((Time | Date | ActiveSupport::TimeWithZone)?) -> String?
     def format_date(date)
       return nil unless date
 
@@ -78,6 +86,7 @@ module Redmine
       ::I18n.l(date.to_date, **options)
     end
 
+    # @rbs (ActiveSupport::TimeWithZone | Time, ?bool, ?nil) -> String
     def format_time(time, include_date=true, user=nil)
       return nil unless time
 
@@ -89,6 +98,7 @@ module Redmine
       (include_date ? "#{format_date(local)} " : "") + ::I18n.l(local, **options)
     end
 
+    # @rbs ((Float | Rational | Integer)?) -> (String | ActiveSupport::SafeBuffer)
     def format_hours(hours)
       return "" if hours.blank?
 
@@ -109,27 +119,33 @@ module Redmine
     #
     # @note The delimiter cannot be used here if it is a decimal point since it
     #       will clash with the dot separator.
+    # @rbs ((String | Float)?) -> String
     def normalize_float(value)
       separator = ::I18n.t('number.format.separator')
       value.to_s.gsub(/[#{separator}]/, separator => '.')
     end
 
+    # @rbs (Integer) -> String
     def day_name(day)
       ::I18n.t('date.day_names')[day % 7]
     end
 
+    # @rbs (Integer) -> String
     def abbr_day_name(day)
       ::I18n.t('date.abbr_day_names')[day % 7]
     end
 
+    # @rbs (Integer) -> String
     def day_letter(day)
       ::I18n.t('date.abbr_day_names')[day % 7].first
     end
 
+    # @rbs (Integer) -> String
     def month_name(month)
       ::I18n.t('date.month_names')[month]
     end
 
+    # @rbs () -> Array[untyped]
     def valid_languages
       ::I18n.available_locales
     end
@@ -139,6 +155,7 @@ module Redmine
     #
     # The result is cached to prevent from loading all translations files
     # unless :cache => false option is given
+    # @rbs (?Hash[untyped, untyped]) -> Array[untyped]
     def languages_options(options={})
       options =
         if options[:cache] == false
@@ -155,6 +172,7 @@ module Redmine
       options.map {|name, lang| [name.force_encoding("UTF-8"), lang.force_encoding("UTF-8")]}
     end
 
+    # @rbs ((String | Symbol)?) -> Symbol?
     def find_language(lang)
       @@languages_lookup ||=
         valid_languages.inject({}) do |k, v|
@@ -164,12 +182,14 @@ module Redmine
       @@languages_lookup[lang.to_s.downcase]
     end
 
+    # @rbs (String | Symbol) -> Symbol
     def set_language_if_valid(lang)
       if l = find_language(lang)
         ::I18n.locale = l
       end
     end
 
+    # @rbs () -> Symbol
     def current_language
       ::I18n.locale
     end

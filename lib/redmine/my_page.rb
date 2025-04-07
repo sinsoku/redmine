@@ -36,15 +36,18 @@ module Redmine
       'activity' => {:label => :label_activity}
     }
 
+    # @rbs () -> Array[untyped]
     def self.groups
       CORE_GROUPS.dup.freeze
     end
 
     # Returns the available blocks
+    # @rbs () -> Hash[untyped, untyped]
     def self.blocks
       CORE_BLOCKS.merge(additional_blocks).freeze
     end
 
+    # @rbs (?Array[untyped]) -> Array[untyped]
     def self.block_options(blocks_in_use=[])
       options = []
       blocks.each do |block, block_options|
@@ -65,10 +68,12 @@ module Redmine
       options
     end
 
+    # @rbs (String, ?Array[untyped]) -> bool
     def self.valid_block?(block, blocks_in_use=[])
       block.present? && block_options(blocks_in_use).map(&:last).include?(block)
     end
 
+    # @rbs (String) -> Hash[untyped, untyped]?
     def self.find_block(block)
       block.to_s =~  /\A(.*?)(__\d+)?\z/
       name = $1
@@ -76,6 +81,7 @@ module Redmine
     end
 
     # Returns the additional blocks that are defined by plugin partials
+    # @rbs () -> Hash[untyped, untyped]
     def self.additional_blocks
       @@additional_blocks ||=
         Dir.glob(
@@ -88,6 +94,7 @@ module Redmine
     end
 
     # Returns the default layout for My Page
+    # @rbs () -> Hash[untyped, untyped]
     def self.default_layout
       {
         'left' => ['issuesassignedtome'],

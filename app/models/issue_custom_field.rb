@@ -24,14 +24,17 @@ class IssueCustomField < CustomField
   safe_attributes 'project_ids',
                   'tracker_ids'
 
+  # @rbs () -> Symbol
   def type_name
     :label_issue_plural
   end
 
+  # @rbs (Project, ?User | AnonymousUser) -> bool
   def visible_by?(project, user=User.current)
     super || roles.intersect?(user.roles_for_project(project))
   end
 
+  # @rbs (?String?, ?User | AnonymousUser, ?String?) -> String
   def visibility_by_project_condition(project_key=nil, user=User.current, id_column=nil)
     sql = super
     id_column ||= id
@@ -42,6 +45,7 @@ class IssueCustomField < CustomField
     "((#{sql}) AND (#{tracker_condition}) AND (#{project_condition}) AND (#{Issue.visible_condition(user)}))"
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_custom_field
     super
     errors.add(:base, l(:label_role_plural) + ' ' + l('activerecord.errors.messages.blank')) unless visible? || roles.present?

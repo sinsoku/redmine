@@ -25,6 +25,7 @@ class WikiRedirect < ApplicationRecord
 
   before_save :set_redirects_to_wiki_id
 
+  # @rbs () -> WikiPage
   def target_page
     wiki = Wiki.find_by_id(redirects_to_wiki_id)
     if wiki
@@ -34,6 +35,7 @@ class WikiRedirect < ApplicationRecord
 
   private
 
+  # @rbs () -> Integer
   def set_redirects_to_wiki_id
     self.redirects_to_wiki_id ||= wiki_id
   end

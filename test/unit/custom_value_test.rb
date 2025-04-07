@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class CustomValueTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_new_without_value_should_set_default_value
     field = CustomField.generate!(:default_value => 'Default string')
 
@@ -31,6 +33,7 @@ class CustomValueTest < ActiveSupport::TestCase
     assert_equal 'Default string', v.value
   end
 
+  # @rbs () -> bool
   def test_new_with_value_should_not_set_default_value
     field = CustomField.generate!(:default_value => 'Default string')
 
@@ -38,6 +41,7 @@ class CustomValueTest < ActiveSupport::TestCase
     assert_equal 'String', v.value
   end
 
+  # @rbs () -> bool
   def test_new_with_nil_value_should_not_set_default_value
     field = CustomField.generate!(:default_value => 'Default string')
 
@@ -45,6 +49,7 @@ class CustomValueTest < ActiveSupport::TestCase
     assert_nil v.value
   end
 
+  # @rbs () -> bool
   def test_sti_polymorphic_association
     # Rails uses top level sti class for polymorphic association. See #3978.
     assert !User.find(4).custom_values.empty?

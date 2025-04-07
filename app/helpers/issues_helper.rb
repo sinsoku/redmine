@@ -22,6 +22,7 @@ module IssuesHelper
   include Redmine::Export::PDF::IssuesPdfHelper
   include IssueStatusesHelper
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def issue_list(issues, &)
     ancestors = []
     issues.each do |issue|
@@ -34,6 +35,7 @@ module IssuesHelper
     end
   end
 
+  # @rbs (Array[untyped], IssueQuery) -> Array[untyped]
   def grouped_issue_list(issues, query, &)
     ancestors = []
     grouped_query_results(issues, query) do |issue, group_name, group_count, group_totals|
@@ -55,6 +57,7 @@ module IssuesHelper
   #      <span class="tip"><%= render_issue_tooltip(issue) %></span>
   #    </div>
   #
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer
   def render_issue_tooltip(issue)
     @cached_label_status ||= l(:field_status)
     @cached_label_start_date ||= l(:field_start_date)
@@ -72,10 +75,12 @@ module IssuesHelper
       "<strong>#{@cached_label_priority}</strong>: #{h(issue.priority.name)}".html_safe
   end
 
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer
   def issue_heading(issue)
     h("#{issue.tracker} ##{issue.id}")
   end
 
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer
   def render_issue_subject_with_tree(issue)
     s = +''
     ancestors = issue.root? ? [] : issue.ancestors.visible.to_a
@@ -89,6 +94,7 @@ module IssuesHelper
     s.html_safe
   end
 
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer
   def render_descendants_tree(issue)
     manage_relations = User.current.allowed_to?(:manage_subtasks, issue.project)
     s = +'<table class="list issues odd-even">'
@@ -144,6 +150,7 @@ module IssuesHelper
   end
 
   # Renders descendants stats (total descendants (open - closed)) with query links
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer?
   def render_descendants_stats(issue)
     # Get issue descendants grouped by status type (open/closed) using a single query
     subtasks_grouped = issue.descendants.visible.joins(:status).select(:is_closed, :id).group(:is_closed).reorder(:is_closed).count(:id)
@@ -156,6 +163,7 @@ module IssuesHelper
   end
 
   # Renders relations stats (total relations (open - closed)) with query links
+  # @rbs (Issue, Array[untyped]) -> ActiveSupport::SafeBuffer?
   def render_relations_stats(issue, relations)
     open_relations = relations.count{|r| r.other_issue(issue).closed? == false}
     closed_relations = relations.count{|r| r.other_issue(issue).closed?}
@@ -163,6 +171,7 @@ module IssuesHelper
   end
 
   # Renders issues stats (total relations (open - closed)) with query links
+  # @rbs (?Integer, ?Integer, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer?
   def render_issues_stats(open_issues=0, closed_issues=0, issues_path_attr={})
     total_issues = open_issues + closed_issues
     return if total_issues == 0
@@ -198,6 +207,7 @@ module IssuesHelper
   end
 
   # Renders the list of related issues on the issue details view
+  # @rbs (Issue, Array[untyped]) -> ActiveSupport::SafeBuffer
   def render_issue_relations(issue, relations)
     manage_relations = User.current.allowed_to?(:manage_issue_relations, issue.project)
     s = ''.html_safe
@@ -253,6 +263,7 @@ module IssuesHelper
     content_tag('table', s, :class => 'list issues odd-even')
   end
 
+  # @rbs (Issue) -> String?
   def issue_estimated_hours_details(issue)
     if issue.total_estimated_hours.present?
       if issue.total_estimated_hours == issue.estimated_hours
@@ -265,6 +276,7 @@ module IssuesHelper
     end
   end
 
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer
   def issue_spent_hours_details(issue)
     if issue.total_spent_hours > 0
       path = project_time_entries_path(issue.project, :issue_id => "~#{issue.id}")
@@ -284,6 +296,7 @@ module IssuesHelper
     end
   end
 
+  # @rbs (Issue) -> String?
   def issue_due_date_details(issue)
     return if issue&.due_date.nil?
 
@@ -293,10 +306,12 @@ module IssuesHelper
   end
 
   # Returns a link for adding a new subtask to the given issue
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer
   def link_to_new_subtask(issue)
     link_to(l(:button_add), url_for_new_subtask(issue))
   end
 
+  # @rbs (Issue) -> String
   def url_for_new_subtask(issue)
     attrs = {
       :parent_issue_id => issue
@@ -307,11 +322,13 @@ module IssuesHelper
     new_project_issue_path(issue.project, params)
   end
 
+  # @rbs (Issue) -> Array[untyped]
   def trackers_options_for_select(issue)
     trackers = trackers_for_select(issue)
     trackers.collect {|t| [t.name, t.id]}
   end
 
+  # @rbs (Issue) -> (Tracker::ActiveRecord_AssociationRelation | Array[untyped])
   def trackers_for_select(issue)
     trackers = issue.allowed_target_trackers
     if issue.new_record? && issue.parent_issue_id.present?
@@ -325,15 +342,18 @@ module IssuesHelper
   class IssueFieldsRows
     include ActionView::Helpers::TagHelper
 
+    # @rbs () -> void
     def initialize
       @left = []
       @right = []
     end
 
+    # @rbs (*String | Hash[untyped, untyped] | ActiveSupport::SafeBuffer | String | Hash[untyped, untyped] | (ActiveSupport::SafeBuffer | Hash[untyped, untyped])? | ActiveSupport::SafeBuffer | Hash[untyped, untyped] | String | ActiveSupport::SafeBuffer | Hash[untyped, untyped]) -> Array[untyped]
     def left(*args)
       args.any? ? @left << cells(*args) : @left
     end
 
+    # @rbs (*String | Hash[untyped, untyped] | (String | Hash[untyped, untyped])? | String | ActiveSupport::SafeBuffer | Hash[untyped, untyped] | (ActiveSupport::SafeBuffer | Hash[untyped, untyped])? | ActiveSupport::SafeBuffer | Hash[untyped, untyped] | ActiveSupport::SafeBuffer | String | Hash[untyped, untyped]) -> Array[untyped]
     def right(*args)
       args.any? ? @right << cells(*args) : @right
     end
@@ -342,6 +362,7 @@ module IssuesHelper
       [@left.size, @right.size].max
     end
 
+    # @rbs () -> ActiveSupport::SafeBuffer
     def to_html
       # rubocop:disable Performance/Sum
       content =
@@ -352,6 +373,7 @@ module IssuesHelper
       content_tag('div', content, :class => 'splitcontent')
     end
 
+    # @rbs (String | ActiveSupport::SafeBuffer, (String | ActiveSupport::SafeBuffer)?, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
     def cells(label, text, options={})
       options[:class] = [options[:class] || "", 'attribute'].join(' ')
       content_tag(
@@ -362,12 +384,14 @@ module IssuesHelper
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def issue_fields_rows
     r = IssueFieldsRows.new
     yield r
     r.to_html
   end
 
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer
   def render_half_width_custom_fields_rows(issue)
     values = issue.visible_custom_field_values.reject {|value| value.custom_field.full_width_layout?}
     return if values.empty?
@@ -381,6 +405,7 @@ module IssuesHelper
     end
   end
 
+  # @rbs (Issue) -> ActiveSupport::SafeBuffer?
   def render_full_width_custom_fields_rows(issue)
     values = issue.visible_custom_field_values.select {|value| value.custom_field.full_width_layout?}
     return if values.empty?
@@ -401,6 +426,7 @@ module IssuesHelper
 
   # Returns the path for updating the issue form
   # with project as the current project
+  # @rbs (Project?, Issue) -> String
   def update_issue_form_path(project, issue)
     options = {:format => 'js'}
     if issue.new_record?
@@ -415,12 +441,14 @@ module IssuesHelper
   end
 
   # Returns the number of descendants for an array of issues
+  # @rbs (Array[untyped]) -> Integer
   def issues_descendant_count(issues)
     ids = issues.reject(&:leaf?).map {|issue| issue.descendants.ids}.flatten.uniq
     ids -= issues.map(&:id)
     ids.size
   end
 
+  # @rbs (Issue | Array[untyped]) -> String
   def issues_destroy_confirmation_message(issues)
     issues = [issues] unless issues.is_a?(Array)
     message = l(:text_issues_destroy_confirmation)
@@ -434,6 +462,7 @@ module IssuesHelper
 
   # Returns an array of users that are proposed as watchers
   # on the new issue form
+  # @rbs (Issue) -> Array[untyped]
   def users_for_new_issue_watchers(issue)
     users = issue.watcher_users.select{|u| u.status == User::STATUS_ACTIVE}
     assignable_watchers = issue.project.principals.assignable_watchers.limit(21)
@@ -443,6 +472,7 @@ module IssuesHelper
     users.uniq
   end
 
+  # @rbs (Issue, User, bool) -> Array[untyped]
   def email_issue_attributes(issue, user, html)
     items = []
     %w(author status priority assigned_to category fixed_version start_date due_date parent_issue).each do |attribute|
@@ -470,6 +500,7 @@ module IssuesHelper
     items
   end
 
+  # @rbs (Issue, User, ?bool) -> (String | ActiveSupport::SafeBuffer)
   def render_email_issue_attributes(issue, user, html=false)
     items = email_issue_attributes(issue, user, html)
     if html
@@ -483,6 +514,7 @@ module IssuesHelper
 
   # Returns the textual representation of a journal details
   # as an array of strings
+  # @rbs (Array[untyped] | JournalDetail::ActiveRecord_Associations_CollectionProxy, ?bool, ?Hash[untyped, untyped]) -> Array[untyped]
   def details_to_strings(details, no_html=false, options={})
     options[:only_path] = !(options[:only_path] == false)
     strings = []
@@ -521,6 +553,7 @@ module IssuesHelper
   end
 
   # Returns the textual representation of a single journal detail
+  # @rbs (JournalDetail | IssuesHelper::MultipleValuesDetail, ?bool, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def show_detail(detail, no_html=false, options={})
     multiple = false
     show_diff = false
@@ -659,6 +692,7 @@ module IssuesHelper
 
   # Find the name of an associated record stored in the field attribute
   # For project, return the associated record only if is visible for the current User
+  # @rbs (String, (String | Integer)?) -> String?
   def find_name_by_reflection(field, id)
     return nil if id.blank?
 
@@ -677,6 +711,7 @@ module IssuesHelper
   end
 
   # Renders issue children recursively
+  # @rbs (Issue, Redmine::Views::Builders::Xml | Redmine::Views::Builders::Json) -> (String | Hash[untyped, untyped])?
   def render_api_issue_children(issue, api)
     return if issue.leaf?
 
@@ -692,6 +727,7 @@ module IssuesHelper
   end
 
   # Issue history tabs
+  # @rbs () -> Array[untyped]
   def issue_history_tabs
     tabs = []
     if @journals.present?
@@ -749,6 +785,7 @@ module IssuesHelper
     tabs
   end
 
+  # @rbs () -> nil
   def issue_history_default_tab
     # tab params overrides user default tab preference
     return params[:tab] if params[:tab].present?
@@ -765,6 +802,7 @@ module IssuesHelper
     end
   end
 
+  # @rbs (Issue) -> Project::ActiveRecord_Relation
   def projects_for_select(issue)
     projects =
       if issue.parent_issue_id.present?

@@ -24,6 +24,7 @@ module Redmine
 
     # Initialize with a Diff file and the type of Diff View
     # The type view must be inline or sbs (side_by_side)
+    # @rbs (?String, ?nil) -> void
     def initialize(type="inline", style=nil)
       super()
       @parsing = false
@@ -38,6 +39,7 @@ module Redmine
 
     # Function for add a line of this Diff
     # Returns false when the diff ends
+    # @rbs (String) -> bool
     def add_line(line)
       unless @parsing
         if line =~ /^(---|\+\+\+) (.*)$/
@@ -61,6 +63,7 @@ module Redmine
       return true
     end
 
+    # @rbs () -> Redmine::DiffTable
     def each_line
       prev_line_left, prev_line_right = nil, nil
       each do |line|
@@ -81,6 +84,7 @@ module Redmine
 
     private
 
+    # @rbs (String) -> String?
     def file_name=(arg)
       both_git_diff = false
       if file_name.nil?
@@ -108,6 +112,7 @@ module Redmine
       end
     end
 
+    # @rbs () -> Redmine::Diff
     def diff_for_added_line
       if @type == 'sbs' && @removed > 0 && @added < @removed
         self[-(@removed - @added)]
@@ -118,6 +123,7 @@ module Redmine
       end
     end
 
+    # @rbs (String, ?String) -> bool
     def parse_line(line, type="inline")
       if line.start_with?('+')
         diff = diff_for_added_line
@@ -156,6 +162,7 @@ module Redmine
       end
     end
 
+    # @rbs () -> void
     def write_offsets
       if @added > 0 && @added == @removed
         @added.times do |i|
@@ -169,6 +176,7 @@ module Redmine
       @removed = 0
     end
 
+    # @rbs (String, String) -> Array[untyped]
     def offsets(line_left, line_right)
       if line_left.present? && line_right.present? && line_left != line_right
         max = [line_left.size, line_right.size].min

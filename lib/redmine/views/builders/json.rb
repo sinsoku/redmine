@@ -25,6 +25,7 @@ module Redmine
       class Json < Structure
         attr_accessor :jsonp
 
+        # @rbs (ActionDispatch::Request | ActionDispatch::TestRequest | ActionController::TestRequest, ActionDispatch::Response | ActionDispatch::TestResponse) -> void
         def initialize(request, response)
           super
           callback = request.params[:callback] || request.params[:jsonp]
@@ -33,6 +34,7 @@ module Redmine
           end
         end
 
+        # @rbs () -> String
         def output
           json = @struct.first.to_json
           if jsonp.present?

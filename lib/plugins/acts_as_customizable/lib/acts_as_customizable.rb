@@ -25,6 +25,7 @@ module Redmine
       end
 
       module ClassMethods
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_customizable(options = {})
           return if self.included_modules.include?(Redmine::Acts::Customizable::InstanceMethods)
           cattr_accessor :customizable_options
@@ -44,16 +45,19 @@ module Redmine
       end
 
       module InstanceMethods
+        # @rbs (Class) -> Class
         def self.included(base)
           base.extend ClassMethods
         end
 
+        # @rbs () -> Array[untyped]
         def available_custom_fields
           CustomField.where("type = '#{self.class.name}CustomField'").sorted.to_a
         end
 
         # Sets the values of the object's custom fields
         # values is an array like [{'id' => 1, 'value' => 'foo'}, {'id' => 2, 'value' => 'bar'}]
+        # @rbs (Array[untyped]) -> Hash[untyped, untyped]
         def custom_fields=(values)
           values_to_hash = values.inject({}) do |hash, v|
             v = v.stringify_keys
@@ -67,6 +71,7 @@ module Redmine
 
         # Sets the values of the object's custom fields
         # values is a hash like {'1' => 'foo', 2 => 'bar'}
+        # @rbs (Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess) -> bool
         def custom_field_values=(values)
           values = values.stringify_keys
 
@@ -79,6 +84,7 @@ module Redmine
           @custom_field_values_changed = true
         end
 
+        # @rbs () -> Array[untyped]
         def custom_field_values
           @custom_field_values ||= available_custom_fields.collect do |field|
             x = CustomFieldValue.new
@@ -100,36 +106,43 @@ module Redmine
           end
         end
 
+        # @rbs () -> Array[untyped]
         def visible_custom_field_values
           custom_field_values.select(&:visible?)
         end
 
+        # @rbs () -> bool
         def custom_field_values_changed?
           @custom_field_values_changed == true
         end
 
         # Should the default custom field value be set for the given custom_value?
         # By default, default custom field value is set for new objects only
+        # @rbs (CustomValue) -> bool
         def set_custom_field_default?(custom_value)
           new_record?
         end
 
+        # @rbs (IssueCustomField | Integer | TimeEntryCustomField | TimeEntryActivityCustomField | GroupCustomField) -> CustomValue?
         def custom_value_for(c)
           field_id = (c.is_a?(CustomField) ? c.id : c.to_i)
           custom_values.detect {|v| v.custom_field_id == field_id }
         end
 
+        # @rbs (GroupCustomField | TimeEntryCustomField | IssueCustomField | Integer | ProjectCustomField | UserCustomField | VersionCustomField) -> (String | Array[untyped])?
         def custom_field_value(c)
           field_id = (c.is_a?(CustomField) ? c.id : c.to_i)
           custom_field_values.detect {|v| v.custom_field_id == field_id }.try(:value)
         end
 
+        # @rbs () -> Array[untyped]?
         def validate_custom_field_values
           if new_record? || custom_field_values_changed?
             custom_field_values.each(&:validate_value)
           end
         end
 
+        # @rbs () -> bool
         def save_custom_field_values
           target_custom_values = []
           custom_field_values.each do |custom_field_value|
@@ -153,6 +166,7 @@ module Redmine
           true
         end
 
+        # @rbs () -> void
         def reassign_custom_field_values
           if @custom_field_values
             values = @custom_field_values.inject({}) {|h,v| h[v.custom_field_id] = v.value; h}
@@ -166,18 +180,21 @@ module Redmine
           @custom_field_values_changed = true
         end
 
+        # @rbs (*nil) -> (Issue | Group | Project | User | IssuePriority | DocumentCategory | GroupAnonymous | TimeEntry | TimeEntryActivity | Document)?
         def reload(*args)
           @custom_field_values = nil
           @custom_field_values_changed = false
           super
         end
 
+        # @rbs () -> Array[untyped]
         def store_attachment_custom_value_ids
           @attachment_custom_value_ids =
             custom_values.select {|cv| cv.custom_field.field_format == 'attachment'}
                          .map(&:id)
         end
 
+        # @rbs () -> Array[untyped]
         def destroy_custom_value_attachments
           Attachment.where(:container_id => @attachment_custom_value_ids, :container_type => 'CustomValue')
                     .destroy_all

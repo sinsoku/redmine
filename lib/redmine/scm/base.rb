@@ -21,6 +21,7 @@ module Redmine
   module Scm
     class Base
       class << self
+        # @rbs () -> Array[untyped]
         def all
           @scms || []
         end

@@ -20,11 +20,13 @@
 require_relative '../test_helper'
 
 class WorkflowTransitionTest < ActiveSupport::TestCase
+  # @rbs () -> Integer
   def setup
     User.current = nil
     WorkflowTransition.delete_all
   end
 
+  # @rbs () -> bool
   def test_replace_transitions_should_create_enabled_transitions
     w = WorkflowTransition.create!(:role_id => 1, :tracker_id => 1,
                                    :old_status_id => 1, :new_status_id => 2)
@@ -41,6 +43,7 @@ class WorkflowTransitionTest < ActiveSupport::TestCase
                                     :new_status_id => 3).exists?
   end
 
+  # @rbs () -> bool
   def test_replace_transitions_should_delete_disabled_transitions
     w1 = WorkflowTransition.create!(:role_id => 1, :tracker_id => 1,
                                     :old_status_id => 1, :new_status_id => 2)
@@ -57,6 +60,7 @@ class WorkflowTransitionTest < ActiveSupport::TestCase
     assert !WorkflowTransition.exists?(w1.id)
   end
 
+  # @rbs () -> bool
   def test_replace_transitions_should_create_enabled_additional_transitions
     transitions = {'1' => {
       '2' => {'always' => '0', 'assignee' => '0', 'author' => '1'}
@@ -71,6 +75,7 @@ class WorkflowTransitionTest < ActiveSupport::TestCase
     assert_equal true, w.author
   end
 
+  # @rbs () -> bool
   def test_replace_transitions_should_delete_disabled_additional_transitions
     w = WorkflowTransition.create!(:role_id => 1, :tracker_id => 1,
                                    :old_status_id => 1, :new_status_id => 2,
@@ -85,6 +90,7 @@ class WorkflowTransitionTest < ActiveSupport::TestCase
     assert !WorkflowTransition.exists?(w.id)
   end
 
+  # @rbs () -> bool
   def test_replace_transitions_should_update_additional_transitions
     WorkflowTransition.create!(:role_id => 1, :tracker_id => 1,
                                :old_status_id => 1, :new_status_id => 2,

@@ -20,12 +20,14 @@
 require_relative '../../test_helper'
 
 class RoutingRepositoriesTest < Redmine::RoutingTest
+  # @rbs () -> Array[untyped]
   def setup
     @paths = ['path/to/index.html',
               'path/to/file.c', 'path/to/file.yaml', 'path/to/file.txt',
               'raw/file.c']
   end
 
+  # @rbs () -> bool
   def test_repositories_resources
     should_route 'GET /projects/foo/repositories/new' => 'repositories#new', :project_id => 'foo'
     should_route 'POST /projects/foo/repositories' => 'repositories#create', :project_id => 'foo'
@@ -38,16 +40,19 @@ class RoutingRepositoriesTest < Redmine::RoutingTest
     should_route 'POST /repositories/1/committers' => 'repositories#committers', :id => '1'
   end
 
+  # @rbs () -> bool
   def test_repositories
     should_route 'GET /projects/foo/repository' => 'repositories#show', :id => 'foo'
   end
 
+  # @rbs () -> bool
   def test_repositories_with_repository_id
     should_route 'GET /projects/foo/repository/svn' => 'repositories#show', :id => 'foo', :repository_id => 'svn'
     should_route 'GET /projects/foo/repository/svn/statistics' => 'repositories#stats', :id => 'foo', :repository_id => 'svn'
     should_route 'GET /projects/foo/repository/svn/graph' => 'repositories#graph', :id => 'foo', :repository_id => 'svn'
   end
 
+  # @rbs () -> Array[untyped]
   def test_repositories_revisions_with_repository_id
     should_route 'GET /projects/foo/repository/foo/revision' => 'repositories#revision', :id => 'foo', :repository_id => 'foo'
     should_route 'GET /projects/foo/repository/foo/revisions' => 'repositories#revisions', :id => 'foo', :repository_id => 'foo'
@@ -69,10 +74,12 @@ class RoutingRepositoriesTest < Redmine::RoutingTest
     end
   end
 
+  # @rbs () -> bool
   def test_repositories_fetch_changesets_with_repository_id
     should_route 'POST /projects/foo/repository/bar/fetch_changesets' => 'repositories#fetch_changesets', :id => 'foo', :repository_id => 'bar'
   end
 
+  # @rbs () -> Array[untyped]
   def test_repositories_non_revisions_path_with_repository_id
     should_route 'GET /projects/foo/repository/svn/changes' => 'repositories#changes', :id => 'foo', :repository_id => 'svn', :format => 'html'
 
@@ -88,6 +95,7 @@ class RoutingRepositoriesTest < Redmine::RoutingTest
     end
   end
 
+  # @rbs () -> bool
   def test_repositories_related_issues_with_repository_id
     should_route 'POST /projects/foo/repository/svn/revisions/123/issues' => 'repositories#add_related_issue',
       :id => 'foo', :repository_id => 'svn', :rev => '123'

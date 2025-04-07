@@ -22,10 +22,12 @@ require_relative '../test_helper'
 class GroupTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_create
     g = Group.new(:name => 'New group')
     assert g.save
@@ -34,6 +36,7 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal true, g.active?
   end
 
+  # @rbs () -> bool
   def test_name_should_accept_255_characters
     name = 'a' * 255
     g = Group.new(:name => name)
@@ -42,6 +45,7 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal name, g.name
   end
 
+  # @rbs () -> bool
   def test_blank_name_error_message
     set_language_if_valid 'en'
     g = Group.new
@@ -49,6 +53,7 @@ class GroupTest < ActiveSupport::TestCase
     assert_include "Name cannot be blank", g.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_name_error_message_fr
     set_language_if_valid 'fr'
     g = Group.new
@@ -56,6 +61,7 @@ class GroupTest < ActiveSupport::TestCase
     assert_include 'Nom doit être renseigné(e)', g.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_group_roles_should_be_given_to_added_user
     group = Group.find(11)
     user = User.find(9)
@@ -66,6 +72,7 @@ class GroupTest < ActiveSupport::TestCase
     assert user.member_of?(project)
   end
 
+  # @rbs () -> bool
   def test_new_roles_should_be_given_to_existing_user
     group = Group.find(11)
     user = User.find(9)
@@ -76,6 +83,7 @@ class GroupTest < ActiveSupport::TestCase
     assert user.member_of?(project)
   end
 
+  # @rbs () -> bool
   def test_user_roles_should_updated_when_updating_user_ids
     group = Group.find(11)
     user = User.find(9)
@@ -91,6 +99,7 @@ class GroupTest < ActiveSupport::TestCase
     assert !User.find(9).member_of?(project)
   end
 
+  # @rbs () -> bool
   def test_user_roles_should_updated_when_updating_group_roles
     group = Group.find(11)
     user = User.find(9)
@@ -109,18 +118,21 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal [1], user.reload.roles_for_project(project).collect(&:id).sort
   end
 
+  # @rbs () -> bool
   def test_user_memberships_should_be_removed_when_removing_group_membership
     assert User.find(8).member_of?(Project.find(5))
     Member.find_by_project_id_and_user_id(5, 10).destroy
     assert !User.find(8).member_of?(Project.find(5))
   end
 
+  # @rbs () -> bool
   def test_user_roles_should_be_removed_when_removing_user_from_group
     assert User.find(8).member_of?(Project.find(5))
     User.find(8).groups = []
     assert !User.find(8).member_of?(Project.find(5))
   end
 
+  # @rbs () -> bool
   def test_destroy_should_unassign_and_unwatch_issues
     group = Group.find(10)
     Issue.where(:id => 1).update_all(["assigned_to_id = ?", group.id])
@@ -138,6 +150,7 @@ class GroupTest < ActiveSupport::TestCase
     assert !issue.watcher_user_ids.include?(10)
   end
 
+  # @rbs () -> bool
   def test_builtin_groups_should_be_created_if_missing
     Group.delete_all
 
@@ -150,12 +163,14 @@ class GroupTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_builtin_in_group_should_be_uniq
     group = GroupAnonymous.new
     group.name = 'Foo'
     assert !group.save
   end
 
+  # @rbs () -> bool
   def test_builtin_in_group_should_not_accept_users
     group = Group.anonymous
     assert_raise RuntimeError do
@@ -164,6 +179,7 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal 0, group.reload.users.count
   end
 
+  # @rbs () -> bool
   def test_sorted_scope_should_sort_groups_alphabetically
     Group.delete_all
     b = Group.generate!(:name => 'B')
@@ -172,6 +188,7 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal %w(A B), Group.sorted.to_a.map(&:name)
   end
 
+  # @rbs () -> bool
   def test_user_added_should_not_fail_when_group_role_is_empty
     group = Group.find(11)
     project = Project.first

@@ -23,16 +23,19 @@ module Redmine
   module Views
     module Builders
       class Xml < ::Builder::XmlMarkup
+        # @rbs (ActionDispatch::Request | ActionController::TestRequest | ActionDispatch::TestRequest, ActionDispatch::Response | ActionDispatch::TestResponse) -> void
         def initialize(request, response)
           super()
           instruct!
         end
 
+        # @rbs () -> String
         def output
           target!
         end
 
         # Overrides Builder::XmlBase#tag! to format timestamps in ISO 8601
+        # @rbs (Symbol, *String | Hash[untyped, untyped] | Integer | nil | bool | ActiveSupport::TimeWithZone | Date | Float | String | Hash[untyped, untyped]) -> String
         def tag!(sym, *args, &)
           if args.size == 1 && args.first.is_a?(::Time)
             tag!(sym, args.first.xmlschema, &)
@@ -41,6 +44,7 @@ module Redmine
           end
         end
 
+        # @rbs (Symbol | String, ?Hash[untyped, untyped]?) -> String
         def array(name, options={}, &)
           __send__(name, (options || {}).merge(:type => 'array'), &)
         end

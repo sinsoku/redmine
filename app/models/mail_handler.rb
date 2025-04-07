@@ -30,6 +30,7 @@ class MailHandler < ActionMailer::Base
 
   attr_reader :email, :user, :handler_options
 
+  # @rbs (String, ?Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess) -> (Issue | bool | Journal | Comment | Message)
   def self.receive(raw_mail, options={})
     options = options.deep_dup
 
@@ -55,6 +56,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Receives an email and rescues any exception
+  # @rbs (*nil | String | ActiveSupport::HashWithIndifferentAccess) -> (bool | Issue | Journal)
   def self.safe_receive(*args)
     receive(*args)
   rescue => e
@@ -64,6 +66,7 @@ class MailHandler < ActionMailer::Base
 
   # Extracts MailHandler options from environment variables
   # Use when receiving emails with rake tasks
+  # @rbs (Hash[untyped, untyped]) -> Hash[untyped, untyped]
   def self.extract_options_from_env(env)
     options = {:issue => {}}
     %w(project status tracker category priority assigned_to fixed_version).each do |option|
@@ -78,6 +81,7 @@ class MailHandler < ActionMailer::Base
     options
   end
 
+  # @rbs () -> ActiveSupport::BroadcastLogger
   def logger
     Rails.logger
   end
@@ -90,6 +94,7 @@ class MailHandler < ActionMailer::Base
 
   # Processes incoming emails
   # Returns the created object (eg. an issue, a message) or false
+  # @rbs (String, ?Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess) -> (Issue | bool | Journal | Comment | Message)
   def receive(email, options={})
     @email = email
     @handler_options = options
@@ -149,6 +154,7 @@ class MailHandler < ActionMailer::Base
   ISSUE_REPLY_SUBJECT_RE = %r{\[(?:[^\]]*\s+)?#(\d+)\]}
   MESSAGE_REPLY_SUBJECT_RE = %r{\[[^\]]*msg(\d+)\]}
 
+  # @rbs () -> (Issue | bool | Journal | Comment | Message)
   def dispatch
     headers = [email.in_reply_to, email.references].flatten.compact
     subject = email.subject.to_s
@@ -182,11 +188,13 @@ class MailHandler < ActionMailer::Base
     false
   end
 
+  # @rbs () -> Issue?
   def dispatch_to_default
     receive_issue
   end
 
   # Creates a new issue
+  # @rbs () -> Issue?
   def receive_issue
     project = target_project
 
@@ -227,6 +235,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Adds a note to an existing issue
+  # @rbs (Integer, ?Journal?) -> Journal?
   def receive_issue_reply(issue_id, from_journal=nil)
     issue = Issue.find_by(:id => issue_id)
     if issue.nil?
@@ -265,6 +274,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Reply will be added to the issue
+  # @rbs (Integer) -> Journal?
   def receive_journal_reply(journal_id)
     journal = Journal.find_by(:id => journal_id)
 
@@ -279,6 +289,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Receives a reply to a forum message
+  # @rbs (Integer) -> Message?
   def receive_message_reply(message_id)
     message = Message.find_by(:id => message_id)&.root
     if message.nil?
@@ -307,6 +318,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Receives a reply to a news entry
+  # @rbs (Integer) -> Comment?
   def receive_news_reply(news_id)
     news = News.find_by_id(news_id)
     if news.nil?
@@ -331,6 +343,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Receives a reply to a comment to a news entry
+  # @rbs (Integer) -> Comment?
   def receive_comment_reply(comment_id)
     comment = Comment.find_by_id(comment_id)
 
@@ -341,6 +354,7 @@ class MailHandler < ActionMailer::Base
     end
   end
 
+  # @rbs (Issue | Message) -> void
   def add_attachments(obj)
     if email.attachments && email.attachments.any?
       email.attachments.each do |attachment|
@@ -357,6 +371,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Returns false if the +attachment+ of the incoming email should be ignored
+  # @rbs (Mail::Part) -> bool
   def accept_attachment?(attachment)
     @excluded ||= Setting.mail_handler_excluded_filenames.to_s.split(',').map(&:strip).reject(&:blank?)
     @excluded.each do |pattern|
@@ -375,6 +390,7 @@ class MailHandler < ActionMailer::Base
 
   # Adds To and Cc as watchers of the given object if the sender has the
   # appropriate permission
+  # @rbs (Issue) -> void
   def add_watchers(obj)
     if handler_options[:no_permission_check] || user.allowed_to?(:"add_#{obj.class.name.underscore}_watchers", obj.project)
       addresses = [email.to, email.cc].flatten.compact.uniq.collect {|a| a.strip.downcase}
@@ -388,6 +404,7 @@ class MailHandler < ActionMailer::Base
     end
   end
 
+  # @rbs (Symbol | String, ?Hash[untyped, untyped]) -> String?
   def get_keyword(attr, options={})
     @keywords ||= {}
     if @keywords.has_key?(attr)
@@ -411,6 +428,7 @@ class MailHandler < ActionMailer::Base
 
   # Destructively extracts the value for +attr+ in +text+
   # Returns nil if no matching keyword found
+  # @rbs (String, Symbol | String, ?(String | Regexp)?) -> String?
   def extract_keyword!(text, attr, format=nil)
     keys = [attr.to_s.humanize]
     if attr.is_a?(Symbol)
@@ -433,6 +451,7 @@ class MailHandler < ActionMailer::Base
     keyword
   end
 
+  # @rbs () -> Project?
   def get_project_from_receiver_addresses
     local, domain = handler_options[:project_from_subaddress].to_s.split("@")
     return nil unless local && domain
@@ -454,6 +473,7 @@ class MailHandler < ActionMailer::Base
     nil
   end
 
+  # @rbs () -> Project?
   def target_project
     # TODO: other ways to specify project:
     # * parse the email To field
@@ -473,6 +493,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Returns a Hash of issue attributes extracted from keywords in the email body
+  # @rbs (Issue) -> Hash[untyped, untyped]
   def issue_attributes_from_keywords(issue)
     attrs = {
       'tracker_id' => (k = get_keyword(:tracker)) && issue.project.trackers.named(k).first.try(:id),
@@ -492,6 +513,7 @@ class MailHandler < ActionMailer::Base
     attrs
   end
 
+  # @rbs (Symbol) -> bool?
   def get_keyword_bool(attr)
     true_values = ["1"]
     false_values = ["0"]
@@ -518,6 +540,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Returns a Hash of issue custom field values extracted from keywords in the email body
+  # @rbs (Issue) -> Hash[untyped, untyped]
   def custom_field_values_from_keywords(customized)
     customized.custom_field_values.inject({}) do |h, v|
       if keyword = get_keyword(v.custom_field.name)
@@ -531,6 +554,7 @@ class MailHandler < ActionMailer::Base
   # If the value of Setting.mail_handler_preferred_body_part is 'html',
   # it returns text converted from the text/html part of the email.
   # Otherwise, it returns text/plain part.
+  # @rbs () -> String
   def plain_text_body
     return @plain_text_body unless @plain_text_body.nil?
 
@@ -554,6 +578,7 @@ class MailHandler < ActionMailer::Base
     @plain_text_body ||= ""
   end
 
+  # @rbs (Array[untyped]) -> String
   def email_parts_to_text(parts)
     parts.reject! do |part|
       part.attachment?
@@ -566,15 +591,18 @@ class MailHandler < ActionMailer::Base
     end.join("\r\n")
   end
 
+  # @rbs () -> String
   def cleaned_up_text_body
     @cleaned_up_text_body ||= cleanup_body(plain_text_body)
   end
 
+  # @rbs () -> String
   def cleaned_up_subject
     subject = email.subject.to_s
     subject.strip[0, 255]
   end
 
+  # @rbs (User, String, String, ?Integer) -> void
   def self.assign_string_attribute_with_limit(object, attribute, value, limit=nil)
     limit ||= object.class.columns_hash[attribute.to_s].limit || 255
     value = value.to_s.slice(0, limit)
@@ -585,11 +613,13 @@ class MailHandler < ActionMailer::Base
   # Singleton class method is public
   class << self
     # Converts a HTML email body to text
+    # @rbs (String) -> String
     def html_body_to_text(html)
       Redmine::WikiFormatting.html_parser.to_text(html)
     end
 
     # Converts a plain/text email body to text
+    # @rbs (String) -> String
     def plain_text_body_to_text(text)
       # Removes leading spaces that would cause the line to be rendered as
       # preformatted text with textile
@@ -597,6 +627,7 @@ class MailHandler < ActionMailer::Base
     end
 
     # Returns a User from an email address and a full name
+    # @rbs (String, ?String?) -> User
     def new_user_from_attributes(email_address, fullname=nil)
       user = User.new
 
@@ -623,6 +654,7 @@ class MailHandler < ActionMailer::Base
 
   # Creates a User for the +email+ sender
   # Returns the user or nil if it could not be created
+  # @rbs () -> User
   def create_user_from_email
     if from_addr = email.header['from'].try(:addrs).to_a.first
       addr = from_addr.address
@@ -644,6 +676,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Adds the newly created user to default group
+  # @rbs (String?) -> void
   def add_user_to_group(default_group)
     if default_group.present?
       default_group.split(',').each do |group_name|
@@ -657,6 +690,7 @@ class MailHandler < ActionMailer::Base
   end
 
   # Removes the email body of text after the truncation configurations.
+  # @rbs (String) -> String
   def cleanup_body(body)
     delimiters = Setting.mail_handler_body_delimiters.to_s.split(/[\r\n]+/).reject(&:blank?)
 
@@ -689,6 +723,7 @@ class MailHandler < ActionMailer::Base
     body.strip
   end
 
+  # @rbs (String, Issue) -> (User | Group)
   def find_assignee_from_keyword(keyword, issue)
     Principal.detect_by_keyword(issue.assignable_users, keyword)
   end

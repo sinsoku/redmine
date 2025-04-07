@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingSettingsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_settings
     should_route 'GET /settings' => 'settings#index'
     should_route 'GET /settings/edit' => 'settings#edit'

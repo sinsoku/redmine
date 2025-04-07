@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class CommentsControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_add_comment
     @request.session[:user_id] = 2
     post(
@@ -43,6 +45,7 @@ class CommentsControllerTest < Redmine::ControllerTest
     assert_equal User.find(2), comment.author
   end
 
+  # @rbs () -> bool
   def test_empty_comment_should_not_be_added
     @request.session[:user_id] = 2
     assert_no_difference 'Comment.count' do
@@ -60,6 +63,7 @@ class CommentsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_be_denied_if_news_is_not_commentable
     News.any_instance.stubs(:commentable?).returns(false)
     @request.session[:user_id] = 2
@@ -77,6 +81,7 @@ class CommentsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_comment
     comments_count = News.find(1).comments.size
     @request.session[:user_id] = 2

@@ -49,28 +49,34 @@ class Group < Principal
 
   alias_attribute :name, :lastname
 
+  # @rbs () -> String
   def to_s
     name.to_s
   end
 
+  # @rbs () -> nil
   def builtin_type
     nil
   end
 
   # Return true if the group is a builtin group
+  # @rbs () -> bool
   def builtin?
     false
   end
 
   # Returns true if the group can be given to a user
+  # @rbs () -> bool
   def givable?
     !builtin?
   end
 
+  # @rbs () -> String
   def css_classes
     'group'
   end
 
+  # @rbs (User) -> Array[untyped]
   def user_added(user)
     members.preload(:member_roles).each do |member|
       next if member.project_id.nil?
@@ -87,6 +93,7 @@ class Group < Principal
     end
   end
 
+  # @rbs (User) -> Array[untyped]
   def user_removed(user)
     MemberRole.
       joins(:member).
@@ -94,6 +101,7 @@ class Group < Principal
       destroy_all
   end
 
+  # @rbs (Symbol | String, *Hash[untyped, untyped] | nil) -> String
   def self.human_attribute_name(attribute_key_name, *args)
     attr_name = attribute_key_name.to_s
     if attr_name == 'lastname'
@@ -102,10 +110,12 @@ class Group < Principal
     super(attr_name, *args)
   end
 
+  # @rbs () -> GroupAnonymous
   def self.anonymous
     GroupAnonymous.load_instance
   end
 
+  # @rbs () -> GroupNonMember
   def self.non_member
     GroupNonMember.load_instance
   end
@@ -113,6 +123,7 @@ class Group < Principal
   private
 
   # Removes references that are not handled by associations
+  # @rbs () -> Integer
   def remove_references_before_destroy
     return if self.id.nil?
 

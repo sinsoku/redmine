@@ -20,12 +20,14 @@
 require_relative '../test_helper'
 
 class WikiPageTest < ActiveSupport::TestCase
+  # @rbs () -> WikiPage
   def setup
     User.current = nil
     @wiki = Wiki.find(1)
     @page = @wiki.pages.first
   end
 
+  # @rbs () -> bool
   def test_create
     page = WikiPage.new(:wiki => @wiki)
     assert !page.save
@@ -40,12 +42,14 @@ class WikiPageTest < ActiveSupport::TestCase
     assert @wiki.pages.include?(page)
   end
 
+  # @rbs () -> bool
   def test_sidebar_should_be_protected_by_default
     page = @wiki.find_or_new_page('sidebar')
     assert page.new_record?
     assert page.protected?
   end
 
+  # @rbs () -> bool
   def test_find_or_new_page
     page = @wiki.find_or_new_page("CookBook documentation")
     assert_kind_of WikiPage, page
@@ -56,6 +60,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert page.new_record?
   end
 
+  # @rbs () -> bool
   def test_parent_title
     page = WikiPage.find_by_title('Another_page')
     assert_nil page.parent_title
@@ -64,6 +69,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_equal 'CookBook documentation', page.parent_title
   end
 
+  # @rbs () -> bool
   def test_assign_parent
     page = WikiPage.find_by_title('Another_page')
     page.parent_title = 'CookBook documentation'
@@ -72,6 +78,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_equal WikiPage.find_by_title('CookBook_documentation'), page.parent
   end
 
+  # @rbs () -> bool
   def test_unassign_parent
     page = WikiPage.find_by_title('Page_with_an_inline_image')
     page.parent_title = ''
@@ -80,6 +87,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_nil page.parent
   end
 
+  # @rbs () -> bool
   def test_parent_validation
     page = WikiPage.find_by_title('CookBook_documentation')
 
@@ -102,6 +110,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert page.save
   end
 
+  # @rbs () -> bool
   def test_move_child_should_clear_parent
     parent = WikiPage.create!(:wiki_id => 1, :title => 'Parent')
     child = WikiPage.create!(:wiki_id => 1, :title => 'Child', :parent => parent)
@@ -111,6 +120,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_nil child.reload.parent_id
   end
 
+  # @rbs () -> bool
   def test_move_parent_should_move_child_page
     parent = WikiPage.create!(:wiki_id => 1, :title => 'Parent')
     child = WikiPage.create!(:wiki_id => 1, :title => 'Child', :parent => parent)
@@ -122,6 +132,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_equal parent, child.parent
   end
 
+  # @rbs () -> bool
   def test_move_parent_with_child_with_duplicate_name_should_not_move_child
     parent = WikiPage.create!(:wiki_id => 1, :title => 'Parent')
     child = WikiPage.create!(:wiki_id => 1, :title => 'Child', :parent_id => parent.id)
@@ -140,6 +151,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_nil child.parent_id
   end
 
+  # @rbs () -> bool
   def test_destroy_should_delete_content_and_its_versions
     set_tmp_attachments_directory
     page = WikiPage.find(1)
@@ -155,6 +167,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_equal 0, WikiContentVersion.where(:page_id => 1).count
   end
 
+  # @rbs () -> Array[untyped]
   def test_destroy_should_not_nullify_children
     page = WikiPage.find(2)
     child_ids = page.child_ids
@@ -169,6 +182,7 @@ class WikiPageTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_with_updated_on_scope_should_preload_updated_on_and_version
     page = WikiPage.with_updated_on.where(:id => 1).first
     # make the assertions fail if attributes are not preloaded
@@ -178,6 +192,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_equal 3, page.version
   end
 
+  # @rbs () -> bool
   def test_descendants
     page = WikiPage.create!(:wiki => @wiki, :title => 'Parent')
     child1 = WikiPage.create!(:wiki => @wiki, :title => 'Child1', :parent => page)
@@ -196,6 +211,7 @@ class WikiPageTest < ActiveSupport::TestCase
     assert_equal %w(Child1 Child2 Parent), page.self_and_descendants(1).map(&:title).sort
   end
 
+  # @rbs () -> bool
   def test_diff_for_page_with_deleted_version_should_pick_the_previous_available_version
     WikiContentVersion.find_by_page_id_and_version(1, 2).destroy
 

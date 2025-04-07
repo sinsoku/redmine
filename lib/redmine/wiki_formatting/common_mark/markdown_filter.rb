@@ -26,11 +26,13 @@ module Redmine
       # does not allow for straightforward configuration of render and parsing
       # options
       class MarkdownFilter < HTML::Pipeline::TextFilter
+        # @rbs (String, ?Hash[untyped, untyped]?, ?Hash[untyped, untyped]?) -> void
         def initialize(text, context = nil, result = nil)
           super
           @text = @text.delete "\r"
         end
 
+        # @rbs () -> String
         def call
           doc = CommonMarker.render_doc(@text, parse_options, extensions)
           html = doc.to_html render_options, extensions
@@ -40,14 +42,17 @@ module Redmine
 
         private
 
+        # @rbs () -> Array[untyped]
         def extensions
           context.fetch :commonmarker_extensions, []
         end
 
+        # @rbs () -> (Array[untyped] | Symbol)
         def parse_options
           context.fetch :commonmarker_parse_options, :DEFAULT
         end
 
+        # @rbs () -> (Array[untyped] | Symbol)
         def render_options
           context.fetch :commonmarker_render_options, :DEFAULT
         end

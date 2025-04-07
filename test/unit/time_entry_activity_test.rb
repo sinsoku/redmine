@@ -22,23 +22,28 @@ require_relative '../test_helper'
 class TimeEntryActivityTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_should_be_an_enumeration
     assert TimeEntryActivity <= Enumeration
   end
 
+  # @rbs () -> bool
   def test_objects_count
     assert_equal 3, TimeEntryActivity.find_by_name("Design").objects_count
     assert_equal 2, TimeEntryActivity.find_by_name("Development").objects_count
   end
 
+  # @rbs () -> bool
   def test_option_name
     assert_equal :enumeration_activities, TimeEntryActivity.new.option_name
   end
 
+  # @rbs () -> bool
   def test_create_with_custom_field
     field = TimeEntryActivityCustomField.find_by_name('Billable')
     e = TimeEntryActivity.new(:name => 'Custom Data')
@@ -49,6 +54,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal "1", e.custom_value_for(field).value
   end
 
+  # @rbs () -> bool
   def test_create_without_required_custom_field_should_fail
     set_language_if_valid 'en'
     field = TimeEntryActivityCustomField.find_by_name('Billable')
@@ -59,6 +65,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal ["Billable cannot be blank"], e.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_create_with_required_custom_field_should_succeed
     field = TimeEntryActivityCustomField.find_by_name('Billable')
     field.update_attribute(:is_required, true)
@@ -68,6 +75,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert e.save
   end
 
+  # @rbs () -> bool
   def test_update_with_required_custom_field_change
     set_language_if_valid 'en'
     field = TimeEntryActivityCustomField.find_by_name('Billable')
@@ -89,6 +97,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal "0", e.custom_value_for(field).value
   end
 
+  # @rbs () -> bool
   def test_system_activity_with_child_in_use_should_be_in_use
     project = Project.generate!
     system_activity = TimeEntryActivity.create!(:name => 'Activity')
@@ -101,6 +110,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert system_activity.in_use?
   end
 
+  # @rbs () -> bool
   def test_destroying_a_system_activity_should_reassign_children_activities
     project = Project.generate!
     entries = []
@@ -118,6 +128,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert entries.all? {|entry| entry.reload.activity.name == 'Development'}
   end
 
+  # @rbs () -> bool
   def test_project_activity_without_parent_should_not_disable_system_activities
     project = Project.find(1)
     activity = TimeEntryActivity.create!(:name => 'Csutom', :project => project)
@@ -125,6 +136,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_include TimeEntryActivity.find(9), project.activities
   end
 
+  # @rbs () -> bool
   def test_project_activity_should_have_the_same_position_as_parent_activity
     project = Project.find(1)
 
@@ -161,6 +173,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal other_parent_activity.position, other_project_activity.reload.position
   end
 
+  # @rbs () -> bool
   def test_project_activity_should_have_the_same_name_as_parent_activity
     parent_activity = TimeEntryActivity.find_by(name: 'Design', parent_id: nil)
     project = Project.find(1)
@@ -187,6 +200,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal 'Design3', parent_activity.reload.name
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_project_activity_should_not_be_created_if_no_custom_value_is_changed
     system_activity = TimeEntryActivity.find(9) # Design
     assert_equal true, system_activity.active
@@ -210,11 +224,13 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_default_should_return_default_activity_if_default_activity_is_included_in_the_project_activities
     project = Project.find(1)
     assert_equal TimeEntryActivity.default(project).id, 10
   end
 
+  # @rbs () -> bool
   def test_default_should_return_project_specific_default_activity_if_default_activity_is_not_included_in_the_project_activities
     project = Project.find(1)
     project_specific_default_activity = TimeEntryActivity.create!(name: 'Development', parent_id: 10, project_id: project.id, is_default: false)
@@ -222,10 +238,12 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal TimeEntryActivity.default(project).id, project_specific_default_activity.id
   end
 
+  # @rbs () -> bool
   def test_default_activity_id_without_user_and_project_should_return_global_default_activity
     assert_equal 10, TimeEntryActivity.default_activity_id
   end
 
+  # @rbs () -> bool
   def test_default_activity_id_with_user_and_project_should_return_role_default_activity
     # set a default activity for Manager role
     manager = Role.find(1)
@@ -235,6 +253,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal 9, TimeEntryActivity.default_activity_id(User.find(2), Project.find(1))
   end
 
+  # @rbs () -> bool
   def test_default_activity_id_with_user_and_project_should_consider_role_position
     project = Project.find(1)
     user = User.find(2)
@@ -258,6 +277,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal 11, TimeEntryActivity.default_activity_id(user, project)
   end
 
+  # @rbs () -> bool
   def test_default_activity_id_should_include_only_available_activities
     # set a default activity for Manager role
     manager = Role.find(1)
@@ -273,6 +293,7 @@ class TimeEntryActivityTest < ActiveSupport::TestCase
     assert_equal 10, TimeEntryActivity.default_activity_id(User.find(2), project)
   end
 
+  # @rbs () -> bool
   def test_default_activity_id_should_selected_from_highest_priority_of_multiple_default_activity_candidates
     project = Project.find(1)
 

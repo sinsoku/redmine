@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module MembersHelper
+  # @rbs (Project, ?Integer) -> ActiveSupport::SafeBuffer
   def render_principals_for_new_members(project, limit=100)
     scope = Principal.active.visible.sorted.not_member_of(project).like(params[:q])
     principal_count = scope.count
@@ -49,6 +50,7 @@ module MembersHelper
   end
 
   # Returns inheritance information for an inherited member role
+  # @rbs (Member, Role) -> nil
   def render_role_inheritance(member, role)
     content = member.role_inheritance(role).filter_map do |h|
       if h.is_a?(Project)

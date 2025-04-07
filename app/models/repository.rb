@@ -63,6 +63,7 @@ class Repository < ApplicationRecord
     'url',
     :if => lambda {|repository, user| repository.new_record?})
 
+  # @rbs () -> ActiveModel::Error?
   def repo_create_validation
     unless Setting.enabled_scm.include?(self.class.name.demodulize)
       errors.add(:type, :invalid)
@@ -78,27 +79,33 @@ class Repository < ApplicationRecord
   end
 
   # Removes leading and trailing whitespace
+  # @rbs (String) -> String
   def url=(arg)
     write_attribute(:url, arg ? arg.to_s.strip : nil)
   end
 
   # Removes leading and trailing whitespace
+  # @rbs (String) -> String
   def root_url=(arg)
     write_attribute(:root_url, arg ? arg.to_s.strip : nil)
   end
 
+  # @rbs () -> String
   def password
     read_ciphered_attribute(:password)
   end
 
+  # @rbs (String) -> String
   def password=(arg)
     write_ciphered_attribute(:password, arg)
   end
 
+  # @rbs () -> Class
   def scm_adapter
     self.class.scm_adapter_class
   end
 
+  # @rbs () -> (Redmine::Scm::Adapters::SubversionAdapter | Redmine::Scm::Adapters::GitAdapter)
   def scm
     unless @scm
       @scm = self.scm_adapter.new(url, root_url,
@@ -110,6 +117,7 @@ class Repository < ApplicationRecord
     @scm
   end
 
+  # @rbs () -> String
   def scm_name
     self.class.scm_name
   end
@@ -124,14 +132,17 @@ class Repository < ApplicationRecord
     end
   end
 
+  # @rbs (String?) -> String?
   def identifier=(identifier)
     super unless identifier_frozen?
   end
 
+  # @rbs () -> bool
   def identifier_frozen?
     errors[:identifier].blank? && !(new_record? || identifier.blank?)
   end
 
+  # @rbs () -> String
   def identifier_param
     if identifier.present?
       identifier
@@ -140,6 +151,7 @@ class Repository < ApplicationRecord
     end
   end
 
+  # @rbs (Repository | Repository::Subversion) -> Integer
   def <=>(repository)
     return nil unless repository.is_a?(Repository)
 
@@ -152,6 +164,7 @@ class Repository < ApplicationRecord
     end
   end
 
+  # @rbs (String) -> Repository::Subversion?
   def self.find_by_identifier_param(param)
     if /^\d+$/.match?(param.to_s)
       find_by_id(param)
@@ -161,11 +174,13 @@ class Repository < ApplicationRecord
   end
 
   # TODO: should return an empty hash instead of nil to avoid many ||{}
+  # @rbs () -> Hash[untyped, untyped]?
   def extra_info
     h = read_attribute(:extra_info)
     h.is_a?(Hash) ? h : nil
   end
 
+  # @rbs (Hash[untyped, untyped]) -> Hash[untyped, untyped]
   def merge_extra_info(arg)
     h = extra_info || {}
     return h if arg.nil?
@@ -194,6 +209,7 @@ class Repository < ApplicationRecord
     false
   end
 
+  # @rbs () -> bool
   def supports_revision_graph?
     false
   end
@@ -202,11 +218,13 @@ class Repository < ApplicationRecord
     scm.entry(path, identifier)
   end
 
+  # @rbs (?String, ?nil) -> nil
   def scm_entries(path=nil, identifier=nil)
     scm.entries(path, identifier)
   end
   protected :scm_entries
 
+  # @rbs (?String, ?nil) -> nil
   def entries(path=nil, identifier=nil)
     entries = scm_entries(path, identifier)
     load_entries_changesets(entries)
@@ -221,6 +239,7 @@ class Repository < ApplicationRecord
     scm.tags
   end
 
+  # @rbs () -> nil
   def default_branch
     nil
   end
@@ -250,6 +269,7 @@ class Repository < ApplicationRecord
   end
 
   # Finds and returns a revision with a number or the beginning of a hash
+  # @rbs (String?) -> Changeset?
   def find_changeset_by_name(name)
     return nil if name.blank?
 
@@ -284,16 +304,19 @@ class Repository < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def scan_changesets_for_issue_ids
     self.changesets.each(&:scan_comment_for_issue_ids)
   end
 
   # Returns an array of committers usernames and associated user_id
+  # @rbs () -> Array[untyped]
   def committers
     @committers ||= Changeset.where(:repository_id => id).distinct.pluck(:committer, :user_id)
   end
 
   # Maps committers username to a user ids
+  # @rbs (Hash[untyped, untyped]) -> void
   def committer_ids=(h)
     if h.is_a?(Hash)
       committers.each do |committer, user_id|
@@ -315,6 +338,7 @@ class Repository < ApplicationRecord
   # Returns the Redmine User corresponding to the given +committer+
   # It will return nil if the committer is not yet mapped and if no User
   # with the same username or email was found
+  # @rbs (String?) -> User?
   def find_committer_user(committer)
     unless committer.blank?
       @found_committer_users ||= {}
@@ -336,6 +360,7 @@ class Repository < ApplicationRecord
     end
   end
 
+  # @rbs () -> String
   def repo_log_encoding
     encoding = log_encoding.to_s.strip
     encoding.blank? ? 'UTF-8' : encoding
@@ -344,6 +369,7 @@ class Repository < ApplicationRecord
   # Fetches new changesets for all repositories of active projects
   # Can be called periodically by an external script
   # eg. ruby script/runner "Repository.fetch_changesets"
+  # @rbs () -> Array[untyped]
   def self.fetch_changesets
     Project.active.has_module(:repository).all.each do |project|
       project.repositories.each do |repository|
@@ -357,10 +383,12 @@ class Repository < ApplicationRecord
   end
 
   # scan changeset comments to find related and fixed issues for all repositories
+  # @rbs () -> Array[untyped]
   def self.scan_changesets_for_issue_ids
     all.each(&:scan_changesets_for_issue_ids)
   end
 
+  # @rbs () -> String
   def self.scm_name
     'Abstract'
   end
@@ -369,10 +397,12 @@ class Repository < ApplicationRecord
     subclasses.collect {|klass| [klass.scm_name, klass.name]}
   end
 
+  # @rbs (String, *nil) -> (Repository::Git | Repository::Mercurial | Repository::Subversion)?
   def self.factory(klass_name, *args)
     repository_class(klass_name).new(*args) rescue nil
   end
 
+  # @rbs (String) -> Class?
   def self.repository_class(class_name)
     class_name = class_name.to_s.camelize
     if Redmine::Scm::Base.all.include?(class_name)
@@ -414,6 +444,7 @@ class Repository < ApplicationRecord
     ret
   end
 
+  # @rbs () -> bool?
   def set_as_default?
     new_record? && project && Repository.where(:project_id => project.id).empty?
   end
@@ -426,6 +457,7 @@ class Repository < ApplicationRecord
   #
   # Notes:
   # - this hash honnors the users mapping defined for the repository
+  # @rbs () -> Hash[untyped, untyped]
   def stats_by_author
     commits = Changeset.where("repository_id = ?", id).
                 select("committer, user_id, count(*) as count").group("committer, user_id")
@@ -455,6 +487,7 @@ class Repository < ApplicationRecord
 
   # Returns a scope of changesets that come from the same commit as the given changeset
   # in different repositories that point to the same backend
+  # @rbs (Changeset::ActiveRecord_Associations_CollectionProxy, Changeset) -> Changeset::ActiveRecord_AssociationRelation
   def same_commits_in_scope(scope, changeset)
     scope = scope.joins(:repository).where(:repositories => {:url => url, :root_url => root_url, :type => type})
     if changeset.scmid.present?
@@ -473,6 +506,7 @@ class Repository < ApplicationRecord
 
   # Validates repository url based against an optional regular expression
   # that can be set in the Redmine configuration file.
+  # @rbs (?Symbol) -> ActiveModel::Error?
   def validate_repository_path(attribute=:url)
     regexp = Redmine::Configuration["scm_#{scm_name.to_s.downcase}_path_regexp"]
     if changes[attribute] && regexp.present?
@@ -483,10 +517,12 @@ class Repository < ApplicationRecord
     end
   end
 
+  # @rbs () -> String
   def normalize_identifier
     self.identifier = identifier.to_s.strip
   end
 
+  # @rbs () -> Integer?
   def check_default
     if !is_default? && set_as_default?
       self.is_default = true
@@ -509,6 +545,7 @@ class Repository < ApplicationRecord
   private
 
   # Deletes repository data
+  # @rbs () -> Integer
   def clear_changesets
     cs = Changeset.table_name
     ch = Change.table_name

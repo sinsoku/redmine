@@ -20,6 +20,7 @@ class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
   # Translate attribute names for validation errors display
+  # @rbs (String, ?Hash[untyped, untyped]) -> String
   def self.human_attribute_name(attr, options = {})
     prepared_attr = attr.to_s.sub(/_id$/, '').sub(/^.+\./, '')
     class_prefix = name.underscore.tr('/', '_')

@@ -23,6 +23,7 @@ class ApplicationHelperTest < Redmine::HelperTest
   include ERB::Util
   include AvatarsHelper
 
+  # @rbs () -> String
   def setup
     super
     set_tmp_attachments_directory
@@ -54,6 +55,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_nil response
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_auto_links
     to_test = {
       'http://foo.bar' => '<a class="external" href="http://foo.bar">http://foo.bar</a>',
@@ -108,6 +110,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_auto_links_with_non_ascii_characters
     to_test = {
       "http://foo.bar/#{@russian_test}" =>
@@ -118,6 +121,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_auto_mailto
     to_test = {
       'test@foo.bar' => '<a class="email" href="mailto:test@foo.bar">test@foo.bar</a>',
@@ -128,6 +132,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_inline_images
     to_test = {
       '!http://foo.bar/image.jpg!' => '<img src="http://foo.bar/image.jpg" alt="" />',
@@ -152,6 +157,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_inline_images_inside_tags
     raw = <<~RAW
       h1. !foo.png! Heading
@@ -166,6 +172,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_attached_images
     to_test = {
       'Inline image: !logo.gif!' =>
@@ -186,6 +193,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_attached_image_alt_attribute_with_textile
     attachments = Attachment.all
     with_settings text_formatting: 'textile' do
@@ -219,6 +227,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_attached_images_on_issue
     issue = Issue.generate!
     attachment_1 = Attachment.generate!(:file => mock_file_with_options(:original_filename => "attached_on_issue.png"), :container => issue)
@@ -237,6 +246,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_attached_images_with_textile_and_non_ascii_filename
     to_test = {
       'CAFÉ.JPG' => 'CAF%C3%89.JPG',
@@ -251,6 +261,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_attached_images_with_markdown_and_non_ascii_filename
     skip unless Object.const_defined?(:CommonMarker)
 
@@ -267,6 +278,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_attached_images_with_hires_naming
     attachment = Attachment.generate!(:filename => 'image@2x.png')
     with_settings :text_formatting => 'textile' do
@@ -278,6 +290,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_attached_images_filename_extension
     a1 =
       Attachment.new(
@@ -340,6 +353,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_attached_images_should_read_later
     set_fixtures_attachments_directory
     a1 = Attachment.find(16)
@@ -368,6 +382,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     set_tmp_attachments_directory
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_textile_external_links
     to_test = {
       'This is a "link":http://foo.bar' => 'This is a <a href="http://foo.bar" class="external">link</a>',
@@ -399,6 +414,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_textile_external_links_with_non_ascii_characters
     to_test = {
       %|This is a "link":http://foo.bar/#{@russian_test}| =>
@@ -409,6 +425,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_redmine_links
     user_with_email_login = User.generate!(:login => 'abcd@example.com')
     user_with_email_login_2 = User.generate!(:login => 'foo.bar@example.com')
@@ -601,6 +618,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_link_to_note_within_the_same_page
     with_settings :text_formatting => 'textile' do
       issue = Issue.find(1)
@@ -611,6 +629,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_user_links_with_email_as_login_name_should_not_be_parsed_textile
     with_settings :text_formatting => 'textile' do
       u = User.generate!(:login => 'jsmith@somenet.foo')
@@ -631,6 +650,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_user_links_with_email_as_login_name_should_not_be_parsed_markdown
     with_settings :text_formatting => 'common_mark' do
       u = User.generate!(:login => 'jsmith@somenet.foo')
@@ -651,6 +671,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_should_not_parse_redmine_links_inside_link
     raw = "r1 should not be parsed in http://example.com/url-r1/"
     html = '<a class="external" href="http://example.com/url-r1/">http://example.com/url-r1/</a>'
@@ -662,6 +683,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_redmine_links_with_a_different_project_before_current_project
     vp1 = Version.generate!(:project_id => 1, :name => '1.4.4')
     vp3 = Version.generate!(:project_id => 3, :name => '1.4.4')
@@ -674,6 +696,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_escaped_redmine_links_should_not_be_parsed
     to_test = [
       '#3.',
@@ -693,6 +716,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_cross_project_redmine_links
     source_link = link_to('ecookbook:source:/some/file',
                           {:controller => 'repositories', :action => 'entry',
@@ -731,6 +755,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_redmine_links_by_name_should_work_with_html_escaped_characters
     v = Version.generate!(:name => "Test & Show.txt", :project_id => 1)
     link = link_to("Test & Show.txt", "/versions/#{v.id}", :class => "version")
@@ -741,6 +766,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_link_to_issue_subject
     issue = Issue.generate!(:subject => "01234567890123456789")
     str = link_to_issue(issue, :truncate => 10)
@@ -758,6 +784,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_equal "#{result}: &lt;&amp;&gt;0123...", str
   end
 
+  # @rbs () -> bool
   def test_link_to_issue_title
     long_str = "0123456789" * 5
 
@@ -776,6 +803,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_equal result, str
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_multiple_repositories_redmine_links
     svn = Repository::Subversion.create!(:project_id => 1, :identifier => 'svn_repo-1', :url => 'file:///foo/hg')
     Changeset.create!(:repository => svn, :committed_on => Time.now, :revision => '123')
@@ -833,6 +861,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_cross_project_multiple_repositories_redmine_links
     svn = Repository::Subversion.create!(:project_id => 1, :identifier => 'svn1', :url => 'file:///foo/hg')
     Changeset.create!(:repository => svn, :committed_on => Time.now, :revision => '123')
@@ -892,6 +921,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_redmine_links_git_commit
     @project = Project.find(3)
     r = Repository::Git.create!(:project => @project, :url => '/tmp/test/git')
@@ -924,6 +954,7 @@ class ApplicationHelperTest < Redmine::HelperTest
   end
 
   # TODO: Bazaar commit id contains mail address, so it contains '@' and '_'.
+  # @rbs () -> Hash[untyped, untyped]
   def test_redmine_links_mercurial_commit
     @project = Project.find(3)
     r = Repository::Mercurial.create!(:project => @project, :url => '/tmp/test')
@@ -968,6 +999,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_attachment_links
     text = 'attachment:error281.txt'
     result = link_to("error281.txt", "/attachments/1",
@@ -980,6 +1012,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_attachment_link_should_link_to_latest_attachment
     a1 = Attachment.generate!(:filename => "test.txt", :created_on => 1.hour.ago)
     a2 = Attachment.generate!(:filename => "test.txt")
@@ -991,6 +1024,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_attachment_links_to_images_with_email_format_should_not_be_parsed
     attachment = Attachment.generate!(:filename => 'image@2x.png')
     with_settings :text_formatting => 'textile' do
@@ -1007,6 +1041,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_wiki_links
     User.current = User.find_by_login('jsmith')
     russian_eacape = CGI.escape(@russian_test)
@@ -1109,6 +1144,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_wiki_links_with_special_characters_should_work_in_textile
     to_test = wiki_links_with_special_characters
 
@@ -1118,6 +1154,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_wiki_links_with_special_characters_should_work_in_markdown
     to_test = wiki_links_with_special_characters
 
@@ -1127,6 +1164,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_wiki_links_with_square_brackets_in_project_name
     User.current = User.find_by_login('jsmith')
 
@@ -1169,6 +1207,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_wiki_links_within_local_file_generation_context
     to_test = {
       # link to a page
@@ -1206,6 +1245,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_wiki_links_within_wiki_page_context
     page = WikiPage.find_by_title('Another_page')
     to_test = {
@@ -1269,6 +1309,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_wiki_links_anchor_option_should_prepend_page_title_to_href
     to_test = {
       # link to a page
@@ -1314,6 +1355,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_html_tags
     to_test = {
       "<div>content</div>" => "<p>&lt;div&gt;content&lt;/div&gt;</p>",
@@ -1340,6 +1382,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_allowed_html_tags
     to_test = {
       "<pre>preformatted text</pre>" => "<pre>preformatted text</pre>",
@@ -1351,6 +1394,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_pre_tags
     raw = <<~RAW
       Before
@@ -1373,6 +1417,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_pre_content_should_not_parse_wiki_and_redmine_links
     raw = <<~RAW
       [[CookBook documentation]]
@@ -1407,6 +1452,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_non_closing_pre_blocks_should_be_closed
     raw = <<~RAW
       <pre><code>
@@ -1421,12 +1467,14 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def test_unbalanced_closing_pre_tag_should_not_error
     assert_nothing_raised do
       textilizable("unbalanced</pre>")
     end
   end
 
+  # @rbs () -> bool
   def test_syntax_highlight
     raw = <<~RAW
       <pre><code class="ECMA_script">
@@ -1442,6 +1490,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_syntax_highlight_ampersand_in_textile
     raw = <<~RAW
       <pre><code class="ruby">
@@ -1456,10 +1505,12 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_syntax_highlight_should_normalize_line_endings
     assert_equal "line 1\nline 2\n", syntax_highlight("test.txt", "line 1\rline 2\r\n")
   end
 
+  # @rbs () -> bool
   def test_to_path_param
     assert_equal 'test1/test2', to_path_param('test1/test2')
     assert_equal 'test1/test2', to_path_param('/test1/test2/')
@@ -1467,6 +1518,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_nil to_path_param('/')
   end
 
+  # @rbs () -> bool
   def test_wiki_links_in_tables
     text = "|[[Page|Link title]]|[[Other Page|Other title]]|\n|Cell 21|[[Last page]]|"
     link1 = link_to("Link title", "/projects/ecookbook/wiki/Page", :class => "wiki-page new")
@@ -1481,6 +1533,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_text_formatting
     to_test = {
       '*_+bold, italic and underline+_*' => '<strong><em><ins>bold, italic and underline</ins></em></strong>',
@@ -1496,6 +1549,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_wiki_horizontal_rule
     with_settings :text_formatting => 'textile' do
       assert_equal '<hr />', textilizable('---')
@@ -1503,6 +1557,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_headings
     raw = 'h1. Some heading'
     expected =
@@ -1513,6 +1568,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_headings_with_special_chars
     # This test makes sure that the generated anchor names match the expected
     # ones even if the heading text contains unconventional characters
@@ -1526,6 +1582,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_headings_in_wiki_single_page_export_should_be_prepended_with_page_title
     page = WikiPage.new(:title => 'Page Title', :wiki_id => 1)
     content = WikiContent.new(:text => 'h1. Some heading', :page => page)
@@ -1537,6 +1594,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_table_of_content
     set_language_if_valid 'en'
     raw = <<~RAW
@@ -1601,6 +1659,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_table_of_content_should_generate_unique_anchors
     set_language_if_valid 'en'
     raw = <<~RAW
@@ -1630,6 +1689,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_table_of_content_should_contain_included_page_headings
     set_language_if_valid 'en'
     raw = <<~RAW
@@ -1650,6 +1710,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_toc_with_textile_formatting_should_be_parsed
     with_settings :text_formatting => 'textile' do
       assert_select_in textilizable("{{toc}}\n\nh1. Heading"), 'ul.toc li', :text => 'Heading'
@@ -1659,6 +1720,7 @@ class ApplicationHelperTest < Redmine::HelperTest
   end
 
   if Object.const_defined?(:CommonMarker)
+    # @rbs () -> Nokogiri::XML::NodeSet
     def test_toc_with_markdown_formatting_should_be_parsed
       with_settings :text_formatting => 'common_mark' do
         assert_select_in textilizable("{{toc}}\n\n# Heading"), 'ul.toc li', :text => 'Heading'
@@ -1668,6 +1730,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_section_edit_links
     raw = <<~RAW
       h1. Title
@@ -1732,6 +1795,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_default_formatter
     with_settings :text_formatting => 'unknown' do
       text = 'a *link*: http://www.example.net/'
@@ -1743,16 +1807,19 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_textilizable_with_formatting_set_to_false_should_not_format_text
     assert_equal '*text*', textilizable("*text*", :formatting => false)
   end
 
+  # @rbs () -> bool
   def test_textilizable_with_formatting_set_to_true_should_format_text
     with_settings :text_formatting => 'textile' do
       assert_equal '<p><strong>text</strong></p>', textilizable("*text*", :formatting => true)
     end
   end
 
+  # @rbs () -> bool
   def test_parse_redmine_links_should_handle_a_tag_without_attributes
     text = +'<a>http://example.com</a>'
     expected = text.dup
@@ -1760,6 +1827,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_equal expected, text
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_due_date_distance_in_words
     to_test = {
       Date.today => 'Due in 0 days',
@@ -1776,6 +1844,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_render_page_hierarchy
     parent_page = WikiPage.find(1)
     child_page = WikiPage.find_by(parent_id: parent_page.id)
@@ -1791,6 +1860,7 @@ class ApplicationHelperTest < Redmine::HelperTest
                              id: child_page.title, version: nil))
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_render_page_hierarchy_with_timestamp
     parent_page = WikiPage.find(1)
     child_page = WikiPage.find_by(parent_id: parent_page.id)
@@ -1806,6 +1876,7 @@ class ApplicationHelperTest < Redmine::HelperTest
         distance_of_time_in_words(Time.now, child_page.updated_on)))
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_render_page_hierarchy_when_action_is_export
     parent_page = WikiPage.find(1)
     child_page = WikiPage.find_by(parent_id: parent_page.id)
@@ -1820,12 +1891,14 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_select_in result, 'ul.pages-hierarchy li ul.pages-hierarchy a[href=?]', "##{child_page.title}"
   end
 
+  # @rbs () -> bool
   def test_link_to_user
     user = User.find(2)
     result = link_to("John Smith", "/users/2", :class => "user active")
     assert_equal result, link_to_user(user)
   end
 
+  # @rbs () -> bool
   def test_link_to_user_should_not_link_to_locked_user
     with_current_user nil do
       user = User.find(5)
@@ -1834,6 +1907,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_link_to_user_should_link_to_locked_user_only_if_current_user_is_admin
     user = User.find(5)
     assert user.locked?
@@ -1849,24 +1923,28 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_link_to_principal_should_link_to_user
     user = User.find(2)
     result = link_to('John Smith', '/users/2', :class => 'user active')
     assert_equal result, link_to_principal(user)
   end
 
+  # @rbs () -> MatchData
   def test_link_to_principal_should_link_to_group
     group = Group.find(10)
     result = %r{<a class="group" href="/groups/10"><svg class="s18 icon-svg" aria-hidden="true"><use href="/assets/icons-\w+.svg#icon--group"></use></svg>A Team</a>}
     assert_match result, link_to_principal(group)
   end
 
+  # @rbs () -> bool
   def test_link_to_principal_should_return_string_representation_for_unknown_type_principal
     unknown_principal = 'foo'
     result = unknown_principal.to_s
     assert_equal result, link_to_principal(unknown_principal, :class => 'bar')
   end
 
+  # @rbs () -> bool
   def test_link_to_principal_should_escape_principal_name
     user = User.generate!(firstname: "firstname<>'", lastname: 'lastname&"')
     group = Group.generate!(lastname: "group<>'&")
@@ -1877,12 +1955,14 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_include "&lt;&gt;&#39;&amp;", link_to_principal("<>'&")
   end
 
+  # @rbs () -> bool
   def test_link_to_group_should_return_only_group_name_for_non_admin_users
     User.current = nil
     group = Group.find(10)
     assert_equal "A Team", link_to_group(group)
   end
 
+  # @rbs () -> bool
   def test_link_to_group_should_link_to_group_edit_page_for_admin_users
     User.current = User.find(1)
     group = Group.find(10)
@@ -1890,6 +1970,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_equal result, link_to_group(group)
   end
 
+  # @rbs () -> bool
   def test_link_to_user_should_not_link_to_anonymous
     user = User.anonymous
     assert user.anonymous?
@@ -1897,6 +1978,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_equal ::I18n.t(:label_user_anonymous), t
   end
 
+  # @rbs () -> bool
   def test_link_to_attachment
     a = Attachment.find(3)
     assert_equal(
@@ -1917,6 +1999,7 @@ class ApplicationHelperTest < Redmine::HelperTest
       link_to_attachment(a, :only_path => false))
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_thumbnail_tag
     a = Attachment.find(3)
     assert_select_in(
@@ -1925,6 +2008,7 @@ class ApplicationHelperTest < Redmine::HelperTest
       "/attachments/3", "logo.gif", "logo.gif", "/attachments/thumbnail/3/200")
   end
 
+  # @rbs () -> bool
   def test_link_to_project
     project = Project.find(1)
     assert_equal %(<a href="/projects/ecookbook">eCookbook</a>),
@@ -1933,6 +2017,7 @@ class ApplicationHelperTest < Redmine::HelperTest
                  link_to_project(project, {:only_path => false, :jump => 'blah'})
   end
 
+  # @rbs () -> bool
   def test_link_to_project_settings
     project = Project.find(1)
     assert_equal '<a href="/projects/ecookbook/settings">eCookbook</a>', link_to_project_settings(project)
@@ -1944,6 +2029,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_equal 'eCookbook', link_to_project_settings(project)
   end
 
+  # @rbs () -> bool
   def test_link_to_legacy_project_with_numerical_identifier_should_use_id
     # numeric identifier are no longer allowed
     Project.where(:id => 1).update_all(:identifier => 25)
@@ -1951,6 +2037,7 @@ class ApplicationHelperTest < Redmine::HelperTest
                  link_to_project(Project.find(1))
   end
 
+  # @rbs () -> Array[untyped]
   def test_link_to_record
     [
       [custom_values(:custom_values_007), '<a href="/projects/ecookbook">eCookbook</a>'],
@@ -1969,6 +2056,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_link_to_attachment_container
     field = ProjectCustomField.generate!(:name => "File", :field_format => 'attachment')
     project = projects(:projects_001)
@@ -1996,6 +2084,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_principals_check_box_tag_with_avatar
     user = User.find(1)
     group = Group.find(10)
@@ -2012,6 +2101,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_principals_check_box_tag_without_avatar
     principals = [User.find(1), Group.find(10)]
     Setting.gravatar_enabled = '1'
@@ -2026,6 +2116,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_principals_options_for_select_with_users
     User.current = nil
     users = [User.find(2), User.find(4)]
@@ -2034,6 +2125,7 @@ class ApplicationHelperTest < Redmine::HelperTest
       principals_options_for_select(users))
   end
 
+  # @rbs () -> bool
   def test_principals_options_for_select_with_selected
     User.current = nil
     users = [User.find(2), User.find(4)]
@@ -2042,6 +2134,7 @@ class ApplicationHelperTest < Redmine::HelperTest
       principals_options_for_select(users, User.find(4)))
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_principals_options_for_select_with_users_and_groups
     User.current = nil
     set_language_if_valid 'en'
@@ -2058,10 +2151,12 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_principals_options_for_select_with_empty_collection
     assert_equal '', principals_options_for_select([])
   end
 
+  # @rbs () -> bool
   def test_principals_options_for_select_should_include_me_option_when_current_user_is_in_collection
     set_language_if_valid 'en'
     users = [User.find(2), User.find(4)]
@@ -2070,6 +2165,7 @@ class ApplicationHelperTest < Redmine::HelperTest
                    principals_options_for_select(users)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_principals_options_for_select_should_include_author_and_previous_assignee
     set_language_if_valid 'en'
     users = [User.find(2), User.find(3), User.find(1)]
@@ -2085,19 +2181,23 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_stylesheet_link_tag_should_pick_the_default_stylesheet
     assert_match 'href="/assets/styles.css"', stylesheet_link_tag("styles")
   end
 
+  # @rbs () -> MatchData
   def test_stylesheet_link_tag_for_plugin_should_pick_the_plugin_stylesheet
     assert_match 'href="/assets/plugin_assets/foo/styles.css"',
                  stylesheet_link_tag("styles", :plugin => :foo)
   end
 
+  # @rbs () -> MatchData
   def test_image_tag_should_pick_the_default_image
     assert_match 'src="/assets/image.png"', image_tag("image.png")
   end
 
+  # @rbs () -> MatchData
   def test_image_tag_should_pick_the_theme_image_if_it_exists
     theme = Redmine::Themes.themes.last
     theme.images << 'image.png'
@@ -2110,66 +2210,80 @@ class ApplicationHelperTest < Redmine::HelperTest
     theme.images.delete 'image.png'
   end
 
+  # @rbs () -> MatchData
   def test_image_tag_sfor_plugin_should_pick_the_plugin_image
     assert_match 'src="/assets/plugin_assets/foo/image.png"', image_tag("image.png", :plugin => :foo)
   end
 
+  # @rbs () -> MatchData
   def test_javascript_include_tag_should_pick_the_default_javascript
     assert_match 'src="/assets/scripts.js"', javascript_include_tag("scripts")
   end
 
+  # @rbs () -> MatchData
   def test_javascript_include_tag_for_plugin_should_pick_the_plugin_javascript
     assert_match 'src="/assets/plugin_assets/foo/scripts.js"', javascript_include_tag("scripts", :plugin => :foo)
   end
 
+  # @rbs () -> bool
   def test_raw_json_should_escape_closing_tags
     s = raw_json(["<foo>bar</foo>"])
     assert_include '\/foo', s
   end
 
+  # @rbs () -> bool
   def test_raw_json_should_be_html_safe
     s = raw_json(["foo"])
     assert s.html_safe?
   end
 
+  # @rbs () -> bool
   def test_html_title_should_app_title_if_not_set
     assert_equal 'Redmine', html_title
   end
 
+  # @rbs () -> bool
   def test_html_title_should_join_items
     html_title 'Foo', 'Bar'
     assert_equal 'Foo - Bar - Redmine', html_title
   end
 
+  # @rbs () -> bool
   def test_html_title_should_append_current_project_name
     @project = Project.find(1)
     html_title 'Foo', 'Bar'
     assert_equal 'Foo - Bar - eCookbook - Redmine', html_title
   end
 
+  # @rbs () -> bool
   def test_title_should_return_a_h2_tag
     assert_equal '<h2>Foo</h2>', title('Foo')
   end
 
+  # @rbs () -> bool
   def test_title_should_set_html_title
     title('Foo')
     assert_equal 'Foo - Redmine', html_title
   end
 
+  # @rbs () -> bool
   def test_title_should_turn_arrays_into_links
     assert_equal '<h2><a href="/foo">Foo</a></h2>', title(['Foo', '/foo'])
     assert_equal 'Foo - Redmine', html_title
   end
 
+  # @rbs () -> bool
   def test_title_should_join_items
     assert_equal '<h2>Foo &#187; Bar</h2>', title('Foo', 'Bar')
     assert_equal 'Bar - Foo - Redmine', html_title
   end
 
+  # @rbs () -> MatchData
   def test_favicon_path
     assert_match %r{^/assets/favicon-\w+\.ico}, favicon_path
   end
 
+  # @rbs () -> MatchData
   def test_favicon_path_with_suburi
     Redmine::Utils.relative_url_root = '/foo'
     assert_match %r{^/foo/assets/favicon-\w+\.ico}, favicon_path
@@ -2177,10 +2291,12 @@ class ApplicationHelperTest < Redmine::HelperTest
     Redmine::Utils.relative_url_root = ''
   end
 
+  # @rbs () -> MatchData
   def test_favicon_url
     assert_match %r{^http://test\.host/assets/favicon-\w+\.ico}, favicon_url
   end
 
+  # @rbs () -> MatchData
   def test_favicon_url_with_suburi
     Redmine::Utils.relative_url_root = '/foo'
     assert_match %r{^http://test\.host/foo/assets/favicon-\w+\.ico}, favicon_url
@@ -2188,6 +2304,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     Redmine::Utils.relative_url_root = ''
   end
 
+  # @rbs () -> bool
   def test_truncate_single_line
     str = "01234"
     result = truncate_single_line_raw("#{str}\n#{str}", 10)
@@ -2198,6 +2315,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert !result.html_safe?
   end
 
+  # @rbs () -> bool
   def test_truncate_single_line_non_ascii
     ja = '日本語'
     result = truncate_single_line_raw("#{ja}\n#{ja}\n#{ja}", 10)
@@ -2205,6 +2323,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert !result.html_safe?
   end
 
+  # @rbs () -> bool
   def test_hours_formatting
     set_language_if_valid 'en'
 
@@ -2224,6 +2343,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_format_hours_rounds_to_nearest_minute
     set_language_if_valid 'en'
 
@@ -2239,6 +2359,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_format_hours_should_use_locale_decimal_separator
     to_test = {'en' => '0.75', 'de' => '0,75'}
     with_settings :timespan_format => 'decimal' do
@@ -2250,6 +2371,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_html_hours
     assert_equal '<span class="hours hours-int">0</span><span class="hours hours-dec">:45</span>',
                  html_hours('0:45')
@@ -2257,15 +2379,18 @@ class ApplicationHelperTest < Redmine::HelperTest
                  html_hours('0.75')
   end
 
+  # @rbs () -> MatchData
   def test_form_for_includes_name_attribute
     assert_match(/name="new_issue-[a-z0-9]{8}"/, form_for(Issue.new){})
   end
 
+  # @rbs () -> MatchData
   def test_labelled_form_for_includes_name_attribute
     assert_match(/name="new_issue-[a-z0-9]{8}"/, labelled_form_for(Issue.new){})
   end
 
   # TODO: Remove this test when ApplicationHelper#render_if_exist is removed
+  # @rbs () -> bool
   def test_render_if_exist_should_be_render_partial
     saved_behavior = Rails.application.deprecators[:active_support].behavior
     Rails.application.deprecators[:active_support].behavior = :silence
@@ -2277,6 +2402,7 @@ class ApplicationHelperTest < Redmine::HelperTest
   end
 
   # TODO: Remove this test when ApplicationHelper#render_if_exist is removed
+  # @rbs () -> bool
   def test_render_if_exist_should_be_render_nil
     saved_behavior = Rails.application.deprecators[:active_support].behavior
     Rails.application.deprecators[:active_support].behavior = :silence
@@ -2287,6 +2413,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     Rails.application.deprecators[:active_support].behavior = saved_behavior
   end
 
+  # @rbs () -> bool
   def test_export_csv_encoding_select_tag_should_return_nil_when_general_csv_encoding_is_UTF8
     with_locale 'az' do
       assert_equal l(:general_csv_encoding), 'UTF-8'
@@ -2294,6 +2421,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_export_csv_encoding_select_tag_should_have_two_option_when_general_csv_encoding_is_not_UTF8
     with_locale 'en' do
       assert_equal l(:general_csv_encoding), 'ISO-8859-1'
@@ -2303,6 +2431,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_time_tag
     user = User.find(1)
     user.pref.update(time_zone: 'UTC')
@@ -2319,6 +2448,7 @@ class ApplicationHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_export_csv_separator_select_tag
     with_locale 'en' do
       result = export_csv_separator_select_tag
@@ -2335,6 +2465,7 @@ class ApplicationHelperTest < Redmine::HelperTest
 
   private
 
+  # @rbs () -> Hash[untyped, untyped]
   def wiki_links_with_special_characters
     {
       '[[Jack & Coke]]' =>

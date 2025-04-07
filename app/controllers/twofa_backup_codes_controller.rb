@@ -28,6 +28,7 @@ class TwofaBackupCodesController < ApplicationController
 
   require_sudo_mode :init
 
+  # @rbs () -> String
   def init
     if @twofa.send_code(controller: 'twofa_backup_codes', action: 'create')
       flash[:notice] = l('twofa_code_sent')
@@ -35,10 +36,12 @@ class TwofaBackupCodesController < ApplicationController
     redirect_to action: 'confirm'
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def confirm
     @twofa_view = @twofa.otp_confirm_view_variables
   end
 
+  # @rbs () -> String
   def create
     if @twofa.verify!(params[:twofa_code].to_s)
       if time = @twofa.backup_codes.map(&:created_on).max
@@ -55,6 +58,7 @@ class TwofaBackupCodesController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]
   def show
     # make sure we get only the codes that we should show
     tokens = @twofa.backup_codes.where(id: flash[:twofa_backup_token_ids])
@@ -72,6 +76,7 @@ class TwofaBackupCodesController < ApplicationController
 
   private
 
+  # @rbs () -> Redmine::Twofa::Totp
   def twofa_setup
     @user = User.current
     @twofa = Redmine::Twofa.for_user(@user)

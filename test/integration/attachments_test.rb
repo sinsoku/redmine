@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class AttachmentsTest < Redmine::IntegrationTest
+  # @rbs () -> bool
   def test_upload_should_set_default_content_type
     log_user('jsmith', 'jsmith')
     assert_difference 'Attachment.count' do
@@ -33,6 +34,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     assert_equal 'text/plain', attachment.content_type
   end
 
+  # @rbs () -> bool
   def test_upload_should_accept_content_type_param
     log_user('jsmith', 'jsmith')
     assert_difference 'Attachment.count' do
@@ -46,6 +48,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     assert_equal 'image/jpeg', attachment.content_type
   end
 
+  # @rbs () -> bool
   def test_upload_as_js_and_attach_to_an_issue
     log_user('jsmith', 'jsmith')
 
@@ -79,6 +82,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     assert_equal file_content.length, attachment.filesize
   end
 
+  # @rbs () -> bool
   def test_upload_as_js_and_preview_as_inline_attachment
     log_user('jsmith', 'jsmith')
 
@@ -110,6 +114,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_upload_and_resubmit_after_validation_failure
     log_user('jsmith', 'jsmith')
 
@@ -163,6 +168,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     assert_equal file_content.length, attachment.filesize
   end
 
+  # @rbs () -> bool
   def test_upload_filename_with_plus
     log_user('jsmith', 'jsmith')
     filename = 'a+b.txt'
@@ -188,6 +194,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     assert_equal file_content.length, attachment.filesize
   end
 
+  # @rbs () -> bool
   def test_upload_as_js_and_destroy
     log_user('jsmith', 'jsmith')
 
@@ -208,6 +215,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     assert_include "$('#attachments_1').remove();", response.body
   end
 
+  # @rbs () -> bool
   def test_download_should_set_sendfile_header
     set_fixtures_attachments_directory
     Rack::Sendfile.any_instance.stubs(:variation).returns("X-Sendfile")
@@ -219,6 +227,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     set_tmp_attachments_directory
   end
 
+  # @rbs () -> bool
   def test_download_all_with_wrong_container_type
     set_tmp_attachments_directory
 
@@ -238,6 +247,7 @@ class AttachmentsTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_download_all_for_journal_should_check_visibility
     set_tmp_attachments_directory
     Project.find(1).update_column :is_public, false
@@ -269,6 +279,7 @@ class AttachmentsTest < Redmine::IntegrationTest
 
   private
 
+  # @rbs (String, String, ?Integer) -> String
   def ajax_upload(filename, content, attachment_id=1)
     assert_difference 'Attachment.count' do
       post(

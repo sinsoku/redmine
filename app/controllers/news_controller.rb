@@ -31,6 +31,7 @@ class NewsController < ApplicationController
   helper :watchers
   helper :attachments
 
+  # @rbs () -> nil
   def index
     case params[:format]
     when 'xml', 'json'
@@ -66,17 +67,20 @@ class NewsController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def show
     @comments = @news.comments.to_a
     @comments.reverse! if User.current.wants_comments_in_reverse_order?
   end
 
+  # @rbs () -> News
   def new
     raise ::Unauthorized unless User.current.allowed_to?(:manage_news, @project, :global => true)
 
     @news = News.new(:project => @project, :author => User.current)
   end
 
+  # @rbs () -> (String | bool | ActiveSupport::SafeBuffer)
   def create
     @news = News.new(:project => @project, :author => User.current)
     @news.safe_attributes = params[:news]
@@ -98,9 +102,11 @@ class NewsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (String | bool | ActiveSupport::SafeBuffer)
   def update
     @news.safe_attributes = params[:news]
     @news.save_attachments(params[:attachments] || (params[:news] && params[:news][:uploads]))
@@ -121,6 +127,7 @@ class NewsController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | String)
   def destroy
     @news.destroy
     respond_to do |format|

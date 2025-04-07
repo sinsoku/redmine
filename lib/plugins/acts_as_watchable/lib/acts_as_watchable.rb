@@ -26,6 +26,7 @@ module Redmine
       end
 
       module ClassMethods
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_watchable(options = {})
           return if self.included_modules.include?(Redmine::Acts::Watchable::InstanceMethods)
 
@@ -47,11 +48,13 @@ module Redmine
       end
 
       module InstanceMethods
+        # @rbs (Class) -> Class
         def self.included(base)
           base.extend ClassMethods
         end
 
         # Returns an array of users that are proposed as watchers
+        # @rbs () -> Array[untyped]
         def addable_watcher_users
           users = self.project.principals.assignable_watchers.sort - self.watcher_users
           if respond_to?(:visible?)
@@ -61,6 +64,7 @@ module Redmine
         end
 
         # array of watchers that the given user is allowed to see
+        # @rbs (?User | AnonymousUser) -> (Array[untyped] | Principal::ActiveRecord_Associations_CollectionProxy)
         def visible_watcher_users(user = User.current)
           if user.allowed_to?(:"view_#{self.class.name.underscore}_watchers", project)
             watcher_users
@@ -71,6 +75,7 @@ module Redmine
         end
 
         # true if user can be added as a watcher
+        # @rbs (User | Group) -> bool
         def valid_watcher?(user)
           return true unless respond_to?(:visible?)
           return true unless user.is_a?(User)
@@ -79,6 +84,7 @@ module Redmine
         end
 
         # Adds user as a watcher
+        # @rbs (User | Group) -> (Watcher::ActiveRecord_Associations_CollectionProxy | Principal::ActiveRecord_Associations_CollectionProxy)?
         def add_watcher(user)
           if persisted?
             # Rails does not reset the has_many :through association
@@ -90,6 +96,7 @@ module Redmine
         end
 
         # Removes user from the watchers list
+        # @rbs (User | Group) -> (Integer | Array[untyped])
         def remove_watcher(user)
           return nil unless user && (user.is_a?(User) || user.is_a?(Group))
 
@@ -103,11 +110,13 @@ module Redmine
         end
 
         # Adds/removes watcher
+        # @rbs (User | Group, ?bool) -> (Integer | Watcher::ActiveRecord_Associations_CollectionProxy)
         def set_watcher(user, watching=true)
           watching ? add_watcher(user) : remove_watcher(user)
         end
 
         # Overrides watcher_user_ids= to make user_ids uniq
+        # @rbs (Array[untyped]) -> Array[untyped]
         def watcher_user_ids=(user_ids)
           if user_ids.is_a?(Array)
             user_ids = user_ids.uniq
@@ -118,6 +127,7 @@ module Redmine
         # Returns true if object is watched by +principal+, that is
         # either by a given group,
         # or by a given user or any of their groups
+        # @rbs (User | Group) -> bool
         def watched_by?(principal)
           return false unless principal
 
@@ -128,6 +138,7 @@ module Redmine
           (self.watcher_user_ids & user_ids).any?
         end
 
+        # @rbs () -> Array[untyped]
         def notified_watchers
           notified = watcher_users.active.to_a
           notified = notified.map {|n| n.is_a?(Group) ? n.users.active : n}.flatten
@@ -140,6 +151,7 @@ module Redmine
         end
 
         # Returns an array of watchers' email addresses
+        # @rbs () -> Array[untyped]
         def watcher_recipients
           notified_watchers.collect(&:mail)
         end

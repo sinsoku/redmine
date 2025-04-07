@@ -26,6 +26,7 @@ class Watcher < ApplicationRecord
   validate :validate_user
 
   # Returns true if at least one object among objects is watched by user
+  # @rbs (Array[untyped], User) -> bool
   def self.any_watched?(objects, user)
     objects = objects.reject(&:new_record?)
     if objects.any?
@@ -39,6 +40,7 @@ class Watcher < ApplicationRecord
   end
 
   # Unwatch things that users are no longer allowed to view
+  # @rbs (?Hash[untyped, untyped]) -> Integer
   def self.prune(options={})
     if options.has_key?(:user)
       prune_single_user(options[:user], options)
@@ -53,11 +55,13 @@ class Watcher < ApplicationRecord
 
   protected
 
+  # @rbs () -> ActiveModel::Error?
   def validate_user
     errors.add :user_id, :invalid \
       unless user.nil? || (user.is_a?(User) && user.active?) || (user.is_a?(Group) && user.givable?)
   end
 
+  # @rbs (User, ?Hash[untyped, untyped]) -> Integer
   def self.prune_single_user(user, options={})
     return unless user.is_a?(User)
 

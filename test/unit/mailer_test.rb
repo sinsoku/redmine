@@ -23,6 +23,7 @@ class MailerTest < ActiveSupport::TestCase
   include Redmine::I18n
   include Rails::Dom::Testing::Assertions
 
+  # @rbs () -> nil
   def setup
     ActionMailer::Base.deliveries.clear
     Setting.plain_text_mail = '0'
@@ -30,6 +31,7 @@ class MailerTest < ActiveSupport::TestCase
     User.current = nil
   end
 
+  # @rbs () -> Array[untyped]
   def test_generated_links_in_emails
     with_settings :host_name => 'mydomain.foo', :protocol => 'https' do
       journal = Journal.find(3)
@@ -71,6 +73,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_generated_links_with_prefix
     relative_url_root = Redmine::Utils.relative_url_root
     with_settings :host_name => 'mydomain.foo/rdm', :protocol => 'http' do
@@ -110,6 +113,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_generated_links_with_port_and_prefix
     with_settings :host_name => '10.0.0.1:81/redmine', :protocol => 'http' do
       Mailer.test_email(User.find(1)).deliver_now
@@ -118,6 +122,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_generated_links_with_port
     with_settings :host_name => '10.0.0.1:81', :protocol => 'http' do
       Mailer.test_email(User.find(1)).deliver_now
@@ -126,6 +131,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_edit_should_generate_url_with_hostname_for_relations
     journal = Journal.new(:journalized => Issue.find(1), :user => User.find(1), :created_on => Time.now)
     journal.details << JournalDetail.new(:property => 'relation', :prop_key => 'label_relates_to', :value => 2)
@@ -137,6 +143,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_generated_links_with_prefix_and_no_relative_url_root
     relative_url_root = Redmine::Utils.relative_url_root
     Redmine::Utils.relative_url_root = nil
@@ -181,6 +188,7 @@ class MailerTest < ActiveSupport::TestCase
     Redmine::Utils.relative_url_root = relative_url_root
   end
 
+  # @rbs () -> Array[untyped]
   def test_link_to_user_in_email
     issue = Issue.generate!(:description => '@jsmith')
     assert Mailer.deliver_issue_add(issue)
@@ -189,6 +197,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_thumbnail_macro_in_email
     set_tmp_attachments_directory
     issue = Issue.generate!(:description => '{{thumbnail(image.png)}}')
@@ -201,6 +210,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_email_headers
     issue = Issue.find(1)
     Mailer.deliver_issue_add(issue)
@@ -211,6 +221,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal 'Low', mail.header['X-Redmine-Issue-Priority'].to_s
   end
 
+  # @rbs () -> bool
   def test_email_headers_should_include_sender
     issue = Issue.find(1)
     Mailer.deliver_issue_add(issue)
@@ -218,6 +229,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal issue.author.login, mail.header['X-Redmine-Sender'].to_s
   end
 
+  # @rbs () -> bool
   def test_email_headers_should_not_include_assignee_when_not_assigned
     issue = Issue.find(6)
     issue.init_journal(User.current)
@@ -227,6 +239,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_not mail.header['X-Redmine-Issue-Assignee']
   end
 
+  # @rbs () -> bool
   def test_email_headers_should_include_assignee_when_assigned
     issue = Issue.find(6)
     issue.init_journal(User.current)
@@ -235,6 +248,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal 'jsmith', mail.header['X-Redmine-Issue-Assignee'].to_s
   end
 
+  # @rbs () -> bool
   def test_email_headers_should_include_assignee_if_assigned_to_group
     issue = Issue.find(6)
     with_settings :issue_group_assignment => 1 do
@@ -245,6 +259,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal 'Group (A Team)', mail.header['X-Redmine-Issue-Assignee'].to_s
   end
 
+  # @rbs () -> bool
   def test_plain_text_mail
     Setting.plain_text_mail = 1
     journal = Journal.find(2)
@@ -255,6 +270,7 @@ class MailerTest < ActiveSupport::TestCase
     assert !mail.encoded.include?('href')
   end
 
+  # @rbs () -> bool
   def test_html_mail
     Setting.plain_text_mail = 0
     journal = Journal.find(2)
@@ -264,6 +280,7 @@ class MailerTest < ActiveSupport::TestCase
     assert mail.encoded.include?('href')
   end
 
+  # @rbs () -> bool
   def test_from_header
     with_settings :mail_from => 'redmine@example.net' do
       Mailer.deliver_test_email(User.find(1))
@@ -272,6 +289,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal 'redmine@example.net', mail.from_addrs.first
   end
 
+  # @rbs () -> bool
   def test_from_header_with_phrase
     with_settings :mail_from => 'Redmine app <redmine@example.net>' do
       Mailer.deliver_test_email(User.find(1))
@@ -281,6 +299,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal 'Redmine app <redmine@example.net>', mail.header['From'].to_s
   end
 
+  # @rbs () -> bool
   def test_from_header_with_rfc_non_compliant_phrase
     # Send out the email instead of raising an exception
     # no matter if the emission email address is not RFC compliant
@@ -294,6 +313,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal '[Redmine app] <redmine@example.net>', mail.header['From'].to_s
   end
 
+  # @rbs () -> bool
   def test_from_header_with_author_name
     # Use the author's name or Setting.app_title as a display name
     # when Setting.mail_from does not include a display name
@@ -313,6 +333,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_list_id_header_should_include_project_identifier
     with_settings :mail_from => 'Redmine <redmine@example.net>' do
       content = WikiContent.find(1)
@@ -322,6 +343,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_list_id_header_excludes_project_identifier_for_non_project_emails
     with_settings :mail_from => 'Redmine <redmine@example.net>' do
       Mailer.deliver_test_email(User.find(1))
@@ -330,6 +352,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_should_not_send_email_without_recipient
     news = News.first
     user = news.author
@@ -351,6 +374,7 @@ class MailerTest < ActiveSupport::TestCase
     assert ActionMailer::Base.deliveries.empty?
   end
 
+  # @rbs () -> bool
   def test_issue_add_message_id
     issue = Issue.find(2)
     Mailer.deliver_issue_add(issue)
@@ -360,6 +384,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_include "redmine.issue-2.20060719190421.#{uid}@example.net", mail.references
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_edit_message_id
     journal = Journal.find(3)
     journal.issue = Issue.find(2)
@@ -376,6 +401,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_message_posted_message_id
     message = Message.find(1)
     attachment = message.attachments.first
@@ -398,6 +424,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_reply_posted_message_id
     set_tmp_attachments_directory
     message = Message.find(3)
@@ -424,6 +451,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_timestamp_in_message_id_should_be_utc
     zone_was = Time.zone
     issue = Issue.find(3)
@@ -441,6 +469,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_include 'dlopper@somenet.foo', recipients
   end
 
+  # @rbs () -> bool
   def test_issue_add_should_send_mail_to_all_user_email_address
     EmailAddress.create!(:user_id => 3, :address => 'otheremail@somenet.foo')
     issue = Issue.find(1)
@@ -480,6 +509,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_not_include user.mail, recipients
   end
 
+  # @rbs () -> bool
   def test_issue_add_should_notify_mentioned_users_in_issue_description
     User.find(1).mail_notification = 'only_my_events'
 
@@ -493,6 +523,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_include User.find(1).mail, recipients
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_add_should_include_enabled_fields
     issue = Issue.find(2)
     assert Mailer.deliver_issue_add(issue)
@@ -502,6 +533,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_add_should_not_include_disabled_fields
     issue = Issue.find(2)
     tracker = issue.tracker
@@ -516,6 +548,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_issue_add_subject_should_include_status_if_setting_is_enabled
     with_settings :show_status_changes_in_mail_subject => 1 do
       issue = Issue.find(2)
@@ -526,6 +559,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_issue_add_subject_should_not_include_status_if_setting_is_disabled
     with_settings :show_status_changes_in_mail_subject => 0 do
       issue = Issue.find(2)
@@ -536,6 +570,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_add_should_include_issue_status_type_badge
     issue = Issue.find(1)
     Mailer.deliver_issue_add(issue)
@@ -546,6 +581,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_issue_edit_subject_should_include_status_changes_if_setting_is_enabled
     with_settings :show_status_changes_in_mail_subject => 1 do
       issue = Issue.find(2)
@@ -560,6 +596,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_issue_edit_subject_should_not_include_status_changes_if_setting_is_disabled
     with_settings :show_status_changes_in_mail_subject => 0 do
       issue = Issue.find(2)
@@ -574,6 +611,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_issue_edit_should_send_private_notes_to_users_with_permission_only
     journal = Journal.find(1)
     journal.private_notes = true
@@ -593,6 +631,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal %w(jsmith@somenet.foo), recipients
   end
 
+  # @rbs () -> bool
   def test_issue_edit_should_send_private_notes_to_watchers_with_permission_only
     Issue.find(1).set_watcher(User.find_by_login('someone'))
     journal = Journal.find(1)
@@ -609,6 +648,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_not_include 'someone@foo.bar', recipients
   end
 
+  # @rbs () -> bool
   def test_issue_edit_should_mark_private_notes
     journal = Journal.find(2)
     journal.private_notes = true
@@ -620,6 +660,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_mail_body_match '(Private notes)', last_email
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_edit_with_relation_should_notify_users_who_can_see_the_related_issue
     issue = Issue.generate!
     issue.init_journal(User.find(1))
@@ -637,6 +678,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_issue_edit_should_notify_mentioned_users_in_issue_updated_description
     User.find(1).mail_notification = 'only_my_events'
 
@@ -655,6 +697,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_include User.find(1).mail, recipients
   end
 
+  # @rbs () -> bool
   def test_issue_edit_should_notify_mentioned_users_in_notes
     User.find(1).mail_notification = 'only_my_events'
 
@@ -670,6 +713,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_include User.find(1).mail, recipients
   end
 
+  # @rbs () -> bool
   def test_issue_should_send_email_notification_with_suppress_empty_fields
     ActionMailer::Base.deliveries.clear
     with_settings :notified_events => %w(issue_added) do
@@ -692,6 +736,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_locked_user_in_group_watcher_should_not_be_notified
     locked_user = users(:users_005)
     group = Group.generate!
@@ -710,6 +755,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_not_include locked_user.mail, recipients
   end
 
+  # @rbs () -> Array[untyped]
   def test_version_file_added
     attachements = [Attachment.find_by_container_type('Version')]
     assert Mailer.deliver_attachments_added(attachements)
@@ -720,6 +766,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_project_file_added
     attachements = [Attachment.find_by_container_type('Project')]
     assert Mailer.deliver_attachments_added(attachements)
@@ -730,6 +777,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_news_added_should_notify_project_news_watchers
     set_tmp_attachments_directory
     user1 = User.generate!
@@ -754,6 +802,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_wiki_content_added
     content = WikiContent.find(1)
     assert_difference 'ActionMailer::Base.deliveries.size', 2 do
@@ -766,6 +815,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_wiki_content_added_should_notify_mentioned_users_in_content
     content = WikiContent.new(text: 'Hello @admin.', author_id: 1, page_id: 1)
     content.save!
@@ -780,6 +830,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_include User.find(1).mail, recipients
   end
 
+  # @rbs () -> Array[untyped]
   def test_wiki_content_updated
     content = WikiContent.find(1)
     assert Mailer.deliver_wiki_content_updated(content)
@@ -790,6 +841,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_wiki_content_updated_should_notify_mentioned_users_in_updated_content
     content = WikiContent.find(1)
     content.update(text: 'Hello @admin.')
@@ -805,6 +857,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_include User.find(1).mail, recipients
   end
 
+  # @rbs () -> Array[untyped]
   def test_register
     token = Token.find(1)
     assert Mailer.deliver_register(token.user, token)
@@ -815,12 +868,14 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_test_email_later
     user = User.find(1)
     assert Mailer.test_email(user).deliver_later
     assert_equal 1, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_reminders
     users(:users_003).pref.update_attribute :time_zone, 'UTC' # dlopper
     days = 42
@@ -847,6 +902,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal "1 issue(s) due in the next #{days} days", mail.subject
   end
 
+  # @rbs () -> bool
   def test_reminders_language_auto
     with_settings :default_language => 'fr' do
       user = User.find(3)
@@ -864,6 +920,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_reminders_should_not_include_closed_issues
     with_settings :default_language => 'en' do
       Issue.create!(:project_id => 1, :tracker_id => 1, :status_id => 5,
@@ -880,6 +937,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_reminders_for_users
     users(:users_003).pref.update_attribute :time_zone, 'UTC' # dlopper
     Mailer.reminders(:days => 42, :users => ['5'])
@@ -891,6 +949,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_mail_body_match 'Bug #3: Error 281 when updating a recipe (5 days late)', mail
   end
 
+  # @rbs () -> Array[untyped]
   def test_reminder_should_include_issues_assigned_to_groups
     with_settings :default_language => 'en', :issue_group_assignment => '1' do
       group = Group.generate!
@@ -927,6 +986,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_reminders_with_version_option
     with_settings :default_language => 'en' do
       version = Version.generate!(:name => 'Acme', :project_id => 1)
@@ -941,6 +1001,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_reminders_should_only_include_issues_the_user_can_see
     with_settings :default_language => 'en' do
       user = User.find(3)
@@ -960,6 +1021,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_reminders_should_sort_issues_by_due_date
     user = User.find(2)
     user.pref.update_attribute :time_zone, 'UTC'
@@ -982,6 +1044,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_security_notification
     set_language_if_valid User.find(1).language
     with_settings :emails_footer => "footer without link" do
@@ -1005,6 +1068,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_security_notification_with_overridden_remote_ip
     set_language_if_valid User.find(1).language
     with_settings :emails_footer => "footer without link" do
@@ -1023,6 +1087,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_security_notification_should_include_title
     set_language_if_valid User.find(2).language
     with_settings :emails_footer => "footer without link" do
@@ -1040,6 +1105,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_security_notification_should_include_link
     set_language_if_valid User.find(3).language
     with_settings :emails_footer => "footer without link" do
@@ -1058,6 +1124,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_mailer_should_not_change_locale
     # Set current language to italian
     set_language_if_valid 'it'
@@ -1072,6 +1139,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal :it, current_language
   end
 
+  # @rbs () -> bool
   def test_with_deliveries_off
     Mailer.with_deliveries false do
       Mailer.test_email(User.find(1)).deliver_now
@@ -1081,6 +1149,7 @@ class MailerTest < ActiveSupport::TestCase
     assert ActionMailer::Base.perform_deliveries
   end
 
+  # @rbs () -> MatchData
   def test_token_for_should_strip_trailing_gt_from_address_with_full_name
     with_settings :mail_from => "Redmine Mailer<no-reply@redmine.org>" do
       assert_match /\Aredmine.issue-\d+\.\d+\.3@redmine.org\z/,
@@ -1088,6 +1157,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_layout_should_include_the_emails_header
     with_settings :emails_header => '*Header content*', :text_formatting => 'textile' do
       with_settings :plain_text_mail => 0 do
@@ -1106,6 +1176,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_layout_should_not_include_empty_emails_header
     with_settings :emails_header => "", :plain_text_mail => 0 do
       assert Mailer.test_email(User.find(1)).deliver_now
@@ -1115,6 +1186,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_layout_should_include_the_emails_footer
     with_settings :emails_footer => '*Footer content*', :text_formatting => 'textile' do
       with_settings :plain_text_mail => 0 do
@@ -1134,6 +1206,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_layout_should_not_include_empty_emails_footer
     with_settings :emails_footer => "" do
       with_settings :plain_text_mail => 0 do
@@ -1150,6 +1223,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_should_escape_html_templates_only
     Issue.generate!(:project_id => 1, :tracker_id => 1, :subject => 'Subject with a <tag>', :notify => true)
     mail = last_email
@@ -1158,6 +1232,7 @@ class MailerTest < ActiveSupport::TestCase
     assert_include '&lt;tag&gt;', html_part.body.encoded
   end
 
+  # @rbs () -> StandardError
   def test_should_raise_delivery_errors_when_raise_delivery_errors_is_true
     mail = Mailer.test_email(User.find(1))
     mail.delivery_method.stubs(:deliver!).raises(StandardError.new("delivery error"))
@@ -1170,6 +1245,7 @@ class MailerTest < ActiveSupport::TestCase
     ActionMailer::Base.raise_delivery_errors = false
   end
 
+  # @rbs () -> Mail::Message
   def test_should_log_delivery_errors_when_raise_delivery_errors_is_false
     mail = Mailer.test_email(User.find(1))
     mail.delivery_method.stubs(:deliver!).raises(StandardError.new("delivery error"))
@@ -1181,6 +1257,7 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_with_synched_deliveries_should_yield_with_synced_deliveries
     ActionMailer::MailDeliveryJob.queue_adapter = ActiveJob::QueueAdapters::AsyncAdapter.new
 
@@ -1192,6 +1269,7 @@ class MailerTest < ActiveSupport::TestCase
     ActionMailer::MailDeliveryJob.queue_adapter = ActiveJob::QueueAdapters::InlineAdapter.new
   end
 
+  # @rbs () -> bool
   def test_email_addresses_should_keep_addresses
     assert_equal ["foo@example.net"],
                  Mailer.email_addresses("foo@example.net")
@@ -1199,6 +1277,7 @@ class MailerTest < ActiveSupport::TestCase
                  Mailer.email_addresses(["foo@example.net", "bar@example.net"])
   end
 
+  # @rbs () -> bool
   def test_email_addresses_should_replace_users_with_their_email_addresses
     assert_equal ["admin@somenet.foo"],
                  Mailer.email_addresses(User.find(1))
@@ -1206,6 +1285,7 @@ class MailerTest < ActiveSupport::TestCase
                  Mailer.email_addresses(User.where(:id => [1, 2])).sort
   end
 
+  # @rbs () -> bool
   def test_email_addresses_should_include_notified_emails_addresses_only
     EmailAddress.create!(:user_id => 2, :address => "another@somenet.foo", :notify => false)
     EmailAddress.create!(:user_id => 2, :address => "another2@somenet.foo")
@@ -1216,24 +1296,29 @@ class MailerTest < ActiveSupport::TestCase
   private
 
   # Returns an array of email addresses to which emails were sent
+  # @rbs () -> Array[untyped]
   def recipients
     ActionMailer::Base.deliveries.map(&:to).flatten.sort
   end
 
+  # @rbs () -> Mail::Message
   def last_email
     mail = ActionMailer::Base.deliveries.last
     assert_not_nil mail
     mail
   end
 
+  # @rbs () -> Mail::Part
   def text_part
     last_email.parts.detect {|part| part.content_type.include?('text/plain')}
   end
 
+  # @rbs () -> Mail::Part
   def html_part
     last_email.parts.detect {|part| part.content_type.include?('text/html')}
   end
 
+  # @rbs (Mail::Message) -> User
   def destination_user(mail)
     EmailAddress.where(:address => [mail.to, mail.cc].flatten).map(&:user).first
   end

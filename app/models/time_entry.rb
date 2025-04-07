@@ -79,6 +79,7 @@ class TimeEntry < ApplicationRecord
                   'custom_field_values', 'custom_fields'
 
   # Returns a SQL conditions string used to find all time entries visible by the specified user
+  # @rbs (User | AnonymousUser, ?Hash[untyped, untyped]) -> String
   def self.visible_condition(user, options={})
     Project.allowed_to_condition(user, :view_time_entries, options) do |role, user|
       if role.time_entries_visibility == 'all'
@@ -92,6 +93,7 @@ class TimeEntry < ApplicationRecord
   end
 
   # Returns true if user or current user is allowed to view the time entry
+  # @rbs (?(User | AnonymousUser)?) -> bool
   def visible?(user=nil)
     (user || User.current).allowed_to?(:view_time_entries, self.project) do |role, user|
       if role.time_entries_visibility == 'all'
@@ -104,6 +106,7 @@ class TimeEntry < ApplicationRecord
     end
   end
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super
     if new_record? && self.activity.nil?
@@ -112,6 +115,7 @@ class TimeEntry < ApplicationRecord
     end
   end
 
+  # @rbs ((Hash[untyped, untyped] | ActionController::Parameters)?, ?User) -> (Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess)?
   def safe_attributes=(attrs, user=User.current)
     if attrs
       attrs = super(attrs)
@@ -148,14 +152,17 @@ class TimeEntry < ApplicationRecord
     attrs
   end
 
+  # @rbs () -> Project?
   def set_project_if_nil
     self.project = issue.project if issue && project.nil?
   end
 
+  # @rbs () -> AnonymousUser?
   def set_author_if_nil
     self.author = User.current if author.nil?
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_time_entry
     if hours
       errors.add :hours, :invalid if hours < 0
@@ -184,10 +191,12 @@ class TimeEntry < ApplicationRecord
     end
   end
 
+  # @rbs (String | Float | Integer) -> (Float | String | Integer)
   def hours=(h)
     write_attribute :hours, (h.is_a?(String) ? (h.to_hours || h) : h)
   end
 
+  # @rbs () -> Rational?
   def hours
     h = read_attribute(:hours)
     if h.is_a?(Float)
@@ -206,6 +215,7 @@ class TimeEntry < ApplicationRecord
 
   # tyear, tmonth, tweek assigned where setting spent_on attributes
   # these attributes make time aggregations easier
+  # @rbs ((Date | String | Time)?) -> Integer?
   def spent_on=(date)
     super
     self.tyear = spent_on ? spent_on.year : nil
@@ -214,6 +224,7 @@ class TimeEntry < ApplicationRecord
   end
 
   # Returns true if the time entry can be edited by usr, otherwise false
+  # @rbs (User | AnonymousUser) -> bool
   def editable_by?(usr)
     visible?(usr) && (
       (usr == user && usr.allowed_to?(:edit_own_time_entries, project)) || usr.allowed_to?(:edit_time_entries, project)
@@ -221,15 +232,18 @@ class TimeEntry < ApplicationRecord
   end
 
   # Returns the custom_field_values that can be edited by the given user
+  # @rbs (?User?) -> Array[untyped]
   def editable_custom_field_values(user=nil)
     visible_custom_field_values(user)
   end
 
   # Returns the custom fields that can be edited by the given user
+  # @rbs (?nil) -> Array[untyped]
   def editable_custom_fields(user=nil)
     editable_custom_field_values(user).map(&:custom_field).uniq
   end
 
+  # @rbs (?User?) -> Array[untyped]
   def visible_custom_field_values(user = nil)
     user ||= User.current
     custom_field_values.select do |value|
@@ -237,6 +251,7 @@ class TimeEntry < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def assignable_users
     users = []
     if project
@@ -250,6 +265,7 @@ class TimeEntry < ApplicationRecord
   private
 
   # Returns the hours that were logged in other time entries for the same user and the same day
+  # @rbs () -> Float
   def other_hours_with_same_user_and_day
     if user_id && spent_on
       TimeEntry.

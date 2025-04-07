@@ -22,10 +22,12 @@ require_relative '../test_helper'
 class IssuesControllerTest < Redmine::ControllerTest
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     with_settings :default_language => "en" do
       get :index
@@ -42,6 +44,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_list_issues_when_module_disabled
     EnabledModule.where("name = 'issue_tracking' AND project_id = 1").delete_all
     get :index
@@ -51,6 +54,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'a[href="/issues/5"]', :text => /Subproject issue/
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_list_visible_issues_only
     get(:index, :params => {:per_page => 100})
     assert_response :success
@@ -60,6 +64,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_project
     with_settings :display_subprojects_issues => '0' do
       get(:index, :params => {:project_id => 1})
@@ -80,6 +85,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_project_and_subprojects
     with_settings :display_subprojects_issues => '1' do
       get(:index, :params => {:project_id => 1})
@@ -91,6 +97,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_should_list_issues_of_closed_subprojects
     @request.session[:user_id] = 1
     project = Project.find(1)
@@ -110,6 +117,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_subproject_filter_should_not_exclude_closed_subprojects_issues
     subproject1 = Project.find(3)
     subproject2 = Project.find(4)
@@ -134,6 +142,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 9, column_values.size
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_project_and_subprojects_should_show_private_subprojects_with_permission
     @request.session[:user_id] = 2
     with_settings :display_subprojects_issues => '1' do
@@ -146,6 +155,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_project_and_default_filter
     get(
       :index,
@@ -160,6 +170,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_query_filters [['status_id', 'o', '']]
   end
 
+  # @rbs () -> bool
   def test_index_with_project_and_filter
     get(
       :index,
@@ -180,6 +191,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_query_filters [['tracker_id', '=', '1']]
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_index_with_short_filters
     to_test = {
       'status_id' => {
@@ -252,6 +264,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_project_and_empty_filters
     get(
       :index,
@@ -267,6 +280,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_query_filters []
   end
 
+  # @rbs () -> bool
   def test_index_with_project_custom_field_filter
     field =
       ProjectCustomField.
@@ -295,6 +309,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [3, 5], issues_in_list.map(&:project_id).uniq.sort
   end
 
+  # @rbs () -> bool
   def test_index_with_project_status_filter
     project = Project.find(2)
     project.close
@@ -316,6 +331,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_not_include 4, issues
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query
     get(
       :index,
@@ -348,6 +364,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query_grouped_by_tracker
     get(
       :index,
@@ -360,6 +377,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'tr.group span.count'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query_grouped_and_sorted_by_category
     get(
       :index,
@@ -374,6 +392,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'tr.group span.count'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query_grouped_and_sorted_by_fixed_version
     get(
       :index,
@@ -388,6 +407,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'tr.group span.count'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query_grouped_and_sorted_by_fixed_version_in_reverse_order
     get(
       :index,
@@ -402,6 +422,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'tr.group span.count'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_grouped_by_due_date
     set_tmp_attachments_directory
     Issue.destroy_all
@@ -425,6 +446,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> nil
   def test_index_grouped_by_created_on_if_time_zone_is_utc
     # TODO: test fails with mysql
     skip if mysql?
@@ -447,6 +469,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> nil
   def test_index_grouped_by_created_on_if_time_zone_is_nil
     skip unless IssueQuery.new.groupable_columns.detect {|c| c.name == :created_on}
     current_user = User.find(2)
@@ -469,6 +492,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> nil
   def test_index_grouped_by_created_on_as_pdf
     skip unless IssueQuery.new.groupable_columns.detect {|c| c.name == :created_on}
 
@@ -484,6 +508,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'application/pdf', response.media_type
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query_grouped_by_list_custom_field
     get(
       :index,
@@ -496,6 +521,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'tr.group span.count'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query_grouped_by_key_value_custom_field
     cf = IssueCustomField.
            create!(
@@ -532,6 +558,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query_grouped_by_user_custom_field
     cf = IssueCustomField.
            create!(
@@ -566,6 +593,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_grouped_by_boolean_custom_field_should_distinguish_blank_and_false_values
     cf = IssueCustomField.
            create!(
@@ -596,6 +624,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'tr.group', :text => /blank/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_grouped_by_boolean_custom_field_with_false_group_in_first_position_should_show_the_group
     cf = IssueCustomField.
            create!(
@@ -625,6 +654,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'tr.group', :text => /No/
   end
 
+  # @rbs () -> bool
   def test_index_with_query_grouped_by_tracker_in_normal_order
     3.times {|i| Issue.generate!(:tracker_id => (i + 1))}
     get(
@@ -640,6 +670,7 @@ class IssuesControllerTest < Redmine::ControllerTest
                  css_select("tr.issue td.tracker").map(&:text).uniq
   end
 
+  # @rbs () -> bool
   def test_index_with_query_grouped_by_tracker_in_reverse_order
     3.times {|i| Issue.generate!(:tracker_id => (i + 1))}
     get(
@@ -656,6 +687,7 @@ class IssuesControllerTest < Redmine::ControllerTest
                  css_select("tr.issue td.tracker").map(&:text).uniq
   end
 
+  # @rbs () -> bool
   def test_index_with_query_id_and_project_id_should_set_session_query
     get(
       :index,
@@ -670,6 +702,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 1, session[:issue_query][:project_id]
   end
 
+  # @rbs () -> bool
   def test_index_with_invalid_query_id_should_respond_404
     get(
       :index,
@@ -681,6 +714,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_index_with_cross_project_query_in_session_should_show_project_issues
     q = IssueQuery.
           create!(
@@ -698,6 +732,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal ["eCookbook"], css_select("tr.issue td.project").map(&:text).uniq
   end
 
+  # @rbs () -> bool
   def test_private_query_should_not_be_available_to_other_users
     q = IssueQuery.
           create!(
@@ -710,6 +745,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_private_query_should_be_available_to_its_user
     q = IssueQuery.
           create!(
@@ -722,6 +758,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_public_query_should_be_available_to_other_users
     q = IssueQuery.
           create!(
@@ -734,6 +771,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_omit_page_param_in_export_links
     get(:index, :params => {:page => 2})
     assert_response :success
@@ -743,6 +781,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'form#csv-export-form[action="/issues.csv"]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_warn_when_not_exceeding_export_limit
     with_settings :issues_export_limit => 200 do
       get :index
@@ -750,6 +789,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_warn_when_exceeding_export_limit
     with_settings :issues_export_limit => 2 do
       get :index
@@ -757,6 +797,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_include_query_params_as_hidden_fields_in_csv_export_form
     get(
       :index,
@@ -795,6 +836,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#csv-export-form input[name=?][value=?]', 'f[]', ''
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_show_block_columns_in_csv_export_form
     field = IssueCustomField.
               create!(
@@ -812,6 +854,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv
     get(:index, :params => {:format => 'csv'})
     assert_response :success
@@ -823,18 +866,21 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal Setting.issue_list_default_columns.size + 2, lines[0].split(',').size
   end
 
+  # @rbs () -> MatchData
   def test_index_csv_filename_without_query_name_param
     get :index, :params => {:format => 'csv'}
     assert_response :success
     assert_match /issues.csv/, @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> MatchData
   def test_index_csv_filename_with_query_name_param
     get :index, :params => {:query_name => 'My Query Name', :format => 'csv'}
     assert_response :success
     assert_match /my_query_name\.csv/, @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_project
     get(
       :index,
@@ -847,6 +893,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'text/csv; header=present', @response.media_type
   end
 
+  # @rbs () -> bool
   def test_index_csv_without_any_filters
     @request.session[:user_id] = 1
     Issue.
@@ -867,6 +914,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal Issue.count, response.body.chomp.split("\n").size - 1
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_description
     Issue.generate!(:description => 'test_index_csv_with_description')
     with_settings :default_language => 'en' do
@@ -885,6 +933,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_include 'test_index_csv_with_description', response.body
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_spent_time_column
     issue = Issue.
               create!(
@@ -912,6 +961,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_include "#{issue.id},#{issue.subject},7.33", lines
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_all_columns
     get(
       :index,
@@ -928,6 +978,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal IssueQuery.new.available_inline_columns.size, lines[0].split(',').size
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_multi_column_field
     CustomField.find(1).update_attribute :multiple, true
     issue = Issue.find(1)
@@ -945,6 +996,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert lines.detect {|line| line.include?('"MySQL, Oracle"')}
   end
 
+  # @rbs () -> bool
   def test_index_csv_should_format_float_custom_fields_with_csv_decimal_separator
     field =
       IssueCustomField.
@@ -991,6 +1043,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_should_fill_parent_column_with_parent_id
     Issue.delete_all
     parent = Issue.generate!
@@ -1008,6 +1061,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_include "#{child.id},#{parent.id}", lines
   end
 
+  # @rbs () -> bool
   def test_index_csv_big_5
     with_settings :default_language => "zh-TW" do
       str_utf8  = '一月'
@@ -1030,6 +1084,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_cannot_convert_should_be_replaced_big_5
     with_settings :default_language => "zh-TW" do
       str_utf8  = '以内'
@@ -1055,6 +1110,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_tw
     with_settings :default_language => "zh-TW" do
       str1  = "test_index_csv_tw"
@@ -1075,6 +1131,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_fr
     with_settings :default_language => "fr" do
       str1  = "test_index_csv_fr"
@@ -1095,6 +1152,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_should_not_change_selected_columns
     get(
       :index,
@@ -1120,6 +1178,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [:subject, :due_date], session[:issue_query][:column_names]
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_pdf
     ["en", "zh", "zh-TW", "ja", "ko", "ar"].each do |lang|
       with_settings :default_language => lang do
@@ -1154,6 +1213,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_pdf_with_query_grouped_by_list_custom_field
     get(
       :index,
@@ -1167,6 +1227,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'application/pdf', @response.media_type
   end
 
+  # @rbs () -> bool
   def test_index_pdf_with_query_grouped_by_full_width_text_custom_field
     field = IssueCustomField.
       create!(
@@ -1190,12 +1251,14 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'application/pdf', @response.media_type
   end
 
+  # @rbs () -> MatchData
   def test_index_pdf_filename_without_query
     get :index, :params => {:format => 'pdf'}
     assert_response :success
     assert_match /issues.pdf/, @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> MatchData
   def test_index_pdf_filename_with_query
     query = IssueQuery.create!(:name => 'My Query Name', :visibility => IssueQuery::VISIBILITY_PUBLIC)
     get :index, :params => {:query_id => query.id, :format => 'pdf'}
@@ -1204,6 +1267,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_match /my_query_name\.pdf/, @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom
     get(
       :index,
@@ -1222,6 +1286,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_include_back_url_input
     get(
       :index,
@@ -1234,6 +1299,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=back_url][value=?]', '/projects/ecookbook/issues?foo=bar'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_sort
     get(:index, :params => {:sort => 'tracker,id:desc'})
     assert_response :success
@@ -1244,6 +1310,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'table.issues.sort-by-tracker.sort-asc'
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_field_not_included_in_columns
     with_settings :issue_list_default_columns => %w(subject author) do
       get(:index, :params => {:sort => 'tracker'})
@@ -1251,6 +1318,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_sort_by_assigned_to
     get(:index, :params => {:sort => 'assigned_to'})
     assert_response :success
@@ -1260,6 +1328,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'table.issues.sort-by-assigned-to.sort-asc'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_sort_by_assigned_to_desc
     get(:index, :params => {:sort => 'assigned_to:desc'})
     assert_response :success
@@ -1269,6 +1338,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'table.issues.sort-by-assigned-to.sort-desc'
   end
 
+  # @rbs () -> bool
   def test_index_group_by_assigned_to
     get(
       :index,
@@ -1280,6 +1350,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_author
     get(
       :index,
@@ -1294,6 +1365,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal authors.sort, authors
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_author_desc
     get(:index, :params => {:sort => 'author:desc'})
     assert_response :success
@@ -1302,6 +1374,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal authors.sort.reverse, authors
   end
 
+  # @rbs () -> bool
   def test_index_group_by_author
     get(
       :index,
@@ -1313,18 +1386,21 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_sort_by_last_updated_by
     get(:index, :params => {:sort => 'last_updated_by'})
     assert_response :success
     assert_select 'table.issues.sort-by-last-updated-by.sort-asc'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_sort_by_last_updated_by_desc
     get(:index, :params => {:sort => 'last_updated_by:desc'})
     assert_response :success
     assert_select 'table.issues.sort-by-last-updated-by.sort-desc'
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_spent_hours
     get(:index, :params => {:sort => 'spent_hours:desc'})
     assert_response :success
@@ -1332,6 +1408,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal hours.sort.reverse, hours
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_spent_hours_should_sort_by_visible_spent_hours
     TimeEntry.delete_all
     TimeEntry.generate!(:issue => Issue.generate!(:project_id => 1), :hours => 3)
@@ -1357,6 +1434,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal ['3:00', '0:00', '0:00'], columns_values_in_list('spent_hours').first(3)
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_total_spent_hours
     get(:index, :params => {:sort => 'total_spent_hours:desc'})
     assert_response :success
@@ -1364,6 +1442,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal hours.sort.reverse, hours
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_total_estimated_hours
     get(:index, :params => {:sort => 'total_estimated_hours:desc'})
     assert_response :success
@@ -1373,6 +1452,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal hours.sort.reverse, hours
   end
 
+  # @rbs () -> bool
   def test_index_sort_by_user_custom_field
     cf = IssueCustomField.
            create!(
@@ -1400,6 +1480,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_columns
     columns = ['tracker', 'subject', 'assigned_to', 'buttons']
     get(
@@ -1433,6 +1514,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_without_project_should_implicitly_add_project_column_to_default_columns
     with_settings :issue_list_default_columns => ['tracker', 'subject', 'assigned_to'] do
       get(:index, :params => {:set_filter => 1})
@@ -1442,6 +1524,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal ["#", "Project", "Tracker", "Subject", "Assignee"], columns_in_issues_list
   end
 
+  # @rbs () -> bool
   def test_index_without_project_and_explicit_default_columns_should_not_add_project_column
     with_settings :issue_list_default_columns => ['tracker', 'subject', 'assigned_to'] do
       columns = ['id', 'tracker', 'subject', 'assigned_to']
@@ -1458,6 +1541,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal ["#", "Tracker", "Subject", "Assignee"], columns_in_issues_list
   end
 
+  # @rbs () -> bool
   def test_index_with_default_columns_should_respect_default_columns_order
     columns = ['assigned_to', 'subject', 'status', 'tracker']
     with_settings :issue_list_default_columns => columns do
@@ -1472,6 +1556,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_custom_field_column
     columns = %w(tracker subject cf_2)
     get(
@@ -1491,6 +1576,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_multi_custom_field_column
     field = CustomField.find(1)
     field.update_attribute :multiple, true
@@ -1509,6 +1595,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'table.issues td.cf_1', :text => 'MySQL, Oracle'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_multi_user_custom_field_column
     field =
       IssueCustomField.
@@ -1535,6 +1622,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_date_column
     with_settings :date_format => '%d/%m/%Y' do
       Issue.find(1).update_attribute :start_date, '1987-08-24'
@@ -1552,6 +1640,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_done_ratio_column
     Issue.find(1).update_attribute :done_ratio, 40
     get(
@@ -1568,6 +1657,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_spent_hours_column
     Issue.expects(:load_visible_spent_hours).once
     get(
@@ -1580,6 +1670,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'table.issues tr#issue-3 td.spent_hours', :text => '1:00'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_total_spent_hours_column
     Issue.expects(:load_visible_total_spent_hours).once
     get(
@@ -1592,6 +1683,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'table.issues tr#issue-3 td.total_spent_hours', :text => '1:00'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_total_estimated_hours_column
     get(
       :index,
@@ -1603,6 +1695,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'table.issues td.total_estimated_hours'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_show_spent_hours_column_without_permission
     Role.anonymous.remove_permission! :view_time_entries
     get(
@@ -1615,6 +1708,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'td.spent_hours', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_fixed_version_column
     get(
       :index,
@@ -1628,6 +1722,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_relations_column
     IssueRelation.delete_all
     IssueRelation.
@@ -1699,6 +1794,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'application/pdf', response.media_type
   end
 
+  # @rbs () -> bool
   def test_index_with_description_column
     get(
       :index,
@@ -1722,6 +1818,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'application/pdf', response.media_type
   end
 
+  # @rbs () -> bool
   def test_index_with_last_notes_column
     with_settings :text_formatting => 'textile' do
       get(
@@ -1752,6 +1849,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_last_notes_column_should_display_private_notes_with_permission_only
     journal = Journal.
                 create!(
@@ -1787,6 +1885,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'td.last_notes[colspan="4"]', :text => 'Public notes'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_description_and_last_notes_columns_should_display_column_name
     get(
       :index,
@@ -1800,6 +1899,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'td.description[colspan="4"] span', :text => 'Description'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_full_width_layout_custom_field_column_should_show_column_as_block_column
     field = IssueCustomField.
               create!(
@@ -1822,6 +1922,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select "td.cf_#{field.id} span", :text => 'Long text'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_parent_column
     Issue.delete_all
     parent = Issue.generate!
@@ -1831,6 +1932,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'td.parent a[title=?]', parent.subject
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_parent_subject_column
     Issue.delete_all
     parent = Issue.generate!
@@ -1844,6 +1946,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_last_updated_by_column
     get(
       :index, :params => {
@@ -1857,6 +1960,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal ["John Smith", "John Smith", ""], css_select('td.last_updated_by').map(&:text)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_attachments_column
     get(
       :index,
@@ -1882,6 +1986,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_attachments_column_as_csv
     get(
       :index,
@@ -1896,6 +2001,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_include "\"source.rb\npicture.jpg\"", response.body
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_watchers_column
     @request.session[:user_id] = 2
     get(
@@ -1917,6 +2023,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_watchers_column_only_visible_watchers
     @request.session[:user_id] = 3
     User.find(3).roles.first.remove_permission! :view_issue_watchers
@@ -1941,6 +2048,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_watchers_column_as_csv
     @request.session[:user_id] = 2
     get(
@@ -1963,6 +2071,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [User.find(3).name, User.find(1).name], watchers
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_estimated_hours_total
     Issue.delete_all
     Issue.generate!(:estimated_hours => '5:30')
@@ -1974,6 +2083,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[type=checkbox][name=?][value=estimated_hours][checked=checked]', 't[]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_grouped_query_and_estimated_hours_total
     Issue.delete_all
     Issue.generate!(:estimated_hours => '5:30', :category_id => 1)
@@ -2001,6 +2111,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_int_custom_field_total
     field = IssueCustomField.generate!(:field_format => 'int', :is_for_all => true)
     CustomValue.create!(:customized => Issue.find(1), :custom_field => field, :value => '2')
@@ -2011,6 +2122,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select ".total-for-cf-#{field.id} span.value", :text => '9'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_spent_time_total_should_sum_visible_spent_time_only
     TimeEntry.delete_all
     TimeEntry.generate!(:issue => Issue.generate!(:project_id => 1), :hours => 3)
@@ -2027,6 +2139,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select ".total-for-spent-hours span.value", :text => '3:00'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_totals_should_default_to_settings
     with_settings :issue_list_default_totals => ['estimated_hours'] do
       get :index
@@ -2036,6 +2149,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_send_html_if_query_is_invalid
     get(
       :index,
@@ -2050,6 +2164,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error /Start date cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_index_send_nothing_if_query_is_invalid
     get(
       :index,
@@ -2065,6 +2180,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert @response.body.blank?
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_include_new_issue_link
     @request.session[:user_id] = 2
     get(:index, :params => {:project_id => 1})
@@ -2074,6 +2190,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_include_new_issue_link_for_project_without_trackers
     Project.find(1).trackers.clear
     @request.session[:user_id] = 2
@@ -2081,6 +2198,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#content a.new-issue', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_include_new_issue_link_for_users_with_copy_issues_permission_only
     role = Role.find(1)
     role.remove_permission! :add_issues
@@ -2090,12 +2208,14 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#content a.new-issue', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_without_project_should_include_new_issue_link
     @request.session[:user_id] = 2
     get :index
     assert_select '#content a.new-issue[href="/issues/new"]', :text => 'New issue'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_show_setting_link_with_edit_project_permission
     role = Role.find(1)
     role.add_permission! :edit_project
@@ -2104,6 +2224,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#content a.icon-settings[href="/projects/ecookbook/settings/issues"]', 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_show_setting_link_without_edit_project_permission
     role = Role.find(1)
     role.remove_permission! :edit_project
@@ -2112,6 +2233,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#content a.icon-settings[href="/projects/ecookbook/settings/issues"]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_include_new_issue_tab_when_disabled
     with_settings :new_item_menu_tab => '0' do
       @request.session[:user_id] = 2
@@ -2120,6 +2242,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_include_new_issue_tab_when_enabled
     with_settings :new_item_menu_tab => '1' do
       @request.session[:user_id] = 2
@@ -2131,6 +2254,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_have_new_issue_tab_as_current_menu_item
     with_settings :new_item_menu_tab => '1' do
       @request.session[:user_id] = 2
@@ -2139,6 +2263,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_include_new_issue_tab_for_project_without_trackers
     with_settings :new_item_menu_tab => '1' do
       Project.find(1).trackers.clear
@@ -2148,6 +2273,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_include_new_issue_tab_for_users_with_copy_issues_permission_only
     with_settings :new_item_menu_tab => '1' do
       role = Role.find(1)
@@ -2159,6 +2285,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_respect_timespan_format
     with_settings :timespan_format => 'minutes' do
       get(
@@ -2175,6 +2302,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_by_anonymous
     get(:show, :params => {:id => 1})
     assert_response :success
@@ -2197,6 +2325,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'title', :text => "Bug #1: Cannot print recipes - eCookbook - Redmine"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_by_manager
     @request.session[:user_id] = 2
     get(:show, :params => {:id => 1})
@@ -2225,6 +2354,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_update_form
     @request.session[:user_id] = 2
     get(:show, :params => {:id => 1})
@@ -2250,6 +2380,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_update_form_with_minimal_permissions
     Role.find(1).update_attribute :permissions, [:view_issues, :add_issue_notes]
     WorkflowTransition.where(:role_id => 1).delete_all
@@ -2277,6 +2408,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_update_form_without_permissions
     Role.find(1).update_attribute :permissions, [:view_issues]
     @request.session[:user_id] = 2
@@ -2285,6 +2417,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'form#issue-form', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_should_not_display_inactive_enumerations
     assert !IssuePriority.find(15).active?
     @request.session[:user_id] = 2
@@ -2298,6 +2431,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_should_allow_attachment_upload
     @request.session[:user_id] = 2
     get(:show, :params => {:id => 1})
@@ -2306,6 +2440,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_should_render_assign_to_me_link_when_issue_can_be_assigned_to_the_current_user
     @request.session[:user_id] = 1
     get(
@@ -2319,6 +2454,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_should_not_render_assign_to_me_link_when_issue_cannot_be_assigned_to_the_current_user
     @request.session[:user_id] = 1
     get(
@@ -2332,6 +2468,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_should_not_show_assign_to_me_link_when_issue_is_assigned_to_the_current_user
     issue = Issue.find(10)
     issue.assigned_to_id = 1
@@ -2349,18 +2486,21 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_show_should_deny_anonymous_access_without_permission
     Role.anonymous.remove_permission!(:view_issues)
     get(:show, :params => {:id => 1})
     assert_response :redirect
   end
 
+  # @rbs () -> bool
   def test_show_should_deny_anonymous_access_to_private_issue
     Issue.where(:id => 1).update_all(["is_private = ?", true])
     get(:show, :params => {:id => 1})
     assert_response :redirect
   end
 
+  # @rbs () -> bool
   def test_show_should_deny_non_member_access_without_permission
     Role.non_member.remove_permission!(:view_issues)
     @request.session[:user_id] = 9
@@ -2368,6 +2508,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_show_should_deny_non_member_access_to_private_issue
     Issue.where(:id => 1).update_all(["is_private = ?", true])
     @request.session[:user_id] = 9
@@ -2375,6 +2516,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_show_should_deny_member_access_without_permission
     Role.find(1).remove_permission!(:view_issues)
     @request.session[:user_id] = 2
@@ -2382,6 +2524,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_show_should_deny_member_access_to_private_issue_without_permission
     Issue.where(:id => 1).update_all(["is_private = ?", true])
     @request.session[:user_id] = 3
@@ -2389,6 +2532,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_show_should_allow_author_access_to_private_issue
     Issue.where(:id => 1).update_all(["is_private = ?, author_id = 3", true])
     @request.session[:user_id] = 3
@@ -2396,6 +2540,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_show_should_allow_assignee_access_to_private_issue
     Issue.where(:id => 1).update_all(["is_private = ?, assigned_to_id = 3", true])
     @request.session[:user_id] = 3
@@ -2403,6 +2548,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_show_should_allow_member_access_to_private_issue_with_permission
     Issue.where(:id => 1).update_all(["is_private = ?", true])
     User.find(3).roles_for_project(Project.find(1)).first.update_attribute :issues_visibility, 'all'
@@ -2411,6 +2557,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_format_related_issues_dates
     with_settings :date_format => '%d/%m/%Y' do
       issue = Issue.generate!(:start_date => '2018-11-29', :due_date => '2018-12-01')
@@ -2426,6 +2573,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_disclose_relations_to_invisible_issues
     with_settings :cross_project_issue_relations => '1' do
       IssueRelation.
@@ -2450,6 +2598,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_list_subtasks
     issue = Issue.
       create!(
@@ -2468,6 +2617,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_show_subtasks_stats
     @request.session[:user_id] = 1
     child1 = Issue.generate!(parent_issue_id: 1, subject: 'Open child issue')
@@ -2491,6 +2641,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_subtasks_stats_should_not_link_if_issue_has_zero_open_or_closed_subtasks
     child1 = Issue.generate!(parent_issue_id: 1, subject: 'Open child issue')
 
@@ -2506,6 +2657,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_show_subtasks_stats_if_subtasks_are_not_visible
     # Issue not visible for anonymous
     Issue.generate!(parent_issue_id: 1, subject: 'Private child', project_id: 5)
@@ -2516,6 +2668,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'div#issue_tree span.issues-stat', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_list_parents
     issue = Issue.
               create!(
@@ -2531,12 +2684,14 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_prev_next_links_without_query_in_session
     get(:show, :params => {:id => 1})
     assert_response :success
     assert_select 'div.next-prev-links', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_prev_next_links_with_query_in_session
     @request.session[:issue_query] =
       {
@@ -2563,6 +2718,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_prev_next_links_with_saved_query_in_session
     query =
       IssueQuery.create!(
@@ -2583,6 +2739,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_show_should_display_prev_next_links_with_query_and_sort_on_association
     @request.session[:issue_query] =
       {
@@ -2604,6 +2761,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_prev_next_links_with_project_query_in_session
     @request.session[:issue_query] =
       {
@@ -2623,6 +2781,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_prev_link_for_first_issue
     @request.session[:issue_query] =
       {
@@ -2641,6 +2800,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_prev_next_links_for_issue_not_in_query_results
     @request.session[:issue_query] =
       {
@@ -2656,6 +2816,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => /Next/, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_show_should_display_prev_next_links_with_query_sort_by_user_custom_field
     cf = IssueCustomField.
            create!(
@@ -2684,6 +2845,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_prev_next_links_when_request_has_previous_and_next_issue_ids_params
     get(
       :show,
@@ -2703,6 +2865,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_category_field_if_categories_are_defined
     Issue.update_all :category_id => nil
     get(:show, :params => {:id => 1})
@@ -2710,6 +2873,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '.attributes .category'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_category_field_if_no_categories_are_defined
     Project.find(1).issue_categories.delete_all
     get(:show, :params => {:id => 1})
@@ -2717,6 +2881,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'table.attributes .category', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_link_to_the_assigned_user
     get(:show, :params => {:id => 2})
     assert_response :success
@@ -2725,6 +2890,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_link_to_the_assigned_group
     Issue.find(2).update_attribute(:assigned_to_id, 10)
     get(:show, :params => {:id => 2})
@@ -2734,6 +2900,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_visible_changesets_from_other_projects
     project = Project.find(2)
     issue = project.issues.first
@@ -2755,6 +2922,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'div.changeset p', :text => /eCookbook - /
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_watchers
     @request.session[:user_id] = 2
     issue = Issue.find(1)
@@ -2773,6 +2941,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_watchers_without_permission
     @request.session[:user_id] = 2
     Role.find(1).remove_permission! :view_issue_watchers
@@ -2784,6 +2953,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'h3', {text: /Watchers \(\d*\)/, count: 0}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_watchers_with_gravatars
     @request.session[:user_id] = 2
     issue = Issue.find(1)
@@ -2807,6 +2977,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_mark_invalid_watchers
     @request.session[:user_id] = 2
     issue = Issue.find(4)
@@ -2822,6 +2993,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_thumbnails_enabled_should_display_thumbnails
     skip unless convert_installed?
     @request.session[:user_id] = 2
@@ -2836,6 +3008,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_thumbnails_disabled_should_not_display_thumbnails
     @request.session[:user_id] = 2
     with_settings :thumbnails_enabled => '0' do
@@ -2845,6 +3018,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'div.thumbnails', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_multi_custom_field
     field = CustomField.find(1)
     field.update_attribute :multiple, true
@@ -2857,6 +3031,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select ".cf_1 .value", :text => 'MySQL, Oracle'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_full_width_layout_custom_field_should_show_field_under_description
     field =
       IssueCustomField.
@@ -2882,6 +3057,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_custom_fields_with_full_text_formatting_should_be_rendered_using_wiki_class
     half_field =
       IssueCustomField.
@@ -2908,6 +3084,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select "div.attribute.cf_#{full_field.id} div.value div.wiki", 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_multi_user_custom_field
     field =
       IssueCustomField.
@@ -2928,6 +3105,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_default_value_for_new_custom_field
     prior = Issue.generate!
     field =
@@ -2947,6 +3125,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select ".cf_#{field.id} .value", :text => 'DEFAULT'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_private_notes_with_permission_only
     journal =
       Journal.
@@ -2967,6 +3146,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select "#change-#{journal.id}", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_private_notes_created_by_current_user
     User.find(3).roles_for_project(Project.find(1)).each do |role|
       role.remove_permission! :view_private_notes
@@ -2991,6 +3171,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select "#change-#{not_visible.id}", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_mark_notes_as_edited_only_for_edited_notes
     get :show, :params => {:id => 1}
     assert_response :success
@@ -3001,6 +3182,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select "#change-2 h4 span.update-info", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_atom
     with_settings :text_formatting => 'textile' do
       get(
@@ -3020,6 +3202,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_show_export_to_pdf
     issue = Issue.find(3)
     assert issue.relations.any? {|r| r.other_issue(issue).visible?}
@@ -3035,6 +3218,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert @response.body.starts_with?('%PDF')
   end
 
+  # @rbs () -> Array[untyped]
   def test_export_to_pdf_with_utf8_u_fffd
     issue = Issue.generate!(:subject => "�")
     ["en", "zh", "zh-TW", "ja", "ko", "ar"].each do |lang|
@@ -3053,6 +3237,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_show_export_to_pdf_with_ancestors
     issue = Issue.generate!(:project_id => 1, :author_id => 2,
                             :tracker_id => 1, :subject => 'child',
@@ -3069,6 +3254,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert @response.body.starts_with?('%PDF')
   end
 
+  # @rbs () -> bool
   def test_show_export_to_pdf_with_descendants
     c1 = Issue.generate!(:project_id => 1, :author_id => 2, :tracker_id => 1,
                          :subject => 'child', :parent_issue_id => 1)
@@ -3088,6 +3274,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert @response.body.starts_with?('%PDF')
   end
 
+  # @rbs () -> bool
   def test_show_export_to_pdf_with_journals
     get(
       :show,
@@ -3101,6 +3288,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert @response.body.starts_with?('%PDF')
   end
 
+  # @rbs () -> bool
   def test_show_export_to_pdf_with_private_journal
     Journal.create!(
       :journalized => Issue.find(1),
@@ -3121,6 +3309,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert @response.body.starts_with?('%PDF')
   end
 
+  # @rbs () -> Array[untyped]
   def test_show_export_to_pdf_with_changesets
     [[100], [100, 101], [100, 101, 102]].each do |cs|
       issue1 = Issue.find(3)
@@ -3141,11 +3330,13 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_show_invalid_should_respond_with_404
     get(:show, :params => {:id => 999})
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_on_active_project_should_display_edit_links
     @request.session[:user_id] = 1
     get(:show, :params => {:id => 1})
@@ -3154,6 +3345,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => 'Delete issue'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_on_closed_project_should_not_display_edit_links
     Issue.find(1).project.close
     @request.session[:user_id] = 1
@@ -3163,6 +3355,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => 'Delete issue', :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_history_tabs_for_issue_without_journals
     @request.session[:user_id] = 1
 
@@ -3172,6 +3365,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#history p.nodata', :text => 'No data to display'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_display_only_all_and_notes_tabs_for_issue_with_notes_only
     @request.session[:user_id] = 1
 
@@ -3184,6 +3378,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_display_only_all_and_history_tabs_for_issue_with_history_changes_only
     journal = Journal.create!(:journalized => Issue.find(5), :user_id => 1)
     detail =
@@ -3204,6 +3399,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_display_all_notes_and_history_tabs_for_issue_with_notes_and_history_changes
     journal = Journal.create!(:journalized => Issue.find(6), :user_id => 1)
     @request.session[:user_id] = 1
@@ -3218,6 +3414,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_display_changesets_tab_for_issue_with_changesets
     project = Project.find(2)
     issue = Issue.find(9)
@@ -3233,6 +3430,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_spent_time_tab_for_issue_with_time_entries
     @request.session[:user_id] = 1
     get :show, :params => {:id => 3}
@@ -3261,6 +3459,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_open_badge_for_open_issue
     get :show, params: {id: 1}
 
@@ -3268,6 +3467,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'span.badge.badge-status-open', text: 'open'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_closed_badge_for_closed_issue
     get :show, params: {id: 8}
 
@@ -3275,6 +3475,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'span.badge.badge-status-closed', text: 'closed'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_private_badge_for_private_issue
     @request.session[:user_id] = 1
     get :show, params: {id: 14}
@@ -3283,6 +3484,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'span.badge.badge-private', text: 'Private'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_edit_attachment_icon_for_user_without_edit_issue_permission_on_tracker
     role = Role.find(2)
     role.set_permission_trackers 'edit_issues', [2, 3]
@@ -3296,6 +3498,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'div.attachments .icon-edit',  0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_delete_attachment_icon_for_user_without_edit_issue_permission_on_tracker
     role = Role.find(2)
     role.set_permission_trackers 'edit_issues', [2, 3]
@@ -3309,6 +3512,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'div.attachments .icon-del', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new
     @request.session[:user_id] = 2
     get(
@@ -3352,6 +3556,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_global_should_show_all_projects
     @request.session[:user_id] = 1
     get :new
@@ -3364,6 +3569,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_show_project_selector_for_project_with_subprojects
     @request.session[:user_id] = 2
     get(
@@ -3385,6 +3591,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_not_show_project_selector_for_project_without_subprojects
     @request.session[:user_id] = 2
     get(
@@ -3398,6 +3605,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'select[name="issue[project_id]"]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_not_show_invalid_projects_when_issue_is_a_subtask
     @request.session[:user_id] = 2
     issue = Issue.find(1)
@@ -3422,6 +3630,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_minimal_permissions
     Role.find(1).update_attribute :permissions, [:add_issues]
     WorkflowTransition.where(:role_id => 1).delete_all
@@ -3454,6 +3663,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_without_project_id
     @request.session[:user_id] = 2
     get :new
@@ -3465,6 +3675,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_me_assigned_to_id
     @request.session[:user_id] = 2
     get(
@@ -3479,6 +3690,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_select_default_status
     @request.session[:user_id] = 2
     get(:new, :params => {:project_id => 1})
@@ -3489,6 +3701,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=was_default_status][value="1"]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_propose_allowed_statuses
     WorkflowTransition.delete_all
     WorkflowTransition.create!(:tracker_id => 1, :role_id => 1,
@@ -3506,6 +3719,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_propose_allowed_statuses_without_default_status_allowed
     WorkflowTransition.delete_all
     WorkflowTransition.create!(:tracker_id => 1, :role_id => 1,
@@ -3521,6 +3735,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_propose_allowed_trackers
     role = Role.find(1)
     role.set_permission_trackers 'add_issues', [1, 3]
@@ -3535,6 +3750,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_default_to_first_tracker
     @request.session[:user_id] = 2
     get(:new, :params => {:project_id => 1})
@@ -3545,6 +3761,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_parent_issue_id_should_default_to_first_tracker_without_disabled_parent_field
     tracker = Tracker.find(1)
     tracker.core_fields -= ['parent_issue_id']
@@ -3567,6 +3784,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_new_without_allowed_trackers_should_respond_with_403
     role = Role.find(1)
     role.set_permission_trackers 'add_issues', []
@@ -3576,6 +3794,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_without_projects_should_respond_with_403
     Project.delete_all
     @request.session[:user_id] = 2
@@ -3585,6 +3804,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error /no projects/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_without_enabled_trackers_on_projects_should_respond_with_403
     Project.all.each {|p| p.trackers.clear}
     @request.session[:user_id] = 2
@@ -3593,6 +3813,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error /no projects/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_preselect_default_version
     version = Version.generate!(:project_id => 1)
     Project.find(1).update_attribute :default_version_id, version.id
@@ -3604,6 +3825,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_list_custom_field
     @request.session[:user_id] = 2
     get(
@@ -3620,6 +3842,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_multi_custom_field
     field = IssueCustomField.find(1)
     field.update_attribute :multiple, true
@@ -3639,6 +3862,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][type=hidden][value=?]', 'issue[custom_field_values][1][]', ''
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_multi_user_custom_field
     field =
       IssueCustomField.
@@ -3662,6 +3886,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][type=hidden][value=?]', "issue[custom_field_values][#{field.id}][]", ''
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_date_custom_field
     field = IssueCustomField.create!(:name => 'Date', :field_format => 'date',
                                      :tracker_ids => [1], :is_for_all => true)
@@ -3677,6 +3902,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', "issue[custom_field_values][#{field.id}]"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_text_custom_field
     field = IssueCustomField.create!(:name => 'Text', :field_format => 'text',
                                      :tracker_ids => [1], :is_for_all => true)
@@ -3692,6 +3918,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'textarea[name=?]', "issue[custom_field_values][#{field.id}]"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_without_default_start_date_is_creation_date
     with_settings :default_issue_start_date_to_creation_date  => 0 do
       @request.session[:user_id] = 2
@@ -3708,6 +3935,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_default_start_date_is_creation_date
     with_settings :default_issue_start_date_to_creation_date  => 1 do
       @request.session[:user_id] = 2
@@ -3724,6 +3952,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_form_should_allow_attachment_upload
     @request.session[:user_id] = 2
     get(
@@ -3739,6 +3968,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_prefill_the_form_from_params
     @request.session[:user_id] = 2
     get(
@@ -3761,6 +3991,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'issue[custom_field_values][2]', 'Custom field value'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_mark_required_fields
     cf1 = IssueCustomField.create!(:name => 'Foo', :field_format => 'string',
                                    :is_for_all => true, :tracker_ids => [1, 2])
@@ -3788,6 +4019,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_not_display_readonly_fields
     cf1 = IssueCustomField.create!(:name => 'Foo', :field_format => 'string',
                                    :is_for_all => true, :tracker_ids => [1, 2])
@@ -3807,6 +4039,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', "issue[custom_field_values][#{cf2.id}]", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_tracker_set_as_readonly_should_accept_status
     WorkflowPermission.delete_all
     [1, 2].each do |status_id|
@@ -3835,6 +4068,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_without_tracker_id
     @request.session[:user_id] = 2
     get(
@@ -3849,6 +4083,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_no_default_status_should_display_an_error
     @request.session[:user_id] = 2
     IssueStatus.delete_all
@@ -3862,6 +4097,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error /No default issue/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_no_tracker_should_display_an_error
     @request.session[:user_id] = 2
     Tracker.delete_all
@@ -3875,6 +4111,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error /No tracker/
   end
 
+  # @rbs () -> bool
   def test_new_with_invalid_project_id
     @request.session[:user_id] = 1
     get(
@@ -3886,6 +4123,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_parent_id_should_only_propose_valid_trackers
     @request.session[:user_id] = 2
     t = Tracker.find(3)
@@ -3912,6 +4150,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'option', text: /#{t.name}/, count: 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_show_trackers_description
     @request.session[:user_id] = 2
     get :new, :params => {
@@ -3936,6 +4175,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_not_show_trackers_description_for_trackers_without_description
     Tracker.update_all(:description => '')
 
@@ -3956,6 +4196,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'div#trackers_description', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_show_issue_status_description
     @request.session[:user_id] = 2
     get :new, :params => {
@@ -3979,6 +4220,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_not_show_issue_status_description
     IssueStatus.update_all(:description => '')
 
@@ -3999,6 +4241,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'div#issue_statuses_description', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_should_show_create_and_follow_button_when_issue_is_subtask_and_back_url_is_present
     @request.session[:user_id] = 2
     get :new, params: {
@@ -4018,6 +4261,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_form_for_new_issue
     @request.session[:user_id] = 2
     post(
@@ -4038,6 +4282,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_include 'This is the test_new issue', response.body
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_for_new_issue_should_propose_transitions_based_on_initial_status
     @request.session[:user_id] = 2
     WorkflowTransition.delete_all
@@ -4065,6 +4310,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_with_default_status_should_ignore_submitted_status_id_if_equals
     @request.session[:user_id] = 2
     tracker = Tracker.find(2)
@@ -4087,6 +4333,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_for_new_issue_should_ignore_version_when_changing_project
     version = Version.generate!(:project_id => 1)
     Project.find(1).update_attribute :default_version_id, version.id
@@ -4111,6 +4358,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_create
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -4149,6 +4397,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'Value for field 2', v.value
   end
 
+  # @rbs () -> bool
   def test_post_new_with_group_assignment
     group = Group.find(11)
     project = Project.find(1)
@@ -4177,6 +4426,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal group, issue.assigned_to
   end
 
+  # @rbs () -> bool
   def test_post_create_without_start_date_and_default_start_date_is_not_creation_date
     with_settings :default_issue_start_date_to_creation_date  => 0 do
       @request.session[:user_id] = 2
@@ -4207,6 +4457,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_create_without_start_date_and_default_start_date_is_creation_date
     with_settings :default_issue_start_date_to_creation_date  => 1 do
       @request.session[:user_id] = 2
@@ -4237,6 +4488,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_and_continue
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -4263,6 +4515,7 @@ class IssuesControllerTest < Redmine::ControllerTest
                      "This is first issue", :text => "##{issue.id}"
   end
 
+  # @rbs () -> bool
   def test_post_create_without_custom_fields_param
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -4282,6 +4535,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_redirected_to :controller => 'issues', :action => 'show', :id => Issue.last.id
   end
 
+  # @rbs () -> bool
   def test_post_create_with_multi_custom_field
     field = IssueCustomField.find_by_name('Database')
     field.update_attribute(:multiple, true)
@@ -4308,6 +4562,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal ['MySQL', 'Oracle'], issue.custom_field_value(1).sort
   end
 
+  # @rbs () -> bool
   def test_post_create_with_empty_multi_custom_field
     field = IssueCustomField.find_by_name('Database')
     field.update_attribute(:multiple, true)
@@ -4334,6 +4589,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [''], issue.custom_field_value(1).sort
   end
 
+  # @rbs () -> bool
   def test_post_create_with_multi_user_custom_field
     field =
       IssueCustomField.create!(:name => 'Multi user', :field_format => 'user',
@@ -4362,6 +4618,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal ['2', '3'], issue.custom_field_value(field).sort
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_with_required_custom_field_and_without_custom_fields_param
     field = IssueCustomField.find_by_name('Database')
     field.update_attribute(:is_required, true)
@@ -4386,6 +4643,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error /Database cannot be blank/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_should_validate_required_fields
     cf1 = IssueCustomField.create!(:name => 'Foo', :field_format => 'string',
                                    :is_for_all => true, :tracker_ids => [1, 2])
@@ -4424,6 +4682,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error /Bar cannot be blank/i
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_should_validate_required_list_fields
     cf1 = IssueCustomField.create!(:name => 'Foo', :field_format => 'list',
                                    :is_for_all => true, :tracker_ids => [1, 2],
@@ -4460,6 +4719,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error /Bar cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_create_should_ignore_readonly_fields
     cf1 = IssueCustomField.create!(:name => 'Foo', :field_format => 'string',
                                    :is_for_all => true, :tracker_ids => [1, 2])
@@ -4498,6 +4758,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_nil issue.custom_field_value(cf2)
   end
 
+  # @rbs () -> bool
   def test_create_should_ignore_unallowed_trackers
     role = Role.find(1)
     role.set_permission_trackers :add_issues, [3]
@@ -4520,6 +4781,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 3, issue.tracker_id
   end
 
+  # @rbs () -> bool
   def test_post_create_with_watchers
     @request.session[:user_id] = 2
     ActionMailer::Base.deliveries.clear
@@ -4557,6 +4819,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert [mail.to].flatten.include?(User.find(8).mail)
   end
 
+  # @rbs () -> bool
   def test_post_create_subissue
     @request.session[:user_id] = 2
 
@@ -4578,6 +4841,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal Issue.find(2), issue.parent
   end
 
+  # @rbs () -> bool
   def test_post_create_subissue_with_sharp_parent_id
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -4598,6 +4862,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal Issue.find(2), issue.parent
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_subissue_with_non_visible_parent_id_should_not_validate
     @request.session[:user_id] = 2
     assert_no_difference 'Issue.count' do
@@ -4618,6 +4883,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_subissue_with_non_numeric_parent_id_should_not_validate
     @request.session[:user_id] = 2
     assert_no_difference 'Issue.count' do
@@ -4638,6 +4904,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_create_private
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -4657,6 +4924,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert issue.is_private?
   end
 
+  # @rbs () -> bool
   def test_post_create_private_with_set_own_issues_private_permission
     role = Role.find(1)
     role.remove_permission! :set_issues_private
@@ -4679,6 +4947,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert issue.is_private?
   end
 
+  # @rbs () -> bool
   def test_create_without_project_id
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -4699,6 +4968,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 2, issue.tracker_id
   end
 
+  # @rbs () -> bool
   def test_create_without_project_id_and_continue_should_redirect_without_project_id
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -4717,6 +4987,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_without_project_id_should_be_denied_without_permission
     Role.non_member.remove_permission! :add_issues
     Role.anonymous.remove_permission! :add_issues
@@ -4736,6 +5007,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_without_project_id_with_failure_should_not_set_project
     @request.session[:user_id] = 2
     post(
@@ -4753,6 +5025,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#main-menu a.overview', 0
   end
 
+  # @rbs () -> bool
   def test_post_create_should_send_a_notification
     ActionMailer::Base.deliveries.clear
     @request.session[:user_id] = 2
@@ -4781,6 +5054,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_should_preserve_fields_values_on_validation_failure
     @request.session[:user_id] = 2
     post(
@@ -4809,6 +5083,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'issue[custom_field_values][2]', 'Value for field 2'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_with_failure_should_preserve_watchers
     assert !User.find(8).member_of?(Project.find(1))
 
@@ -4830,6 +5105,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value="8"][checked=checked]', 'issue[watcher_user_ids][]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_with_failure_should_not_dereference_group_watchers
     @request.session[:user_id] = 1
     post(
@@ -4848,6 +5124,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value="11"][checked=checked]', 'issue[watcher_user_ids][]', 1
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_post_create_should_ignore_non_safe_attributes
     @request.session[:user_id] = 2
     assert_nothing_raised do
@@ -4863,6 +5140,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_create_with_attachment
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -4903,6 +5181,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 59, File.size(attachment.diskfile)
   end
 
+  # @rbs () -> Array[untyped]
   def test_post_create_with_attachment_should_notify_with_attachments
     ActionMailer::Base.deliveries.clear
     set_tmp_attachments_directory
@@ -4935,6 +5214,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_with_failure_should_save_attachments
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -4970,6 +5250,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'attachments[p0][filename]', 'testfile.txt'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_with_failure_should_keep_saved_attachments
     set_tmp_attachments_directory
     attachment =
@@ -5002,6 +5283,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'attachments[p0][filename]', 'testfile.txt'
   end
 
+  # @rbs () -> bool
   def test_post_create_should_attach_saved_attachments
     set_tmp_attachments_directory
     attachment =
@@ -5037,6 +5319,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal issue, attachment.container
   end
 
+  # @rbs () -> void
   def setup_without_workflow_privilege
     WorkflowTransition.where(["role_id = ?", Role.anonymous.id]).delete_all
     Role.anonymous.add_permission! :add_issues, :add_issue_notes
@@ -5131,6 +5414,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_nil issue.assigned_to
   end
 
+  # @rbs () -> void
   def setup_with_workflow_privilege
     WorkflowTransition.where(["role_id = ?", Role.anonymous.id]).delete_all
     WorkflowTransition.create!(:role => Role.anonymous, :tracker_id => 1,
@@ -5141,6 +5425,7 @@ class IssuesControllerTest < Redmine::ControllerTest
   end
   private :setup_with_workflow_privilege
 
+  # @rbs () -> void
   def setup_with_workflow_privilege_and_edit_issues_permission
     setup_with_workflow_privilege
     Role.anonymous.add_permission! :add_issues, :edit_issues
@@ -5201,6 +5486,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 2, issue.assigned_to_id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_as_copy
     orig = Issue.find(1)
     @request.session[:user_id] = 2
@@ -5222,6 +5508,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_as_copy_without_add_issues_permission_should_not_propose_current_project_as_target
     user = setup_user_with_copy_but_not_add_permission
     @request.session[:user_id] = user.id
@@ -5239,6 +5526,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_as_copy_with_attachments_should_show_copy_attachments_checkbox
     @request.session[:user_id] = 2
     issue = Issue.find(3)
@@ -5253,6 +5541,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=copy_attachments][type=checkbox][checked=checked][value="1"]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_as_copy_without_attachments_should_not_show_copy_attachments_checkbox
     @request.session[:user_id] = 2
     issue = Issue.find(3)
@@ -5267,6 +5556,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=copy_attachments]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_as_copy_should_preserve_parent_id
     @request.session[:user_id] = 2
     issue = Issue.generate!(:parent_issue_id => 2)
@@ -5280,6 +5570,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value="2"]', 'issue[parent_issue_id]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_as_copy_with_subtasks_should_show_copy_subtasks_checkbox
     @request.session[:user_id] = 2
     issue = Issue.generate_with_descendants!
@@ -5293,6 +5584,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[type=checkbox][name=copy_subtasks][checked=checked][value="1"]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_as_copy_should_preserve_watchers
     @request.session[:user_id] = 2
     issue = Issue.find(1)
@@ -5314,6 +5606,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[type=hidden][name=?][value=?]', 'issue[watcher_user_ids][]', '', 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_as_copy_should_not_propose_locked_watchers
     @request.session[:user_id] = 2
 
@@ -5341,6 +5634,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[type=hidden][name=?][value=?]', 'issue[watcher_user_ids][]', '', 1
   end
 
+  # @rbs () -> bool
   def test_new_as_copy_with_invalid_issue_should_respond_with_404
     @request.session[:user_id] = 2
     get(
@@ -5353,6 +5647,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_on_different_project
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -5378,6 +5673,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'Copy', issue.subject
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_should_allow_status_to_be_set_to_default
     copied = Issue.generate! :status_id => 2
     assert_equal 2, copied.reload.status_id
@@ -5402,6 +5698,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 1, issue.status_id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_as_copy_should_fail_without_add_issue_permission_on_original_tracker
     role = Role.find(2)
     role.set_permission_trackers :add_issues, [1, 3]
@@ -5426,6 +5723,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select_error 'Tracker is invalid'
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_should_copy_attachments
     @request.session[:user_id] = 2
     issue = Issue.find(3)
@@ -5454,6 +5752,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal issue.attachments.map(&:filename).sort, copy.attachments.map(&:filename).sort
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_without_copy_attachments_option_should_not_copy_attachments
     @request.session[:user_id] = 2
     issue = Issue.find(3)
@@ -5480,6 +5779,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 0, copy.attachments.count
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_with_attachments_should_also_add_new_files
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -5514,6 +5814,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal count + 1, copy.attachments.count
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_should_add_relation_with_copied_issue
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -5538,6 +5839,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 1, copy.relations.size
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_as_copy_should_allow_not_to_add_relation_with_copied_issue
     @request.session[:user_id] = 2
     assert_difference 'Issue.count' do
@@ -5556,6 +5858,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_as_copy_should_always_add_relation_with_copied_issue_by_setting
     with_settings :link_copied_issue => 'yes' do
       @request.session[:user_id] = 2
@@ -5576,6 +5879,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_as_copy_should_never_add_relation_with_copied_issue_by_setting
     with_settings :link_copied_issue => 'no' do
       @request.session[:user_id] = 2
@@ -5597,6 +5901,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_as_copy_should_always_copy_attachments_by_settings
     assert_equal 4, Issue.find(3).attachments.size
     with_settings :copy_attachments_on_issue_copy => 'yes' do
@@ -5618,6 +5923,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_as_copy_should_never_copy_attachments_by_settings
     with_settings :copy_attachments_on_issue_copy => 'no' do
       @request.session[:user_id] = 2
@@ -5638,6 +5944,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_should_copy_subtasks
     @request.session[:user_id] = 2
     issue = Issue.generate_with_descendants!
@@ -5663,6 +5970,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal issue.descendants.map(&:subject).sort, copy.descendants.map(&:subject).sort
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_to_a_different_project_should_copy_subtask_custom_fields
     issue = Issue.generate! {|i| i.custom_field_values = {'2' => 'Foo'}}
     child = Issue.generate!(:parent_issue_id => issue.id) {|i| i.custom_field_values = {'2' => 'Bar'}}
@@ -5693,6 +6001,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'Bar', child_copy.custom_field_value(2)
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_without_copy_subtasks_option_should_not_copy_subtasks
     @request.session[:user_id] = 2
     issue = Issue.generate_with_descendants!
@@ -5715,6 +6024,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 0, copy.descendants.count
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_as_copy_with_failure
     @request.session[:user_id] = 2
     post(
@@ -5741,6 +6051,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_on_project_without_permission_should_ignore_target_project
     @request.session[:user_id] = 2
     assert !User.find(2).member_of?(Project.find(4))
@@ -5764,6 +6075,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 1, issue.project_id
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_with_watcher_user_ids_should_copy_watchers
     @request.session[:user_id] = 2
     copied = Issue.generate!
@@ -5786,6 +6098,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [3, 10], issue.watcher_user_ids.sort
   end
 
+  # @rbs () -> bool
   def test_create_as_copy_without_watcher_user_ids_should_not_copy_watchers
     @request.session[:user_id] = 2
     copied = Issue.generate!
@@ -5808,6 +6121,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [], issue.watcher_user_ids
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit
     @request.session[:user_id] = 2
     get(:edit, :params => {:id => 1})
@@ -5822,6 +6136,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'span.icon-warning', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_should_hide_project_if_user_is_not_allowed_to_change_project
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 1,
                                :field_name => 'project_id', :rule => 'readonly')
@@ -5832,6 +6147,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'issue[project_id]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_hide_project_if_user_is_not_allowed_to_change_project_in_hierarchy_projects
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 1,
                                :field_name => 'project_id', :rule => 'readonly')
@@ -5842,6 +6158,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'issue[project_id]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_show_project_if_user_is_not_allowed_to_change_project_global_new_issue
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 1,
                                :field_name => 'project_id', :rule => 'readonly')
@@ -5852,6 +6169,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'issue[project_id]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_should_not_hide_project_when_user_changes_the_project_even_if_project_is_readonly_on_target_project
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 1,
                                :field_name => 'project_id', :rule => 'readonly')
@@ -5871,6 +6189,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'issue[project_id]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_display_the_time_entry_form_with_log_time_permission
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').update_attribute :permissions, [:view_issues, :edit_issues, :log_time]
@@ -5878,6 +6197,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'time_entry[hours]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_not_display_the_time_entry_form_without_log_time_permission
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :log_time
@@ -5885,6 +6205,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'time_entry[hours]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_with_params
     @request.session[:user_id] = 2
     get(
@@ -5919,6 +6240,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=test_get_edit_with_params]', 'time_entry[comments]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_with_multi_custom_field
     field = CustomField.find(1)
     field.update_attribute :multiple, true
@@ -5938,6 +6260,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_with_me_assigned_to_id
     @request.session[:user_id] = 2
     get(
@@ -5953,6 +6276,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_for_issue_with_transition_warning_should_show_the_warning
     @request.session[:user_id] = 2
 
@@ -5971,6 +6295,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_display_visible_spent_time_custom_field
     @request.session[:user_id] = 2
 
@@ -5986,6 +6311,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#issue-form select.cf_10', 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_not_display_spent_time_custom_field_not_visible
     cf = TimeEntryCustomField.find(10)
     cf.visible = false
@@ -6006,6 +6332,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#issue-form select.cf_10', 0
   end
 
+  # @rbs () -> bool
   def test_update_form_for_existing_issue
     @request.session[:user_id] = 2
     patch(
@@ -6027,6 +6354,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_include 'This is the test_new issue', response.body
   end
 
+  # @rbs () -> bool
   def test_update_form_for_existing_issue_should_keep_issue_author
     @request.session[:user_id] = 3
     patch(
@@ -6043,6 +6371,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal User.find(2), Issue.find(1).author
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_for_existing_issue_should_propose_transitions_based_on_initial_status
     @request.session[:user_id] = 2
     WorkflowTransition.delete_all
@@ -6068,6 +6397,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_for_existing_issue_with_project_change
     @request.session[:user_id] = 2
     patch(
@@ -6093,6 +6423,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'issue[subject]', 'This is the test_new issue'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_should_keep_category_with_same_when_changing_project
     source = Project.generate!
     target = Project.generate!
@@ -6118,6 +6449,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_form_should_propose_default_status_for_existing_issue
     @request.session[:user_id] = 2
     WorkflowTransition.delete_all
@@ -6131,6 +6463,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_put_update_without_custom_fields_param
     @request.session[:user_id] = 2
 
@@ -6157,6 +6490,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal '125', issue.custom_value_for(2).value
   end
 
+  # @rbs () -> bool
   def test_put_update_with_project_change
     @request.session[:user_id] = 2
     ActionMailer::Base.deliveries.clear
@@ -6192,6 +6526,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_mail_body_match "Project changed from eCookbook to OnlineStore", mail
   end
 
+  # @rbs () -> bool
   def test_put_update_trying_to_move_issue_to_project_without_tracker_should_not_error
     target = Project.generate!(:tracker_ids => [])
     assert target.trackers.empty?
@@ -6209,6 +6544,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :found
   end
 
+  # @rbs () -> bool
   def test_put_update_with_tracker_change
     @request.session[:user_id] = 2
     ActionMailer::Base.deliveries.clear
@@ -6243,6 +6579,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_mail_body_match "Tracker changed from Bug to Feature request", mail
   end
 
+  # @rbs () -> bool
   def test_put_update_with_custom_field_change
     @request.session[:user_id] = 2
     issue = Issue.find(1)
@@ -6275,6 +6612,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_mail_body_match "Searchable field changed from 125 to New custom value", mail
   end
 
+  # @rbs () -> bool
   def test_put_update_with_multi_custom_field_change
     field = CustomField.find(1)
     field.update_attribute :multiple, true
@@ -6303,6 +6641,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal ['Oracle', 'PostgreSQL'], Issue.find(1).custom_field_value(1).sort
   end
 
+  # @rbs () -> bool
   def test_put_update_with_status_and_assignee_change
     issue = Issue.find(1)
     assert_equal 1, issue.status_id
@@ -6341,6 +6680,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert mail.subject.include?("(#{IssueStatus.find(2).name})")
   end
 
+  # @rbs () -> bool
   def test_put_update_with_note_only
     notes = 'Note added by IssuesControllerTest#test_update_with_note_only'
 
@@ -6366,6 +6706,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_mail_body_match notes, mail
   end
 
+  # @rbs () -> bool
   def test_put_update_with_private_note_only
     notes = 'Private note'
     @request.session[:user_id] = 2
@@ -6389,6 +6730,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal true, j.private_notes
   end
 
+  # @rbs () -> bool
   def test_put_update_with_private_note_and_changes
     notes = 'Private note'
     @request.session[:user_id] = 2
@@ -6419,6 +6761,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 1, j.details.count
   end
 
+  # @rbs () -> bool
   def test_put_update_with_note_and_spent_time
     @request.session[:user_id] = 2
     spent_hours_before = Issue.find(1).spent_hours
@@ -6452,6 +6795,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal spent_hours_before + 2.5, issue.spent_hours
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_put_update_should_check_add_issue_notes_permission
     role = Role.find(1)
     role.remove_permission! :add_issue_notes
@@ -6470,6 +6814,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_put_update_should_preserve_parent_issue_even_if_not_visible
     parent = Issue.generate!(:project_id => 1, :is_private => true)
     issue = Issue.generate!(:parent_issue_id => parent.id)
@@ -6493,6 +6838,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal parent, issue.parent
   end
 
+  # @rbs () -> bool
   def test_put_update_with_attachment_only
     set_tmp_attachments_directory
 
@@ -6543,6 +6889,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_mail_body_match 'testfile.txt', mail
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_put_update_with_failure_should_save_attachments
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -6577,6 +6924,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'attachments[p0][filename]', 'testfile.txt'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_put_update_with_failure_should_keep_saved_attachments
     set_tmp_attachments_directory
     attachment = Attachment.create!(:file => uploaded_test_file("testfile.txt", "text/plain"), :author_id => 2)
@@ -6606,6 +6954,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'attachments[p0][filename]', 'testfile.txt'
   end
 
+  # @rbs () -> bool
   def test_put_update_should_attach_saved_attachments
     set_tmp_attachments_directory
     attachment = Attachment.create!(:file => uploaded_test_file("testfile.txt", "text/plain"), :author_id => 2)
@@ -6641,6 +6990,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'testfile.txt', journal.details.first.value
   end
 
+  # @rbs () -> bool
   def test_put_update_with_attachment_that_fails_to_save
     set_tmp_attachments_directory
 
@@ -6665,6 +7015,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_put_update_with_attachment_deletion_should_create_a_single_journal
     set_tmp_attachments_directory
     ActionMailer::Base.deliveries.clear
@@ -6692,6 +7043,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_put_update_with_attachment_deletion_and_failure_should_preserve_selected_attachments
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -6716,6 +7068,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value="6"]:not([checked])', 'issue[deleted_attachment_ids][]'
   end
 
+  # @rbs () -> bool
   def test_put_update_with_no_change
     issue = Issue.find(1)
     issue.journals.clear
@@ -6738,6 +7091,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert ActionMailer::Base.deliveries.empty?
   end
 
+  # @rbs () -> bool
   def test_put_update_should_send_a_notification
     @request.session[:user_id] = 2
     ActionMailer::Base.deliveries.clear
@@ -6761,6 +7115,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_put_update_with_invalid_spent_time_hours_only
     @request.session[:user_id] = 2
     notes = 'Note added by IssuesControllerTest#test_post_edit_with_invalid_spent_time'
@@ -6786,6 +7141,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'time_entry[hours]', '2z'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_put_update_with_invalid_spent_time_comments_only
     @request.session[:user_id] = 2
     notes = 'Note added by IssuesControllerTest#test_post_edit_with_invalid_spent_time'
@@ -6812,6 +7168,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'time_entry[comments]', 'this is my comment'
   end
 
+  # @rbs () -> bool
   def test_put_with_spent_time_when_assigned_to_of_private_issue_is_update_at_the_same_time
     @request.session[:user_id] = 3
     Role.find(2).update! :issues_visibility => 'own'
@@ -6835,6 +7192,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_not private_issue.reload.visible?
   end
 
+  # @rbs () -> bool
   def test_put_update_should_allow_fixed_version_to_be_set_to_a_subproject
     issue = Issue.find(2)
     @request.session[:user_id] = 2
@@ -6853,6 +7211,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_not_equal issue.project_id, issue.fixed_version.project_id
   end
 
+  # @rbs () -> bool
   def test_put_update_should_redirect_back_using_the_back_url_parameter
     issue = Issue.find(2)
     @request.session[:user_id] = 2
@@ -6870,6 +7229,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_redirected_to '/issues'
   end
 
+  # @rbs () -> bool
   def test_put_update_should_not_redirect_back_using_the_back_url_parameter_off_the_host
     issue = Issue.find(2)
     @request.session[:user_id] = 2
@@ -6887,6 +7247,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_redirected_to :controller => 'issues', :action => 'show', :id => issue.id
   end
 
+  # @rbs () -> bool
   def test_put_update_should_redirect_with_previous_and_next_issue_ids_params
     @request.session[:user_id] = 2
     put(
@@ -6906,6 +7267,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_redirected_to '/issues/11?issue_count=3&issue_position=2&next_issue_id=12&prev_issue_id=8'
   end
 
+  # @rbs () -> bool
   def test_update_with_permission_on_tracker_should_be_allowed
     role = Role.find(1)
     role.set_permission_trackers :edit_issues, [1]
@@ -6925,6 +7287,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'Changed subject', issue.reload.subject
   end
 
+  # @rbs () -> bool
   def test_update_without_permission_on_tracker_should_be_denied
     role = Role.find(1)
     role.set_permission_trackers :edit_issues, [1]
@@ -6945,6 +7308,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'Original subject', issue.reload.subject
   end
 
+  # @rbs () -> bool
   def test_update_with_me_assigned_to_id
     @request.session[:user_id] = 2
     issue = Issue.find(1)
@@ -6962,6 +7326,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 2, issue.reload.assigned_to_id
   end
 
+  # @rbs () -> bool
   def test_update_with_value_of_none_should_set_the_values_to_blank
     @request.session[:user_id] = 2
     issue = Issue.find(1)
@@ -6989,6 +7354,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal '', issue.custom_field_value(1)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_edit
     @request.session[:user_id] = 2
     get(:bulk_edit, :params => {:ids => [1, 3]})
@@ -7072,6 +7438,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_edit_on_different_projects
     @request.session[:user_id] = 2
     get(:bulk_edit, :params => {:ids => [1, 2, 6]})
@@ -7087,6 +7454,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'issue[custom_field_values][9]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_edit_with_user_custom_field
     field =
       IssueCustomField.
@@ -7105,6 +7473,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_edit_with_version_custom_field
     field =
       IssueCustomField.
@@ -7123,6 +7492,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_edit_with_multi_custom_field
     field = CustomField.find(1)
     field.update_attribute :multiple, true
@@ -7136,6 +7506,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_edit_should_propose_to_clear_text_custom_fields
     @request.session[:user_id] = 2
     get(:bulk_edit, :params => {:ids => [1, 3]})
@@ -7144,6 +7515,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'issue[custom_field_values][2]', '__none__'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_edit_should_only_propose_statuses_allowed_for_all_issues
     WorkflowTransition.delete_all
     WorkflowTransition.create!(:role_id => 1, :tracker_id => 1,
@@ -7168,6 +7540,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_edit_should_propose_target_project_open_shared_versions
     @request.session[:user_id] = 2
     post(
@@ -7193,6 +7566,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_edit_should_propose_target_project_categories
     @request.session[:user_id] = 2
     post(
@@ -7218,6 +7592,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_edit_should_only_propose_issues_trackers_custom_fields
     IssueCustomField.delete_all
     field1 = IssueCustomField.generate!(:tracker_ids => [1], :is_for_all => true)
@@ -7237,6 +7612,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', "issue[custom_field_values][#{field2.id}]", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_edit_should_propose_target_tracker_custom_fields
     IssueCustomField.delete_all
     field1 = IssueCustomField.generate!(:tracker_ids => [1], :is_for_all => true)
@@ -7259,6 +7635,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', "issue[custom_field_values][#{field2.id}]"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_edit_should_warn_about_custom_field_values_about_to_be_cleared
     CustomField.destroy_all
 
@@ -7291,6 +7668,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '.warning span', :text => /Not cleared/, :count => 0
   end
 
+  # @rbs () -> bool
   def test_bulk_update
     @request.session[:user_id] = 2
     # update issues priority
@@ -7319,6 +7697,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 1, journal.details.size
   end
 
+  # @rbs () -> bool
   def test_bulk_update_with_group_assignee
     group = Group.find(11)
     project = Project.find(1)
@@ -7346,6 +7725,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_bulk_update_on_different_projects
     @request.session[:user_id] = 2
     # update issues priority
@@ -7374,6 +7754,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 1, journal.details.size
   end
 
+  # @rbs () -> bool
   def test_bulk_update_on_different_projects_without_rights
     @request.session[:user_id] = 3
     user = User.find(3)
@@ -7398,6 +7779,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_not_equal "Bulk should fail", Journal.last.notes
   end
 
+  # @rbs () -> bool
   def test_bulk_update_should_send_a_notification
     @request.session[:user_id] = 2
     ActionMailer::Base.deliveries.clear
@@ -7421,6 +7803,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_bulk_update_project
     @request.session[:user_id] = 2
     post(
@@ -7441,6 +7824,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 2, Issue.find(2).tracker_id
   end
 
+  # @rbs () -> bool
   def test_bulk_update_project_on_single_issue_should_follow_when_needed
     @request.session[:user_id] = 2
     post(
@@ -7456,6 +7840,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_redirected_to '/issues/1'
   end
 
+  # @rbs () -> bool
   def test_bulk_update_project_on_multiple_issues_should_follow_when_needed
     @request.session[:user_id] = 2
     post(
@@ -7471,6 +7856,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_redirected_to '/projects/onlinestore/issues'
   end
 
+  # @rbs () -> bool
   def test_bulk_update_tracker
     @request.session[:user_id] = 2
     post(
@@ -7486,6 +7872,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 2, Issue.find(2).tracker_id
   end
 
+  # @rbs () -> bool
   def test_bulk_update_status
     @request.session[:user_id] = 2
     # update issues priority
@@ -7506,6 +7893,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert issue.closed?
   end
 
+  # @rbs () -> bool
   def test_bulk_update_priority
     @request.session[:user_id] = 2
     post(
@@ -7522,6 +7910,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 6, Issue.find(2).priority_id
   end
 
+  # @rbs () -> bool
   def test_bulk_update_with_notes
     @request.session[:user_id] = 2
     post(
@@ -7538,6 +7927,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal false, Issue.find(2).journals.sort_by(&:id).last.private_notes
   end
 
+  # @rbs () -> bool
   def test_bulk_update_with_private_notes
     @request.session[:user_id] = 2
     post(
@@ -7555,6 +7945,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal true, Issue.find(2).journals.sort_by(&:id).last.private_notes
   end
 
+  # @rbs () -> bool
   def test_bulk_update_parent_id
     IssueRelation.delete_all
     @request.session[:user_id] = 2
@@ -7578,6 +7969,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [1, 3], parent.children.collect(&:id).sort
   end
 
+  # @rbs () -> bool
   def test_bulk_update_estimated_hours
     @request.session[:user_id] = 2
     post(
@@ -7594,6 +7986,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 4.25, Issue.find(2).estimated_hours
   end
 
+  # @rbs () -> bool
   def test_bulk_update_custom_field
     @request.session[:user_id] = 2
     # update issues priority
@@ -7621,6 +8014,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal '777', journal.details.first.value
   end
 
+  # @rbs () -> bool
   def test_bulk_update_custom_field_to_blank
     @request.session[:user_id] = 2
     post(
@@ -7642,6 +8036,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal '', Issue.find(3).custom_field_value(1)
   end
 
+  # @rbs () -> bool
   def test_bulk_update_multi_custom_field
     field = CustomField.find(1)
     field.update_attribute :multiple, true
@@ -7667,6 +8062,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_nil Issue.find(2).custom_field_value(1)
   end
 
+  # @rbs () -> bool
   def test_bulk_update_multi_custom_field_to_blank
     field = CustomField.find(1)
     field.update_attribute :multiple, true
@@ -7691,6 +8087,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [''], Issue.find(3).custom_field_value(1)
   end
 
+  # @rbs () -> bool
   def test_bulk_update_unassign
     assert_not_nil Issue.find(2).assigned_to
     @request.session[:user_id] = 2
@@ -7710,6 +8107,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_nil Issue.find(2).assigned_to
   end
 
+  # @rbs () -> Array[untyped]
   def test_post_bulk_update_should_allow_fixed_version_to_be_set_to_a_subproject
     @request.session[:user_id] = 2
     post(
@@ -7729,6 +8127,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_bulk_update_should_redirect_back_using_the_back_url_parameter
     @request.session[:user_id] = 2
     post(
@@ -7742,6 +8141,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_redirected_to '/issues'
   end
 
+  # @rbs () -> bool
   def test_post_bulk_update_should_not_redirect_back_using_the_back_url_parameter_off_the_host
     @request.session[:user_id] = 2
     post(
@@ -7758,6 +8158,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_update_with_all_failures_should_show_errors
     @request.session[:user_id] = 2
     post(
@@ -7774,6 +8175,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#errorExplanation ul li', :text => 'Start date is not a valid date: #1, #2'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_update_with_some_failures_should_show_errors
     issue1 = Issue.generate!(:start_date => '2013-05-12')
     issue2 = Issue.generate!(:start_date => '2013-05-15')
@@ -7796,6 +8198,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#bulk-selection li', 2
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_update_with_failure_should_preserved_form_values
     @request.session[:user_id] = 2
     post(
@@ -7815,6 +8218,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'issue[start_date]', 'foo'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_copy
     assert_not Issue.find(1).attachments.any?
     assert Issue.find(2).attachments.any?
@@ -7860,6 +8264,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_copy_without_add_issues_permission_should_not_propose_current_project_as_target
     user = setup_user_with_copy_but_not_add_permission
     @request.session[:user_id] = user.id
@@ -7879,6 +8284,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_bulk_copy_to_another_project
     @request.session[:user_id] = 2
     issue_ids = [1, 2]
@@ -7904,6 +8310,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_bulk_copy_without_add_issues_permission_should_be_allowed_on_project_with_permission
     user = setup_user_with_copy_but_not_add_permission
     @request.session[:user_id] = user.id
@@ -7922,6 +8329,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_bulk_copy_on_same_project_without_add_issues_permission_should_be_denied
     user = setup_user_with_copy_but_not_add_permission
     @request.session[:user_id] = user.id
@@ -7938,6 +8346,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_bulk_copy_on_different_project_without_add_issues_permission_should_be_denied
     user = setup_user_with_copy_but_not_add_permission
     @request.session[:user_id] = user.id
@@ -7954,6 +8363,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> Array[untyped]
   def test_bulk_copy_should_allow_not_changing_the_issue_attributes
     @request.session[:user_id] = 2
     issues = [
@@ -7997,6 +8407,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_bulk_copy_should_allow_changing_the_issue_attributes
     # Fixes random test failure with Mysql
     # where Issue.where(:project_id => 2).limit(2).order('id desc')
@@ -8035,6 +8446,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_bulk_copy_should_allow_adding_a_note
     @request.session[:user_id] = 2
     assert_difference 'Issue.count', 1 do
@@ -8060,6 +8472,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'Copying one issue', journal.notes
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_bulk_copy_should_allow_not_copying_the_attachments
     attachment_count = Issue.find(3).attachments.size
     assert attachment_count > 0
@@ -8081,6 +8494,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_bulk_copy_should_allow_copying_the_attachments
     attachment_count = Issue.find(3).attachments.size
     assert attachment_count > 0
@@ -8102,6 +8516,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_bulk_copy_should_never_copy_attachments_by_settings
     with_settings :copy_attachments_on_issue_copy => 'no' do
       @request.session[:user_id] = 2
@@ -8122,6 +8537,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_bulk_copy_should_always_copy_attachments_by_settings
     assert_equal 4, Issue.find(3).attachments.size
     with_settings :copy_attachments_on_issue_copy => 'yes' do
@@ -8143,6 +8559,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_bulk_copy_should_add_relations_with_copied_issues
     @request.session[:user_id] = 2
     assert_difference 'Issue.count', 2 do
@@ -8162,6 +8579,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_bulk_copy_should_allow_not_copying_the_subtasks
     issue = Issue.generate_with_descendants!
     @request.session[:user_id] = 2
@@ -8224,6 +8642,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal [3, 10], copy.watcher_user_ids.sort
   end
 
+  # @rbs () -> bool
   def test_bulk_copy_should_not_copy_selected_subtasks_twice
     issue = Issue.generate_with_descendants!
     count = issue.descendants.count
@@ -8246,6 +8665,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal count, copy.descendants.count
   end
 
+  # @rbs () -> bool
   def test_bulk_copy_to_another_project_should_follow_when_needed
     @request.session[:user_id] = 2
     post(
@@ -8263,6 +8683,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_redirected_to :controller => 'issues', :action => 'show', :id => issue
   end
 
+  # @rbs () -> bool
   def test_bulk_copy_with_all_failures_should_display_errors
     @request.session[:user_id] = 2
     post(
@@ -8278,6 +8699,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_destroy_issue_with_no_time_entries_should_delete_the_issues
     set_tmp_attachments_directory
     assert_nil TimeEntry.find_by_issue_id(2)
@@ -8290,6 +8712,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_nil Issue.find_by_id(2)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_issues_with_time_entries_should_show_the_reassign_form
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -8312,6 +8735,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_issues_with_time_entries_should_not_show_the_nullify_option_when_issue_is_required_for_time_entries
     set_tmp_attachments_directory
     with_settings :timelog_required_fields => ['issue_id'] do
@@ -8334,6 +8758,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_issues_with_time_entries_should_show_hours_on_issues_and_descendants
     parent = Issue.generate_with_child!
     TimeEntry.generate!(:issue => parent)
@@ -8353,6 +8778,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'p', :text => /3:00 hours were reported/
   end
 
+  # @rbs () -> bool
   def test_destroy_issues_and_destroy_time_entries
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -8373,6 +8799,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_nil TimeEntry.find_by_id([1, 2])
   end
 
+  # @rbs () -> bool
   def test_destroy_issues_and_assign_time_entries_to_project
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -8396,6 +8823,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_nil TimeEntry.find(2).issue_id
   end
 
+  # @rbs () -> bool
   def test_destroy_issues_and_reassign_time_entries_to_another_issue
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -8418,6 +8846,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 2, TimeEntry.find(2).issue_id
   end
 
+  # @rbs () -> bool
   def test_destroy_issues_with_time_entries_should_reassign_time_entries_of_issues_and_descendants
     parent = Issue.generate_with_child!
     TimeEntry.generate!(:issue => parent)
@@ -8443,6 +8872,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 3, target.time_entries.count
   end
 
+  # @rbs () -> bool
   def test_destroy_issues_and_reassign_time_entries_to_an_invalid_issue_should_fail
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -8462,6 +8892,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_issues_and_reassign_time_entries_to_an_issue_to_delete_should_fail
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -8481,6 +8912,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#flash_error', :text => I18n.t(:error_cannot_reassign_time_entries_to_an_issue_about_to_be_deleted)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_issues_and_nullify_time_entries_should_fail_when_issue_is_required_for_time_entries
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -8501,6 +8933,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select '#flash_error', :text => 'Issue cannot be blank'
   end
 
+  # @rbs () -> bool
   def test_destroy_issues_from_different_projects
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -8518,6 +8951,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert !(Issue.find_by_id(1) || Issue.find_by_id(2) || Issue.find_by_id(6))
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_child_issue
     parent = Issue.create!(:project_id => 1, :author_id => 1, :tracker_id => 1, :subject => 'Parent Issue')
     child = Issue.create!(:project_id => 1, :author_id => 1, :tracker_id => 1, :subject => 'Child Issue', :parent_issue_id => parent.id)
@@ -8543,6 +8977,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_parent_and_child_issues
     parent = Issue.create!(:project_id => 1, :author_id => 1,
                            :tracker_id => 1, :subject => 'Parent Issue')
@@ -8563,6 +8998,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'Successful deletion.', flash[:notice]
   end
 
+  # @rbs () -> bool
   def test_destroy_invalid_should_respond_with_404
     @request.session[:user_id] = 2
     assert_no_difference 'Issue.count' do
@@ -8571,6 +9007,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_destroy_with_permission_on_tracker_should_be_allowed
     role = Role.find(1)
     role.set_permission_trackers :delete_issues, [1]
@@ -8584,6 +9021,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_equal 'Successful deletion.', flash[:notice]
   end
 
+  # @rbs () -> bool
   def test_destroy_without_permission_on_tracker_should_be_denied
     role = Role.find(1)
     role.set_permission_trackers :delete_issues, [2]
@@ -8596,6 +9034,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_default_search_scope
     get :index
 
@@ -8604,6 +9043,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> User
   def setup_user_with_copy_but_not_add_permission
     Role.all.each {|r| r.remove_permission! :add_issues}
     Role.find_by_name('Manager').add_permission! :add_issues
@@ -8613,6 +9053,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     user
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_cancel_edit_link_for_issue_show_action_should_have_onclick_action
     @request.session[:user_id] = 1
     get(:show, :params => {:id => 1})
@@ -8620,6 +9061,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?][onclick=?]', "/issues/1", "$('#update').hide(); return false;", :text => 'Cancel'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_cancel_edit_link_for_issue_edit_action_should_not_have_onclick_action
     @request.session[:user_id] = 1
     get(:edit, :params => {:id => 1})
@@ -8627,6 +9069,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?][onclick=?]', "/issues/1", "", :text => 'Cancel'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_author_gravatar_only_when_not_assigned
     issue = Issue.find(1)
     assert_nil issue.assigned_to_id
@@ -8640,6 +9083,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_author_and_assignee_gravatars_when_assigned
     issue = Issue.find(1)
     issue.assigned_to_id = 2
@@ -8655,6 +9099,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_be_able_to_link_to_another_journal_attachment_of_the_same_issue
     @request.session[:user_id] = 1
     issue = Issue.find(2)
@@ -8670,6 +9115,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_thumbnail_macro_should_be_able_to_fetch_image_of_different_journal
     @request.session[:user_id] = 1
     issue = Issue.find(2)
@@ -8686,6 +9132,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_retrieve_default_query
     query = IssueQuery.find(4)
     IssueQuery.stubs(:default).returns query
@@ -8700,6 +9147,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_ignore_default_query_with_without_default
     query = IssueQuery.find(4)
     IssueQuery.stubs(:default).returns query
@@ -8714,6 +9162,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_ignore_default_query_with_session_query
     query = IssueQuery.find 4
     IssueQuery.stubs(:default).returns query
@@ -8725,6 +9174,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'h2', text: session_query.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_global_should_ignore_default_query_with_session_query
     query = IssueQuery.find 4
     IssueQuery.stubs(:default).returns query
@@ -8736,6 +9186,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'h2', text: session_query.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_use_default_query_with_invalid_session_query
     query = IssueQuery.find 4
     IssueQuery.stubs(:default).returns query
@@ -8746,6 +9197,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'h2', text: query.name
   end
 
+  # @rbs () -> bool
   def test_index_should_not_load_default_query_for_api_request
     query = IssueQuery.find 4
     IssueQuery.stubs(:default).returns query
@@ -8758,6 +9210,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert results.detect{ |i| i['tracker_id'] != 3 }
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_ignore_user_default_query_if_it_is_invisible
     query = IssueQuery.find(4)
 
@@ -8779,6 +9232,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     assert_select 'h2', text: 'Issues'
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_ignore_project_default_query_if_it_is_not_public
     query = IssueQuery.find(1)
     query.project.update(default_issue_query: query)
@@ -8794,6 +9248,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_ignore_global_default_query_if_it_is_not_public
     query = IssueQuery.find(1)
     with_settings default_issue_query: query.id do
@@ -8809,6 +9264,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_issue_field_five_percent_increments
     with_settings :issue_done_ratio => 'issue_field', :issue_done_ratio_interval => 5 do
       @request.session[:user_id] = 1

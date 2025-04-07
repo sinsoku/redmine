@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class CustomFieldsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     @request.session[:user_id] = 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
@@ -31,6 +33,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select 'table.custom_fields'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_without_type_should_render_select_type
     get :new
     assert_response :success
@@ -39,6 +42,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=type][checked=checked]', 1
   end
 
+  # @rbs () -> Array[untyped]
   def test_new_should_work_for_each_customized_class_and_format
     custom_field_classes.each do |klass|
       Redmine::FieldFormat.formats_for_custom_field_class(klass).each do |format|
@@ -63,6 +67,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_have_string_default_format
     get(
       :new,
@@ -77,6 +82,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_issue_custom_field
     get(
       :new,
@@ -102,6 +108,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_time_entry_custom_field
     get(
       :new,
@@ -125,6 +132,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_project_custom_field
     get(
       :new,
@@ -148,6 +156,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_version_custom_field
     get(
       :new,
@@ -171,6 +180,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_time_entry_custom_field_should_not_show_trackers_and_projects
     get(
       :new,
@@ -186,6 +196,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_default_value_should_be_an_input_for_string_custom_field
     get(
       :new,
@@ -200,6 +211,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'custom_field[default_value]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_default_value_should_be_a_textarea_for_text_custom_field
     get(
       :new,
@@ -214,6 +226,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select 'textarea[name=?]', 'custom_field[default_value]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_default_value_should_be_a_checkbox_for_bool_custom_field
     get(
       :new,
@@ -230,6 +243,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_default_value_should_not_be_present_for_user_custom_field
     get(
       :new,
@@ -244,6 +258,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select '[name=?]', 'custom_field[default_value]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_setting_full_width_layout_shoul_be_present_only_for_long_text_issue_custom_field
     get(
       :new,
@@ -282,6 +297,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select '[name=?]', 'custom_field[full_width_layout]', 0
   end
 
+  # @rbs () -> bool
   def test_new_js
     get(
       :new,
@@ -300,6 +316,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_include '<option selected=\"selected\" value=\"list\">List<\/option>', response.body
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_invalid_custom_field_class_should_render_select_type
     get(
       :new,
@@ -312,6 +329,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=radio][name=type]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_copy
     role_ids = [1, 2]
     tracker_ids = [1, 2]
@@ -362,6 +380,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_list_custom_field
     field = new_record(IssueCustomField) do
       post(
@@ -391,6 +410,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_equal 1, field.trackers.size
   end
 
+  # @rbs () -> bool
   def test_create_project_custom_field
     field = new_record(ProjectCustomField) do
       post(
@@ -417,6 +437,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_equal 'test_new_project_custom_field', field.name
   end
 
+  # @rbs () -> bool
   def test_create_with_project_ids
     assert_difference 'CustomField.count' do
       post(
@@ -438,6 +459,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_equal [1, 3], field.projects.map(&:id).sort
   end
 
+  # @rbs () -> bool
   def test_create_with_continue_params
     assert_difference 'CustomField.count' do
       post(
@@ -455,6 +477,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_redirected_to '/custom_fields/new?type=IssueCustomField'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     assert_no_difference 'CustomField.count' do
       post(
@@ -471,6 +494,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_without_type_should_render_select_type
     assert_no_difference 'CustomField.count' do
       post(
@@ -486,6 +510,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=radio][name=type]'
   end
 
+  # @rbs () -> bool
   def test_create_with_enumerations
     custom_field = IssueCustomField.create(:field_format => 'enumeration', :name => 'IssueCustomField')
     custom_field.enumerations.build(:name => 'enumeration1', :position => 1)
@@ -509,6 +534,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_equal [1, 2], field.enumerations.pluck(:position).sort
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     get(
       :edit,
@@ -520,6 +546,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'custom_field[name]', 'Database'
   end
 
+  # @rbs () -> bool
   def test_edit_invalid_custom_field_should_render_404
     get(
       :edit,
@@ -530,6 +557,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_update
     put(
       :update,
@@ -546,6 +574,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_equal 'New name', field.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     put(
       :update,
@@ -560,6 +589,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_destroy
     custom_values_count = CustomValue.where(:custom_field_id => 1).count
     assert custom_values_count > 0
@@ -580,6 +610,7 @@ class CustomFieldsControllerTest < Redmine::ControllerTest
     assert_nil CustomValue.find_by_custom_field_id(1)
   end
 
+  # @rbs () -> Array[untyped]
   def custom_field_classes
     classes =
       Dir.glob(Rails.root.join('app/models/*_custom_field.rb')).map do |f|

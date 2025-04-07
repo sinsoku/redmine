@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module IssueStatusesHelper
+  # @rbs (IssueStatus) -> ActiveSupport::SafeBuffer
   def issue_status_type_badge(status)
     if status.is_closed?
       content_tag('span', l(:label_closed_issues), class: 'badge badge-status-closed')

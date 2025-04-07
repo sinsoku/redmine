@@ -51,11 +51,13 @@ class Import < ApplicationRecord
     user.admin?
   end
 
+  # @rbs (*nil) -> void
   def initialize(*args)
     super
     self.settings ||= {}
   end
 
+  # @rbs (Rack::Test::UploadedFile | ActionDispatch::Http::UploadedFile) -> void
   def file=(arg)
     return unless arg.present? && arg.size > 0
 
@@ -63,6 +65,7 @@ class Import < ApplicationRecord
     Redmine::Utils.save_upload(arg, filepath)
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> void
   def set_default_settings(options={})
     separator = lu(user, :general_csv_separator)
     wrapper = '"'
@@ -104,12 +107,14 @@ class Import < ApplicationRecord
     end
   end
 
+  # @rbs () -> String
   def to_param
     filename
   end
 
   # Returns the full path of the file to import
   # It is stored in tmp/imports with a random hex as filename
+  # @rbs () -> String?
   def filepath
     if filename.present? && /\A[0-9a-f]+\z/.match?(filename)
       File.join(Rails.root, "tmp", "imports", filename)
@@ -119,18 +124,21 @@ class Import < ApplicationRecord
   end
 
   # Returns true if the file to import exists
+  # @rbs () -> bool
   def file_exists?
     filepath.present? && File.exist?(filepath)
   end
 
   # Returns the headers as an array that
   # can be used for select options
+  # @rbs (?nil) -> Array[untyped]
   def columns_options(default=nil)
     i = -1
     headers.map {|h| [h, i+=1]}
   end
 
   # Parses the file to import and updates the total number of items
+  # @rbs () -> Integer?
   def parse_file
     count = 0
     read_items {|row, i| count=i}
@@ -139,6 +147,7 @@ class Import < ApplicationRecord
   end
 
   # Reads the items to import and yields the given block for each item
+  # @rbs () -> void
   def read_items
     i = 0
     headers = true
@@ -153,6 +162,7 @@ class Import < ApplicationRecord
   end
 
   # Returns the count first rows of the file (including headers)
+  # @rbs (?Integer) -> Array[untyped]
   def first_rows(count=4)
     rows = []
     read_rows do |row|
@@ -163,16 +173,19 @@ class Import < ApplicationRecord
   end
 
   # Returns an array of headers
+  # @rbs () -> Array[untyped]
   def headers
     first_rows(1).first || []
   end
 
   # Returns the mapping options
+  # @rbs () -> (Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess)
   def mapping
     settings['mapping'] || {}
   end
 
   # Adds a callback that will be called after the item at given position is imported
+  # @rbs (Integer | String, String, *Integer | Integer | String | (Integer | String)?) -> bool
   def add_callback(position, name, *args)
     settings['callbacks'] ||= {}
     settings['callbacks'][position] ||= []
@@ -181,6 +194,7 @@ class Import < ApplicationRecord
   end
 
   # Executes the callbacks for the given object
+  # @rbs (Integer | String, TimeEntry | Issue | User) -> bool?
   def do_callbacks(position, object)
     if callbacks = (settings['callbacks'] || {}).delete(position)
       callbacks.each do |name, args|
@@ -191,6 +205,7 @@ class Import < ApplicationRecord
   end
 
   # Imports items and returns the position of the last processed item
+  # @rbs (?Hash[untyped, untyped]) -> Integer
   def run(options={})
     max_items = options[:max_items]
     max_time = options[:max_time]
@@ -238,10 +253,12 @@ class Import < ApplicationRecord
     current
   end
 
+  # @rbs () -> ImportItem::ActiveRecord_AssociationRelation
   def unsaved_items
     items.where(:obj_id => nil)
   end
 
+  # @rbs () -> ImportItem::ActiveRecord_AssociationRelation
   def saved_items
     items.where("obj_id IS NOT NULL")
   end
@@ -250,6 +267,7 @@ class Import < ApplicationRecord
 
   # Reads lines from the beginning of the file, up to the specified number
   # of bytes (max_read_bytes).
+  # @rbs (?Integer) -> String
   def read_file_head(max_read_bytes = 4096)
     return '' unless file_exists?
     return File.read(filepath, mode: 'rb') if File.size(filepath) <= max_read_bytes
@@ -262,6 +280,7 @@ class Import < ApplicationRecord
     last_lf_index ? chunk[..last_lf_index] : chunk
   end
 
+  # @rbs () -> nil
   def read_rows
     return unless file_exists?
 
@@ -278,12 +297,14 @@ class Import < ApplicationRecord
     end
   end
 
+  # @rbs (Array[untyped], String) -> String?
   def row_value(row, key)
     if index = mapping[key].presence
       row[index.to_i].presence
     end
   end
 
+  # @rbs (Array[untyped], String) -> (Date | String)?
   def row_date(row, key)
     if s = row_value(row, key)
       format = settings['date_format']
@@ -299,15 +320,18 @@ class Import < ApplicationRecord
 
   # Extends object with properties, that may only be handled after it's been
   # persisted.
+  # @rbs (Array[untyped], ImportItem, TimeEntry) -> nil
   def extend_object(row, item, object)
   end
 
   # Generates a filename used to store the import file
+  # @rbs () -> String
   def generate_filename
     Redmine::Utils.random_hex(16)
   end
 
   # Deletes the import file
+  # @rbs () -> Integer?
   def remove_file
     if file_exists?
       begin
@@ -319,10 +343,12 @@ class Import < ApplicationRecord
   end
 
   # Returns true if value is a string that represents a true value
+  # @rbs (String?) -> bool
   def yes?(value)
     value == lu(user, :general_text_yes) || value == '1'
   end
 
+  # @rbs () -> bool
   def use_unique_id?
     mapping['unique_id'].present?
   end

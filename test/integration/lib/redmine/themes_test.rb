@@ -20,16 +20,19 @@
 require_relative '../../../test_helper'
 
 class ThemesTest < Redmine::IntegrationTest
+  # @rbs () -> String
   def setup
     Redmine::Themes.rescan
     @theme = Redmine::Themes.theme('classic')
     Setting.ui_theme = @theme.id
   end
 
+  # @rbs () -> String
   def teardown
     Setting.ui_theme = ''
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_application_css
     get '/'
 
@@ -37,6 +40,7 @@ class ThemesTest < Redmine::IntegrationTest
     assert_select "link[rel=stylesheet]:match('href', ?)", %r{/assets/themes/#{@theme.dir}/application-\w+\.css}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_without_theme_js
     # simulate a state theme.js does not exists
     @theme.javascripts.clear
@@ -46,6 +50,7 @@ class ThemesTest < Redmine::IntegrationTest
     assert_select "script[src^=?]", "/assets/themes/#{@theme.dir}/theme.js", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_with_theme_js
     # Simulates a theme.js
     @theme.javascripts << 'theme'
@@ -57,6 +62,7 @@ class ThemesTest < Redmine::IntegrationTest
     @theme.javascripts.delete 'theme'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_use_default_favicon_if_theme_provides_none
     @theme.favicons.clear
     get '/'
@@ -65,6 +71,7 @@ class ThemesTest < Redmine::IntegrationTest
     assert_select "link[rel='shortcut icon']:match('href',?)", %r{/assets/favicon-\w+\.ico}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_use_theme_favicon_if_theme_provides_one
     # Simulate a theme favicon
     @theme.favicons.unshift('a.ico')
@@ -76,6 +83,7 @@ class ThemesTest < Redmine::IntegrationTest
     @theme.favicons.delete 'a.ico'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_use_only_one_theme_favicon_if_theme_provides_many
     @theme.favicons.unshift('b.ico', 'a.png')
     get '/'
@@ -88,6 +96,7 @@ class ThemesTest < Redmine::IntegrationTest
     @theme.favicons.delete("a.png")
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_with_sub_uri
     Redmine::Utils.relative_url_root = '/foo'
     @theme.javascripts.unshift('theme')
@@ -102,6 +111,7 @@ class ThemesTest < Redmine::IntegrationTest
     Redmine::Utils.relative_url_root = ''
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_body_css_class_with_spaces_in_theme_name
     @theme.instance_variable_set(:@name, 'Foo bar baz')
     get '/'
@@ -110,6 +120,7 @@ class ThemesTest < Redmine::IntegrationTest
     assert_select 'body[class~="theme-Foo_bar_baz"]'
   end
 
+  # @rbs () -> MatchData
   def test_old_theme_compatibility
     @theme = Redmine::Themes::Theme.new(Rails.root.join('test/fixtures/themes/foo_theme'))
     Rails.application.config.assets.redmine_extension_paths << @theme.asset_paths

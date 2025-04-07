@@ -28,10 +28,12 @@ class ImportsController < ApplicationController
   helper :issues
   helper :queries
 
+  # @rbs () -> IssueImport
   def new
     @import = import_type.new
   end
 
+  # @rbs () -> String
   def create
     @import = import_type.new
     @import.user = User.current
@@ -45,9 +47,11 @@ class ImportsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def show
   end
 
+  # @rbs () -> String?
   def settings
     if request.post? && @import.parse_file
       if @import.total_items == 0
@@ -67,6 +71,7 @@ class ImportsController < ApplicationController
     flash.now[:error] = l(:error_can_not_read_import_file)
   end
 
+  # @rbs () -> (String | Hash[untyped, untyped])
   def mapping
     @custom_fields = @import.mappable_custom_fields
 
@@ -86,6 +91,7 @@ class ImportsController < ApplicationController
     end
   end
 
+  # @rbs () -> String?
   def run
     if request.post?
       @current = @import.run(
@@ -105,6 +111,7 @@ class ImportsController < ApplicationController
     end
   end
 
+  # @rbs (nil) -> Symbol
   def current_menu(project)
     if import_layout == 'admin'
       nil
@@ -115,6 +122,7 @@ class ImportsController < ApplicationController
 
   private
 
+  # @rbs () -> bool?
   def find_import
     @import = Import.where(:user_id => User.current.id, :filename => params[:id]).first
     if @import.nil?
@@ -127,6 +135,7 @@ class ImportsController < ApplicationController
     update_from_params if request.post?
   end
 
+  # @rbs () -> bool?
   def update_from_params
     if params[:import_settings].present?
       @import.settings ||= {}
@@ -135,24 +144,29 @@ class ImportsController < ApplicationController
     end
   end
 
+  # @rbs () -> Integer
   def max_items_per_request
     5
   end
 
+  # @rbs () -> String
   def import_layout
     import_type && import_type.layout || 'base'
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def menu_items
     menu_item = import_type ? import_type.menu_item : nil
     {self.controller_name.to_sym => {:actions => {}, :default => menu_item}}
   end
 
+  # @rbs () -> bool?
   def authorize_import
     return render_404 unless import_type
     return render_403 unless import_type.authorized?(User.current)
   end
 
+  # @rbs () -> Class
   def import_type
     return @import_type if defined? @import_type
 
@@ -170,6 +184,7 @@ class ImportsController < ApplicationController
       end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def auto_map_fields
     # Try to auto map fields only when settings['enconding'] is present
     # otherwhise, the import fails for non UTF-8 files because the headers

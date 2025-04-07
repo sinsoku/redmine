@@ -20,12 +20,14 @@
 require_relative '../test_helper'
 
 class WatcherTest < ActiveSupport::TestCase
+  # @rbs () -> Issue
   def setup
     User.current = nil
     @user = User.find(1)
     @issue = Issue.find(1)
   end
 
+  # @rbs () -> bool
   def test_validate
     user = User.find(5)
     assert !user.active?
@@ -33,6 +35,7 @@ class WatcherTest < ActiveSupport::TestCase
     assert !watcher.save
   end
 
+  # @rbs () -> bool
   def test_watch
     group = Group.find(10)
     assert @issue.add_watcher(group)
@@ -42,11 +45,13 @@ class WatcherTest < ActiveSupport::TestCase
     assert @issue.watchers.detect {|w| w.user == group}
   end
 
+  # @rbs () -> bool
   def test_cant_watch_twice
     assert @issue.add_watcher(@user)
     assert !@issue.add_watcher(@user)
   end
 
+  # @rbs () -> bool
   def test_watched_by
     assert @issue.add_watcher(@user)
     @issue.reload
@@ -54,6 +59,7 @@ class WatcherTest < ActiveSupport::TestCase
     assert Issue.watched_by(@user).include?(@issue)
   end
 
+  # @rbs () -> bool
   def test_watched_by_group
     group = Group.find(10)
     user = User.find(8)
@@ -67,12 +73,14 @@ class WatcherTest < ActiveSupport::TestCase
     assert Issue.watched_by(user).include?(@issue)
   end
 
+  # @rbs () -> bool
   def test_watcher_users
     watcher_users = Issue.find(2).watcher_users
     assert_kind_of Array, watcher_users.collect{|w| w}
     assert_kind_of User, watcher_users.first
   end
 
+  # @rbs () -> Watcher::ActiveRecord_Associations_CollectionProxy
   def test_watcher_users_should_be_reloaded_after_adding_a_watcher
     issue = Issue.find(2)
     user = User.generate!
@@ -82,6 +90,7 @@ class WatcherTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_watcher_users_should_not_validate_user
     User.where(:id => 1).update_all("firstname = ''")
     @user.reload
@@ -93,16 +102,19 @@ class WatcherTest < ActiveSupport::TestCase
     assert issue.watched_by?(@user)
   end
 
+  # @rbs () -> bool
   def test_watcher_user_ids
     assert_equal [1, 3], Issue.find(2).watcher_user_ids.sort
   end
 
+  # @rbs () -> bool
   def test_watcher_user_ids=
     issue = Issue.new
     issue.watcher_user_ids = ['1', '3']
     assert issue.watched_by?(User.find(1))
   end
 
+  # @rbs () -> bool
   def test_watcher_user_ids_should_make_ids_uniq
     issue = Issue.new(:project => Project.find(1), :tracker_id => 1, :subject => "test", :author => User.find(2))
     issue.watcher_user_ids = ['1', '3', '1']
@@ -110,6 +122,7 @@ class WatcherTest < ActiveSupport::TestCase
     assert_equal 2, issue.watchers.count
   end
 
+  # @rbs () -> Array[untyped]
   def test_addable_watcher_users
     addable_watcher_users = @issue.addable_watcher_users
     assert_kind_of Array, addable_watcher_users
@@ -118,6 +131,7 @@ class WatcherTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_add_watcher_with_unsaved_object
     issue = Issue.new(project: Project.find(1), tracker_id: 1, subject: "test", author: User.find(2))
     assert_not issue.persisted?
@@ -135,6 +149,7 @@ class WatcherTest < ActiveSupport::TestCase
     assert 1, Watcher.where(watchable: issue).count
   end
 
+  # @rbs () -> bool
   def test_remove_watcher_with_unsaved_object
     issue = Issue.new(project: Project.find(1), tracker_id: 1, subject: "test", author: User.find(2))
     assert_not issue.persisted?
@@ -155,17 +170,20 @@ class WatcherTest < ActiveSupport::TestCase
     assert 0, Watcher.where(watchable: issue).count
   end
 
+  # @rbs () -> bool
   def test_addable_watcher_users_should_not_include_user_that_cannot_view_the_object
     issue = Issue.new(:project => Project.find(1), :is_private => true)
     assert_nil issue.addable_watcher_users.detect {|user| user.is_a?(User) && !issue.visible?(user)}
   end
 
+  # @rbs () -> bool
   def test_any_watched_should_return_false_if_no_object_is_watched
     objects = (0..2).map {Issue.generate!}
 
     assert_equal false, Watcher.any_watched?(objects, @user)
   end
 
+  # @rbs () -> bool
   def test_any_watched_should_return_true_if_one_object_is_watched
     objects = (0..2).map {Issue.generate!}
     objects.last.add_watcher(@user)
@@ -173,10 +191,12 @@ class WatcherTest < ActiveSupport::TestCase
     assert_equal true, Watcher.any_watched?(objects, @user)
   end
 
+  # @rbs () -> bool
   def test_any_watched_should_return_false_with_no_object
     assert_equal false, Watcher.any_watched?([], @user)
   end
 
+  # @rbs () -> bool
   def test_recipients
     @issue.watchers.delete_all
     @issue.reload
@@ -195,6 +215,7 @@ class WatcherTest < ActiveSupport::TestCase
     assert !@issue.watcher_recipients.include?(@user.mail)
   end
 
+  # @rbs () -> bool
   def test_unwatch
     group = Group.find(10)
     assert @issue.add_watcher(group)
@@ -204,6 +225,7 @@ class WatcherTest < ActiveSupport::TestCase
     assert_equal 1, @issue.remove_watcher(group)
   end
 
+  # @rbs () -> bool
   def test_prune_with_user
     Watcher.where("user_id = 9").delete_all
     user = User.find(9)
@@ -236,6 +258,7 @@ class WatcherTest < ActiveSupport::TestCase
     assert !Issue.find(4).watched_by?(user)
   end
 
+  # @rbs () -> bool
   def test_prune_with_project
     user = User.find(9)
     Watcher.new(:watchable => Issue.find(4), :user => User.find(9)).save(:validate => false) # project 2
@@ -246,6 +269,7 @@ class WatcherTest < ActiveSupport::TestCase
     assert !Issue.find(6).watched_by?(user)
   end
 
+  # @rbs () -> bool
   def test_prune_all
     user = User.find(9)
     Watcher.new(:watchable => Issue.find(4), :user => User.find(9)).save(:validate => false)

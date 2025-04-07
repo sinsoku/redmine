@@ -19,11 +19,13 @@
 require_relative '../test_helper'
 
 class UserQueryTest < ActiveSupport::TestCase
+  # @rbs () -> bool
   def test_available_columns_should_include_user_custom_fields
     query = UserQuery.new
     assert_include :cf_4, query.available_columns.map(&:name)
   end
 
+  # @rbs () -> ActiveSupport::OrderedHash
   def test_filter_values_should_be_arrays
     q = UserQuery.new
 
@@ -34,6 +36,7 @@ class UserQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_filter_by_admin
     q = UserQuery.new name: '_'
     q.filters = { 'admin' => { operator: '=', values: ['1'] }}
@@ -53,6 +56,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [false], users.map(&:admin?).uniq
   end
 
+  # @rbs () -> bool
   def test_filter_by_status
     q = UserQuery.new name: '_'
     q.filters = { 'status' => { operator: '=', values: [User::STATUS_LOCKED] }}
@@ -60,6 +64,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [5], users.map(&:id)
   end
 
+  # @rbs () -> Array[untyped]
   def test_login_filter
     [
       ['~', 'jsmith', [2]],
@@ -73,6 +78,7 @@ class UserQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_firstname_filter
     q = UserQuery.new name: '_'
     q.add_filter('firstname', '~', ['john'])
@@ -80,6 +86,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [2], users.map(&:id)
   end
 
+  # @rbs () -> bool
   def test_lastname_filter
     q = UserQuery.new name: '_'
     q.add_filter('lastname', '~', ['smith'])
@@ -87,6 +94,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [2], users.map(&:id)
   end
 
+  # @rbs () -> Array[untyped]
   def test_mail_filter
     [
       ['~', 'somenet', [1, 2, 3, 4]],
@@ -105,6 +113,7 @@ class UserQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_name_or_email_or_login_filter
     [
       ['~', 'jsmith', [2]],
@@ -128,6 +137,7 @@ class UserQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_group_filter
     q = UserQuery.new name: '_'
     q.add_filter('is_member_of_group', '=', ['10', '99'])
@@ -135,6 +145,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [8], users.map(&:id)
   end
 
+  # @rbs () -> bool
   def test_group_filter_not
     q = UserQuery.new name: '_'
     q.add_filter('is_member_of_group', '!', ['10'])
@@ -143,6 +154,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_not users.map(&:id).include? 8
   end
 
+  # @rbs () -> bool
   def test_group_filter_any
     q = UserQuery.new name: '_'
     q.add_filter('is_member_of_group', '*', [''])
@@ -150,6 +162,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [8], users.map(&:id)
   end
 
+  # @rbs () -> bool
   def test_group_filter_none
     q = UserQuery.new name: '_'
     q.add_filter('is_member_of_group', '!*', [''])
@@ -158,6 +171,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_not users.map(&:id).include? 8
   end
 
+  # @rbs () -> bool
   def test_auth_source_filter
     user = User.find(1)
     user.update_column :auth_source_id, 1
@@ -168,6 +182,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [1], users.map(&:id)
   end
 
+  # @rbs () -> bool
   def test_auth_source_filter_any
     user = User.find(1)
     user.update_column :auth_source_id, 1
@@ -178,6 +193,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [1], users.map(&:id)
   end
 
+  # @rbs () -> bool
   def test_auth_source_filter_none
     user = User.find(1)
     user.update_column :auth_source_id, 1
@@ -189,6 +205,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_not users.map(&:id).include? 1
   end
 
+  # @rbs () -> bool
   def test_auth_source_ordering
     auth = AuthSource.generate!(name: "Auth")
 
@@ -209,6 +226,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_equal [2, 1], users.pluck(:id)
   end
 
+  # @rbs () -> bool
   def test_user_query_is_only_visible_to_admins
     q = UserQuery.new(name: '_')
     assert q.save
@@ -223,6 +241,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_not_include q, UserQuery.visible(user)
   end
 
+  # @rbs () -> bool
   def test_user_query_is_only_editable_by_admins
     q = UserQuery.new(name: '_')
 
@@ -233,6 +252,7 @@ class UserQueryTest < ActiveSupport::TestCase
     assert_not q.editable_by?(user)
   end
 
+  # @rbs (UserQuery) -> Array[untyped]
   def find_users_with_query(query)
     User.where(query.statement).to_a
   end

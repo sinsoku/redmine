@@ -34,6 +34,7 @@ class UserQuery < Query
     QueryAssociationColumn.new(:auth_source, :name, caption: :field_auth_source, sortable: "#{AuthSource.table_name}.name")
   ]
 
+  # @rbs (*nil | User) -> UserQuery::ActiveRecord_Relation
   def self.visible(*args)
     user = args.shift || User.current
     if user.admin?
@@ -43,11 +44,13 @@ class UserQuery < Query
     end
   end
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super(attributes)
     self.filters ||= { 'status' => {operator: "=", values: [User::STATUS_ACTIVE]} }
   end
 
+  # @rbs () -> void
   def initialize_available_filters
     add_available_filter "status",
       type: :list_optional, values: ->{ user_statuses_values }
@@ -74,18 +77,22 @@ class UserQuery < Query
     add_custom_fields_filters(user_custom_fields)
   end
 
+  # @rbs (?User) -> bool
   def visible?(user=User.current)
     user&.admin?
   end
 
+  # @rbs (User) -> bool
   def editable_by?(user)
     user&.admin?
   end
 
+  # @rbs () -> Array[untyped]
   def auth_sources_values
     AuthSource.order(name: :asc).pluck(:name, :id)
   end
 
+  # @rbs () -> Array[untyped]
   def user_statuses_values
     [
       [l(:status_active), User::STATUS_ACTIVE.to_s],
@@ -94,6 +101,7 @@ class UserQuery < Query
     ]
   end
 
+  # @rbs () -> Array[untyped]
   def available_columns
     return @available_columns if @available_columns
 
@@ -108,22 +116,27 @@ class UserQuery < Query
   end
 
   # Returns a scope of user custom fields that are available as columns or filters
+  # @rbs () -> UserCustomField::ActiveRecord_Relation
   def user_custom_fields
     UserCustomField.sorted
   end
 
+  # @rbs () -> Array[untyped]
   def default_columns_names
     @default_columns_names ||= [:login, :firstname, :lastname, :mail, :admin, :created_on, :last_login_on]
   end
 
+  # @rbs () -> Array[untyped]
   def default_sort_criteria
     [['login', 'asc']]
   end
 
+  # @rbs () -> User::ActiveRecord_Relation
   def base_scope
     User.logged.where(statement).includes(:email_address)
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> User::ActiveRecord_Relation
   def results_scope(options={})
     order_option = [group_by_sort_order, (options[:order] || sort_clause)].flatten.reject(&:blank?)
 
@@ -132,6 +145,7 @@ class UserQuery < Query
       joins(joins_for_order_statement(order_option.join(',')))
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_admin_field(field, operator, value)
     return unless value = value.first
 
@@ -145,6 +159,7 @@ class UserQuery < Query
     "(#{User.table_name}.admin = #{val})"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_is_member_of_group_field(field, operator, value)
     if ["*", "!*"].include? operator
       value = Group.givable.ids
@@ -155,6 +170,7 @@ class UserQuery < Query
     "(#{e} (SELECT 1 FROM groups_users WHERE #{User.table_name}.id = groups_users.user_id AND #{sql_for_field(field, '=', value, 'groups_users', 'group_id')}))"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_mail_field(field, operator, value)
     if operator == '!*'
       match = false
@@ -171,6 +187,7 @@ class UserQuery < Query
     SQL
   end
 
+  # @rbs (String) -> String?
   def joins_for_order_statement(order_options)
     joins = [super]
 
@@ -183,6 +200,7 @@ class UserQuery < Query
     joins.any? ? joins.join(' ') : nil
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_name_field(field, operator, value)
     case operator
     when '*'

@@ -26,6 +26,7 @@ module Redmine
 
       attr_reader :startdt, :enddt
 
+      # @rbs (Date, ?Symbol, ?Symbol) -> void
       def initialize(date, lang = current_language, period = :month)
         @date = date
         @events = []
@@ -48,14 +49,17 @@ module Redmine
         end
       end
 
+      # @rbs () -> Array[untyped]
       def format_month
         (@startdt..@enddt).to_a
       end
 
+      # @rbs (Date) -> Integer
       def week_number(day)
         (day + (11 - day.cwday) % 7).cweek
       end
 
+      # @rbs (Date) -> String
       def day_css_classes(day)
         css = day.month==month ? +'this-month' : +'other-month'
         css << " today" if User.current.today == day
@@ -64,6 +68,7 @@ module Redmine
       end
 
       # Sets calendar events
+      # @rbs (Array[untyped]) -> Hash[untyped, untyped]
       def events=(events)
         @events = events
         @ending_events_by_days = @events.group_by {|event| event.due_date}
@@ -71,17 +76,20 @@ module Redmine
       end
 
       # Returns events for the given day
+      # @rbs (Date) -> Array[untyped]
       def events_on(day)
         ((@ending_events_by_days[day] || []) + (@starting_events_by_days[day] || [])).uniq
       end
 
       # Calendar current month
+      # @rbs () -> Integer
       def month
         @date.month
       end
 
       # Return the first day of week
       # 1 = Monday ... 7 = Sunday
+      # @rbs () -> Integer
       def first_wday
         @first_wday ||= begin
           start_of_week = Setting.start_of_week.to_i
@@ -94,6 +102,7 @@ module Redmine
         end
       end
 
+      # @rbs () -> Integer
       def last_wday
         @last_wday ||= ((first_wday + 5) % 7) + 1
       end

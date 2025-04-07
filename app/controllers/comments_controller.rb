@@ -24,6 +24,7 @@ class CommentsController < ApplicationController
   before_action :find_project_from_association
   before_action :authorize
 
+  # @rbs () -> String?
   def create
     raise Unauthorized unless @news.commentable?
 
@@ -37,6 +38,7 @@ class CommentsController < ApplicationController
     redirect_to news_path(@news)
   end
 
+  # @rbs () -> String
   def destroy
     @news.comments.find(params[:comment_id]).destroy
     redirect_to news_path(@news)
@@ -46,6 +48,7 @@ class CommentsController < ApplicationController
 
   # ApplicationController's find_model_object sets it based on the controller
   # name so it needs to be overridden and set to @news instead
+  # @rbs () -> News
   def find_model_object
     super
     @news = @object

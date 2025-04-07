@@ -32,6 +32,7 @@ module Redmine
       end
 
       # Registers an activity provider
+      # @rbs (String, ?Hash[untyped, untyped]) -> void
       def register(event_type, options={})
         options.assert_valid_keys(:class_name, :default, :plugin)
 
@@ -45,6 +46,7 @@ module Redmine
         @@providers[event_type] += providers
       end
 
+      # @rbs (String) -> Array[untyped]
       def delete(event_type)
         @@available_event_types.delete event_type
         @@default_event_types.delete event_type
@@ -52,6 +54,7 @@ module Redmine
         @@providers.delete(event_type)
       end
 
+      # @rbs (String) -> nil
       def plugin_name(event_type)
         @@plugins_event_types[event_type]
       end

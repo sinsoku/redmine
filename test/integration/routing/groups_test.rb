@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingGroupsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_groups
     should_route 'GET /groups' => 'groups#index'
     should_route 'GET /groups/new' => 'groups#new'
@@ -34,6 +35,7 @@ class RoutingGroupsTest < Redmine::RoutingTest
     should_route 'GET /groups/1/autocomplete_for_user.js' => 'groups#autocomplete_for_user', :id => '1', :format => 'js'
   end
 
+  # @rbs () -> bool
   def test_group_users
     should_route 'GET /groups/567/users/new' => 'groups#new_users', :id => '567'
     should_route 'POST /groups/567/users' => 'groups#add_users', :id => '567'

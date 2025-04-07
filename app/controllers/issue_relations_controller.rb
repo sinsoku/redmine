@@ -25,6 +25,7 @@ class IssueRelationsController < ApplicationController
 
   accept_api_auth :index, :show, :create, :destroy
 
+  # @rbs () -> nil
   def index
     @relations = @issue.relations
 
@@ -34,6 +35,7 @@ class IssueRelationsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def show
     raise Unauthorized unless @relation.visible?
 
@@ -43,6 +45,7 @@ class IssueRelationsController < ApplicationController
     end
   end
 
+  # @rbs () -> (Array[untyped] | String)
   def create
     saved = false
     params_relation = params[:relation]
@@ -81,6 +84,7 @@ class IssueRelationsController < ApplicationController
     end
   end
 
+  # @rbs () -> (Array[untyped] | String | bool)
   def destroy
     raise Unauthorized unless @relation.deletable?
 
@@ -99,6 +103,7 @@ class IssueRelationsController < ApplicationController
 
   private
 
+  # @rbs () -> (Project | bool)
   def find_issue
     @issue = Issue.find(params[:issue_id])
     @project = @issue.project
@@ -106,12 +111,14 @@ class IssueRelationsController < ApplicationController
     render_404
   end
 
+  # @rbs () -> (IssueRelation | bool)
   def find_relation
     @relation = IssueRelation.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
+  # @rbs () -> Array[untyped]
   def relation_issues_to_id
     issue_to_id = params[:relation].require(:issue_to_id)
     case issue_to_id
@@ -127,6 +134,7 @@ class IssueRelationsController < ApplicationController
     ['']
   end
 
+  # @rbs (Issue) -> Array[untyped]
   def select_relations(issue)
     issue.reload.relations.select {|r| r.other_issue(issue) && r.other_issue(issue).visible?}
   end

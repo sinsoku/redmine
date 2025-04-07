@@ -16,6 +16,7 @@ module ActionView
   module Helpers
     module DateHelper
       # distance_of_time_in_words breaks when difference is greater than 30 years
+      # @rbs (Date, ?Date, ?Hash[untyped, untyped]) -> String
       def distance_of_date_in_words(from_date, to_date = 0, options = {})
         from_date = from_date.to_date if from_date.respond_to?(:to_date)
         to_date = to_date.to_date if to_date.respond_to?(:to_date)
@@ -39,6 +40,7 @@ module ActionView
   module Helpers
     module FormHelper
       alias :date_field_without_max :date_field
+      # @rbs (Symbol | String, Symbol | String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def date_field(object_name, method, options = {})
         date_field_without_max(object_name, method, options.reverse_merge(max: '9999-12-31'))
       end
@@ -46,6 +48,7 @@ module ActionView
 
     module FormTagHelper
       alias :date_field_tag_without_max :date_field_tag
+      # @rbs (String, ?String?, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def date_field_tag(name, value = nil, options = {})
         date_field_tag_without_max(name, value, options.reverse_merge(max: '9999-12-31'))
       end
@@ -73,6 +76,7 @@ ActionMailer::Base.add_delivery_method :tmp_file, DeliveryMethods::TmpFile
 module ActionController
   module MimeResponds
     class Collector
+      # @rbs () -> Array[untyped]
       def api(&)
         any(:xml, :json, &)
       end

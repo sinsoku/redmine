@@ -20,11 +20,13 @@
 require_relative '../../../../test_helper'
 
 class PdfTest < ActiveSupport::TestCase
+  # @rbs () -> bool
   def test_fix_text_encoding_nil
     assert_equal '', Redmine::Export::PDF::RDMPdfEncoding::rdm_from_utf8(nil, "UTF-8")
     assert_equal '', Redmine::Export::PDF::RDMPdfEncoding::rdm_from_utf8(nil, "ISO-8859-1")
   end
 
+  # @rbs () -> Array[untyped]
   def test_rdm_pdf_iconv_cannot_convert_ja_cp932
     utf8_txt_1  = '狀態'
     utf8_txt_2  = '狀態狀'
@@ -42,6 +44,7 @@ class PdfTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_rdm_pdf_iconv_invalid_utf8_should_be_replaced_en
     str1 = "Texte encod\xE9 en ISO-8859-1"
     str2 = "\xe9a\xe9b\xe9c\xe9d\xe9e test".b
@@ -53,6 +56,7 @@ class PdfTest < ActiveSupport::TestCase
     assert_equal "?a?b?c?d?e test", txt_2
   end
 
+  # @rbs () -> bool
   def test_rdm_pdf_iconv_invalid_utf8_should_be_replaced_ja
     str1 = "Texte encod\xE9 en ISO-8859-1"
     str2 = "\xe9a\xe9b\xe9c\xe9d\xe9e test".b
@@ -65,6 +69,7 @@ class PdfTest < ActiveSupport::TestCase
     assert_equal "?a?b?c?d?e test", txt_2
   end
 
+  # @rbs () -> Array[untyped]
   def test_attach
     set_fixtures_attachments_directory
     ["CP932", "SJIS"].each do |encoding|

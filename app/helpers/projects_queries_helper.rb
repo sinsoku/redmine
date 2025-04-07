@@ -19,6 +19,7 @@
 module ProjectsQueriesHelper
   include ApplicationHelper
 
+  # @rbs (QueryColumn | QueryCustomFieldColumn, Project, (String | Integer | CustomValue | ActiveSupport::TimeWithZone | bool)?) -> (ActiveSupport::SafeBuffer | String)?
   def column_value(column, item, value)
     if item.is_a?(Project)
       case column.name
@@ -56,6 +57,7 @@ module ProjectsQueriesHelper
     end
   end
 
+  # @rbs (QueryColumn, Project, String | Integer) -> String
   def csv_value(column, object, value)
     if object.is_a?(Project)
       case column.name
@@ -71,6 +73,7 @@ module ProjectsQueriesHelper
 
   private
 
+  # @rbs () -> Hash[untyped, untyped]
   def get_project_status_label
     {
       Project::STATUS_ACTIVE => l(:project_status_active),

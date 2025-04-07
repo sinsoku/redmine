@@ -20,29 +20,34 @@
 require_relative '../test_helper'
 
 class IssueStatusesControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 1 # admin
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
     assert_select 'table.issue_statuses'
   end
 
+  # @rbs () -> bool
   def test_index_by_anonymous_should_redirect_to_login_form
     @request.session[:user_id] = nil
     get :index
     assert_redirected_to '/login?back_url=http%3A%2F%2Ftest.host%2Fissue_statuses'
   end
 
+  # @rbs () -> bool
   def test_index_by_user_should_respond_with_406
     @request.session[:user_id] = 2
     get :index
     assert_response :not_acceptable
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_show_warning_when_no_workflow_is_defined
     status = IssueStatus.new :name => "No workflow"
     status.save!
@@ -58,6 +63,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     get :new
     assert_response :success
@@ -65,6 +71,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_select 'textarea[name=?]', 'issue_status[description]'
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'IssueStatus.count' do
       post(
@@ -83,6 +90,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_equal 'New status description', status.description
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     post(
       :create,
@@ -96,6 +104,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     get(:edit, :params => {:id => '3'})
     assert_response :success
@@ -103,6 +112,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_select 'textarea[name=?]', 'issue_status[description]', 'Description for Resolved issue status'
   end
 
+  # @rbs () -> bool
   def test_update
     put(
       :update,
@@ -120,6 +130,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_equal 'Renamed status description', status.description
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     put(
       :update,
@@ -134,6 +145,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_destroy
     Issue.where(:status_id => 1).delete_all
     Tracker.where(:default_status_id => 1).delete_all
@@ -144,6 +156,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_nil IssueStatus.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_block_if_status_is_used_by_issues
     assert Issue.where(:status_id => 1).any?
     Tracker.where(:default_status_id => 1).delete_all
@@ -154,6 +167,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_not_nil IssueStatus.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_block_if_status_is_used_as_tracker_default_status
     Issue.where(:status_id => 1).delete_all
     assert Tracker.where(:default_status_id => 1).any?
@@ -164,6 +178,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     assert_not_nil IssueStatus.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_update_issue_done_ratio_with_issue_done_ratio_set_to_issue_field
     with_settings :issue_done_ratio => 'issue_field' do
       post :update_issue_done_ratio
@@ -172,6 +187,7 @@ class IssueStatusesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_issue_done_ratio_with_issue_done_ratio_set_to_issue_status
     with_settings :issue_done_ratio => 'issue_status' do
       post :update_issue_done_ratio

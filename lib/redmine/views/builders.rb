@@ -24,6 +24,7 @@ module Redmine
   module Views
     module Builders
       class << self
+        # @rbs (String?, ActionDispatch::Request | ActionController::TestRequest, ActionDispatch::Response | ActionDispatch::TestResponse) -> String
         def for(format, request, response, &block)
           builder =
             case format

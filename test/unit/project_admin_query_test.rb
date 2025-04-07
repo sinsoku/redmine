@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class ProjectAdminQueryTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> ActiveSupport::OrderedHash
   def test_filter_values_be_arrays
     q = ProjectAdminQuery.new
     assert_nil q.project
@@ -33,6 +34,7 @@ class ProjectAdminQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_project_statuses_filter_should_return_project_statuses
     set_language_if_valid 'en'
     query = ProjectAdminQuery.new(:name => '_')
@@ -42,6 +44,7 @@ class ProjectAdminQueryTest < ActiveSupport::TestCase
     assert_equal ['1', '5', '9', '10'], values.map(&:second)
   end
 
+  # @rbs () -> bool
   def test_default_columns
     q = ProjectAdminQuery.new
     assert q.columns.any?
@@ -49,16 +52,19 @@ class ProjectAdminQueryTest < ActiveSupport::TestCase
     assert q.block_columns.empty?
   end
 
+  # @rbs () -> bool
   def test_available_columns_should_include_project_custom_fields
     query = ProjectAdminQuery.new
     assert_include :cf_3, query.available_columns.map(&:name)
   end
 
+  # @rbs () -> bool
   def test_available_display_types_should_always_returns_list
     query = ProjectAdminQuery.new
     assert_equal ['list'], query.available_display_types
   end
 
+  # @rbs () -> Array[untyped]
   def test_display_type_should_returns_list
     ProjectAdminQuery.new.available_display_types.each do |t|
       with_settings :project_list_display_type => t do
@@ -68,6 +74,7 @@ class ProjectAdminQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_no_default_project_admin_query
     user = User.find(1)
     query = ProjectQuery.find(11)
@@ -94,6 +101,7 @@ class ProjectAdminQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_project_statuses_values_should_return_all_statuses
     q = ProjectAdminQuery.new
     assert_equal [
@@ -104,11 +112,13 @@ class ProjectAdminQueryTest < ActiveSupport::TestCase
     ], q.project_statuses_values
   end
 
+  # @rbs () -> bool
   def test_base_scope_should_return_all_projects
     q = ProjectAdminQuery.new
     assert_equal Project.all, q.base_scope
   end
 
+  # @rbs () -> bool
   def test_results_scope_has_last_activity_date
     q = ProjectAdminQuery.generate!(column_names: [:last_activity_date])
     result_projects = q.results_scope({})
@@ -121,6 +131,7 @@ class ProjectAdminQueryTest < ActiveSupport::TestCase
     assert_equal Redmine::Activity::Fetcher.new(User.current).events(nil, nil, :project => Project.find(1)).first.updated_on, last_activitiy_date
   end
 
+  # @rbs () -> Integer
   def test_results_scope_with_offset_and_limit
     q = ProjectAdminQuery.new
 

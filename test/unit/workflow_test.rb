@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class WorkflowTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_copy
     WorkflowTransition.delete_all
     WorkflowTransition.create!(:role_id => 1, :tracker_id => 2,
@@ -50,6 +52,7 @@ class WorkflowTest < ActiveSupport::TestCase
                                     :author => true, :assignee => false).first
   end
 
+  # @rbs () -> bool
   def test_workflow_permission_should_validate_rule
     wp = WorkflowPermission.new(:role_id => 1, :tracker_id => 1,
                                 :old_status_id => 1, :field_name => 'due_date')
@@ -65,6 +68,7 @@ class WorkflowTest < ActiveSupport::TestCase
     assert wp.save
   end
 
+  # @rbs () -> bool
   def test_workflow_permission_should_validate_field_name
     wp = WorkflowPermission.new(:role_id => 1, :tracker_id => 1,
                                 :old_status_id => 1, :rule => 'required')

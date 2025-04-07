@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class SearchTest < ActiveSupport::TestCase
+  # @rbs () -> Changeset
   def setup
     User.current = nil
     @project = Project.find(1)
@@ -29,6 +30,7 @@ class SearchTest < ActiveSupport::TestCase
     @changeset = Changeset.find(100)
   end
 
+  # @rbs () -> bool
   def test_search_by_anonymous
     User.current = nil
 
@@ -54,6 +56,7 @@ class SearchTest < ActiveSupport::TestCase
     assert !r.include?(@changeset)
   end
 
+  # @rbs () -> bool
   def test_search_by_user
     User.current = User.find_by_login('rhill')
     assert User.current.memberships.empty?
@@ -80,6 +83,7 @@ class SearchTest < ActiveSupport::TestCase
     assert !r.include?(@changeset)
   end
 
+  # @rbs () -> bool
   def test_search_by_allowed_member
     User.current = User.find_by_login('jsmith')
     assert User.current.projects.include?(@project)
@@ -97,6 +101,7 @@ class SearchTest < ActiveSupport::TestCase
     assert r.include?(@changeset)
   end
 
+  # @rbs () -> bool
   def test_search_by_unallowed_member
     # Removes the :view_changesets permission from user's and non member role
     remove_permission Role.find(1), :view_changesets
@@ -118,6 +123,7 @@ class SearchTest < ActiveSupport::TestCase
     assert !r.include?(@changeset)
   end
 
+  # @rbs () -> bool
   def test_search_issue_with_multiple_hits_in_journals
     issue = Issue.find(1)
     assert_equal 2, issue.journals.where("notes LIKE '%notes%'").count
@@ -127,6 +133,7 @@ class SearchTest < ActiveSupport::TestCase
     assert_equal issue, r.first
   end
 
+  # @rbs () -> bool
   def test_search_should_be_case_insensitive
     issue = Issue.generate!(:subject => "AzerTY")
 
@@ -134,6 +141,7 @@ class SearchTest < ActiveSupport::TestCase
     assert_include issue, r
   end
 
+  # @rbs () -> bool
   def test_search_should_not_allow_like_injection
     issue = Issue.generate!(:subject => "asdf")
 
@@ -144,6 +152,7 @@ class SearchTest < ActiveSupport::TestCase
     assert_not_include issue, r
   end
 
+  # @rbs () -> bool
   def test_search_should_find_underscore
     issue = Issue.generate!(:subject => "as_f")
 
@@ -151,6 +160,7 @@ class SearchTest < ActiveSupport::TestCase
     assert_include issue, r
   end
 
+  # @rbs () -> bool
   def test_search_should_find_percent_sign
     issue = Issue.generate!(:subject => "as%f")
 
@@ -158,6 +168,7 @@ class SearchTest < ActiveSupport::TestCase
     assert_include issue, r
   end
 
+  # @rbs () -> nil
   def test_search_should_be_case_insensitive_with_accented_characters
     skip if sqlite? || postgresql?
 
@@ -168,6 +179,7 @@ class SearchTest < ActiveSupport::TestCase
     assert_include issue2, r
   end
 
+  # @rbs () -> nil
   def test_search_should_be_case_and_accent_insensitive_with_mysql
     skip unless mysql?
 
@@ -178,6 +190,7 @@ class SearchTest < ActiveSupport::TestCase
     assert_include issue2, r
   end
 
+  # @rbs () -> nil
   def test_search_should_be_case_and_accent_insensitive_with_postgresql_and_noaccent_extension
     skip unless postgresql?
     skip unless Redmine::Database.postgresql_version >= 90000
@@ -195,6 +208,7 @@ class SearchTest < ActiveSupport::TestCase
     Redmine::Database.reset
   end
 
+  # @rbs () -> bool
   def test_fetcher_should_handle_accents_in_phrases
     f = Redmine::Search::Fetcher.new('No special chars "in a phrase"',
                                      User.anonymous, %w(issues), Project.all)
@@ -205,6 +219,7 @@ class SearchTest < ActiveSupport::TestCase
     assert_equal ['Special', 'chars', 'in a phrase Öö'], f.tokens
   end
 
+  # @rbs () -> bool
   def test_fetcher_should_exclude_single_character_tokens_except_for_chinese_characters
     f = Redmine::Search::Fetcher.new('ca f é 漢 あ 한',
                                      User.anonymous, %w(issues), Project.all)
@@ -213,6 +228,7 @@ class SearchTest < ActiveSupport::TestCase
 
   private
 
+  # @rbs (Role, Symbol) -> void
   def remove_permission(role, permission)
     role.permissions = role.permissions - [permission]
     role.save

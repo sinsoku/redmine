@@ -22,48 +22,62 @@ class AnonymousUser < User
 
   self.valid_statuses = [STATUS_ANONYMOUS]
 
+  # @rbs () -> ActiveModel::Error?
   def validate_anonymous_uniqueness
     # There should be only one AnonymousUser in the database
     errors.add :base, 'An anonymous user already exists.' if AnonymousUser.unscoped.exists?
   end
 
+  # @rbs () -> Array[untyped]
   def available_custom_fields
     []
   end
 
   # Overrides a few properties
+  # @rbs () -> bool
   def logged?; false end
+  # @rbs () -> bool
   def admin; false end
+  # @rbs (*nil) -> String
   def name(*args); I18n.t(:label_user_anonymous) end
   def mail=(*args); nil end
+  # @rbs () -> nil
   def mail; nil end
+  # @rbs () -> nil
   def time_zone; nil end
+  # @rbs () -> nil
   def atom_key; nil end
 
+  # @rbs () -> UserPreference
   def pref
     UserPreference.new(:user => self)
   end
 
   # Returns the user's bult-in role
+  # @rbs () -> Role
   def builtin_role
     @builtin_role ||= Role.anonymous
   end
 
+  # @rbs (*Project) -> nil
   def membership(*args)
     nil
   end
 
+  # @rbs (*Project) -> bool
   def member_of?(*args)
     false
   end
 
   # Anonymous user can not be destroyed
+  # @rbs () -> bool
   def destroy
     false
   end
 
   protected
 
+  # @rbs () -> nil
   def instantiate_email_address
   end
 end

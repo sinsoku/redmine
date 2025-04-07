@@ -40,6 +40,7 @@
 module Redmine
   module StringArrayDiff
     module Diffable
+      # @rbs (Array[untyped]) -> Redmine::StringArrayDiff::Diff
       def diff(b)
         Redmine::StringArrayDiff::Diff.new(self, b)
       end
@@ -47,6 +48,7 @@ module Redmine
       # Create a hash that maps elements of the array to arrays of indices
       # where the elements are found.
 
+      # @rbs (?Range[untyped]) -> Hash[untyped, untyped]
       def reverse_hash(range = (0...self.length))
         revmap = {}
         range.each { |i|
@@ -60,6 +62,7 @@ module Redmine
         return revmap
       end
 
+      # @rbs (Integer, ?Integer?) -> Integer?
       def replacenextlarger(value, high = nil)
         high ||= self.length
         if self.empty? || value > self[-1]

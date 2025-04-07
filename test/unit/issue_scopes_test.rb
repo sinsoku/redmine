@@ -20,45 +20,53 @@
 require_relative '../test_helper'
 
 class IssueScopesTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_cross_project_scope_without_project_should_return_all_issues
     ids = Issue.cross_project_scope(nil).pluck(:id).sort
     assert_equal Issue.pluck(:id).sort, ids
   end
 
+  # @rbs () -> bool
   def test_cross_project_scope_with_project_should_return_project_issues
     project = Project.find(1)
     ids = Issue.cross_project_scope(project).pluck(:id).sort
     assert_equal project.issues.pluck(:id).sort, ids
   end
 
+  # @rbs () -> bool
   def test_cross_project_scope_with_all_scope_should_return_all_issues
     project = Project.find(1)
     ids = Issue.cross_project_scope(project, 'all').pluck(:id).sort
     assert_equal Issue.pluck(:id).sort, ids
   end
 
+  # @rbs () -> bool
   def test_cross_project_scope_with_system_scope_should_return_all_issues
     project = Project.find(1)
     ids = Issue.cross_project_scope(project, 'system').pluck(:id).sort
     assert_equal Issue.pluck(:id).sort, ids
   end
 
+  # @rbs () -> bool
   def test_cross_project_scope_with_tree_scope_should_return_tree_issues
     project = Project.find(5)
     ids = Issue.cross_project_scope(project, 'tree').pluck(:id).sort
     assert_equal project.root.self_and_descendants.map{|p| p.issues.pluck(:id)}.flatten.sort, ids
   end
 
+  # @rbs () -> bool
   def test_cross_project_scope_with_hierarchy_scope_should_return_hierarchy_issues
     project = Project.find(5)
     ids = Issue.cross_project_scope(project, 'hierarchy').pluck(:id).sort
     assert_equal (project.self_and_descendants + project.ancestors).map{|p| p.issues.pluck(:id)}.flatten.sort, ids
   end
 
+  # @rbs () -> bool
   def test_cross_project_scope_with_descendants_scope_should_return_descendants_issues
     project = Project.find(5)
     ids = Issue.cross_project_scope(project, 'descendants').pluck(:id).sort

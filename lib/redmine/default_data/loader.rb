@@ -27,6 +27,7 @@ module Redmine
       class << self
         # Returns true if no data is already loaded in the database
         # otherwise false
+        # @rbs () -> bool
         def no_data?
           !Role.where(:builtin => 0).exists? &&
             !Tracker.exists? &&
@@ -37,6 +38,7 @@ module Redmine
 
         # Loads the default data
         # Raises a RecordNotSaved exception if something goes wrong
+        # @rbs (?String | Symbol, ?Hash[untyped, untyped]) -> bool
         def load(lang=nil, options={})
           raise DataAlreadyLoaded.new("Some configuration data is already loaded.") unless no_data?
           set_language_if_valid(lang)

@@ -20,12 +20,14 @@
 require_relative '../test_helper'
 
 class JournalObserverTest < ActiveSupport::TestCase
+  # @rbs () -> Array[untyped]
   def setup
     User.current = nil
     ActionMailer::Base.deliveries.clear
   end
 
   # context: issue_updated notified_events
+  # @rbs () -> bool
   def test_create_should_send_email_notification_with_issue_updated
     issue = Issue.first
     user = User.first
@@ -37,6 +39,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_not_send_email_notification_with_notify_set_to_false
     issue = Issue.first
     user = User.first
@@ -49,6 +52,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_not_send_email_notification_without_issue_updated
     issue = Issue.first
     user = User.first
@@ -60,6 +64,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_send_email_notification_with_issue_note_added
     issue = Issue.first
     user = User.first
@@ -72,6 +77,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_not_send_email_notification_without_issue_note_added
     issue = Issue.first
     user = User.first
@@ -84,6 +90,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_send_email_notification_with_issue_status_updated
     issue = Issue.first
     user = User.first
@@ -96,6 +103,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_not_send_email_notification_without_issue_status_updated
     issue = Issue.first
     user = User.first
@@ -108,6 +116,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_without_status_update_should_not_send_email_notification_with_issue_status_updated
     issue = Issue.first
     user = User.first
@@ -120,6 +129,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_send_email_notification_with_issue_assignee_updated
     issue = Issue.generate!(:assigned_to_id => 2)
     ActionMailer::Base.deliveries.clear
@@ -133,6 +143,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_not_send_email_notification_without_issue_assignee_updated
     issue = Issue.generate!(:assigned_to_id => 2)
     ActionMailer::Base.deliveries.clear
@@ -146,6 +157,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_send_email_notification_with_issue_priority_updated
     issue = Issue.first
     user = User.first
@@ -158,6 +170,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_not_send_email_notification_without_issue_priority_updated
     issue = Issue.first
     user = User.first
@@ -170,6 +183,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_should_send_email_notification_with_issue_fixed_version_updated
     with_settings :notified_events => %w(issue_fixed_version_updated) do
       user = User.find_by_login('jsmith')
@@ -182,6 +196,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_not_send_email_notification_without_issue_fixed_version_updated
     with_settings :notified_events => [] do
       user = User.find_by_login('jsmith')
@@ -194,6 +209,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_send_email_notification_with_issue_attachment_added
     set_tmp_attachments_directory
     with_settings :notified_events => %w(issue_attachment_added) do
@@ -209,6 +225,7 @@ class JournalObserverTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_not_send_email_notification_without_issue_attachment_added
     set_tmp_attachments_directory
     with_settings :notified_events => [] do

@@ -35,6 +35,7 @@ class AttachmentsController < ApplicationController
 
   accept_api_auth :show, :download, :thumbnail, :upload, :update, :destroy
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def show
     respond_to do |format|
       format.html do
@@ -69,6 +70,7 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  # @rbs () -> ActionDispatch::Response::FileBody?
   def download
     if @attachment.container.is_a?(Version) || @attachment.container.is_a?(Project)
       @attachment.increment_download
@@ -82,6 +84,7 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  # @rbs () -> (ActionDispatch::Response::FileBody | bool)?
   def thumbnail
     if (tbnail = @attachment.thumbnail(:size => params[:size]))
       if stale?(:etag => tbnail, :template => false)
@@ -97,6 +100,7 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  # @rbs () -> String?
   def upload
     # Make sure that API users get used to set this content type
     # as it won't trigger Rails' automatic parsing of the request body for parameters
@@ -124,10 +128,12 @@ class AttachmentsController < ApplicationController
   end
 
   # Edit all the attachments of a container
+  # @rbs () -> nil
   def edit_all
   end
 
   # Update all the attachments of a container
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def update_all
     if Attachment.update_attachments(@attachments, update_all_params)
       redirect_back_or_default home_path
@@ -136,6 +142,7 @@ class AttachmentsController < ApplicationController
     render :action => 'edit_all'
   end
 
+  # @rbs () -> (String | bool)
   def download_all
     zip_data = Attachment.archive_attachments(@attachments)
     if zip_data
@@ -150,6 +157,7 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | String)
   def update
     @attachment.safe_attributes = params[:attachment]
     saved = @attachment.save
@@ -165,6 +173,7 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | String)?
   def destroy
     if @attachment.container.respond_to?(:init_journal)
       @attachment.container.init_journal(User.current)
@@ -184,6 +193,7 @@ class AttachmentsController < ApplicationController
   end
 
   # Returns the menu item that should be selected when viewing an attachment
+  # @rbs () -> Symbol?
   def current_menu_item
     container = @attachment.try(:container) || @container
 
@@ -203,6 +213,7 @@ class AttachmentsController < ApplicationController
 
   private
 
+  # @rbs () -> (Project | bool)?
   def find_attachment
     @attachment = Attachment.find(params[:id])
     # Show 404 if the filename in the url is wrong
@@ -213,11 +224,13 @@ class AttachmentsController < ApplicationController
     render_404
   end
 
+  # @rbs () -> bool?
   def find_editable_attachments
     @attachments = @container.attachments.select(&:editable?)
     render_404 if @attachments.empty?
   end
 
+  # @rbs () -> (Project | bool)?
   def find_container
     # object_type is constrained to valid values in routes
     klass = params[:object_type].to_s.singularize.classify.constantize
@@ -233,6 +246,7 @@ class AttachmentsController < ApplicationController
     render_404
   end
 
+  # @rbs () -> nil
   def find_downloadable_attachments
     @attachments = @container.attachments.select(&:readable?)
     bulk_download_max_size = Setting.bulk_download_max_size.to_i.kilobytes
@@ -244,6 +258,7 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def container_url
     case @container
     when Message
@@ -262,6 +277,7 @@ class AttachmentsController < ApplicationController
   end
 
   # Checks that the file exists and is readable
+  # @rbs () -> bool
   def file_readable
     if @attachment.readable?
       true
@@ -271,18 +287,22 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  # @rbs () -> bool
   def read_authorize
     @attachment.visible? ? true : deny_access
   end
 
+  # @rbs () -> bool
   def update_authorize
     @attachment.editable? ? true : deny_access
   end
 
+  # @rbs () -> bool
   def delete_authorize
     @attachment.deletable? ? true : deny_access
   end
 
+  # @rbs (Attachment, ?bool) -> String
   def detect_content_type(attachment, is_thumb = false)
     content_type = attachment.content_type
     if content_type.blank? || content_type == "application/octet-stream"
@@ -299,6 +319,7 @@ class AttachmentsController < ApplicationController
     content_type
   end
 
+  # @rbs (Attachment) -> String
   def disposition(attachment)
     if attachment.is_pdf?
       'inline'
@@ -308,12 +329,14 @@ class AttachmentsController < ApplicationController
   end
 
   # Returns attachments param for #update_all
+  # @rbs () -> ActionController::Parameters
   def update_all_params
     params.permit(:attachments => [:filename, :description]).require(:attachments)
   end
 
   # Get an IO-like object for the request body which is usable to create a new
   # attachment. We try to avoid having to read the whole body into memory.
+  # @rbs () -> (String | StringIO | Rack::RewindableInput)
   def raw_request_body
     if request.body.respond_to?(:size)
       request.body
@@ -322,6 +345,7 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  # @rbs (String, ?Hash[untyped, untyped]) -> ActionDispatch::Response::FileBody
   def send_file(path, options={})
     headers['content-security-policy'] = "default-src 'none'; style-src 'unsafe-inline'; sandbox"
     super

@@ -20,15 +20,18 @@
 require_relative '../test_helper'
 
 class EmailAddressTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_address_with_punycode_tld_should_be_valid
     email = EmailAddress.new(address: 'jsmith@example.xn--80akhbyknj4f')
     assert email.valid?
   end
 
+  # @rbs () -> bool
   def test_address_should_be_validated_against_denied_domains
     with_settings :email_domains_denied => "black.test\r\nBLACK.EXAMPLE, .subdomain.test" do
       email = EmailAddress.new(address: 'user@black.test')
@@ -46,6 +49,7 @@ class EmailAddressTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_address_should_be_validated_against_allowed_domains
     with_settings :email_domains_allowed => "white.test\r\nWHITE.EXAMPLE, .subdomain.test" do
       email = EmailAddress.new(address: 'user@white.test')
@@ -63,10 +67,12 @@ class EmailAddressTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_should_reject_invalid_email
     assert_not EmailAddress.new(address: 'invalid,email@example.com').valid?
   end
 
+  # @rbs () -> bool
   def test_should_normalize_idn_email_address
     email = EmailAddress.new(address: 'marie@société.example')
     assert_equal 'marie@xn--socit-esab.example', email.address

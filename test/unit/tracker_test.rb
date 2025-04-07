@@ -20,18 +20,22 @@
 require_relative '../test_helper'
 
 class TrackerTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_sorted_scope
     assert_equal Tracker.all.sort, Tracker.sorted.to_a
   end
 
+  # @rbs () -> bool
   def test_named_scope
     assert_equal Tracker.find(2), Tracker.named('feature request').first
   end
 
+  # @rbs () -> bool
   def test_visible_scope_chained_with_project_rolled_up_trackers
     project = Project.find(1)
     role = Role.generate!
@@ -44,6 +48,7 @@ class TrackerTest < ActiveSupport::TestCase
     assert_equal [2], project.rolled_up_trackers(false).visible(user).map(&:id)
   end
 
+  # @rbs () -> bool
   def test_copy_from
     tracker = Tracker.find(1)
     copy = Tracker.new.copy_from(tracker)
@@ -60,18 +65,21 @@ class TrackerTest < ActiveSupport::TestCase
     assert copy.save
   end
 
+  # @rbs () -> bool
   def test_copy_from_should_copy_custom_fields
     tracker = Tracker.generate!(:custom_field_ids => [1, 2, 6])
     copy = Tracker.new.copy_from(tracker)
     assert_equal [1, 2, 6], copy.custom_field_ids.sort
   end
 
+  # @rbs () -> bool
   def test_copy_from_should_copy_projects
     tracker = Tracker.generate!(:project_ids => [1, 2, 3, 4, 5, 6])
     copy = Tracker.new.copy_from(tracker)
     assert_equal [1, 2, 3, 4, 5, 6], copy.project_ids.sort
   end
 
+  # @rbs () -> bool
   def test_copy_workflows
     source = Tracker.find(1)
     rules_count = source.workflow_rules.count
@@ -84,6 +92,7 @@ class TrackerTest < ActiveSupport::TestCase
     assert_equal rules_count, target.workflow_rules.size
   end
 
+  # @rbs () -> bool
   def test_issue_statuses
     tracker = Tracker.find(1)
     WorkflowTransition.delete_all
@@ -96,21 +105,25 @@ class TrackerTest < ActiveSupport::TestCase
     assert_equal [2, 3, 5], Tracker.find(1).issue_statuses.collect(&:id)
   end
 
+  # @rbs () -> bool
   def test_issue_statuses_empty
     WorkflowTransition.where(:tracker_id => 1).delete_all
     assert_equal [], Tracker.find(1).issue_statuses
   end
 
+  # @rbs () -> bool
   def test_issue_statuses_should_be_empty_for_new_record
     assert_equal [], Tracker.new.issue_statuses
   end
 
+  # @rbs () -> bool
   def test_core_fields_should_be_enabled_by_default
     tracker = Tracker.new
     assert_equal Tracker::CORE_FIELDS, tracker.core_fields
     assert_equal [], tracker.disabled_core_fields
   end
 
+  # @rbs () -> bool
   def test_core_fields
     tracker = Tracker.new
     tracker.core_fields = %w(assigned_to_id due_date)
@@ -119,6 +132,7 @@ class TrackerTest < ActiveSupport::TestCase
     assert_equal Tracker::CORE_FIELDS - %w(assigned_to_id due_date), tracker.disabled_core_fields
   end
 
+  # @rbs () -> bool
   def test_core_fields_should_return_fields_enabled_for_any_tracker
     trackers = []
     trackers << Tracker.new(:core_fields => %w(assigned_to_id due_date))
@@ -129,11 +143,13 @@ class TrackerTest < ActiveSupport::TestCase
     assert_equal Tracker::CORE_FIELDS - %w(assigned_to_id due_date done_ratio), Tracker.disabled_core_fields(trackers)
   end
 
+  # @rbs () -> bool
   def test_core_fields_should_return_all_fields_for_an_empty_argument
     assert_equal Tracker::CORE_FIELDS, Tracker.core_fields([])
     assert_equal [], Tracker.disabled_core_fields([])
   end
 
+  # @rbs () -> bool
   def test_sort_should_sort_by_position
     a = Tracker.new(:name => 'Tracker A', :position => 2)
     b = Tracker.new(:name => 'Tracker B', :position => 1)
@@ -141,6 +157,7 @@ class TrackerTest < ActiveSupport::TestCase
     assert_equal [b, a], [a, b].sort
   end
 
+  # @rbs () -> Tracker
   def test_destroying_a_tracker_without_issues_should_not_raise_an_error
     tracker = Tracker.find(1)
     Issue.where(:tracker_id => tracker.id).delete_all
@@ -152,6 +169,7 @@ class TrackerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> RuntimeError
   def test_destroying_a_tracker_with_issues_should_raise_an_error
     tracker = Tracker.find(1)
 
@@ -162,6 +180,7 @@ class TrackerTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_tracker_should_have_description
     tracker = Tracker.find(1)
     assert tracker.respond_to?(:description)

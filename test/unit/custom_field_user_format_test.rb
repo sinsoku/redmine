@@ -20,16 +20,19 @@
 require_relative '../test_helper'
 
 class CustomFieldUserFormatTest < ActiveSupport::TestCase
+  # @rbs () -> IssueCustomField
   def setup
     User.current = nil
     @field = IssueCustomField.create!(:name => 'Tester', :field_format => 'user')
   end
 
+  # @rbs () -> bool
   def test_possible_values_options_with_no_arguments
     assert_equal [], @field.possible_values_options
     assert_equal [], @field.possible_values_options(nil)
   end
 
+  # @rbs () -> bool
   def test_possible_values_options_with_project_resource
     project = Project.find(1)
     possible_values_options = @field.possible_values_options(project.issues.first)
@@ -37,6 +40,7 @@ class CustomFieldUserFormatTest < ActiveSupport::TestCase
     assert_equal project.users.sort.map {|u| [u.name, u.id.to_s]}, possible_values_options
   end
 
+  # @rbs () -> bool
   def test_possible_values_options_with_array
     projects = Project.find([1, 2])
     possible_values_options = @field.possible_values_options(projects)
@@ -44,6 +48,7 @@ class CustomFieldUserFormatTest < ActiveSupport::TestCase
     assert_equal (projects.first.users & projects.last.users).sort.map {|u| [u.name, u.id.to_s]}, possible_values_options
   end
 
+  # @rbs () -> bool
   def test_possible_custom_value_options_should_not_include_locked_users
     custom_value = CustomValue.new(:customized => Issue.find(1), :custom_field => @field)
     assert_include '2', @field.possible_custom_value_options(custom_value).map(&:last)
@@ -52,6 +57,7 @@ class CustomFieldUserFormatTest < ActiveSupport::TestCase
     assert_not_include '2', @field.possible_custom_value_options(custom_value).map(&:last)
   end
 
+  # @rbs () -> bool
   def test_possible_custom_value_options_should_include_user_that_was_assigned_to_the_custom_value
     user = User.generate!
     custom_value = CustomValue.new(:customized => Issue.find(1), :custom_field => @field)
@@ -62,17 +68,20 @@ class CustomFieldUserFormatTest < ActiveSupport::TestCase
     assert_include user.id.to_s, @field.possible_custom_value_options(custom_value).map(&:last)
   end
 
+  # @rbs () -> bool
   def test_cast_blank_value
     assert_nil @field.cast_value(nil)
     assert_nil @field.cast_value("")
   end
 
+  # @rbs () -> bool
   def test_cast_valid_value
     user = @field.cast_value("2")
     assert_kind_of User, user
     assert_equal User.find(2), user
   end
 
+  # @rbs () -> bool
   def test_cast_invalid_value
     assert_nil @field.cast_value("187")
   end

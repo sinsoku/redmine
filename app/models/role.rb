@@ -24,10 +24,12 @@ class Role < ApplicationRecord
   # array of symbols. Rails 3 uses Psych which can be *unbelievably*
   # slow on some platforms (eg. mingw32).
   class PermissionsAttributeCoder
+    # @rbs (String?) -> Array[untyped]
     def self.load(str)
       str.to_s.scan(/:([a-z0-9_]+)/).flatten.map(&:to_sym)
     end
 
+    # @rbs (Array[untyped]) -> String
     def self.dump(value)
       YAML.dump(value)
     end
@@ -111,6 +113,7 @@ class Role < ApplicationRecord
   )
 
   # Copies attributes from another role, arg can be an id or a Role
+  # @rbs (Role, ?Hash[untyped, untyped]) -> Role
   def copy_from(arg, options={})
     return unless arg.present?
 
@@ -121,11 +124,13 @@ class Role < ApplicationRecord
     self
   end
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def permissions=(perms)
     perms = perms.filter_map {|p| p.to_sym unless p.blank?}.uniq if perms
     write_attribute(:permissions, perms)
   end
 
+  # @rbs (*Symbol | String) -> bool
   def add_permission!(*perms)
     self.permissions = [] unless permissions.is_a?(Array)
 
@@ -137,6 +142,7 @@ class Role < ApplicationRecord
     save!
   end
 
+  # @rbs (*Symbol) -> bool
   def remove_permission!(*perms)
     return unless permissions.is_a?(Array)
 
@@ -146,14 +152,17 @@ class Role < ApplicationRecord
   end
 
   # Returns true if the role has the given permission
+  # @rbs (Symbol) -> bool
   def has_permission?(perm)
     !permissions.nil? && permissions.include?(perm.to_sym)
   end
 
+  # @rbs () -> bool
   def consider_workflow?
     has_permission?(:add_issues) || has_permission?(:edit_issues)
   end
 
+  # @rbs (Role) -> Integer
   def <=>(role)
     # returns -1 for nil since r2726
     return -1 if role.nil?
@@ -166,10 +175,12 @@ class Role < ApplicationRecord
     end
   end
 
+  # @rbs () -> String
   def to_s
     name
   end
 
+  # @rbs () -> String
   def name
     case builtin
     when 1 then l(:label_role_non_member, :default => read_attribute(:name))
@@ -180,16 +191,19 @@ class Role < ApplicationRecord
   end
 
   # Return true if the role is a builtin role
+  # @rbs () -> bool
   def builtin?
     self.builtin != 0
   end
 
   # Return true if the role is the anonymous role
+  # @rbs () -> bool
   def anonymous?
     builtin == 2
   end
 
   # Return true if the role is a project member role
+  # @rbs () -> bool
   def member?
     !self.builtin?
   end
@@ -198,6 +212,7 @@ class Role < ApplicationRecord
   # action can be:
   # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
   # * a permission Symbol (eg. :edit_project)
+  # @rbs (Symbol | Hash[untyped, untyped]) -> bool
   def allowed_to?(action)
     if action.is_a? Hash
       allowed_actions.include? "#{action[:controller]}/#{action[:action]}"
@@ -207,6 +222,7 @@ class Role < ApplicationRecord
   end
 
   # Return all the permissions that can be given to the role
+  # @rbs () -> Array[untyped]
   def setable_permissions
     setable_permissions = Redmine::AccessControl.permissions - Redmine::AccessControl.public_permissions
     setable_permissions -= Redmine::AccessControl.members_only_permissions if self.builtin == BUILTIN_NON_MEMBER
@@ -214,6 +230,7 @@ class Role < ApplicationRecord
     setable_permissions
   end
 
+  # @rbs (*nil | Symbol) -> (ActiveSupport::HashWithIndifferentAccess | Array[untyped] | Hash[untyped, untyped])
   def permissions_tracker_ids(*args)
     if args.any?
       Array(permissions_tracker_ids[args.first.to_s]).map(&:to_i)
@@ -222,6 +239,7 @@ class Role < ApplicationRecord
     end
   end
 
+  # @rbs (Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess) -> Hash[untyped, untyped]
   def permissions_tracker_ids=(arg)
     h = arg.to_hash
     h.each_value {|v| v.reject!(&:blank?)}
@@ -230,21 +248,25 @@ class Role < ApplicationRecord
 
   # Returns true if tracker_id belongs to the list of
   # trackers for which permission is given
+  # @rbs (Symbol, Integer?) -> bool
   def permissions_tracker_ids?(permission, tracker_id)
     return false unless has_permission?(permission)
 
     permissions_tracker_ids(permission).include?(tracker_id)
   end
 
+  # @rbs () -> (Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess)
   def permissions_all_trackers
     super || {}
   end
 
+  # @rbs (Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess) -> Hash[untyped, untyped]?
   def permissions_all_trackers=(arg)
     super(arg.to_hash)
   end
 
   # Returns true if permission is given for all trackers
+  # @rbs (Symbol) -> bool
   def permissions_all_trackers?(permission)
     return false unless has_permission?(permission)
 
@@ -253,6 +275,7 @@ class Role < ApplicationRecord
 
   # Returns true if permission is given for the tracker
   # (explicitly or for all trackers)
+  # @rbs (Symbol, Tracker | Integer) -> bool
   def permissions_tracker?(permission, tracker)
     permissions_all_trackers?(permission) ||
       permissions_tracker_ids?(permission, tracker.try(:id))
@@ -265,6 +288,7 @@ class Role < ApplicationRecord
   # Examples:
   #   role.set_permission_trackers :add_issues, [1, 3]
   #   role.set_permission_trackers :add_issues, :all
+  # @rbs (Symbol | String, Array[untyped] | Symbol) -> void
   def set_permission_trackers(permission, tracker_ids)
     h = {permission.to_s => (tracker_ids == :all ? '1' : '0')}
     self.permissions_all_trackers = permissions_all_trackers.merge(h)
@@ -275,33 +299,39 @@ class Role < ApplicationRecord
     self
   end
 
+  # @rbs (Role) -> Array[untyped]
   def copy_workflow_rules(source_role)
     WorkflowRule.copy(nil, source_role, nil, self)
   end
 
   # Find all the roles that can be given to a project member
+  # @rbs () -> Array[untyped]
   def self.find_all_givable
     Role.givable.to_a
   end
 
   # Return the builtin 'non member' role.  If the role doesn't exist,
   # it will be created on the fly.
+  # @rbs () -> Role
   def self.non_member
     find_or_create_system_role(BUILTIN_NON_MEMBER, 'Non member')
   end
 
   # Return the builtin 'anonymous' role.  If the role doesn't exist,
   # it will be created on the fly.
+  # @rbs () -> Role
   def self.anonymous
     find_or_create_system_role(BUILTIN_ANONYMOUS, 'Anonymous')
   end
 
   private
 
+  # @rbs () -> Array[untyped]
   def allowed_permissions
     @allowed_permissions ||= permissions + Redmine::AccessControl.public_permissions.collect {|p| p.name}
   end
 
+  # @rbs () -> Array[untyped]
   def allowed_actions
     @actions_allowed ||=
       allowed_permissions.inject([]) do |actions, permission|
@@ -309,11 +339,13 @@ class Role < ApplicationRecord
       end.flatten
   end
 
+  # @rbs () -> nil
   def check_deletable
     raise "Cannot delete role" if members.any?
     raise "Cannot delete builtin role" if builtin?
   end
 
+  # @rbs (Integer, String) -> Role
   def self.find_or_create_system_role(builtin, name)
     role = unscoped.find_by(:builtin => builtin)
     if role.nil?

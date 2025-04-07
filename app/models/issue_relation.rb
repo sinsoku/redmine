@@ -22,11 +22,13 @@ class IssueRelation < ApplicationRecord
   class Relations < Array
     include Redmine::I18n
 
+    # @rbs (Issue, *Array[untyped]) -> void
     def initialize(issue, *args)
       @issue = issue
       super(*args)
     end
 
+    # @rbs (*nil) -> String
     def to_s(*args)
       map {|relation| relation.to_s(@issue)}.join(', ')
     end
@@ -83,6 +85,7 @@ class IssueRelation < ApplicationRecord
                   'delay',
                   'issue_to_id'
 
+  # @rbs (ActionController::Parameters, ?User) -> void
   def safe_attributes=(attrs, user=User.current)
     if attrs.respond_to?(:to_unsafe_hash)
       attrs = attrs.to_unsafe_hash
@@ -100,16 +103,19 @@ class IssueRelation < ApplicationRecord
     super(attrs)
   end
 
+  # @rbs (?User) -> bool
   def visible?(user=User.current)
     (issue_from.nil? || issue_from.visible?(user)) && (issue_to.nil? || issue_to.visible?(user))
   end
 
+  # @rbs (?User) -> bool
   def deletable?(user=User.current)
     visible?(user) &&
       ((issue_from.nil? || user.allowed_to?(:manage_issue_relations, issue_from.project)) ||
         (issue_to.nil? || user.allowed_to?(:manage_issue_relations, issue_to.project)))
   end
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super
     if new_record?
@@ -119,6 +125,7 @@ class IssueRelation < ApplicationRecord
     end
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_issue_relation
     if issue_from && issue_to
       errors.add :issue_to_id, :invalid if issue_from_id == issue_to_id
@@ -135,11 +142,13 @@ class IssueRelation < ApplicationRecord
     end
   end
 
+  # @rbs (Issue) -> Issue
   def other_issue(issue)
     (self.issue_from_id == issue.id) ? issue_to : issue_from
   end
 
   # Returns the relation type for +issue+
+  # @rbs (Issue) -> String
   def relation_type_for(issue)
     if TYPES[relation_type]
       if self.issue_from_id == issue.id
@@ -150,6 +159,7 @@ class IssueRelation < ApplicationRecord
     end
   end
 
+  # @rbs (Issue) -> Symbol
   def label_for(issue)
     if TYPES[relation_type]
       TYPES[relation_type][(self.issue_from_id == issue.id) ? :name : :sym_name]
@@ -158,6 +168,7 @@ class IssueRelation < ApplicationRecord
     end
   end
 
+  # @rbs (?Issue?) -> String
   def to_s(issue=nil)
     issue ||= issue_from
     issue_text = block_given? ? yield(other_issue(issue)) : "##{other_issue(issue).try(:id)}"
@@ -168,10 +179,12 @@ class IssueRelation < ApplicationRecord
     s.join(' ')
   end
 
+  # @rbs (Issue) -> String
   def css_classes_for(issue)
     "rel-#{relation_type_for(issue)}"
   end
 
+  # @rbs () -> bool?
   def handle_issue_order
     reverse_if_needed
 
@@ -183,6 +196,7 @@ class IssueRelation < ApplicationRecord
     set_issue_to_dates
   end
 
+  # @rbs (?Journal?) -> bool?
   def set_issue_to_dates(journal=nil)
     soonest_start = self.successor_soonest_start
     if soonest_start && issue_to
@@ -190,6 +204,7 @@ class IssueRelation < ApplicationRecord
     end
   end
 
+  # @rbs () -> Date?
   def successor_soonest_start
     if (self.relation_type == TYPE_PRECEDES) && delay && issue_from &&
            (issue_from.start_date || issue_from.due_date)
@@ -197,6 +212,7 @@ class IssueRelation < ApplicationRecord
     end
   end
 
+  # @rbs (IssueRelation) -> Integer
   def <=>(relation)
     return nil unless relation.is_a?(IssueRelation)
 
@@ -204,6 +220,7 @@ class IssueRelation < ApplicationRecord
     r == 0 ? id <=> relation.id : r
   end
 
+  # @rbs (User) -> void
   def init_journals(user)
     issue_from.init_journal(user) if issue_from
     issue_to.init_journal(user) if issue_to
@@ -217,6 +234,7 @@ class IssueRelation < ApplicationRecord
   #
   # Orders relates relations by ID, so that uniqueness index in DB is triggered
   # on concurrent access.
+  # @rbs () -> void
   def reverse_if_needed
     if TYPES.has_key?(relation_type) && TYPES[relation_type][:reverse]
       issue_tmp = issue_to
@@ -230,6 +248,7 @@ class IssueRelation < ApplicationRecord
   end
 
   # Returns true if the relation would create a circular dependency
+  # @rbs () -> bool
   def circular_dependency?
     case relation_type
     when 'follows'
@@ -247,14 +266,17 @@ class IssueRelation < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def call_issues_relation_added_callback
     call_issues_callback :relation_added
   end
 
+  # @rbs () -> Array[untyped]
   def call_issues_relation_removed_callback
     call_issues_callback :relation_removed
   end
 
+  # @rbs (Symbol) -> Array[untyped]
   def call_issues_callback(name)
     [issue_from, issue_to].each do |issue|
       if issue

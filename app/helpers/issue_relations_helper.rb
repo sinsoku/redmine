@@ -18,11 +18,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module IssueRelationsHelper
+  # @rbs () -> Array[untyped]
   def collection_for_relation_type_select
     values = IssueRelation::TYPES
     values.keys.sort_by{|k| values[k][:order]}.collect{|k| [l(values[k][:name]), k]}
   end
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def relation_error_messages(relations)
     messages = {}
     relations.each do |item|

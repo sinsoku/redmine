@@ -20,22 +20,26 @@
 require_relative '../test_helper'
 
 class GroupsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     @request.session[:user_id] = 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
     assert_select 'table.groups'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_show_user_count
     get :index
     assert_response :success
     assert_select 'tr#group-11 td.user_count', :text => '1'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_name_filter
     Group.generate!(:name => "Clients")
     get(:index, :params => {:name => "cli"})
@@ -44,6 +48,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_select 'table.groups tbody td.name', :text => 'Clients'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show
     Role.anonymous.update! :users_visibility => 'all'
 
@@ -54,6 +59,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_select 'li a.user.active[href=?]', '/users/8', :text => 'User Misc'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_custom_fields
     GroupCustomField.generate!(name: 'field_visible', visible: true)
     Group.find(10).update(custom_field_values: {GroupCustomField.last.id => 'value_visible'})
@@ -68,11 +74,13 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_select 'li', :text => /value_invisible/, :count => 0
   end
 
+  # @rbs () -> bool
   def test_show_invalid_should_return_404
     get(:show, :params => {:id => 99})
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_show_group_that_is_not_visible_should_return_404
     Role.anonymous.update! :users_visibility => 'members_of_visible_projects'
 
@@ -81,6 +89,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_only_visible_users
     group = Group.find(10)
     locked_user = User.find(5)
@@ -95,12 +104,14 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_select 'li', :text => locked_user.name, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     get :new
     assert_response :success
     assert_select 'input[name=?]', 'group[name]'
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'Group.count' do
       post(
@@ -117,6 +128,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_equal [], group.users
   end
 
+  # @rbs () -> bool
   def test_create_and_continue
     assert_difference 'Group.count' do
       post(
@@ -134,6 +146,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_equal 'New group', group.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     assert_no_difference 'Group.count' do
       post(
@@ -149,6 +162,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/i
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     get(
       :edit,
@@ -164,6 +178,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update
     new_name = 'New name'
     put(
@@ -180,6 +195,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_equal new_name, group.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     put(
       :update,
@@ -194,6 +210,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_destroy
     assert_difference 'Group.count', -1 do
       post(:destroy, :params => {:id => 10})
@@ -201,12 +218,14 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_redirected_to '/groups'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_users
     get(:new_users, :params => {:id => 10})
     assert_response :success
     assert_select 'input[name=?]', 'user_search'
   end
 
+  # @rbs () -> bool
   def test_xhr_new_users
     get(
       :new_users,
@@ -219,6 +238,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_add_users
     assert_difference 'Group.find(10).users.count', 2 do
       post(
@@ -231,6 +251,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_xhr_add_users
     assert_difference 'Group.find(10).users.count', 2 do
       post(
@@ -247,6 +268,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     assert_match /John Smith/, response.body
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_remove_user
     assert_difference 'Group.find(10).users.count', -1 do
       delete(
@@ -259,6 +281,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_xhr_remove_user
     assert_difference 'Group.find(10).users.count', -1 do
       delete(
@@ -274,6 +297,7 @@ class GroupsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_autocomplete_for_user
     get(
       :autocomplete_for_user,

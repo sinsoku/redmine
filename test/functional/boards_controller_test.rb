@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class BoardsControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get(
       :index,
@@ -35,6 +37,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_select 'table.boards'
   end
 
+  # @rbs () -> bool
   def test_index_not_found
     get(
       :index,
@@ -45,6 +48,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_show_messages_if_only_one_board
     Project.find(1).boards.to_a.slice(1..-1).each(&:destroy)
 
@@ -60,6 +64,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_select 'table.messages'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show
     get(
       :show,
@@ -75,6 +80,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_sticky_messages_first
     Message.update_all(:sticky => 0)
     Message.where({:id => 1}).update_all({:sticky => 1})
@@ -96,6 +102,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_message_with_last_reply_first
     Message.update_all(:sticky => 0)
 
@@ -119,6 +126,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_permission_should_display_the_new_message_form
     @request.session[:user_id] = 2
     get(
@@ -135,6 +143,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_atom
     get(
       :show,
@@ -149,6 +158,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_select 'feed > entry > title', :text => 'Help: RE: post 2'
   end
 
+  # @rbs () -> bool
   def test_show_not_found
     get(
       :index,
@@ -160,6 +170,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     @request.session[:user_id] = 2
     get(
@@ -177,6 +188,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_without_project_boards
     Project.find(1).boards.delete_all
     @request.session[:user_id] = 2
@@ -191,6 +203,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'board[parent_id]', 0
   end
 
+  # @rbs () -> bool
   def test_create
     @request.session[:user_id] = 2
     assert_difference 'Board.count' do
@@ -211,6 +224,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_equal 'Testing board creation', board.description
   end
 
+  # @rbs () -> bool
   def test_create_with_parent
     @request.session[:user_id] = 2
     assert_difference 'Board.count' do
@@ -231,6 +245,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_equal Board.find(2), board.parent
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     @request.session[:user_id] = 2
     assert_no_difference 'Board.count' do
@@ -249,6 +264,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     @request.session[:user_id] = 2
     get(
@@ -262,6 +278,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'board[name]', 'Discussion'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_with_parent
     board = Board.generate!(:project_id => 1, :parent_id => 2)
     @request.session[:user_id] = 2
@@ -279,6 +296,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update
     @request.session[:user_id] = 2
     assert_no_difference 'Board.count' do
@@ -298,6 +316,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_equal 'Testing', Board.find(2).name
   end
 
+  # @rbs () -> bool
   def test_update_position
     @request.session[:user_id] = 2
     put(
@@ -315,6 +334,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_equal 1, board.position
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     @request.session[:user_id] = 2
     put(
@@ -332,6 +352,7 @@ class BoardsControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 2
     assert_difference 'Board.count', -1 do

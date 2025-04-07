@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class WikiControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_start_page
     with_settings :text_formatting => 'textile' do
       get :show, :params => {:project_id => 'ecookbook'}
@@ -36,6 +38,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_export_link
     Role.anonymous.add_permission! :export_wiki_pages
     get :show, :params => {:project_id => 'ecookbook'}
@@ -43,6 +46,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/ecookbook/wiki/CookBook_documentation.txt'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_sidebar_link
     Role.anonymous.add_permission! :edit_wiki_pages
     Role.anonymous.add_permission! :protect_wiki_pages
@@ -51,6 +55,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/ecookbook/wiki/sidebar/edit'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_page_with_name
     with_settings :text_formatting => 'textile' do
       get :show, :params => {:project_id => 1, :id => 'Another_page'}
@@ -63,6 +68,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_old_version
     with_settings :default_language => 'en' do
       get :show, :params => {:project_id => 'ecookbook', :id => 'CookBook_documentation', :version => '2'}
@@ -74,6 +80,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/ecookbook/wiki/CookBook_documentation/3', :text => /Next/
   end
 
+  # @rbs () -> bool
   def test_show_old_version_with_attachments
     page = WikiPage.find(4)
     assert page.attachments.any?
@@ -85,6 +92,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_show_old_version_without_permission_should_be_denied
     Role.anonymous.remove_permission! :view_wiki_edits
 
@@ -92,6 +100,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_redirected_to '/login?back_url=http%3A%2F%2Ftest.host%2Fprojects%2Fecookbook%2Fwiki%2FCookBook_documentation%2F2'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_first_version
     with_settings :default_language => 'en' do
       get :show, :params => {:project_id => 'ecookbook', :id => 'CookBook_documentation', :version => '1'}
@@ -103,6 +112,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/ecookbook/wiki/CookBook_documentation/2', :text => /Next/
   end
 
+  # @rbs () -> bool
   def test_show_redirected_page
     WikiRedirect.create!(:wiki_id => 1, :title => 'Old_title', :redirects_to => 'Another_page')
 
@@ -110,6 +120,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_redirected_to '/projects/ecookbook/wiki/Another_page'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_sidebar
     page = Project.find(1).wiki.pages.new(:title => 'Sidebar')
     page.content = WikiContent.new(:text => 'Side bar content for test_show_with_sidebar')
@@ -120,6 +131,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'div#sidebar', :text => /Side bar content for test_show_with_sidebar/
   end
 
+  # @rbs () -> Array[untyped]
   def test_show_should_display_watchers
     @request.session[:user_id] = 2
     page = Project.find(1).wiki.find_page('Another_page')
@@ -146,6 +158,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_watchers_without_permission
     @request.session[:user_id] = 2
     Role.find(1).remove_permission! :view_wiki_page_watchers
@@ -157,6 +170,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'h3', {text: /Watchers \(\d*\)/, count: 0}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_section_edit_links
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -168,6 +182,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_current_version_should_display_section_edit_links
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -177,6 +192,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_old_version_should_not_display_section_edit_links
     @request.session[:user_id] = 2
     get :show, :params => {:project_id => 1, :id => 'Page with sections', :version => 2}
@@ -184,11 +200,13 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/ecookbook/wiki/Page_with_sections/edit?section=2', 0
   end
 
+  # @rbs () -> bool
   def test_show_unexistent_page_without_edit_right
     get :show, :params => {:project_id => 1, :id => 'Unexistent page'}
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_unexistent_page_with_edit_right
     @request.session[:user_id] = 2
     get :show, :params => {:project_id => 1, :id => 'Unexistent page'}
@@ -196,11 +214,13 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'textarea[name=?]', 'content[text]'
   end
 
+  # @rbs () -> bool
   def test_show_specific_version_of_an_unexistent_page_without_edit_right
     get :show, :params => {:project_id => 1, :id => 'Unexistent page', :version => 1}
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_unexistent_page_with_parent_should_preselect_parent
     @request.session[:user_id] = 2
     get :show, :params => {:project_id => 1, :id => 'Unexistent page', :parent => 'Another_page'}
@@ -208,12 +228,14 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?] option[value="2"][selected=selected]', 'wiki_page[parent_id]'
   end
 
+  # @rbs () -> bool
   def test_show_unexistent_version_page
     @request.session[:user_id] = 2
     get :show, :params => {:project_id => 1, :id => 'CookBook_documentation', :version => 100}
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_show_should_not_show_history_without_permission
     Role.anonymous.remove_permission! :view_wiki_edits
     get :show, :params => {:project_id => 1, :id => 'Page with sections', :version => 2}
@@ -221,6 +243,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_page_without_content_should_display_the_edit_form
     @request.session[:user_id] = 2
     WikiPage.create!(:title => 'NoContent', :wiki => Project.find(1).wiki)
@@ -230,6 +253,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'textarea[name=?]', 'content[text]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_protected_page_shoud_show_locked_badge
     @request.session[:user_id] = 2
 
@@ -240,6 +264,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_revisions_count
     # To ensure that the number of versions is correctly displayed instead of
     # the last version number of the wiki page, make a situation where the
@@ -254,6 +279,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/1/wiki/CookBook_documentation/history', :text => /2 revisions/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new
     @request.session[:user_id] = 2
 
@@ -262,6 +288,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'title'
   end
 
+  # @rbs () -> bool
   def test_get_new_xhr
     @request.session[:user_id] = 2
 
@@ -270,6 +297,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_include 'Unallowed characters', response.body
   end
 
+  # @rbs () -> bool
   def test_post_new_with_valid_title_should_redirect_to_edit
     @request.session[:user_id] = 2
 
@@ -277,6 +305,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_redirected_to '/projects/ecookbook/wiki/New_Page'
   end
 
+  # @rbs () -> bool
   def test_post_new_xhr_with_valid_title_should_redirect_to_edit
     @request.session[:user_id] = 2
 
@@ -285,6 +314,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal 'window.location = "/projects/ecookbook/wiki/New_Page"', response.body
   end
 
+  # @rbs () -> bool
   def test_post_new_should_redirect_to_edit_with_parent
     @request.session[:user_id] = 2
 
@@ -292,6 +322,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_redirected_to '/projects/ecookbook/wiki/New_Page?parent=Child_1'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_new_with_invalid_title_should_display_errors
     @request.session[:user_id] = 2
 
@@ -300,6 +331,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select_error 'Title has already been taken'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_new_with_protected_title_should_display_errors
     Role.find(1).remove_permission!(:protect_wiki_pages)
     @request.session[:user_id] = 2
@@ -309,6 +341,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select_error /Title/
   end
 
+  # @rbs () -> bool
   def test_post_new_xhr_with_invalid_title_should_display_errors
     @request.session[:user_id] = 2
 
@@ -317,6 +350,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_include 'Title has already been taken', response.body
   end
 
+  # @rbs () -> bool
   def test_create_page
     @request.session[:user_id] = 2
     assert_difference 'WikiPage.count' do
@@ -340,6 +374,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal 'Created the page', page.content.comments
   end
 
+  # @rbs () -> bool
   def test_create_page_with_attachments
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -362,6 +397,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal 'testfile.txt', page.attachments.first.filename
   end
 
+  # @rbs () -> bool
   def test_create_page_with_parent
     @request.session[:user_id] = 2
     assert_difference 'WikiPage.count' do
@@ -379,6 +415,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal WikiPage.find(2), page.parent
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_page
     @request.session[:user_id] = 2
     get :edit, :params => {:project_id => 'ecookbook', :id => 'Another_page'}
@@ -387,6 +424,7 @@ class WikiControllerTest < Redmine::ControllerTest
                   :text => WikiPage.find_by_title('Another_page').content.text
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_section
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -403,6 +441,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_edit_invalid_section_should_respond_with_404
     @request.session[:user_id] = 2
     get :edit, :params => {:project_id => 'ecookbook', :id => 'Page_with_sections', :section => 10}
@@ -410,6 +449,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_update_page
     @request.session[:user_id] = 2
     assert_no_difference 'WikiPage.count' do
@@ -435,6 +475,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal "my comments", page.content.comments
   end
 
+  # @rbs () -> bool
   def test_update_page_with_parent
     @request.session[:user_id] = 2
     assert_no_difference 'WikiPage.count' do
@@ -462,6 +503,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal WikiPage.find(1), page.parent
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_page_with_failure
     @request.session[:user_id] = 2
     assert_no_difference 'WikiPage.count' do
@@ -488,6 +530,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'input#content_version[value="1"]'
   end
 
+  # @rbs () -> bool
   def test_update_page_with_parent_change_only_should_not_create_content_version
     @request.session[:user_id] = 2
     assert_no_difference 'WikiPage.count' do
@@ -511,6 +554,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal WikiPage.find(1), page.parent
   end
 
+  # @rbs () -> bool
   def test_update_page_with_attachments_only_should_not_create_content_version
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -536,6 +580,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal 1, page.content.version
   end
 
+  # @rbs () -> bool
   def test_update_with_deleted_attachment_ids
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -556,6 +601,7 @@ class WikiControllerTest < Redmine::ControllerTest
     refute_includes page.attachments, attachment
   end
 
+  # @rbs () -> bool
   def test_update_with_deleted_attachment_ids_and_failure_should_preserve_selected_attachments
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -576,6 +622,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_includes page.attachments, attachment
   end
 
+  # @rbs () -> bool
   def test_update_stale_page_should_not_raise_an_error
     @request.session[:user_id] = 2
     c = Wiki.find(1).find_page('Another_page').content
@@ -608,6 +655,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal 2, c.version
   end
 
+  # @rbs () -> bool
   def test_update_page_without_content_should_create_content
     @request.session[:user_id] = 2
     page = WikiPage.create!(:title => 'NoContent', :wiki => Project.find(1).wiki)
@@ -625,6 +673,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal 'Some content', page.reload.content.text
   end
 
+  # @rbs () -> bool
   def test_update_section
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -653,6 +702,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_section_should_allow_stale_page_update
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -683,6 +733,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_section_should_not_allow_stale_section_update
     @request.session[:user_id] = 2
 
@@ -709,6 +760,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'content[comments]', 'My comments'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -726,6 +778,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview_new_page
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -743,6 +796,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_history
     @request.session[:user_id] = 2
     get :history, :params => {:project_id => 'ecookbook', :id => 'CookBook_documentation'}
@@ -760,6 +814,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_history_with_one_version
     @request.session[:user_id] = 2
     get :history, :params => {:project_id => 'ecookbook', :id => 'Another_page'}
@@ -777,6 +832,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_diff
     content = WikiPage.find(1).content
     assert_difference 'WikiContentVersion.count', 2 do
@@ -796,6 +852,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'span.diff_in', :text => 'Line added'
   end
 
+  # @rbs () -> bool
   def test_diff_with_invalid_version_should_respond_with_404
     get :diff, :params => {
       :project_id => 1, :id => 'CookBook_documentation',
@@ -804,6 +861,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_diff_with_invalid_version_from_should_respond_with_404
     get :diff, :params => {
       :project_id => 1, :id => 'CookBook_documentation',
@@ -813,6 +871,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_annotate
     get :annotate, :params => {
       :project_id => 1, :id =>  'CookBook_documentation',
@@ -841,6 +900,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_annotate_with_invalid_version_should_respond_with_404
     get :annotate, :params => {
       :project_id => 1, :id => 'CookBook_documentation',
@@ -849,6 +909,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_rename
     @request.session[:user_id] = 2
     get :rename, :params => {:project_id => 1, :id => 'Another_page'}
@@ -860,6 +921,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_rename_child_page
     @request.session[:user_id] = 2
     get :rename, :params => {:project_id => 1, :id => 'Child_1'}
@@ -871,6 +933,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_rename_with_redirect
     @request.session[:user_id] = 2
     post :rename, :params => {
@@ -888,6 +951,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_nil wiki.find_page('Another page', :with_redirect => false)
   end
 
+  # @rbs () -> bool
   def test_rename_without_redirect
     @request.session[:user_id] = 2
     post :rename, :params => {
@@ -904,6 +968,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_nil wiki.find_page('Another page')
   end
 
+  # @rbs () -> bool
   def test_rename_with_parent_assignment
     @request.session[:user_id] = 2
     post :rename, :params => {
@@ -919,6 +984,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal WikiPage.find(4), WikiPage.find_by_title('Another_page').parent
   end
 
+  # @rbs () -> bool
   def test_rename_with_parent_unassignment
     @request.session[:user_id] = 2
     post :rename, :params => {
@@ -934,6 +1000,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_nil WikiPage.find_by_title('Child_1').parent
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_rename_should_show_target_projects_list
     @request.session[:user_id] = 2
     project = Project.find(5)
@@ -949,6 +1016,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_rename_with_move
     @request.session[:user_id] = 2
     project = Project.find(5)
@@ -969,6 +1037,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal project.wiki.id, page.wiki_id
   end
 
+  # @rbs () -> bool
   def test_rename_as_start_page
     @request.session[:user_id] = 2
 
@@ -988,6 +1057,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal 'Another_page', wiki.start_page
   end
 
+  # @rbs () -> bool
   def test_destroy_a_page_without_children_should_not_ask_confirmation
     @request.session[:user_id] = 2
     delete :destroy, :params => {:project_id => 1, :id => 'Child_2'}
@@ -995,6 +1065,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal 'Successful deletion.', flash[:notice]
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_parent_should_ask_confirmation
     @request.session[:user_id] = 2
     assert_no_difference('WikiPage.count') do
@@ -1008,6 +1079,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_parent_with_nullify_should_delete_parent_only
     @request.session[:user_id] = 2
     assert_difference('WikiPage.count', -1) do
@@ -1018,6 +1090,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_nil WikiPage.find_by_id(2)
   end
 
+  # @rbs () -> bool
   def test_destroy_parent_with_cascade_should_delete_descendants
     @request.session[:user_id] = 2
     assert_difference('WikiPage.count', -4) do
@@ -1029,6 +1102,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_nil WikiPage.find_by_id(5)
   end
 
+  # @rbs () -> bool
   def test_destroy_parent_with_reassign
     @request.session[:user_id] = 2
     assert_difference('WikiPage.count', -1) do
@@ -1040,6 +1114,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal WikiPage.find(1), WikiPage.find_by_id(5).parent
   end
 
+  # @rbs () -> bool
   def test_destroy_version
     @request.session[:user_id] = 2
     assert_difference 'WikiContentVersion.count', -1 do
@@ -1052,6 +1127,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_invalid_version_should_respond_with_404
     @request.session[:user_id] = 2
     assert_no_difference 'WikiContentVersion.count' do
@@ -1064,6 +1140,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index, :params => {:project_id => 'ecookbook'}
     assert_response :success
@@ -1081,11 +1158,13 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_include_atom_link
     get :index, :params => {:project_id => 'ecookbook'}
     assert_select 'a[href=?]', '/projects/ecookbook/activity.atom?show_wiki_edits=1'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_export_to_html
     @request.session[:user_id] = 2
     get :export, :params => {:project_id => 'ecookbook'}
@@ -1103,6 +1182,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select "a[name=?]", "Page_with_an_inline_image"
   end
 
+  # @rbs () -> bool
   def test_export_to_pdf
     @request.session[:user_id] = 2
     get :export, :params => {:project_id => 'ecookbook', :format => 'pdf'}
@@ -1113,6 +1193,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert @response.body.starts_with?('%PDF')
   end
 
+  # @rbs () -> bool
   def test_export_without_permission_should_be_denied
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :export_wiki_pages
@@ -1121,6 +1202,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_date_index
     get :date_index, :params => {:project_id => 'ecookbook'}
 
@@ -1129,11 +1211,13 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/ecookbook/activity.atom?show_wiki_edits=1'
   end
 
+  # @rbs () -> bool
   def test_not_found
     get :show, :params => {:project_id => 999}
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_protect_page
     page = WikiPage.find_by_wiki_id_and_title(1, 'Another_page')
     assert !page.protected?
@@ -1143,6 +1227,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert page.reload.protected?
   end
 
+  # @rbs () -> bool
   def test_unprotect_page
     page = WikiPage.find_by_wiki_id_and_title(1, 'CookBook_documentation')
     assert page.protected?
@@ -1152,6 +1237,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert !page.reload.protected?
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_page_with_edit_link
     @request.session[:user_id] = 2
     get :show, :params => {:project_id => 1}
@@ -1160,6 +1246,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/1/wiki/CookBook_documentation/edit'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_page_without_edit_link
     @request.session[:user_id] = 4
     get :show, :params => {:project_id => 1}
@@ -1168,6 +1255,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/1/wiki/CookBook_documentation/edit', 0
   end
 
+  # @rbs () -> bool
   def test_show_pdf
     @request.session[:user_id] = 2
     get :show, :params => {:project_id => 1, :format => 'pdf'}
@@ -1178,6 +1266,7 @@ class WikiControllerTest < Redmine::ControllerTest
                  @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_html
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -1191,6 +1280,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_versioned_html
     with_settings :text_formatting => 'textile' do
       @request.session[:user_id] = 2
@@ -1204,6 +1294,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_show_txt
     @request.session[:user_id] = 2
     get :show, :params => {:project_id => 1, :format => 'txt'}
@@ -1215,6 +1306,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_include 'h1. CookBook documentation', @response.body
   end
 
+  # @rbs () -> bool
   def test_show_versioned_txt
     @request.session[:user_id] = 2
     get :show, :params => {:project_id => 1, :format => 'txt', :version => 2}
@@ -1226,6 +1318,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_include 'h1. CookBook documentation v2', @response.body
   end
 
+  # @rbs () -> Array[untyped]
   def test_show_filename_should_be_uri_encoded
     @request.session[:user_id] = 2
     title = 'Этика_менеджмента'
@@ -1247,6 +1340,7 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_edit_unprotected_page
     # Non members can edit unprotected wiki pages
     @request.session[:user_id] = 4
@@ -1254,6 +1348,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_edit_protected_page_by_nonmember
     # Non members cannot edit protected wiki pages
     @request.session[:user_id] = 4
@@ -1261,17 +1356,20 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_edit_protected_page_by_member
     @request.session[:user_id] = 2
     get :edit, :params => {:project_id => 1, :id => 'CookBook_documentation'}
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_history_of_non_existing_page_should_return_404
     get :history, :params => {:project_id => 1, :id => 'Unknown_page'}
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_add_attachment
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -1288,6 +1386,7 @@ class WikiControllerTest < Redmine::ControllerTest
     assert_equal Wiki.find(1).find_page('CookBook_documentation'), attachment.container
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_old_version_should_have_robot_exclusion_tag
     @request.session[:user_id] = 2
     # Discourage search engines from indexing old versions

@@ -20,15 +20,18 @@
 require_relative '../test_helper'
 
 class CustomFieldTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_create
     field = UserCustomField.new(:name => 'Money money money', :field_format => 'float')
     assert field.save
   end
 
+  # @rbs () -> bool
   def test_before_validation
     field = CustomField.new(:name => 'test_before_validation', :field_format => 'int')
     field.searchable = true
@@ -39,6 +42,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert_equal false, field.searchable
   end
 
+  # @rbs () -> bool
   def test_regexp_validation
     field = IssueCustomField.new(:name => 'regexp', :field_format => 'text', :regexp => '[a-z0-9')
     assert !field.save
@@ -48,6 +52,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert field.save
   end
 
+  # @rbs () -> bool
   def test_default_value_should_be_validated
     field = CustomField.new(:name => 'Test', :field_format => 'int')
     field.default_value = 'abc'
@@ -56,6 +61,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert field.valid?
   end
 
+  # @rbs () -> bool
   def test_default_value_should_not_be_validated_when_blank
     field = CustomField.new(:name => 'Test', :field_format => 'list',
                             :possible_values => ['a', 'b'], :is_required => true,
@@ -63,11 +69,13 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert field.valid?
   end
 
+  # @rbs () -> bool
   def test_field_format_should_be_validated
     field = CustomField.new(:name => 'Test', :field_format => 'foo')
     assert field.invalid?
   end
 
+  # @rbs () -> bool
   def test_field_format_validation_should_accept_formats_added_at_runtime
     Redmine::FieldFormat.add 'foobar', Class.new(Redmine::FieldFormat::Base)
 
@@ -77,30 +85,35 @@ class CustomFieldTest < ActiveSupport::TestCase
     Redmine::FieldFormat.delete 'foobar'
   end
 
+  # @rbs () -> bool
   def test_should_not_change_field_format_of_existing_custom_field
     field = CustomField.find(1)
     field.field_format = 'int'
     assert_equal 'list', field.field_format
   end
 
+  # @rbs () -> bool
   def test_possible_values_should_accept_an_array
     field = CustomField.new
     field.possible_values = ["One value", ""]
     assert_equal ["One value"], field.possible_values
   end
 
+  # @rbs () -> bool
   def test_possible_values_should_stringify_values
     field = CustomField.new
     field.possible_values = [1, 2]
     assert_equal ["1", "2"], field.possible_values
   end
 
+  # @rbs () -> bool
   def test_possible_values_should_accept_a_string
     field = CustomField.new
     field.possible_values = "One value"
     assert_equal ["One value"], field.possible_values
   end
 
+  # @rbs () -> bool
   def test_possible_values_should_return_utf8_encoded_strings
     field = CustomField.new
     s = "Value".b
@@ -109,12 +122,14 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert_equal 'UTF-8', field.possible_values.first.encoding.name
   end
 
+  # @rbs () -> bool
   def test_possible_values_should_accept_a_multiline_string
     field = CustomField.new
     field.possible_values = "One value\nAnd another one  \r\n \n"
     assert_equal ["One value", "And another one"], field.possible_values
   end
 
+  # @rbs () -> Array[untyped]
   def test_possible_values_stored_as_binary_should_be_utf8_encoded
     field = CustomField.find(11)
     assert_kind_of Array, field.possible_values
@@ -124,30 +139,36 @@ class CustomFieldTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_destroy
     field = CustomField.find(1)
     assert field.destroy
   end
 
+  # @rbs () -> bool
   def test_new_subclass_instance_should_return_an_instance
     f = CustomField.new_subclass_instance('IssueCustomField')
     assert_kind_of IssueCustomField, f
   end
 
+  # @rbs () -> bool
   def test_new_subclass_instance_should_set_attributes
     f = CustomField.new_subclass_instance('IssueCustomField', :name => 'Test')
     assert_kind_of IssueCustomField, f
     assert_equal 'Test', f.name
   end
 
+  # @rbs () -> bool
   def test_new_subclass_instance_with_invalid_class_name_should_return_nil
     assert_nil CustomField.new_subclass_instance('WrongClassName')
   end
 
+  # @rbs () -> bool
   def test_new_subclass_instance_with_non_subclass_name_should_return_nil
     assert_nil CustomField.new_subclass_instance('Project')
   end
 
+  # @rbs () -> bool
   def test_string_field_validation_with_blank_value
     f = CustomField.new(:field_format => 'string')
 
@@ -159,6 +180,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert !f.valid_field_value?('')
   end
 
+  # @rbs () -> bool
   def test_string_field_validation_with_min_and_max_lengths
     f = CustomField.new(:field_format => 'string', :min_length => 2, :max_length => 5)
 
@@ -170,6 +192,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert !f.valid_field_value?('a' * 6)
   end
 
+  # @rbs () -> bool
   def test_string_field_validation_with_regexp
     f = CustomField.new(:field_format => 'string', :regexp => '^[A-Z0-9]*$')
 
@@ -180,6 +203,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert !f.valid_field_value?('abc')
   end
 
+  # @rbs () -> bool
   def test_date_field_validation
     f = CustomField.new(:field_format => 'date')
 
@@ -191,6 +215,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert !f.valid_field_value?('abc')
   end
 
+  # @rbs () -> bool
   def test_list_field_validation
     f = CustomField.new(:field_format => 'list', :possible_values => ['value1', 'value2'])
 
@@ -201,6 +226,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert !f.valid_field_value?('abc')
   end
 
+  # @rbs () -> bool
   def test_int_field_validation
     f = CustomField.new(:field_format => 'int')
 
@@ -215,6 +241,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert f.valid_field_value?(123)
   end
 
+  # @rbs () -> bool
   def test_float_field_validation
     f = CustomField.new(:field_format => 'float')
 
@@ -229,6 +256,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert f.valid_field_value?(11.2)
   end
 
+  # @rbs () -> bool
   def test_multi_field_validation
     f = CustomField.new(:field_format => 'list', :multiple => 'true', :possible_values => ['value1', 'value2'])
 
@@ -253,6 +281,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert !f.valid_field_value?(['value1', 'abc'])
   end
 
+  # @rbs () -> bool
   def test_changing_multiple_to_false_should_delete_multiple_values
     field = ProjectCustomField.create!(:name => 'field', :field_format => 'list',
                                        :multiple => 'true',
@@ -277,21 +306,25 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert_equal 2, item_with_multiple_values.custom_field_value(other).size
   end
 
+  # @rbs () -> bool
   def test_value_class_should_return_the_class_used_for_fields_values
     assert_equal User, CustomField.new(:field_format => 'user').value_class
     assert_equal Version, CustomField.new(:field_format => 'version').value_class
   end
 
+  # @rbs () -> bool
   def test_value_class_should_return_nil_for_other_fields
     assert_nil CustomField.new(:field_format => 'text').value_class
     assert_nil CustomField.new.value_class
   end
 
+  # @rbs () -> bool
   def test_value_from_keyword_for_list_custom_field
     field = CustomField.find(1)
     assert_equal 'PostgreSQL', field.value_from_keyword('postgresql', Issue.find(1))
   end
 
+  # @rbs () -> bool
   def test_visibile_scope_with_admin_should_return_all_custom_fields
     admin = User.generate! {|user| user.admin = true}
     CustomField.delete_all
@@ -305,6 +338,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert_equal 4, CustomField.visible(admin).count
   end
 
+  # @rbs () -> bool
   def test_visibile_scope_with_non_admin_user_should_return_visible_custom_fields
     CustomField.delete_all
     fields = [
@@ -319,6 +353,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert_equal [fields[0], fields[2]], CustomField.visible(user).order("id").to_a
   end
 
+  # @rbs () -> bool
   def test_visibile_scope_with_anonymous_user_should_return_visible_custom_fields
     CustomField.delete_all
     fields = [
@@ -331,12 +366,14 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert_equal [fields[0]], CustomField.visible(User.anonymous).order("id").to_a
   end
 
+  # @rbs () -> bool
   def test_float_cast_blank_value_should_return_nil
     field = CustomField.new(:field_format => 'float')
     assert_nil field.cast_value(nil)
     assert_nil field.cast_value('')
   end
 
+  # @rbs () -> bool
   def test_float_cast_valid_value_should_return_float
     field = CustomField.new(:field_format => 'float')
     assert_equal 12.0, field.cast_value('12')
@@ -345,6 +382,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert_equal -12.5, field.cast_value('-12.5')
   end
 
+  # @rbs () -> bool
   def test_project_custom_field_visibility
     project_field = ProjectCustomField.generate!(:visible => false, :field_format => 'list', :possible_values => %w[a b c])
     project = Project.find(3)
@@ -361,6 +399,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_full_text_formatting?
     field = IssueCustomField.create!(:name => 'Long text', :field_format => 'text', :text_formatting => 'full')
     assert field.full_text_formatting?
@@ -369,6 +408,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert !field2.full_text_formatting?
   end
 
+  # @rbs () -> bool
   def test_copy_from
     custom_field = CustomField.find(1)
     copy = CustomField.new.copy_from(custom_field)
@@ -384,6 +424,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert copy.save
   end
 
+  # @rbs () -> bool
   def test_copy_from_should_copy_enumerations
     custom_field = CustomField.create(:field_format => 'enumeration', :name => 'CustomField')
     custom_field.enumerations.build(:name => 'enumeration1', :position => 1)
@@ -397,6 +438,7 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert_equal [1, 2], copy.enumerations.pluck(:position)
   end
 
+  # @rbs () -> Array[untyped]
   def test_copy_from_should_copy_roles
     %w(IssueCustomField TimeEntryCustomField ProjectCustomField VersionCustomField).each do |klass_name|
       klass = klass_name.constantize
@@ -406,12 +448,14 @@ class CustomFieldTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_copy_from_should_copy_trackers
     issue_custom_field = IssueCustomField.new(:name => 'IssueCustomField', :tracker_ids => [1, 2, 3])
     copy = IssueCustomField.new.copy_from(issue_custom_field)
     assert_equal [1, 2, 3], copy.tracker_ids
   end
 
+  # @rbs () -> bool
   def test_copy_from_should_copy_projects
     issue_custom_field = IssueCustomField.new(:name => 'IssueCustomField', :project_ids => [1, 2, 3, 4, 5, 6])
     copy = IssueCustomField.new.copy_from(issue_custom_field)

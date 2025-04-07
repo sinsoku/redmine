@@ -24,12 +24,14 @@ class WorkflowsController < ApplicationController
 
   before_action :require_admin
 
+  # @rbs () -> Hash[untyped, untyped]
   def index
     @roles = Role.sorted.select(&:consider_workflow?)
     @trackers = Tracker.sorted
     @workflow_counts = WorkflowTransition.group(:tracker_id, :role_id).count
   end
 
+  # @rbs () -> Array[untyped]?
   def edit
     if @trackers && @roles && @statuses.any?
       workflows = WorkflowTransition.
@@ -42,6 +44,7 @@ class WorkflowsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def update
     if @roles && @trackers && params[:transitions]
       transitions = params[:transitions].deep_dup
@@ -56,6 +59,7 @@ class WorkflowsController < ApplicationController
     redirect_to_referer_or edit_workflows_path
   end
 
+  # @rbs () -> Array[untyped]?
   def permissions
     if @roles && @trackers
       @fields = (Tracker::CORE_FIELDS_ALL - @trackers.map(&:disabled_core_fields).reduce(:&)).map do |field|
@@ -67,6 +71,7 @@ class WorkflowsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def update_permissions
     if @roles && @trackers && params[:permissions]
       permissions = params[:permissions].deep_dup
@@ -79,10 +84,12 @@ class WorkflowsController < ApplicationController
     redirect_to_referer_or permissions_workflows_path
   end
 
+  # @rbs () -> nil
   def copy
     find_sources_and_targets
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def duplicate
     find_sources_and_targets
     if params[:source_tracker_id].blank? || params[:source_role_id].blank? ||
@@ -104,6 +111,7 @@ class WorkflowsController < ApplicationController
 
   private
 
+  # @rbs () -> Array[untyped]?
   def find_sources_and_targets
     @roles = Role.sorted.select(&:consider_workflow?)
     @trackers = Tracker.sorted
@@ -131,12 +139,14 @@ class WorkflowsController < ApplicationController
       end
   end
 
+  # @rbs () -> Array[untyped]
   def find_trackers_roles_and_statuses_for_edit
     find_roles
     find_trackers
     find_statuses
   end
 
+  # @rbs () -> void
   def find_roles
     ids = Array.wrap(params[:role_id])
     if ids == ['all']
@@ -147,6 +157,7 @@ class WorkflowsController < ApplicationController
     @roles = nil if @roles.blank?
   end
 
+  # @rbs () -> void
   def find_trackers
     ids = Array.wrap(params[:tracker_id])
     if ids == ['all']
@@ -157,6 +168,7 @@ class WorkflowsController < ApplicationController
     @trackers = nil if @trackers.blank?
   end
 
+  # @rbs () -> Array[untyped]
   def find_statuses
     @used_statuses_only = (params[:used_statuses_only] == '0' ? false : true)
     if @trackers && @used_statuses_only

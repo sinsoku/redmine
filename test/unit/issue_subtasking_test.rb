@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class IssueSubtaskingTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Array[untyped]
   def test_leaf_planning_fields_should_be_editable
     issue = Issue.generate!
     user = User.find(1)
@@ -32,6 +34,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_parent_dates_should_be_read_only_with_parent_issue_dates_set_to_derived
     with_settings :parent_issue_dates => 'derived' do
       issue = Issue.generate_with_child!
@@ -42,6 +45,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_dates_should_be_lowest_start_and_highest_due_dates_with_parent_issue_dates_set_to_derived
     with_settings :parent_issue_dates => 'derived' do
       parent = Issue.generate!
@@ -54,6 +58,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_reschuling_a_parent_should_reschedule_subtasks_with_parent_issue_dates_set_to_derived
     with_settings :parent_issue_dates => 'derived' do
       parent = Issue.generate!
@@ -69,6 +74,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_priority_should_be_read_only_with_parent_issue_priority_set_to_derived
     with_settings :parent_issue_priority => 'derived' do
       issue = Issue.generate_with_child!
@@ -77,6 +83,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_priority_should_be_the_highest_open_child_priority
     with_settings :parent_issue_priority => 'derived' do
       parent = Issue.generate!(:priority => IssuePriority.find_by_name('Normal'))
@@ -107,6 +114,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_priority_should_be_set_to_default_when_all_children_are_closed
     with_settings :parent_issue_priority => 'derived' do
       parent = Issue.generate!
@@ -118,6 +126,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_priority_should_be_left_unchanged_when_all_children_are_closed_and_no_default_priority
     IssuePriority.update_all :is_default => false
 
@@ -131,6 +140,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_done_ratio_should_be_read_only_with_parent_issue_done_ratio_set_to_derived
     with_settings :parent_issue_done_ratio => 'derived' do
       issue = Issue.generate_with_child!
@@ -139,6 +149,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_done_ratio_should_be_average_done_ratio_of_leaves
     with_settings :parent_issue_done_ratio => 'derived' do
       parent = Issue.generate!
@@ -156,6 +167,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_done_ratio_should_be_rounded_down_to_the_nearest_integer
     with_settings :parent_issue_done_ratio => 'derived' do
       parent = Issue.generate!
@@ -167,6 +179,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_done_ratio_should_be_weighted_by_estimated_times_if_any
     with_settings :parent_issue_done_ratio => 'derived' do
       parent = Issue.generate!
@@ -177,6 +190,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_done_ratio_should_be_weighted_by_estimated_times_if_any_with_grandchildren
     # parent
     #   child 1 (2h estd, 0% done)
@@ -197,6 +211,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_done_ratio_with_child_estimate_to_0_should_reach_100
     with_settings :parent_issue_done_ratio => 'derived' do
       parent = Issue.generate!
@@ -210,6 +225,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_done_ratio_of_parent_with_a_child_without_estimated_time_should_not_exceed_100
     with_settings :parent_issue_done_ratio => 'derived' do
       parent = Issue.generate!
@@ -222,6 +238,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_done_ratio_of_parent_with_a_child_with_estimated_time_at_0_should_not_exceed_100
     with_settings :parent_issue_done_ratio => 'derived' do
       parent = Issue.generate!
@@ -234,6 +251,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_done_ratio_of_parent_with_completed_children_should_not_be_99
     with_settings :parent_issue_done_ratio => 'derived' do
       parent1 = Issue.generate!
@@ -251,6 +269,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_changing_parent_should_update_previous_parent_done_ratio
     with_settings :parent_issue_done_ratio => 'derived' do
       first_parent = Issue.generate!
@@ -265,6 +284,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_done_ratio_of_parent_should_reflect_children
     root = Issue.generate!
     child1 = root.generate_child!
@@ -286,6 +306,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_parent_dates_should_be_editable_with_parent_issue_dates_set_to_independent
     with_settings :parent_issue_dates => 'independent' do
       issue = Issue.generate_with_child!
@@ -296,6 +317,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_dates_should_not_be_updated_with_parent_issue_dates_set_to_independent
     with_settings :parent_issue_dates => 'independent' do
       parent = Issue.generate!(:start_date => '2015-07-01', :due_date => '2015-08-01')
@@ -306,6 +328,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_reschuling_a_parent_should_not_reschedule_subtasks_with_parent_issue_dates_set_to_independent
     with_settings :parent_issue_dates => 'independent' do
       parent = Issue.generate!(:start_date => '2010-05-01', :due_date => '2010-05-20')
@@ -317,6 +340,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_priority_should_be_editable_with_parent_issue_priority_set_to_independent
     with_settings :parent_issue_priority => 'independent' do
       issue = Issue.generate_with_child!
@@ -325,6 +349,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_priority_should_not_be_updated_with_parent_issue_priority_set_to_independent
     with_settings :parent_issue_priority => 'independent' do
       parent = Issue.generate!(:priority => IssuePriority.find_by_name('Normal'))
@@ -333,6 +358,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_done_ratio_should_be_editable_with_parent_issue_done_ratio_set_to_independent
     with_settings :parent_issue_done_ratio => 'independent' do
       issue = Issue.generate_with_child!
@@ -341,6 +367,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_done_ratio_should_not_be_updated_with_parent_issue_done_ratio_set_to_independent
     with_settings :parent_issue_done_ratio => 'independent' do
       parent = Issue.generate!(:done_ratio => 0)
@@ -349,6 +376,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_parent_total_estimated_hours_should_be_sum_of_visible_descendants
     parent = Issue.generate!
     parent.generate_child!(:estimated_hours => nil)
@@ -362,6 +390,7 @@ class IssueSubtaskingTest < ActiveSupport::TestCase
     assert_equal 12, parent.reload.total_estimated_hours
   end
 
+  # @rbs () -> bool
   def test_open_issue_with_closed_parent_should_not_validate
     parent = Issue.generate!(:status_id => 5)
     child = Issue.generate!

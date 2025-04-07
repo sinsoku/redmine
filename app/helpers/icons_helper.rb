@@ -21,6 +21,7 @@ module IconsHelper
   DEFAULT_ICON_SIZE = "18"
   DEFAULT_SPRITE = "icons"
 
+  # @rbs (String?, ?(String | ActiveSupport::SafeBuffer | Version)?, ?icon_only: bool, ?size: String | Integer, ?css_class: nil | String, ?sprite: String, ?plugin: nil | String) -> ActiveSupport::SafeBuffer
   def sprite_icon(icon_name, label = nil, icon_only: false, size: DEFAULT_ICON_SIZE, css_class: nil, sprite: DEFAULT_SPRITE, plugin: nil)
     sprite = plugin ? "plugin_assets/#{plugin}/#{sprite}.svg" : "#{sprite}.svg"
 
@@ -36,6 +37,7 @@ module IconsHelper
     end
   end
 
+  # @rbs (Mocha::Mock, String, **nil) -> ActiveSupport::SafeBuffer
   def file_icon(entry, name, **options)
     if entry.is_dir?
       sprite_icon("folder", name, **options)
@@ -45,6 +47,7 @@ module IconsHelper
     end
   end
 
+  # @rbs (User | Group | GroupNonMember | GroupAnonymous, **nil) -> ActiveSupport::SafeBuffer?
   def principal_icon(principal, **options)
     raise ArgumentError, "First argument has to be a Principal, was #{principal.inspect}" unless principal.is_a?(Principal)
 
@@ -52,6 +55,7 @@ module IconsHelper
     sprite_icon('group', **options) if ['groupanonymous', 'groupnonmember', 'group'].include?(principal_class)
   end
 
+  # @rbs (String, **nil) -> ActiveSupport::SafeBuffer
   def activity_event_type_icon(event_type, **options)
     icon_name = case event_type
                 when 'reply'
@@ -69,6 +73,7 @@ module IconsHelper
 
   private
 
+  # @rbs (String?, ?size: String | Integer, ?sprite: String, ?css_class: nil | String) -> ActiveSupport::SafeBuffer
   def svg_sprite_icon(icon_name, size: DEFAULT_ICON_SIZE, sprite: DEFAULT_SPRITE, css_class: nil)
     css_classes = "s#{size} icon-svg"
     css_classes += " #{css_class}" unless css_class.nil?
@@ -83,6 +88,7 @@ module IconsHelper
     )
   end
 
+  # @rbs (String?) -> String
   def icon_for_mime_type(mime)
     if %w(text-plain text-x-c text-x-csharp text-x-java text-x-php
           text-x-ruby text-xml text-css text-html text-css text-html

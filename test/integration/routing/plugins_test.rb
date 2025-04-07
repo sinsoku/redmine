@@ -20,6 +20,7 @@
 require File.expand_path('../../test_helper', __dir__)
 
 class RoutingPluginsTest < Redmine::RoutingTest
+  # @rbs () -> nil
   def setup
     @original_plugin_dir = Redmine::PluginLoader.directory
 
@@ -31,6 +32,7 @@ class RoutingPluginsTest < Redmine::RoutingTest
     RedmineApp::Application.instance.routes_reloader.reload!
   end
 
+  # @rbs () -> nil
   def teardown
     Redmine::Plugin.clear
     Redmine::PluginLoader.directory = @original_plugin_dir
@@ -39,6 +41,7 @@ class RoutingPluginsTest < Redmine::RoutingTest
     RedmineApp::Application.instance.routes_reloader.reload!
   end
 
+  # @rbs () -> bool
   def test_plugins
     should_route 'GET /plugin_articles' => 'plugin_articles#index'
     should_route 'GET /bar_plugin_articles' => 'bar_plugin_articles#index'

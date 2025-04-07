@@ -32,6 +32,7 @@ module Redmine
         # auto_link rule after textile rules so that it doesn't break !image_url! tags
         RULES = [:textile, :block_markdown_rule, :inline_auto_link, :inline_auto_mailto, :inline_restore_redmine_links]
 
+        # @rbs (*String) -> void
         def initialize(*args)
           super
           self.hard_breaks=true
@@ -39,11 +40,13 @@ module Redmine
           self.filter_styles=false
         end
 
+        # @rbs (*nil) -> String
         def to_html(*rules)
           @toc = []
           super(*RULES).to_s
         end
 
+        # @rbs (Integer) -> Array[untyped]
         def extract_sections(index)
           @pre_list = []
           text = self.dup
@@ -95,12 +98,14 @@ module Redmine
 
         # Patch for RedCloth.  Fixed in RedCloth r128 but _why hasn't released it yet.
         # <a href="http://code.whytheluckystiff.net/redcloth/changeset/128">http://code.whytheluckystiff.net/redcloth/changeset/128</a>
+        # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
         def hard_break(text)
           text.gsub!(/(.)\n(?!\n|\Z| *([#*=]+(\s|$)|[{|]))/, "\\1<br />") if hard_breaks
         end
 
         alias :smooth_offtags_without_code_highlighting :smooth_offtags
         # Patch to add code highlighting support to RedCloth
+        # @rbs (Redmine::WikiFormatting::Textile::Formatter) -> void
         def smooth_offtags(text)
           unless @pre_list.empty?
             ## replace <pre> content

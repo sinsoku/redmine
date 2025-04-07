@@ -29,6 +29,7 @@ class RepositoriesCvsControllerTest < Redmine::RepositoryControllerTest
   PRJ_ID = 3
   NUM_REV = 7
 
+  # @rbs () -> bool
   def setup
     super
     Setting.default_language = 'en'
@@ -330,6 +331,7 @@ class RepositoriesCvsControllerTest < Redmine::RepositoryControllerTest
     end
   else
     puts "CVS test repository NOT FOUND. Skipping functional tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

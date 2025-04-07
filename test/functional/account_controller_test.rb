@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class AccountControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_login
     get :login
     assert_response :success
@@ -32,6 +34,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_select 'input[name=password][autocomplete=current-password]'
   end
 
+  # @rbs () -> bool
   def test_get_login_while_logged_in_should_redirect_to_back_url_if_present
     @request.session[:user_id] = 2
     @request.env["HTTP_REFERER"] = 'http://test.host/issues/show/1'
@@ -45,6 +48,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal 2, @request.session[:user_id]
   end
 
+  # @rbs () -> bool
   def test_get_login_while_logged_in_should_redirect_to_referer_without_back_url
     @request.session[:user_id] = 2
     @request.env["HTTP_REFERER"] = 'http://test.host/issues/show/1'
@@ -54,6 +58,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal 2, @request.session[:user_id]
   end
 
+  # @rbs () -> bool
   def test_get_login_while_logged_in_should_redirect_to_home_by_default
     @request.session[:user_id] = 2
 
@@ -62,6 +67,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal 2, @request.session[:user_id]
   end
 
+  # @rbs () -> Array[untyped]
   def test_login_should_redirect_to_back_url_param
     # request.uri is "test.host" in test environment
     back_urls = [
@@ -82,6 +88,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_login_with_suburi_should_redirect_to_back_url_param
     @relative_url_root = Redmine::Utils.relative_url_root
     Redmine::Utils.relative_url_root = '/redmine'
@@ -105,6 +112,7 @@ class AccountControllerTest < Redmine::ControllerTest
     Redmine::Utils.relative_url_root = @relative_url_root
   end
 
+  # @rbs () -> Array[untyped]
   def test_login_should_not_redirect_to_another_host
     back_urls = [
       'http://test.foo/fake',
@@ -122,6 +130,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_login_with_suburi_should_not_redirect_to_another_suburi
     @relative_url_root = Redmine::Utils.relative_url_root
     Redmine::Utils.relative_url_root = '/redmine'
@@ -157,6 +166,7 @@ class AccountControllerTest < Redmine::ControllerTest
     Redmine::Utils.relative_url_root = @relative_url_root
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_login_with_wrong_password
     post(
       :login,
@@ -172,6 +182,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_select 'input[name=password][value]', 0
   end
 
+  # @rbs () -> bool
   def test_login_with_locked_account_should_fail
     User.find(2).update_attribute :status, User::STATUS_LOCKED
     post(
@@ -186,6 +197,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_nil @request.session[:user_id]
   end
 
+  # @rbs () -> bool
   def test_login_as_registered_user_with_manual_activation_should_inform_user
     User.find(2).update_attribute :status, User::STATUS_REGISTERED
     with_settings :self_registration => '2', :default_language => 'en' do
@@ -201,6 +213,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_login_as_registered_user_with_email_activation_should_propose_new_activation_email
     User.find(2).update_attribute :status, User::STATUS_REGISTERED
     with_settings :self_registration => '1', :default_language => 'en' do
@@ -217,6 +230,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_login_should_rescue_auth_source_exception
     source = AuthSource.create!(:name => 'Test')
     User.find(2).update_attribute :auth_source_id, source.id
@@ -232,6 +246,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_select_error /Something wrong/
   end
 
+  # @rbs () -> bool
   def test_login_should_reset_session
     @controller.expects(:reset_session).once
     post(
@@ -244,6 +259,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_response :found
   end
 
+  # @rbs () -> bool
   def test_login_should_strip_whitespaces_from_user_name
     post(
       :login,
@@ -256,6 +272,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal 2, @request.session[:user_id]
   end
 
+  # @rbs () -> bool
   def test_get_logout_should_not_logout
     @request.session[:user_id] = 2
     get :logout
@@ -264,11 +281,13 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal 2, @request.session[:user_id]
   end
 
+  # @rbs () -> bool
   def test_get_logout_with_anonymous_should_redirect
     get :logout
     assert_redirected_to '/'
   end
 
+  # @rbs () -> bool
   def test_logout
     @request.session[:user_id] = 2
     post :logout
@@ -276,6 +295,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_nil @request.session[:user_id]
   end
 
+  # @rbs () -> bool
   def test_logout_should_reset_session
     @controller.expects(:reset_session).once
 
@@ -284,6 +304,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_response :found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_register_with_registration_on
     with_settings :self_registration => '3' do
       get :register
@@ -294,6 +315,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_register_should_detect_user_language
     with_settings :self_registration => '3' do
       @request.env['HTTP_ACCEPT_LANGUAGE'] = 'fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3'
@@ -306,6 +328,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_get_register_with_registration_off_should_redirect
     with_settings :self_registration => '0' do
       get :register
@@ -313,11 +336,13 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_register_should_show_hide_mail_preference
     get :register
     assert_select 'input[name=?][checked=checked]', 'pref[hide_mail]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_register_should_show_hide_mail_preference_with_setting_turned_off
     with_settings :default_users_hide_mail => '0' do
       get :register
@@ -326,6 +351,7 @@ class AccountControllerTest < Redmine::ControllerTest
   end
 
   # See integration/account_test.rb for the full test
+  # @rbs () -> bool
   def test_post_register_with_registration_on
     with_settings :self_registration => '3' do
       assert_difference 'User.count' do
@@ -354,6 +380,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_register_with_registration_off_should_redirect
     with_settings :self_registration => '0' do
       assert_no_difference 'User.count' do
@@ -375,6 +402,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_register_should_create_user_with_hide_mail_preference
     with_settings :default_users_hide_mail => '0' do
       user = new_record(User) do
@@ -399,12 +427,14 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_lost_password_should_display_lost_password_form
     get :lost_password
     assert_response :success
     assert_select 'input[name=mail]'
   end
 
+  # @rbs () -> Array[untyped]
   def test_lost_password_for_active_user_should_create_a_token
     Token.delete_all
     ActionMailer::Base.deliveries.clear
@@ -428,6 +458,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_lost_password_with_whitespace_should_send_email_to_the_address
     Token.delete_all
 
@@ -446,6 +477,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal ['jsmith@somenet.foo'], mail.to
   end
 
+  # @rbs () -> bool
   def test_lost_password_using_additional_email_address_should_send_email_to_the_address
     EmailAddress.create!(:user_id => 2, :address => 'anotherAddress@foo.bar')
     Token.delete_all
@@ -464,6 +496,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal ['anotherAddress@foo.bar'], mail.to
   end
 
+  # @rbs () -> bool
   def test_lost_password_for_unknown_user_should_fail
     Token.delete_all
     assert_no_difference 'Token.count' do
@@ -478,6 +511,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_lost_password_for_non_active_user_should_fail
     Token.delete_all
     assert User.find(2).lock!
@@ -492,6 +526,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_lost_password_for_user_who_cannot_change_password_should_fail
     User.any_instance.stubs(:change_password_allowed?).returns(false)
     assert_no_difference 'Token.count' do
@@ -505,6 +540,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_get_lost_password_with_token_should_redirect_with_token_in_session
     user = User.find(2)
     token = Token.create!(:action => 'recovery', :user => user)
@@ -514,6 +550,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal token.value, request.session[:password_recovery_token]
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_lost_password_with_token_in_session_should_display_the_password_recovery_form
     user = User.find(2)
     token = Token.create!(:action => 'recovery', :user => user)
@@ -525,11 +562,13 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_select 'input[type=hidden][name=token][value=?]', token.value
   end
 
+  # @rbs () -> bool
   def test_get_lost_password_with_invalid_token_should_redirect
     get(:lost_password, :params => {:token => "abcdef"})
     assert_redirected_to '/'
   end
 
+  # @rbs () -> Array[untyped]
   def test_post_lost_password_with_token_should_change_the_user_password
     ActionMailer::Base.deliveries.clear
     user = User.find(2)
@@ -552,6 +591,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_lost_password_with_token_for_non_active_user_should_fail
     user = User.find(2)
     token = Token.create!(:action => 'recovery', :user => user)
@@ -568,6 +608,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert ! user.check_password?('newpass123')
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_lost_password_with_token_and_password_confirmation_failure_should_redisplay_the_form
     user = User.find(2)
     token = Token.create!(:action => 'recovery', :user => user)
@@ -584,6 +625,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_select 'input[type=hidden][name=token][value=?]', token.value
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_lost_password_with_token_should_not_accept_same_password_if_user_must_change_password
     user = User.find(2)
     user.password = "originalpassword"
@@ -605,6 +647,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_select 'input[type=hidden][name=token][value=?]', token.value
   end
 
+  # @rbs () -> bool
   def test_post_lost_password_with_token_should_reset_must_change_password
     user = User.find(2)
     user.password = "originalpassword"
@@ -624,6 +667,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal false, user.reload.must_change_passwd
   end
 
+  # @rbs () -> bool
   def test_post_lost_password_with_invalid_token_should_redirect
     post(
       :lost_password,
@@ -636,6 +680,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_redirected_to '/'
   end
 
+  # @rbs () -> bool
   def test_activation_email_should_send_an_activation_email
     User.find(2).update_attribute :status, User::STATUS_REGISTERED
     @request.session[:registered_user_id] = 2
@@ -648,6 +693,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_activation_email_without_session_data_should_fail
     User.find(2).update_attribute :status, User::STATUS_REGISTERED
 
@@ -659,6 +705,7 @@ class AccountControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_validate_back_url
     request.host = 'example.com'
 
@@ -668,6 +715,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal false, @controller.send(:validate_back_url, 'http://invalid.example.com/issues')
   end
 
+  # @rbs () -> bool
   def test_validate_back_url_with_port
     request.host = 'example.com:3000'
 

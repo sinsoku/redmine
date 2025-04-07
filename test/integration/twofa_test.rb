@@ -213,6 +213,7 @@ class TwofaTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_enable_twofa_should_destroy_tokens
     recovery_token = Token.create!(:user_id => 2, :action => 'recovery')
     autologin_token = Token.create!(:user_id => 2, :action => 'autologin')

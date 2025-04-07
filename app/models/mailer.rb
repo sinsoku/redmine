@@ -40,6 +40,7 @@ class Mailer < ActionMailer::Base
   # and his language as the default locale.
   # The first argument of all actions of this Mailer must be a User (the recipient),
   # otherwise an ArgumentError is raised.
+  # @rbs (Symbol, *User | Journal | User | Hash[untyped, untyped] | User | Issue | User | Array[untyped] | Hash[untyped, untyped] | User | Message | User | Token | String | User | User | AnonymousUser | Hash[untyped, untyped] | User | Token | User | Array[untyped] | User | Array[untyped] | Integer | User | WikiContent | User | News | User | Comment | User? | User | String | User | Document | User | Document | AnonymousUser) -> nil
   def process(action, *args)
     user = args.first
     raise ArgumentError, "First argument has to be a user, was #{user.inspect}" unless user.is_a?(User)
@@ -62,6 +63,7 @@ class Mailer < ActionMailer::Base
 
   # Default URL options for generating URLs in emails based on host_name and protocol
   # defined in application settings.
+  # @rbs () -> Hash[untyped, untyped]
   def self.default_url_options
     options = {:protocol => Setting.protocol}
     if Setting.host_name.to_s =~ /\A(https?\:\/\/)?(.+?)(\:(\d+))?(\/.+)?\z/i
@@ -78,6 +80,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail for notifying user about a new issue
+  # @rbs (User, Issue) -> Mail::Message
   def issue_add(user, issue)
     redmine_headers 'Project' => issue.project.identifier,
                     'Issue-Tracker' => issue.tracker.name,
@@ -102,6 +105,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_issue_add(issue)
+  # @rbs (Issue) -> Array[untyped]
   def self.deliver_issue_add(issue)
     users = issue.notified_users | issue.notified_watchers | issue.notified_mentions
     users.each do |user|
@@ -110,6 +114,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail for notifying user about an issue update
+  # @rbs (User, Journal) -> Mail::Message
   def issue_edit(user, journal)
     issue = journal.journalized
     redmine_headers 'Project' => issue.project.identifier,
@@ -138,6 +143,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_issue_edit(journal)
+  # @rbs (Journal) -> Array[untyped]
   def self.deliver_issue_edit(journal)
     users  = journal.notified_users | journal.notified_watchers | journal.notified_mentions | journal.journalized.notified_mentions
     users.select! do |user|
@@ -149,6 +155,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about a new document.
+  # @rbs (User, Document, User | AnonymousUser) -> Mail::Message
   def document_added(user, document, author)
     redmine_headers 'Project' => document.project.identifier
     @author = author
@@ -163,6 +170,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_document_added(document, author)
+  # @rbs (Document, User | AnonymousUser) -> Array[untyped]
   def self.deliver_document_added(document, author)
     users = document.notified_users
     users.each do |user|
@@ -171,6 +179,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about new attachements.
+  # @rbs (User, Array[untyped]) -> Mail::Message
   def attachments_added(user, attachments)
     container = attachments.first.container
     added_to = ''
@@ -203,6 +212,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_attachments_added(attachments)
+  # @rbs (Array[untyped]) -> Array[untyped]
   def self.deliver_attachments_added(attachments)
     container = attachments.first.container
     case container.class.name
@@ -218,6 +228,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about a new news.
+  # @rbs (User, News) -> Mail::Message
   def news_added(user, news)
     redmine_headers 'Project' => news.project.identifier
     @author = news.author
@@ -234,6 +245,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_news_added(news)
+  # @rbs (News) -> Array[untyped]
   def self.deliver_news_added(news)
     users = news.notified_users | news.notified_watchers_for_added_news
     users.each do |user|
@@ -242,6 +254,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about a new news comment.
+  # @rbs (User, Comment) -> Mail::Message
   def news_comment_added(user, comment)
     news = comment.commented
     redmine_headers 'Project' => news.project.identifier
@@ -260,6 +273,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_news_comment_added(comment)
+  # @rbs (Comment) -> Array[untyped]
   def self.deliver_news_comment_added(comment)
     news = comment.commented
     users = news.notified_users | news.notified_watchers
@@ -269,6 +283,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about a new message.
+  # @rbs (User, Message) -> Mail::Message
   def message_posted(user, message)
     redmine_headers 'Project' => message.project.identifier,
                     'Topic-Id' => (message.parent_id || message.id)
@@ -286,6 +301,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_message_posted(message)
+  # @rbs (Message) -> Array[untyped]
   def self.deliver_message_posted(message)
     users  = message.notified_users
     users |= message.root.notified_watchers
@@ -297,6 +313,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about a new wiki content.
+  # @rbs (User, WikiContent) -> Mail::Message
   def wiki_content_added(user, wiki_content)
     redmine_headers 'Project' => wiki_content.project.identifier,
                     'Wiki-Page-Id' => wiki_content.page.id
@@ -318,6 +335,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_wiki_content_added(wiki_content)
+  # @rbs (WikiContent) -> Array[untyped]
   def self.deliver_wiki_content_added(wiki_content)
     users = wiki_content.notified_users | wiki_content.page.wiki.notified_watchers | wiki_content.notified_mentions
     users.each do |user|
@@ -326,6 +344,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about an update of the specified wiki content.
+  # @rbs (User, WikiContent) -> Mail::Message
   def wiki_content_updated(user, wiki_content)
     redmine_headers 'Project' => wiki_content.project.identifier,
                     'Wiki-Page-Id' => wiki_content.page.id
@@ -352,6 +371,7 @@ class Mailer < ActionMailer::Base
   #
   # Example:
   #   Mailer.deliver_wiki_content_updated(wiki_content)
+  # @rbs (WikiContent) -> Array[untyped]
   def self.deliver_wiki_content_updated(wiki_content)
     users  = wiki_content.notified_users
     users |= wiki_content.page.notified_watchers
@@ -364,6 +384,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about his account information.
+  # @rbs (User, String?) -> Mail::Message
   def account_information(user, password)
     @user = user
     @password = password
@@ -373,11 +394,13 @@ class Mailer < ActionMailer::Base
   end
 
   # Notifies user about his account information.
+  # @rbs (User, String?) -> Mailer::DeliveryJob
   def self.deliver_account_information(user, password)
     account_information(user, password).deliver_later
   end
 
   # Builds a mail to user about an account activation request.
+  # @rbs (User, User) -> Mail::Message
   def account_activation_request(user, new_user)
     @new_user = new_user
     @url = url_for(:controller => 'users', :action => 'index',
@@ -392,6 +415,7 @@ class Mailer < ActionMailer::Base
   #
   # Exemple:
   #   Mailer.deliver_account_activation_request(new_user)
+  # @rbs (User) -> void
   def self.deliver_account_activation_request(new_user)
     # Send the email to all active administrators
     users = User.active.where(:admin => true)
@@ -401,6 +425,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to notify user that his account was activated.
+  # @rbs (User) -> Mail::Message
   def account_activated(user)
     @user = user
     @login_url = url_for(:controller => 'account', :action => 'login')
@@ -412,11 +437,13 @@ class Mailer < ActionMailer::Base
   #
   # Exemple:
   #   Mailer.deliver_account_activated(user)
+  # @rbs (User) -> Mailer::DeliveryJob
   def self.deliver_account_activated(user)
     account_activated(user).deliver_later
   end
 
   # Builds a mail with the password recovery link.
+  # @rbs (User, Token, ?String?) -> Mail::Message
   def lost_password(user, token, recipient=nil)
     recipient ||= user.mail
     @token = token
@@ -431,6 +458,7 @@ class Mailer < ActionMailer::Base
   # Exemple:
   #   Mailer.deliver_lost_password(user, token)
   #   Mailer.deliver_lost_password(user, token, 'foo@example.net')
+  # @rbs (User, Token, ?String) -> void
   def self.deliver_lost_password(user, token, recipient=nil)
     lost_password(user, token, recipient).deliver_later
   end
@@ -439,6 +467,7 @@ class Mailer < ActionMailer::Base
   #
   # Exemple:
   #   Mailer.deliver_password_updated(user, sender)
+  # @rbs (User, AnonymousUser | User) -> Array[untyped]
   def self.deliver_password_updated(user, sender)
     # Don't send a notification to the dummy email address when changing the password
     # of the default admin account which is required after the first login
@@ -455,6 +484,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user with his account activation link.
+  # @rbs (User, Token) -> Mail::Message
   def register(user, token)
     @token = token
     @url = url_for(:controller => 'account', :action => 'activate', :token => token.value)
@@ -466,6 +496,7 @@ class Mailer < ActionMailer::Base
   #
   # Exemple:
   #   Mailer.deliver_register(user, token)
+  # @rbs (User, Token) -> Mailer::DeliveryJob
   def self.deliver_register(user, token)
     register(user, token).deliver_later
   end
@@ -480,6 +511,7 @@ class Mailer < ActionMailer::Base
   #     field: :field_mail,
   #     value: address
   #   ) => Mail::Message object
+  # @rbs (User, User | AnonymousUser, ?Hash[untyped, untyped]) -> Mail::Message
   def security_notification(user, sender, options={})
     @sender = sender
     redmine_headers 'Sender' => sender.login
@@ -508,6 +540,7 @@ class Mailer < ActionMailer::Base
   #     field: :field_mail,
   #     value: address
   #   )
+  # @rbs (User | Array[untyped], User | AnonymousUser, ?Hash[untyped, untyped]) -> Array[untyped]
   def self.deliver_security_notification(users, sender, options={})
     # Symbols cannot be serialized:
     # ActiveJob::SerializationError: Unsupported argument type: Symbol
@@ -522,6 +555,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Build a mail to user about application settings changes made by sender.
+  # @rbs (User, User, Array[untyped], ?Hash[untyped, untyped]) -> Mail::Message
   def settings_updated(user, sender, changes, options={})
     @sender = sender
     redmine_headers 'Sender' => sender.login
@@ -537,6 +571,7 @@ class Mailer < ActionMailer::Base
   #
   # Exemple:
   #   Mailer.deliver_settings_updated(sender, [:login_required, :self_registration])
+  # @rbs (User, Array[untyped], ?Hash[untyped, untyped]) -> Array[untyped]
   def self.deliver_settings_updated(sender, changes, options={})
     return unless changes.present?
 
@@ -554,6 +589,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Build a test email to user.
+  # @rbs (User) -> Mail::Message
   def test_email(user)
     @url = url_for(:controller => 'welcome')
     mail :to => user,
@@ -564,6 +600,7 @@ class Mailer < ActionMailer::Base
   #
   # Exemple:
   #   Mailer.deliver_test_email(user)
+  # @rbs (User) -> Mail::Message
   def self.deliver_test_email(user)
     raise_delivery_errors_was = self.raise_delivery_errors
     self.raise_delivery_errors = true
@@ -574,6 +611,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a reminder mail to user about issues that are due in the next days.
+  # @rbs (User, Array[untyped], Integer) -> Mail::Message
   def reminder(user, issues, days)
     @issues = issues
     @days = days
@@ -600,6 +638,7 @@ class Mailer < ActionMailer::Base
   # * :project  => id or identifier of project to process (defaults to all projects)
   # * :users    => array of user/group ids who should be reminded
   # * :version  => name of target version for filtering issues (defaults to none)
+  # @rbs (?Hash[untyped, untyped]) -> void
   def self.reminders(options={})
     days = options[:days] || 7
     project = options[:project] ? Project.find(options[:project]) : nil
@@ -642,6 +681,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Activates/desactivates email deliveries during +block+
+  # @rbs (?bool) -> String?
   def self.with_deliveries(enabled = true, &)
     was_enabled = ActionMailer::Base.perform_deliveries
     ActionMailer::Base.perform_deliveries = !!enabled
@@ -655,6 +695,7 @@ class Mailer < ActionMailer::Base
   # Using the asynchronous queue from a Rake task will generally not work because
   # Rake will likely end, causing the in-process thread pool to be deleted, before
   # any/all of the .deliver_later emails are processed
+  # @rbs () -> void
   def self.with_synched_deliveries(&)
     adapter = ActionMailer::MailDeliveryJob.queue_adapter
     ActionMailer::MailDeliveryJob.queue_adapter = ActiveJob::QueueAdapters::InlineAdapter.new
@@ -663,6 +704,7 @@ class Mailer < ActionMailer::Base
     ActionMailer::MailDeliveryJob.queue_adapter = adapter
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> Mail::Message
   def mail(headers={}, &block)
     begin
       # Add a display name to the From field if Setting.mail_from does not
@@ -735,6 +777,7 @@ class Mailer < ActionMailer::Base
     end
   end
 
+  # @rbs (Mail::Message) -> (Array[untyped] | bool)?
   def self.deliver_mail(mail)
     return false if mail.to.blank? && mail.cc.blank? && mail.bcc.blank?
 
@@ -757,6 +800,7 @@ class Mailer < ActionMailer::Base
   # Example:
   #   Mailer.email_addresses(users)
   #   => ["foo@example.net", "bar@example.net"]
+  # @rbs (User | Array[untyped] | String | User::ActiveRecord_Relation) -> Array[untyped]
   def self.email_addresses(arg)
     arr = Array.wrap(arg)
     mails = arr.reject {|a| a.is_a? Principal}
@@ -773,10 +817,12 @@ class Mailer < ActionMailer::Base
   private
 
   # Appends a Redmine header field (name is prepended with 'X-Redmine-')
+  # @rbs (Hash[untyped, untyped]) -> Hash[untyped, untyped]
   def redmine_headers(h)
     h.compact.each {|k, v| headers["X-Redmine-#{k}"] = v.to_s}
   end
 
+  # @rbs (Issue) -> String?
   def assignee_for_header(issue)
     case issue.assigned_to
     when User
@@ -788,6 +834,7 @@ class Mailer < ActionMailer::Base
 
   # Singleton class method is public
   class << self
+    # @rbs (Journal | Issue | Message | WikiContent | News | Comment, User) -> String
     def token_for(object, user)
       timestamp = object.send(object.respond_to?(:created_on) ? :created_on : :updated_on)
       hash = [
@@ -802,21 +849,25 @@ class Mailer < ActionMailer::Base
     end
 
     # Returns a Message-Id for the given object
+    # @rbs (Journal | Issue | Message | WikiContent | News | Comment, User) -> String
     def message_id_for(object, user)
       token_for(object, user)
     end
 
     # Returns a uniq token for a given object referenced by all notifications
     # related to this object
+    # @rbs (Issue | Message | News, User) -> String
     def references_for(object, user)
       token_for(object, user)
     end
   end
 
+  # @rbs (Journal | Issue | Message | WikiContent | News | Comment) -> void
   def message_id(object)
     @message_id_object = object
   end
 
+  # @rbs (Issue | Message | News) -> void
   def references(object)
     @references_objects ||= []
     @references_objects << object

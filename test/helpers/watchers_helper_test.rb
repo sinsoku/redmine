@@ -51,6 +51,7 @@ class WatchersHelperTest < Redmine::HelperTest
     assert_equal expected, watcher_link([Issue.find(1), Issue.find(3)], User.find(1))
   end
 
+  # @rbs () -> bool
   def test_watcher_link_with_nil_should_return_empty_string
     assert_equal '', watcher_link(nil, User.find(1))
   end
@@ -66,6 +67,7 @@ class WatchersHelperTest < Redmine::HelperTest
     assert_equal expected, watcher_link(Issue.find(1), User.find(1))
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_watchers_list_should_be_sorted_by_user_name
     issue = Issue.find(1)
     [1, 2, 3].shuffle.each do |user_id|

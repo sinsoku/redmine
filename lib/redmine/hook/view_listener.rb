@@ -69,10 +69,12 @@ module Redmine
         end
       end
 
+      # @rbs () -> nil
       def controller
         nil
       end
 
+      # @rbs () -> untyped
       def config
         ActionController::Base.config
       end

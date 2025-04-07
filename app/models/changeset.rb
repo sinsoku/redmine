@@ -63,11 +63,13 @@ class Changeset < ApplicationRecord
   before_create :before_create_cs
   after_create :scan_for_issues
 
+  # @rbs (Integer | String) -> String
   def revision=(r)
     write_attribute :revision, (r.nil? ? nil : r.to_s)
   end
 
   # Returns the identifier of this changeset; depending on repository backends
+  # @rbs () -> String
   def identifier
     if repository.class.respond_to? :changeset_identifier
       repository.class.changeset_identifier self
@@ -76,12 +78,14 @@ class Changeset < ApplicationRecord
     end
   end
 
+  # @rbs (Time | ActiveSupport::TimeWithZone) -> (Time | ActiveSupport::TimeWithZone)
   def committed_on=(date)
     self.commit_date = date
     super
   end
 
   # Returns the readable identifier
+  # @rbs () -> String
   def format_identifier
     if repository.class.respond_to? :format_changeset_identifier
       repository.class.format_changeset_identifier self
@@ -90,14 +94,17 @@ class Changeset < ApplicationRecord
     end
   end
 
+  # @rbs () -> Project
   def project
     repository.project
   end
 
+  # @rbs () -> User
   def author
     user || committer.to_s.split('<').first
   end
 
+  # @rbs () -> User?
   def before_create_cs
     self.committer = self.class.to_utf8(self.committer, repository.repo_log_encoding)
     self.comments =
@@ -105,6 +112,7 @@ class Changeset < ApplicationRecord
     self.user = repository.find_committer_user(self.committer)
   end
 
+  # @rbs () -> Array[untyped]?
   def scan_for_issues
     scan_comment_for_issue_ids
   end
@@ -121,6 +129,7 @@ class Changeset < ApplicationRecord
     )
     /x
 
+  # @rbs () -> Array[untyped]?
   def scan_comment_for_issue_ids
     return if comments.blank?
 
@@ -162,14 +171,17 @@ class Changeset < ApplicationRecord
     self.issues = referenced_issues unless referenced_issues.empty?
   end
 
+  # @rbs () -> String
   def short_comments
     @short_comments || split_comments.first
   end
 
+  # @rbs () -> String
   def long_comments
     @long_comments || split_comments.last
   end
 
+  # @rbs (?Project?) -> String
   def text_tag(ref_project=nil)
     repo = ""
     if repository && repository.identifier.present?
@@ -183,6 +195,7 @@ class Changeset < ApplicationRecord
   end
 
   # Returns the title used for the changeset in the activity/search results
+  # @rbs () -> String
   def title
     repo = (repository && repository.identifier.present?) ? " (#{repository.identifier})" : ''
     comm = short_comments.blank? ? '' : (': ' + short_comments)
@@ -190,11 +203,13 @@ class Changeset < ApplicationRecord
   end
 
   # Returns the previous changeset
+  # @rbs () -> Changeset?
   def previous
     @previous ||= Changeset.where(["id < ? AND repository_id = ?", id, repository_id]).order('id DESC').first
   end
 
   # Returns the next changeset
+  # @rbs () -> Changeset?
   def next
     @next ||= Changeset.where(["id > ? AND repository_id = ?", id, repository_id]).order('id ASC').first
   end
@@ -209,6 +224,7 @@ class Changeset < ApplicationRecord
   end
 
   # Finds an issue that can be referenced by the commit message
+  # @rbs (String | Integer) -> Issue?
   def find_referenced_issue_by_id(id)
     return nil if id.blank?
 
@@ -230,11 +246,13 @@ class Changeset < ApplicationRecord
 
   # Returns true if the issue is already linked to the same commit
   # from a different repository
+  # @rbs (Issue) -> bool
   def issue_linked_to_same_commit?(issue)
     repository.same_commits_in_scope(issue.changesets, self).any?
   end
 
   # Updates the +issue+ according to +action+
+  # @rbs (Issue, String) -> Issue
   def fix_issue(issue, action)
     # the issue may have been updated by the closure of another one (eg. duplicate)
     issue.reload
@@ -265,6 +283,7 @@ class Changeset < ApplicationRecord
     issue
   end
 
+  # @rbs (Issue, String) -> TimeEntry
   def log_time(issue, hours)
     time_entry =
       TimeEntry.new(
@@ -285,6 +304,7 @@ class Changeset < ApplicationRecord
     time_entry
   end
 
+  # @rbs () -> Array[untyped]
   def split_comments
     comments =~ /\A(.+?)\r?\n(.*)$/m
     @short_comments = $1 || comments
@@ -295,10 +315,12 @@ class Changeset < ApplicationRecord
   # Singleton class method is public
   class << self
     # Strips and reencodes a commit log before insertion into the database
+    # @rbs (String?, String) -> String
     def normalize_comments(str, encoding)
       Changeset.to_utf8(str.to_s, encoding).strip
     end
 
+    # @rbs (String?, String) -> String?
     def to_utf8(str, encoding)
       Redmine::CodesetUtil.to_utf8(str, encoding)
     end

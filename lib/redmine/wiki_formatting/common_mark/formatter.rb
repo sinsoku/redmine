@@ -64,10 +64,12 @@ module Redmine
       class Formatter
         include Redmine::WikiFormatting::SectionHelper
 
+        # @rbs (String) -> void
         def initialize(text)
           @text = text
         end
 
+        # @rbs (*nil) -> String
         def to_html(*args)
           result = MarkdownPipeline.call @text
           result[:output].to_s

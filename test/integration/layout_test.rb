@@ -37,6 +37,7 @@ class LayoutTest < Redmine::IntegrationTest
     assert_select "#admin-menu", :count => 0
   end
 
+  # @rbs () -> bool
   def test_top_menu_and_search_not_visible_when_login_required
     with_settings :login_required => '1' do
       get '/'
@@ -45,6 +46,7 @@ class LayoutTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_top_menu_and_search_visible_when_login_not_required
     with_settings :login_required => '0' do
       get '/'
@@ -53,6 +55,7 @@ class LayoutTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_wiki_formatter_header_tags
     Role.anonymous.add_permission! :add_issues
 
@@ -61,6 +64,7 @@ class LayoutTest < Redmine::IntegrationTest
     assert_include "var userHlLanguages = #{UserPreference::DEFAULT_TOOLBAR_LANGUAGE_OPTIONS.to_json};", response.body
   end
 
+  # @rbs () -> MatchData
   def test_calendar_header_tags
     with_settings :default_language => 'fr' do
       get '/issues'
@@ -110,16 +114,19 @@ class LayoutTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_field_outside_project_should_link_to_global_search
     get '/'
     assert_select 'div#quick-search form[action="/search"]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_field_inside_project_should_link_to_project_search
     get '/projects/ecookbook'
     assert_select 'div#quick-search form[action="/projects/ecookbook/search"]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_help_and_powered_by_redmine_link_should_open_separate_tab
     get '/'
     assert_select '#top-menu a.help[target="_blank"][rel="noopener"]'

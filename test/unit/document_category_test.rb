@@ -20,23 +20,28 @@
 require_relative '../test_helper'
 
 class DocumentCategoryTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_should_be_an_enumeration
     assert DocumentCategory <= Enumeration
   end
 
+  # @rbs () -> bool
   def test_objects_count
     assert_equal 2, DocumentCategory.find_by_name("Uncategorized").objects_count
     assert_equal 0, DocumentCategory.find_by_name("User documentation").objects_count
   end
 
+  # @rbs () -> bool
   def test_option_name
     assert_equal :enumeration_doc_categories, DocumentCategory.new.option_name
   end
 
+  # @rbs () -> bool
   def test_default
     assert_not DocumentCategory.where(:is_default => true).exists?
     e = Enumeration.find_by_name('Technical documentation')
@@ -44,6 +49,7 @@ class DocumentCategoryTest < ActiveSupport::TestCase
     assert_equal 3, DocumentCategory.default.id
   end
 
+  # @rbs () -> bool
   def test_force_default
     assert_not DocumentCategory.where(:is_default => true).exists?
     assert_equal 1, DocumentCategory.default.id

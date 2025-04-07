@@ -23,6 +23,7 @@ module Redmine
   module Helpers
     module URL
       # safe for resources fetched without user interaction?
+      # @rbs (String, ?Array[untyped]) -> bool
       def uri_with_safe_scheme?(uri, schemes = ['http', 'https', 'ftp', 'mailto', nil])
         # URLs relative to the current document or document root (without a protocol
         # separator, should be harmless
@@ -35,6 +36,7 @@ module Redmine
       end
 
       # safe to render links to given uri?
+      # @rbs (String) -> bool
       def uri_with_link_safe_scheme?(uri)
         # regexp adapted from Sanitize (we need to catch even invalid protocol specs)
         return true unless uri =~ /\A\s*([^\/#]*?)(?:\:|&#0*58|&#x0*3a)/i

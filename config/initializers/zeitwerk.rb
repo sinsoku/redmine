@@ -8,6 +8,7 @@ IGNORE_LIST = [
 ]
 
 class RedmineInflector < Zeitwerk::Inflector
+  # @rbs (String, String) -> String
   def camelize(basename, abspath)
     abspath.match?('redmine\/version.rb\z') ? 'VERSION' : super
   end

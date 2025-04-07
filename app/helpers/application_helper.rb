@@ -34,6 +34,7 @@ module ApplicationHelper
   def_delegators :wiki_helper, :wikitoolbar_for, :heads_for_wiki_formatter
 
   # Return true if user is authorized for controller/action, otherwise false
+  # @rbs (String, String) -> bool
   def authorize_for(controller, action)
     User.current.allowed_to?({:controller => controller, :action => action}, @project)
   end
@@ -44,6 +45,7 @@ module ApplicationHelper
   # @param [Hash] options Hash params. This will checked by authorize_for to see if the user is authorized
   # @param [optional, Hash] html_options Options passed to link_to
   # @param [optional, Hash] parameters_for_method_reference Extra parameters for link_to
+  # @rbs (ActiveSupport::SafeBuffer | String, ?Hash[untyped, untyped], ?Hash[untyped, untyped]?, *nil) -> ActiveSupport::SafeBuffer?
   def link_to_if_authorized(name, options = {}, html_options = nil, *parameters_for_method_reference)
     if authorize_for(options[:controller] || params[:controller], options[:action])
       link_to(name, options, html_options, *parameters_for_method_reference)
@@ -51,11 +53,13 @@ module ApplicationHelper
   end
 
   # Displays a link to user's account page if active
+  # @rbs ((User | AnonymousUser | String | Group)?, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_user(user, options={})
     user.is_a?(User) ? link_to_principal(user, options) : h(user.to_s)
   end
 
   # Displays a link to user's account page or group page
+  # @rbs (User | AnonymousUser | Group | String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_principal(principal, options={})
     only_path = options[:only_path].nil? ? true : options[:only_path]
     case principal
@@ -81,6 +85,7 @@ module ApplicationHelper
 
   # Displays a link to edit group page if current user is admin
   # Otherwise display only the group name
+  # @rbs (Group, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_group(group, options={})
     if group.is_a?(Group)
       name = h(group.name)
@@ -102,6 +107,7 @@ module ApplicationHelper
   #   link_to_issue(issue, :project => true)      # => Foo - Defect #6
   #   link_to_issue(issue, :subject => false, :tracker => false)     # => #6
   #
+  # @rbs (Issue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_issue(issue, options={})
     title = nil
     subject = nil
@@ -126,6 +132,7 @@ module ApplicationHelper
   # Options:
   # * :text - Link text (default to attachment filename)
   # * :download - Force download (default: false)
+  # @rbs (Attachment, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_attachment(attachment, options={})
     text = options.delete(:text) || attachment.filename
     icon = options.fetch(:icon, false)
@@ -150,6 +157,7 @@ module ApplicationHelper
   # Generates a link to a SCM revision
   # Options:
   # * :text - Link text (default to the formatted revision)
+  # @rbs (Changeset, Repository::Subversion, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_revision(revision, repository, options={})
     if repository.is_a?(Project)
       repository = repository.repository
@@ -167,6 +175,7 @@ module ApplicationHelper
   end
 
   # Generates a link to a message
+  # @rbs (Message, ?Hash[untyped, untyped], ?Hash[untyped, untyped]?) -> ActiveSupport::SafeBuffer
   def link_to_message(message, options={}, html_options = nil)
     link_to(
       message.subject.truncate(60),
@@ -186,6 +195,7 @@ module ApplicationHelper
   #   link_to_project(project, {:only_path => false}, :class => "project") # => 3rd arg adds html options
   #   link_to_project(project, {}, :class => "project") # => html options with default url (project overview)
   #
+  # @rbs (Project, ?Hash[untyped, untyped], ?Hash[untyped, untyped]?) -> ActiveSupport::SafeBuffer
   def link_to_project(project, options={}, html_options = nil)
     if project.archived?
       h(project.name)
@@ -197,6 +207,7 @@ module ApplicationHelper
   end
 
   # Generates a link to a project settings if active
+  # @rbs (Project, ?Hash[untyped, untyped], ?nil) -> ActiveSupport::SafeBuffer
   def link_to_project_settings(project, options={}, html_options=nil)
     if project.active?
       link_to project.name, settings_project_path(project, options), html_options
@@ -208,6 +219,7 @@ module ApplicationHelper
   end
 
   # Generates a link to a version
+  # @rbs (Version | Class, ?Hash[untyped, untyped]) -> (ActiveSupport::SafeBuffer | String)
   def link_to_version(version, options = {})
     return '' unless version && version.is_a?(Version)
 
@@ -234,6 +246,7 @@ module ApplicationHelper
       end
   }
 
+  # @rbs (Project | CustomValue | Document | Group | Issue | Message | News | User | Version | WikiPage) -> ActiveSupport::SafeBuffer
   def link_to_record(record)
     if link = RECORD_LINK[record.class.name]
       self.instance_exec(record, &link)
@@ -249,6 +262,7 @@ module ApplicationHelper
        lambda {|version| link_to(l(:project_module_files), project_files_path(version.project))},
   }
 
+  # @rbs ((CustomValue | Document | Issue | Message | News | Project | Version | WikiPage)?) -> ActiveSupport::SafeBuffer?
   def link_to_attachment_container(attachment_container)
     if link = ATTACHMENT_CONTAINER_LINK[attachment_container.class.name] ||
               RECORD_LINK[attachment_container.class.name]
@@ -260,6 +274,7 @@ module ApplicationHelper
   # Options:
   # * :html - If true, format the object as HTML (default: true)
   # * :thousands_delimiter - If true, format the numeric object with thousands delimiter (default: false)
+  # @rbs ((CustomFieldValue | Tracker | IssueStatus | IssuePriority | ActiveSupport::TimeWithZone | User | Float | Date | Version | Integer | bool | CustomValue | Rational | String | Project | Attachment | Array[untyped] | TimeEntryActivity | Issue | IssueCategory | IssueRelation | CustomFieldEnumeration)?, *Hash[untyped, untyped] | nil) -> (String | ActiveSupport::SafeBuffer)?
   def format_object(object, *args, &block)
     options =
       if args.first.is_a?(Hash)
@@ -338,11 +353,13 @@ module ApplicationHelper
     end
   end
 
+  # @rbs (WikiPage, ?Hash[untyped, untyped]) -> String
   def wiki_page_path(page, options={})
     url_for({:controller => 'wiki', :action => 'show', :project_id => page.project,
              :id => page.title}.merge(options))
   end
 
+  # @rbs (Attachment) -> ActiveSupport::SafeBuffer
   def thumbnail_tag(attachment)
     thumbnail_size = Setting.thumbnails_size.to_i
     thumbnail_path = thumbnail_path(attachment, :size => thumbnail_size * 2)
@@ -361,6 +378,7 @@ module ApplicationHelper
     )
   end
 
+  # @rbs (String, String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def toggle_link(name, id, options={})
     onclick = "$('##{id}').toggle(); "
     onclick << (options[:focus] ? "$('##{options[:focus]}:visible').focus(); " : "this.blur(); ")
@@ -369,6 +387,7 @@ module ApplicationHelper
     link_to(name, "#", :onclick => onclick)
   end
 
+  # @rbs (Integer, Integer, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_previous_month(year, month, options={})
     target_year, target_month = if month == 1
                                   [year - 1, 12]
@@ -385,6 +404,7 @@ module ApplicationHelper
     link_to_month(("« " + name), target_year, target_month, options)
   end
 
+  # @rbs (Integer, Integer, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_next_month(year, month, options={})
     target_year, target_month = if month == 12
                                   [year + 1, 1]
@@ -401,24 +421,29 @@ module ApplicationHelper
     link_to_month((name + " »"), target_year, target_month, options)
   end
 
+  # @rbs (String, Integer, Integer, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_month(link_name, year, month, options={})
     link_to(link_name, {:params => request.query_parameters.merge(:year => year, :month => month)}, options)
   end
 
   # Used to format item titles on the activity view
+  # @rbs (String) -> String
   def format_activity_title(text)
     text
   end
 
+  # @rbs (Date) -> String
   def format_activity_day(date)
     date == User.current.today ? l(:label_today).titleize : format_date(date)
   end
 
+  # @rbs (String?) -> ActiveSupport::SafeBuffer
   def format_activity_description(text)
     h(text.to_s.truncate(120).gsub(%r{[\r\n]*<(pre|code)>.*$}m, '...')).
       gsub(/[\r\n]+/, "<br />").html_safe
   end
 
+  # @rbs (Version) -> ActiveSupport::SafeBuffer
   def format_version_name(version)
     if version.project == @project
       h(version)
@@ -427,11 +452,13 @@ module ApplicationHelper
     end
   end
 
+  # @rbs (Changeset, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def format_changeset_comments(changeset, options={})
     method = options[:short] ? :short_comments : :comments
     textilizable changeset, method, :formatting => Setting.commit_logs_formatting?
   end
 
+  # @rbs (Date) -> String
   def due_date_distance_in_words(date)
     if date
       l((if date < User.current.today
@@ -446,6 +473,7 @@ module ApplicationHelper
   # Renders a tree of projects as a nested set of unordered lists
   # The given collection may be a subset of the whole project tree
   # (eg. some intermediate nodes are private and can not be seen)
+  # @rbs (Array[untyped] | Project::ActiveRecord_Relation | Project::ActiveRecord_Associations_CollectionProxy) -> ActiveSupport::SafeBuffer
   def render_project_nested_lists(projects, &block)
     s = +''
     if projects.any?
@@ -477,6 +505,7 @@ module ApplicationHelper
     s.html_safe
   end
 
+  # @rbs (Hash[untyped, untyped], ?Integer?, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_page_hierarchy(pages, node=nil, options={})
     content = +''
     if pages[node]
@@ -508,6 +537,7 @@ module ApplicationHelper
   end
 
   # Renders flash messages
+  # @rbs () -> ActiveSupport::SafeBuffer
   def render_flash_messages
     s = +''
     flash.each do |k, v|
@@ -517,6 +547,7 @@ module ApplicationHelper
   end
 
   # Renders tabs and their content
+  # @rbs (Array[untyped], ?String?) -> ActiveSupport::SafeBuffer
   def render_tabs(tabs, selected=params[:tab])
     if tabs.any?
       unless tabs.detect {|tab| tab[:name] == selected}
@@ -530,6 +561,7 @@ module ApplicationHelper
   end
 
   # Returns the tab action depending on the tab properties
+  # @rbs (Hash[untyped, untyped]) -> String?
   def get_tab_action(tab)
     if tab[:onclick]
       return tab[:onclick]
@@ -542,6 +574,7 @@ module ApplicationHelper
 
   # Returns the default scope for the quick search form
   # Could be 'all', 'my_projects', 'subprojects' or nil (current project)
+  # @rbs () -> String?
   def default_search_project_scope
     if @project && !@project.leaf?
       'subprojects'
@@ -549,6 +582,7 @@ module ApplicationHelper
   end
 
   # Returns an array of projects that are displayed in the quick-jump box
+  # @rbs (?AnonymousUser | User) -> Array[untyped]
   def projects_for_jump_box(user=User.current)
     if user.logged?
       user.projects.active.select(:id, :name, :identifier, :lft, :rgt).to_a
@@ -557,6 +591,7 @@ module ApplicationHelper
     end
   end
 
+  # @rbs (Array[untyped], ?selected: nil | Project, ?query: nil | String) -> ActiveSupport::SafeBuffer
   def render_projects_for_jump_box(projects, selected: nil, query: nil)
     if query.blank?
       jump_box = Redmine::ProjectJumpBox.new User.current
@@ -595,6 +630,7 @@ module ApplicationHelper
   end
 
   # Renders the project quick-jump box
+  # @rbs () -> ActiveSupport::SafeBuffer
   def render_project_jump_box
     projects = projects_for_jump_box(User.current)
     if @project && @project.persisted?
@@ -619,6 +655,7 @@ module ApplicationHelper
     content_tag('div', trigger + content, :id => "project-jump", :class => "drdn")
   end
 
+  # @rbs (Project::ActiveRecord_Relation | Array[untyped], ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def project_tree_options_for_select(projects, options = {})
     s = ''.html_safe
     if blank_text = options[:include_blank]
@@ -645,10 +682,12 @@ module ApplicationHelper
   # Yields the given block for each project with its level in the tree
   #
   # Wrapper for Project#project_tree
+  # @rbs (Array[untyped] | Project::ActiveRecord_Relation, ?Hash[untyped, untyped]) -> Array[untyped]
   def project_tree(projects, options={}, &)
     Project.project_tree(projects, options, &)
   end
 
+  # @rbs (String, Array[untyped]) -> ActiveSupport::SafeBuffer
   def principals_check_box_tags(name, principals)
     s = +''
     principals.each do |principal|
@@ -668,6 +707,7 @@ module ApplicationHelper
   end
 
   # Returns a string for users/groups option tags
+  # @rbs (Array[untyped] | Principal::ActiveRecord_Relation, ?(User | String)?) -> ActiveSupport::SafeBuffer
   def principals_options_for_select(collection, selected=nil)
     s = +''
     if collection.include?(User.current)
@@ -710,11 +750,13 @@ module ApplicationHelper
     content_tag 'option', value, options.merge(:value => value, :selected => (value == selected))
   end
 
+  # @rbs (String, Integer) -> String
   def truncate_single_line_raw(string, length)
     string.to_s.truncate(length).gsub(%r{[\r\n]+}m, ' ')
   end
 
   # Truncates at line break after 250 characters or options[:length]
+  # @rbs (String, ?Hash[untyped, untyped]) -> String
   def truncate_lines(string, options={})
     length = options[:length] || 250
     if string.to_s =~ /\A(.{#{length}}.*?)$/m
@@ -724,10 +766,12 @@ module ApplicationHelper
     end
   end
 
+  # @rbs (String) -> String
   def anchor(text)
     text.to_s.tr(' ', '_')
   end
 
+  # @rbs (String) -> ActiveSupport::SafeBuffer
   def html_hours(text)
     text.gsub(
       %r{(\d+)([\.,:])(\d+)},
@@ -735,10 +779,12 @@ module ApplicationHelper
     ).html_safe
   end
 
+  # @rbs (ActiveSupport::TimeWithZone, User | AnonymousUser, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def authoring(created, author, options={})
     l(options[:label] || :label_added_time_by, :author => link_to_user(author), :age => time_tag(created)).html_safe
   end
 
+  # @rbs (ActiveSupport::TimeWithZone?) -> ActiveSupport::SafeBuffer?
   def time_tag(time)
     return if time.nil?
 
@@ -752,19 +798,23 @@ module ApplicationHelper
     end
   end
 
+  # @rbs (String, String) -> Array[untyped]
   def syntax_highlight_lines(name, content)
     syntax_highlight(name, content).each_line.to_a
   end
 
+  # @rbs (String, String) -> String
   def syntax_highlight(name, content)
     Redmine::SyntaxHighlighting.highlight_by_filename(content, name)
   end
 
+  # @rbs (String) -> String?
   def to_path_param(path)
     str = path.to_s.split(%r{[/\\]}).select{|p| !p.blank?}.join("/")
     str.blank? ? nil : str
   end
 
+  # @rbs (IssueCustomField | TimeEntryCustomField | ProjectCustomField | UserCustomField | TimeEntryActivityCustomField | Role | Board | DocumentCategory | IssuePriority | TimeEntryActivity | IssueStatus | Tracker, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def reorder_handle(object, options={})
     data = {
       :reorder_url => options[:url] || url_for(object),
@@ -776,17 +826,20 @@ module ApplicationHelper
                 :title => l(:button_sort))
   end
 
+  # @rbs (*Array[untyped] | ActiveSupport::SafeBuffer) -> ActiveSupport::SafeBuffer?
   def breadcrumb(*args)
     elements = args.flatten
     elements.any? ? content_tag('p', (args.join(" \xc2\xbb ") + " \xc2\xbb ").html_safe, :class => 'breadcrumb') : nil
   end
 
+  # @rbs () -> ActionView::OutputBuffer
   def other_formats_links(&)
     concat('<p class="other-formats">'.html_safe + l(:label_export_to))
     yield Redmine::Views::OtherFormatsBuilder.new(self)
     concat('</p>'.html_safe)
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def page_header_title
     if @project.nil? || @project.new_record?
       h(Setting.app_title)
@@ -816,6 +869,7 @@ module ApplicationHelper
   end
 
   # Returns a h2 tag and sets the html title with the given arguments
+  # @rbs (*Array[untyped] | String | String | Array[untyped]) -> ActiveSupport::SafeBuffer
   def title(*args)
     strings = args.map do |arg|
       if arg.is_a?(Array) && arg.size >= 2
@@ -834,6 +888,7 @@ module ApplicationHelper
   # Exemples:
   #   html_title 'Foo', 'Bar'
   #   html_title # => 'Foo - Bar - My Project - Redmine'
+  # @rbs (*nil | String | Integer | Array[untyped] | String? | String | User) -> (String | Array[untyped])
   def html_title(*args)
     if args.empty?
       title = @html_title || []
@@ -846,6 +901,7 @@ module ApplicationHelper
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def actions_dropdown(&)
     content = capture(&)
     if content.present?
@@ -861,6 +917,7 @@ module ApplicationHelper
 
   # Returns the theme, controller name, and action as css classes for the
   # HTML body.
+  # @rbs () -> String
   def body_css_classes
     css = []
     if theme = Redmine::Themes.theme(Setting.ui_theme)
@@ -878,6 +935,7 @@ module ApplicationHelper
     css.join(' ')
   end
 
+  # @rbs (Symbol) -> String?
   def accesskey(s)
     @used_accesskeys ||= []
     key = Redmine::AccessKeys.key_for(s)
@@ -891,6 +949,7 @@ module ApplicationHelper
   # 2 ways to call this method:
   # * with a String: textilizable(text, options)
   # * with an object and one of its attribute: textilizable(issue, :description, options)
+  # @rbs (*String | String | Hash[untyped, untyped] | Issue | Symbol | WikiContent | Symbol | Hash[untyped, untyped] | Journal | Symbol | Hash[untyped, untyped] | Issue | Symbol | Hash[untyped, untyped] | Journal | Symbol | Project | Symbol | Hash[untyped, untyped] | Message | Symbol | Message | Symbol | Hash[untyped, untyped] | WikiContentVersion | Symbol | Hash[untyped, untyped] | WikiContent | Symbol | Changeset | Symbol | Hash[untyped, untyped] | News | Symbol | Hash[untyped, untyped] | Comment | Symbol | Hash[untyped, untyped] | Attachment | Symbol | Hash[untyped, untyped] | TimeEntry | Symbol | Hash[untyped, untyped] | Project | Symbol | News | Symbol | Document | Symbol | Hash[untyped, untyped]) -> (ActiveSupport::SafeBuffer | String)
   def textilizable(*args)
     options = args.last.is_a?(Hash) ? args.pop : {}
     case args.size
@@ -938,6 +997,7 @@ module ApplicationHelper
     text.html_safe
   end
 
+  # @rbs (String | ActiveSupport::SafeBuffer, (WikiContent | Issue | Journal | Project | Message | WikiContentVersion | Changeset | Document | News | Comment | Attachment | TimeEntry)?, Hash[untyped, untyped], ?Hash[untyped, untyped]) -> String
   def parse_non_pre_blocks(text, obj, macros, options={})
     s = StringScanner.new(text)
     tags = []
@@ -972,6 +1032,7 @@ module ApplicationHelper
 
   # add srcset attribute to img tags if filename includes @2x, @3x, etc.
   # to support hires displays
+  # @rbs (String, Project?, (WikiContent | Issue | Journal | Project | Message | WikiContentVersion | Changeset | Document | News | Comment | Attachment | TimeEntry)?, Symbol?, bool, Hash[untyped, untyped]) -> String?
   def parse_hires_images(text, project, obj, attr, only_path, options)
     text.gsub!(/src="([^"]+@(\dx)\.(bmp|gif|jpg|jpe|jpeg|png))"/i) do |m|
       filename, dpr = $1, $2
@@ -979,6 +1040,7 @@ module ApplicationHelper
     end
   end
 
+  # @rbs (String, Project?, (WikiContent | Issue | Journal | Project | Message | WikiContentVersion | Changeset | Document | News | Comment | Attachment | TimeEntry)?, Symbol?, bool, Hash[untyped, untyped]) -> String?
   def parse_inline_attachments(text, project, obj, attr, only_path, options)
     return if options[:inline_attachments] == false
 
@@ -1028,6 +1090,7 @@ module ApplicationHelper
   #   [[project:|mytext]]
   #   [[project:mypage]]
   #   [[project:mypage|mytext]]
+  # @rbs (String, Project?, (WikiContent | Issue | Journal | Project | Message | WikiContentVersion | Changeset | Document | News | Comment | Attachment | TimeEntry)?, Symbol?, bool, Hash[untyped, untyped]) -> String?
   def parse_wiki_links(text, project, obj, attr, only_path, options)
     text.gsub!(/(!)?(\[\[([^\n\|]+?)(\|([^\n\|]+?))?\]\])/) do |m|
       link_project = project
@@ -1142,6 +1205,7 @@ module ApplicationHelper
   #     identifier:document:"Some document"
   #     identifier:version:1.0.0
   #     identifier:source:some/file
+  # @rbs (String, Project?, (WikiContent | Issue | Journal | Project | Message | WikiContentVersion | Changeset | Document | News | Comment | Attachment | TimeEntry)?, Symbol?, bool, Hash[untyped, untyped]) -> String?
   def parse_redmine_links(text, default_project, obj, attr, only_path, options)
     text.gsub!(LINKS_RE) do |_|
       tag_content = $~[:tag_content]
@@ -1381,6 +1445,7 @@ module ApplicationHelper
     }x
   HEADING_RE = /(<h(\d)( [^>]+)?>(.+?)<\/h(\d)>)/i unless const_defined?(:HEADING_RE)
 
+  # @rbs (String | ActiveSupport::SafeBuffer, Project?, (WikiContent | Issue | Journal | Project | Message | WikiContentVersion | Changeset | Document | News | Comment | Attachment | TimeEntry)?, Symbol?, bool, Hash[untyped, untyped]) -> void
   def parse_sections(text, project, obj, attr, only_path, options)
     return unless options[:edit_section_links]
 
@@ -1406,6 +1471,7 @@ module ApplicationHelper
 
   # Headings and TOC
   # Adds ids and links to headings unless options[:headings] is set to false
+  # @rbs (String, Project?, (WikiContent | Issue | Journal | Project | Message | WikiContentVersion | Changeset | Document | News | Comment | Attachment | TimeEntry)?, Symbol?, bool, Hash[untyped, untyped]) -> void
   def parse_headings(text, project, obj, attr, only_path, options)
     return if options[:headings] == false
 
@@ -1450,6 +1516,7 @@ module ApplicationHelper
   end
 
   # Extracts macros from text
+  # @rbs (String) -> Hash[untyped, untyped]
   def catch_macros(text)
     macros = {}
     text.gsub!(MACROS_RE) do
@@ -1466,6 +1533,7 @@ module ApplicationHelper
   end
 
   # Executes and replaces macros in text
+  # @rbs (String, (WikiContent | Issue | Journal)?, Hash[untyped, untyped], ?bool, ?Hash[untyped, untyped]) -> String?
   def inject_macros(text, obj, macros, execute=true, options={})
     text.gsub!(MACRO_SUB_RE) do
       all, index = $1, $2.to_i
@@ -1488,6 +1556,7 @@ module ApplicationHelper
   TOC_RE = /<p>\{\{((<|&lt;)|(>|&gt;))?toc\}\}<\/p>/i unless const_defined?(:TOC_RE)
 
   # Renders the TOC with given headings
+  # @rbs (String, Array[untyped]) -> String?
   def replace_toc(text, headings)
     text.gsub!(TOC_RE) do
       left_align, right_align = $2, $3
@@ -1522,6 +1591,7 @@ module ApplicationHelper
   end
 
   # Same as Rails' simple_format helper without using paragraphs
+  # @rbs (String) -> ActiveSupport::SafeBuffer
   def simple_format_without_paragraph(text)
     text.to_s.
       gsub(/\r\n?/, "\n").                    # \r\n and \r -> \n
@@ -1530,10 +1600,12 @@ module ApplicationHelper
       html_safe
   end
 
+  # @rbs (?bool) -> Array[untyped]
   def lang_options_for_select(blank=true)
     (blank ? [["(#{l('label_option_auto_lang')})", ""]] : []) + languages_options
   end
 
+  # @rbs (*Issue | Hash[untyped, untyped] | Symbol | WikiPage | Hash[untyped, untyped] | User | Hash[untyped, untyped] | Symbol | Repository::Git | Hash[untyped, untyped] | Symbol | Repository::Mercurial | Hash[untyped, untyped] | Symbol | Repository::Subversion | Hash[untyped, untyped] | AuthSourceLdap | Hash[untyped, untyped] | TimeEntry | Hash[untyped, untyped] | Issue | TimeEntry | Symbol | User | Hash[untyped, untyped] | Board | Hash[untyped, untyped] | Group | Hash[untyped, untyped] | Version | Hash[untyped, untyped] | Symbol | TimeEntryCustomField | Hash[untyped, untyped] | Symbol | IssueCustomField | Hash[untyped, untyped] | Symbol | VersionCustomField | Hash[untyped, untyped] | Symbol | ProjectCustomField | Hash[untyped, untyped] | Symbol | DocumentCategoryCustomField | Hash[untyped, untyped] | Symbol | DocumentCustomField | Hash[untyped, untyped] | Symbol | GroupCustomField | Hash[untyped, untyped] | Symbol | IssuePriorityCustomField | Hash[untyped, untyped] | Symbol | TimeEntryActivityCustomField | Hash[untyped, untyped] | Symbol | UserCustomField | Hash[untyped, untyped] | Role | Project | Hash[untyped, untyped] | Symbol | IssuePriority | Hash[untyped, untyped] | IssueCategory | Hash[untyped, untyped] | Symbol | News | Hash[untyped, untyped] | News | Hash[untyped, untyped] | IssueStatus | Document | Hash[untyped, untyped] | Tracker) -> ActiveSupport::SafeBuffer
   def labelled_form_for(*args, &)
     args << {} unless args.last.is_a?(Hash)
     options = args.last
@@ -1544,6 +1616,7 @@ module ApplicationHelper
     form_for(*args, &)
   end
 
+  # @rbs (*Symbol | Issue | Symbol | TimeEntry | Symbol | UserPreference) -> ActiveSupport::SafeBuffer
   def labelled_fields_for(*args, &)
     args << {} unless args.last.is_a?(Hash)
     options = args.last
@@ -1551,6 +1624,7 @@ module ApplicationHelper
     fields_for(*args, &)
   end
 
+  # @rbs (Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def form_tag_html(html_options)
     # Set a randomized name attribute on all form fields by default
     # as a workaround to https://bugzilla.mozilla.org/show_bug.cgi?id=1279253
@@ -1559,6 +1633,7 @@ module ApplicationHelper
   end
 
   # Render the error messages for the given objects
+  # @rbs (*String | ProjectQuery | IssueQuery | TimeEntryQuery | ProjectAdminQuery | Board | Group | EmailAddress | Attachment | UserQuery | News | Document) -> ActiveSupport::SafeBuffer
   def error_messages_for(*objects)
     objects = objects.filter_map {|o| o.is_a?(String) ? instance_variable_get(:"@#{o}") : o}
     errors = objects.map {|o| o.errors.full_messages}.flatten
@@ -1566,6 +1641,7 @@ module ApplicationHelper
   end
 
   # Renders a list of error messages
+  # @rbs (Array[untyped]) -> ActiveSupport::SafeBuffer
   def render_error_messages(errors)
     html = +""
     if errors.present?
@@ -1578,6 +1654,7 @@ module ApplicationHelper
     html.html_safe
   end
 
+  # @rbs (String | Group, ?Hash[untyped, untyped], ?String) -> ActiveSupport::SafeBuffer
   def delete_link(url, options={}, button_name=l(:button_delete))
     options = {
       :method => :delete,
@@ -1588,35 +1665,42 @@ module ApplicationHelper
     link_to sprite_icon('del', button_name), url, options
   end
 
+  # @rbs (ActiveSupport::SafeBuffer | String, String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_function(name, function, html_options={})
     content_tag(:a, name, {:href => '#', :onclick => "#{function}; return false;"}.merge(html_options))
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def link_to_context_menu
     link_to sprite_icon('3-bullets', l(:button_actions)), '#', title: l(:button_actions), class: 'icon-only icon-actions js-contextmenu '
   end
 
   # Helper to render JSON in views
+  # @rbs (Hash[untyped, untyped] | String | Array[untyped]) -> ActiveSupport::SafeBuffer
   def raw_json(arg)
     arg.to_json.to_s.gsub('/', '\/').html_safe
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def back_url_hidden_field_tag
     url = validate_back_url(back_url)
     hidden_field_tag('back_url', url, :id => nil) unless url.blank?
   end
 
+  # @rbs (String) -> ActiveSupport::SafeBuffer
   def cancel_button_tag(fallback_url)
     url = validate_back_url(back_url) || fallback_url
     link_to l(:button_cancel), url
   end
 
+  # @rbs (String) -> ActiveSupport::SafeBuffer
   def check_all_links(form_name)
     link_to_function(l(:button_check_all), "checkAll('#{form_name}', true)") +
     " | ".html_safe +
     link_to_function(l(:button_uncheck_all), "checkAll('#{form_name}', false)")
   end
 
+  # @rbs (String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def toggle_checkboxes_link(selector, options={})
     css_classes = 'icon icon-checked'
     css_classes += ' ' + options[:class] if options[:class]
@@ -1626,6 +1710,7 @@ module ApplicationHelper
                      :class => css_classes
   end
 
+  # @rbs (Integer | Array[untyped] | Float, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def progress_bar(pcts, options={})
     pcts = [pcts, pcts] unless pcts.is_a?(Array)
     pcts = pcts.collect(&:floor)
@@ -1660,12 +1745,14 @@ module ApplicationHelper
       content_tag('p', legend, :class => 'percent').html_safe
   end
 
+  # @rbs (?bool) -> ActiveSupport::SafeBuffer?
   def checked_image(checked=true)
     if checked
       @checked_image_tag ||= content_tag(:span, sprite_icon("checked"), :class => 'icon-only icon-checked')
     end
   end
 
+  # @rbs () -> nil
   def context_menu
     unless @context_menu_included
       content_for :header_tags do
@@ -1682,6 +1769,7 @@ module ApplicationHelper
     nil
   end
 
+  # @rbs (String) -> ActiveSupport::SafeBuffer
   def calendar_for(field_id)
     include_calendar_headers_tags
     javascript_tag(
@@ -1689,6 +1777,7 @@ module ApplicationHelper
     )
   end
 
+  # @rbs () -> nil
   def include_calendar_headers_tags
     unless @calendar_headers_tags_included
       tags = ''.html_safe
@@ -1722,6 +1811,7 @@ module ApplicationHelper
   #   stylesheet_link_tag('styles') # => picks styles.css from the current theme or defaults
   #   stylesheet_link_tag('styles', :plugin => 'foo) # => picks styles.css from plugin's assets
   #
+  # @rbs (*String | Hash[untyped, untyped] | String) -> ActiveSupport::SafeBuffer
   def stylesheet_link_tag(*sources)
     options = sources.last.is_a?(Hash) ? sources.pop : {}
     plugin = options.delete(:plugin)
@@ -1742,6 +1832,7 @@ module ApplicationHelper
   #   image_tag('image.png') # => picks image.png from the current theme or defaults
   #   image_tag('image.png', :plugin => 'foo) # => picks image.png from plugin's assets
   #
+  # @rbs (String | ActiveSupport::SafeBuffer, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def image_tag(source, options={})
     if plugin = options.delete(:plugin)
       source = "plugin_assets/#{plugin}/#{source}"
@@ -1756,6 +1847,7 @@ module ApplicationHelper
   #   javascript_include_tag('scripts') # => picks scripts.js from defaults
   #   javascript_include_tag('scripts', :plugin => 'foo) # => picks scripts.js from plugin's assets
   #
+  # @rbs (*String | String | Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def javascript_include_tag(*sources)
     options = sources.last.is_a?(Hash) ? sources.pop : {}
     if plugin = options.delete(:plugin)
@@ -1770,23 +1862,28 @@ module ApplicationHelper
     super(*sources, options)
   end
 
+  # @rbs () -> bool
   def sidebar_content?
     content_for?(:sidebar) || view_layouts_base_sidebar_hook_response.present?
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def view_layouts_base_sidebar_hook_response
     @view_layouts_base_sidebar_hook_response ||= call_hook(:view_layouts_base_sidebar)
   end
 
+  # @rbs () -> bool
   def email_delivery_enabled?
     !!ActionMailer::Base.perform_deliveries
   end
 
+  # @rbs (String) -> String
   def sanitize_anchor_name(anchor)
     anchor.gsub(%r{[^\s\-\p{Word}]}, '').gsub(%r{\s+(\-+\s*)?}, '-')
   end
 
   # Returns the javascript tags that are included in the html layout head
+  # @rbs () -> ActiveSupport::SafeBuffer
   def javascript_heads
     tags = javascript_include_tag(
       'jquery-3.7.1-ui-1.13.3',
@@ -1808,26 +1905,31 @@ module ApplicationHelper
     tags
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def favicon
     favicon_link_tag(favicon_path, rel: "shortcut icon")
   end
 
   # Returns the path to the favicon
+  # @rbs () -> String
   def favicon_path
     icon = (current_theme && current_theme.favicon?) ? current_theme.favicon_path : 'favicon.ico'
     image_path(icon)
   end
 
   # Returns the full URL to the favicon
+  # @rbs () -> String
   def favicon_url
     image_url(favicon_path)
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def robot_exclusion_tag
     '<meta name="robots" content="noindex,follow,noarchive" />'.html_safe
   end
 
   # Returns true if arg is expected in the API response
+  # @rbs (String) -> bool
   def include_in_api_response?(arg)
     unless @included_in_api_response
       param = params[:include]
@@ -1839,6 +1941,7 @@ module ApplicationHelper
 
   # Returns options or nil if nometa param or X-Redmine-Nometa header
   # was set in the request
+  # @rbs (Hash[untyped, untyped]) -> Hash[untyped, untyped]?
   def api_meta(options)
     if params[:nometa].present? || request.headers['X-Redmine-Nometa']
       # compatibility mode for activeresource clients that raise
@@ -1849,6 +1952,7 @@ module ApplicationHelper
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def export_csv_encoding_select_tag
     return if l(:general_csv_encoding).casecmp('UTF-8') == 0
 
@@ -1863,6 +1967,7 @@ module ApplicationHelper
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def export_csv_separator_select_tag
     options = [[l(:label_comma_char), ','], [l(:label_semi_colon_char), ';']]
     # Add the separator from translations if it is missing
@@ -1881,6 +1986,7 @@ module ApplicationHelper
   end
 
   # Returns an array of error messages for bulk edited items (issues, time entries)
+  # @rbs (Array[untyped]) -> Array[untyped]
   def bulk_edit_error_messages(items)
     messages = {}
     items.each do |item|
@@ -1894,6 +2000,7 @@ module ApplicationHelper
     end
   end
 
+  # @rbs (?Hash[untyped, untyped], ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer?
   def render_if_exist(options = {}, locals = {}, &)
     # Remove test_render_if_exist_should_be_render_partial and test_render_if_exist_should_be_render_nil
     # along with this method in Redmine 7.0
@@ -1908,6 +2015,7 @@ module ApplicationHelper
     end
   end
 
+  # @rbs (Project?) -> ActiveSupport::SafeBuffer
   def heads_for_auto_complete(project)
     data_sources = autocomplete_data_sources(project)
     javascript_tag(
@@ -1917,12 +2025,14 @@ module ApplicationHelper
     )
   end
 
+  # @rbs (Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def update_data_sources_for_auto_complete(data_sources)
     javascript_tag(
       "rm.AutoComplete.dataSources = Object.assign(rm.AutoComplete.dataSources, JSON.parse('#{data_sources.to_json}'));"
     )
   end
 
+  # @rbs (String) -> ActiveSupport::SafeBuffer
   def copy_object_url_link(url)
     link_to_function(
       sprite_icon('copy-link', l(:button_copy_link)), 'copyTextToClipboard(this);',
@@ -1933,6 +2043,7 @@ module ApplicationHelper
 
   private
 
+  # @rbs () -> untyped
   def wiki_helper
     helper = Redmine::WikiFormatting.helper_for(Setting.text_formatting)
     extend helper
@@ -1940,11 +2051,13 @@ module ApplicationHelper
   end
 
   # remove double quotes if any
+  # @rbs (String) -> String
   def remove_double_quotes(identifier)
     name = identifier.gsub(%r{^"(.*)"$}, "\\1")
     return CGI.unescapeHTML(name)
   end
 
+  # @rbs (Project?) -> Hash[untyped, untyped]
   def autocomplete_data_sources(project)
     {
       issues: auto_complete_issues_path(project_id: project, q: ''),

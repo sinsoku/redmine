@@ -20,18 +20,22 @@
 class GroupBuiltin < Group
   validate :validate_uniqueness, :on => :create
 
+  # @rbs () -> ActiveModel::Error
   def validate_uniqueness
     errors.add :base, 'The builtin group already exists.' if self.class.exists?
   end
 
+  # @rbs () -> bool
   def builtin?
     true
   end
 
+  # @rbs () -> bool
   def destroy
     false
   end
 
+  # @rbs (User) -> nil
   def user_added(user)
     raise 'Cannot add users to a builtin group'
   end

@@ -23,6 +23,7 @@ module Redmine
     class Fetcher
       attr_reader :user, :project, :scope
 
+      # @rbs (AnonymousUser | ActivityTest::MockUser | User, ?Hash[untyped, untyped]) -> void
       def initialize(user, options={})
         options.assert_valid_keys(:project, :with_subprojects, :author)
         @user = user
@@ -33,6 +34,7 @@ module Redmine
       end
 
       # Returns an array of available event types
+      # @rbs () -> Array[untyped]
       def event_types
         return @event_types unless @event_types.nil?
 
@@ -60,12 +62,14 @@ module Redmine
       end
 
       # Yields to filter the activity scope
+      # @rbs () -> void
       def scope_select(&)
         @scope = @scope.select {|t| yield t}
       end
 
       # Sets the scope
       # Argument can be :all, :default or an array of event types
+      # @rbs (Array[untyped] | Symbol) -> Array[untyped]
       def scope=(s)
         case s
         when :all
@@ -78,12 +82,14 @@ module Redmine
       end
 
       # Resets the scope to the default scope
+      # @rbs () -> Array[untyped]
       def default_scope!
         @scope = Redmine::Activity.default_event_types
       end
 
       # Returns an array of events for the given date range
       # sorted in reverse chronological order
+      # @rbs (?Date?, ?Date?, ?Hash[untyped, untyped]) -> Array[untyped]
       def events(from = nil, to = nil, options={})
         e = []
         @options[:limit] = options[:limit]
@@ -109,6 +115,7 @@ module Redmine
 
       private
 
+      # @rbs (String) -> Array[untyped]
       def constantized_providers(event_type)
         Redmine::Activity.providers[event_type].map(&:constantize)
       end

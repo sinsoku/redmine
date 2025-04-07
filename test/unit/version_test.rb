@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class VersionTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_create
     v = Version.new(:project => Project.find(1), :name => '1.1',
                     :effective_date => '2011-03-25')
@@ -32,6 +34,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_equal 'none', v.sharing
   end
 
+  # @rbs () -> bool
   def test_create_as_default_project_version
     project = Project.find(1)
     v = Version.new(:project => project, :name => '1.1',
@@ -40,6 +43,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_equal v, project.reload.default_version
   end
 
+  # @rbs () -> bool
   def test_create_not_as_default_project_version
     project = Project.find(1)
     v = Version.new(:project => project, :name => '1.1',
@@ -48,6 +52,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_nil project.reload.default_version
   end
 
+  # @rbs () -> bool
   def test_invalid_effective_date_validation
     v = Version.new(:project => Project.find(1), :name => '1.1',
                     :effective_date => '99999-01-01')
@@ -64,6 +69,7 @@ class VersionTest < ActiveSupport::TestCase
                    v.errors[:effective_date]
   end
 
+  # @rbs () -> bool
   def test_progress_should_be_0_with_no_assigned_issues
     project = Project.find(1)
     v = Version.create!(:project => project, :name => 'Progress')
@@ -71,6 +77,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_equal 0, v.closed_percent
   end
 
+  # @rbs () -> bool
   def test_progress_should_be_0_with_unbegun_assigned_issues
     project = Project.find(1)
     v = Version.create!(:project => project, :name => 'Progress')
@@ -80,6 +87,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_progress_equal 0, v.closed_percent
   end
 
+  # @rbs () -> bool
   def test_progress_should_be_100_with_closed_assigned_issues
     project = Project.find(1)
     status = IssueStatus.where(:is_closed => true).first
@@ -92,6 +100,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_progress_equal 100.0, v.closed_percent
   end
 
+  # @rbs () -> bool
   def test_progress_should_consider_done_ratio_of_open_assigned_issues
     project = Project.find(1)
     v = Version.create!(:project => project, :name => 'Progress')
@@ -102,6 +111,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_progress_equal 0, v.closed_percent
   end
 
+  # @rbs () -> bool
   def test_progress_should_consider_closed_issues_as_completed
     project = Project.find(1)
     v = Version.create!(:project => project, :name => 'Progress')
@@ -112,6 +122,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_progress_equal (100.0)/3, v.closed_percent
   end
 
+  # @rbs () -> bool
   def test_progress_should_consider_closed_issues_with_0h_estimated_as_completed
     project = Project.find(1)
     closed = IssueStatus.where(:is_closed => true).first
@@ -122,6 +133,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_progress_equal 50, v.closed_percent
   end
 
+  # @rbs () -> bool
   def test_progress_should_consider_estimated_hours_to_weight_issues
     project = Project.find(1)
     v = Version.create!(:project => project, :name => 'Progress')
@@ -133,6 +145,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_progress_equal 25.0/95.0*100, v.closed_percent
   end
 
+  # @rbs () -> bool
   def test_progress_should_consider_average_estimated_hours_to_weight_unestimated_issues
     project = Project.find(1)
     v = Version.create!(:project => project, :name => 'Progress')
@@ -144,6 +157,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_progress_equal 25.0/100.0*100, v.closed_percent
   end
 
+  # @rbs () -> bool
   def test_progress_should_be_weighted_by_estimated_times_if_any_with_grandchildren
     project = Project.find(1)
     v = Version.create!(:project => project, :name => 'Progress')
@@ -158,6 +172,7 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_should_sort_scheduled_then_unscheduled_versions
     Version.delete_all
     v4 = Version.create!(:project_id => 1, :name => 'v4')
@@ -170,17 +185,20 @@ class VersionTest < ActiveSupport::TestCase
     assert_equal [v5, v3, v1, v2, v4], Version.sorted.to_a
   end
 
+  # @rbs () -> bool
   def test_should_sort_versions_with_same_date_by_name
     v1 = Version.new(:effective_date => '2014-12-03', :name => 'v2')
     v2 = Version.new(:effective_date => '2014-12-03', :name => 'v1')
     assert_equal [v2, v1], [v1, v2].sort
   end
 
+  # @rbs () -> bool
   def test_completed_should_be_false_when_due_today
     version = Version.create!(:project_id => 1, :effective_date => Date.today, :name => 'Due today')
     assert_equal false, version.completed?
   end
 
+  # @rbs () -> bool
   def test_completed_should_be_true_when_closed
     version = Version.create!(:project_id => 1, :status => 'closed', :name => 'Closed')
     assert_equal true, version.completed?
@@ -287,12 +305,14 @@ class VersionTest < ActiveSupport::TestCase
     assert_equal @version, project_2_issue.fixed_version
   end
 
+  # @rbs () -> bool
   def test_deletable_should_return_true_when_not_referenced
     version = Version.generate!
 
     assert_equal true, version.deletable?
   end
 
+  # @rbs () -> bool
   def test_deletable_should_return_false_when_referenced_by_an_issue
     version = Version.generate!
     Issue.generate!(:fixed_version => version)
@@ -300,6 +320,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_equal false, version.deletable?
   end
 
+  # @rbs () -> bool
   def test_deletable_should_return_false_when_referenced_by_a_custom_field
     version = Version.generate!
     field = IssueCustomField.generate!(:field_format => 'version')
@@ -308,6 +329,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_equal false, version.deletable?
   end
 
+  # @rbs () -> bool
   def test_deletable_should_return_false_when_referenced_by_an_attachment
     version = Version.generate!
     Attachment.generate!(:container => version, :filename => 'test.txt')
@@ -315,6 +337,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_equal false, version.deletable?
   end
 
+  # @rbs () -> bool
   def test_like_scope
     version = Version.create!(:project => Project.find(1), :name => 'Version for like scope test')
 
@@ -323,6 +346,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_includes Version.like('like scope'), version
   end
 
+  # @rbs () -> bool
   def test_like_scope_should_escape_query
     version = Version.create!(:project => Project.find(1), :name => 'Version for like scope test')
     r = Version.like('Ver_ion')
@@ -339,6 +363,7 @@ class VersionTest < ActiveSupport::TestCase
     assert_include version, r
   end
 
+  # @rbs () -> bool
   def test_safe_attributes_should_include_only_custom_fields_visible_to_user
     cf1 = VersionCustomField.create!(:name => 'Visible field',
                                   :field_format => 'string',
@@ -376,6 +401,7 @@ class VersionTest < ActiveSupport::TestCase
 
   private
 
+  # @rbs (Version, ?Hash[untyped, untyped]) -> Issue
   def add_issue(version, attributes={})
     Issue.create!({:project => version.project,
                    :fixed_version => version,
@@ -384,6 +410,7 @@ class VersionTest < ActiveSupport::TestCase
                    :tracker => version.project.trackers.first}.merge(attributes))
   end
 
+  # @rbs (Float | Integer, Float | Integer, ?String) -> bool
   def assert_progress_equal(expected_float, actual_float, message="")
     assert_in_delta(expected_float, actual_float, 0.000001, message="")
   end

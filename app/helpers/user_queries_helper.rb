@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module UserQueriesHelper
+  # @rbs (QueryColumn | QueryAssociationColumn, User, (String | bool | ActiveSupport::TimeWithZone)?) -> (ActiveSupport::SafeBuffer | String)
   def column_value(column, object, value)
     if object.is_a?(User) && column.name == :status
       user_status_label(column.value_object(object))
@@ -26,6 +27,7 @@ module UserQueriesHelper
     end
   end
 
+  # @rbs (QueryColumn | QueryCustomFieldColumn, User, (String | Integer | ActiveSupport::TimeWithZone | bool | CustomValue)?) -> String
   def csv_value(column, object, value)
     if object.is_a?(User)
       case column.name
@@ -41,6 +43,7 @@ module UserQueriesHelper
     end
   end
 
+  # @rbs (Integer) -> String
   def user_status_label(value)
     case value.to_i
     when User::STATUS_ACTIVE
@@ -52,6 +55,7 @@ module UserQueriesHelper
     end
   end
 
+  # @rbs (String?) -> String
   def twofa_scheme_label(value)
     if value
       ::I18n.t :"twofa__#{value}__name"

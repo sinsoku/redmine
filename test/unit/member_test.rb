@@ -22,17 +22,20 @@ require_relative '../test_helper'
 class MemberTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> Member
   def setup
     User.current = nil
     @jsmith = Member.find(1)
   end
 
+  # @rbs () -> bool
   def test_sorted_scope_on_project_members
     members = Project.find(1).members.sorted.to_a
     roles = members.map {|m| m.roles.sort.first}
     assert_equal roles, roles.sort
   end
 
+  # @rbs () -> bool
   def test_create
     member = Member.new(:project_id => 1, :user_id => 4, :role_ids => [1, 2])
     assert member.save
@@ -42,6 +45,7 @@ class MemberTest < ActiveSupport::TestCase
     assert_equal Role.find(1), member.roles.sort.first
   end
 
+  # @rbs () -> bool
   def test_update
     assert_equal "eCookbook", @jsmith.project.name
     assert_equal "Manager", @jsmith.roles.first.name
@@ -51,6 +55,7 @@ class MemberTest < ActiveSupport::TestCase
     assert @jsmith.save
   end
 
+  # @rbs () -> bool
   def test_update_roles
     assert_equal 1, @jsmith.roles.size
     @jsmith.role_ids = [1, 2]
@@ -58,6 +63,7 @@ class MemberTest < ActiveSupport::TestCase
     assert_equal 2, @jsmith.reload.roles.size
   end
 
+  # @rbs () -> bool
   def test_update_roles_with_inherited_roles
     User.current = User.find(1)
 
@@ -91,6 +97,7 @@ class MemberTest < ActiveSupport::TestCase
     ], test_user_member.member_roles.map{|r| [r.role_id, r.inherited_from]}
   end
 
+  # @rbs () -> bool
   def test_validate
     member = Member.new(:project_id => 1, :user_id => 2, :role_ids => [2])
     # same use cannot have more than one membership for a project
@@ -111,6 +118,7 @@ class MemberTest < ActiveSupport::TestCase
                  [member.errors.full_messages].flatten.join
   end
 
+  # @rbs () -> bool
   def test_validate_member_role
     user = User.new(:firstname => "new1", :lastname => "user1",
                     :mail => "test_validate@somenet.foo")
@@ -121,6 +129,7 @@ class MemberTest < ActiveSupport::TestCase
     assert !member.save
   end
 
+  # @rbs () -> Integer
   def test_set_issue_category_nil_should_handle_nil_values
     m = Member.new
     assert_nil m.user
@@ -131,6 +140,7 @@ class MemberTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_destroy
     category1 = IssueCategory.find(1)
     assert_equal @jsmith.user.id, category1.assigned_to_id
@@ -144,6 +154,7 @@ class MemberTest < ActiveSupport::TestCase
     assert_nil category1.assigned_to_id
   end
 
+  # @rbs () -> bool
   def test_destroy_should_trigger_callbacks_only_once
     Member.class_eval {def destroy_test_callback; end}
     Member.after_destroy :destroy_test_callback
@@ -161,6 +172,7 @@ class MemberTest < ActiveSupport::TestCase
     Member._destroy_callbacks.delete(:destroy_test_callback)
   end
 
+  # @rbs () -> bool
   def test_roles_should_be_unique
     m = Member.new(:user_id => 1, :project_id => 1)
     m.member_roles.build(:role_id => 1)
@@ -171,6 +183,7 @@ class MemberTest < ActiveSupport::TestCase
     assert_equal [1], m.roles.ids
   end
 
+  # @rbs () -> bool
   def test_sort_without_roles
     a = Member.new(:roles => [Role.first])
     b = Member.new
@@ -179,6 +192,7 @@ class MemberTest < ActiveSupport::TestCase
     assert_equal 1,  b <=> a
   end
 
+  # @rbs () -> bool
   def test_sort_without_principal
     role = Role.first
     a = Member.new(:roles => [role], :principal => User.first)
@@ -188,6 +202,7 @@ class MemberTest < ActiveSupport::TestCase
     assert_equal 1,  b <=> a
   end
 
+  # @rbs () -> bool
   def test_managed_roles_should_return_all_roles_for_role_with_all_roles_managed
     member = Member.new
     member.roles <<
@@ -195,12 +210,14 @@ class MemberTest < ActiveSupport::TestCase
     assert_equal Role.givable.all, member.managed_roles
   end
 
+  # @rbs () -> bool
   def test_managed_roles_should_return_all_roles_for_admins
     member = Member.new(:user => User.find(1))
     member.roles << Role.generate!
     assert_equal Role.givable.all, member.managed_roles
   end
 
+  # @rbs () -> bool
   def test_managed_roles_should_return_limited_roles_for_role_without_all_roles_managed
     member = Member.new
     member.roles <<
@@ -209,6 +226,7 @@ class MemberTest < ActiveSupport::TestCase
     assert_equal [2, 3], member.managed_roles.map(&:id).sort
   end
 
+  # @rbs () -> bool
   def test_managed_roles_should_cumulated_managed_roles
     member = Member.new
     member.roles <<
@@ -220,12 +238,14 @@ class MemberTest < ActiveSupport::TestCase
     assert_equal [2, 3], member.managed_roles.map(&:id).sort
   end
 
+  # @rbs () -> bool
   def test_managed_roles_should_return_no_roles_for_role_without_permission
     member = Member.new
     member.roles << Role.generate!(:all_roles_managed => true)
     assert_equal [], member.managed_roles
   end
 
+  # @rbs () -> bool
   def test_create_principal_memberships_should_not_error_with_2_projects_and_inheritance
     parent = Project.generate!
     child = Project.generate!(:parent_id => parent.id, :inherit_members => true)
@@ -245,6 +265,7 @@ class MemberTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> ActiveRecord::RecordNotFound
   def test_destroy_member_when_member_role_is_empty
     member = Member.find(1)
 

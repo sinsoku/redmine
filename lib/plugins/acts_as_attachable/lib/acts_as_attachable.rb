@@ -29,15 +29,18 @@ module Redmine
         ])
 
         class << self
+          # @rbs (ActionDispatch::Request) -> Integer?
           def matches?(request)
             request.path_parameters[:object_type] =~ param_expression
           end
 
+          # @rbs (String) -> void
           def register_object_type(type)
             object_types << type
             @param_expression = nil
           end
 
+          # @rbs () -> Regexp
           def param_expression
             @param_expression ||= Regexp.new("^(#{object_types.to_a.join("|")})$")
           end
@@ -49,6 +52,7 @@ module Redmine
       end
 
       module ClassMethods
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_attachable(options = {})
           cattr_accessor :attachable_options
           self.attachable_options = {}
@@ -66,33 +70,40 @@ module Redmine
       end
 
       module InstanceMethods
+        # @rbs (Class) -> Class
         def self.included(base)
           base.extend ClassMethods
         end
 
+        # @rbs (?User | AnonymousUser) -> bool
         def attachments_visible?(user=User.current)
           (respond_to?(:visible?) ? visible?(user) : true) &&
             user.allowed_to?(self.class.attachable_options[:view_permission], self.project)
         end
 
+        # @rbs (?User | AnonymousUser) -> bool
         def attachments_editable?(user=User.current)
           (respond_to?(:visible?) ? visible?(user) : true) &&
             user.allowed_to?(self.class.attachable_options[:edit_permission], self.project)
         end
 
+        # @rbs (?User | AnonymousUser) -> bool
         def attachments_deletable?(user=User.current)
           (respond_to?(:visible?) ? visible?(user) : true) &&
             user.allowed_to?(self.class.attachable_options[:delete_permission], self.project)
         end
 
+        # @rbs () -> Array[untyped]
         def saved_attachments
           @saved_attachments ||= []
         end
 
+        # @rbs () -> Array[untyped]
         def unsaved_attachments
           @unsaved_attachments ||= []
         end
 
+        # @rbs ((ActionController::Parameters | Array[untyped] | Hash[untyped, untyped])?, ?AnonymousUser | User) -> Hash[untyped, untyped]
         def save_attachments(attachments, author=User.current)
           if attachments.respond_to?(:to_unsafe_hash)
             attachments = attachments.to_unsafe_hash
@@ -141,18 +152,21 @@ module Redmine
           {:files => saved_attachments, :unsaved => unsaved_attachments}
         end
 
+        # @rbs () -> Array[untyped]
         def attach_saved_attachments
           saved_attachments.each do |attachment|
             self.attachments << attachment
           end
         end
 
+        # @rbs () -> Array[untyped]
         def detach_saved_attachments
           saved_attachments.each do |attachment|
             attachment.reload
           end
         end
 
+        # @rbs () -> ActiveModel::Error?
         def warn_about_failed_attachments
           if @failed_attachment_count && @failed_attachment_count > 0
             errors.add :base, ::I18n.t('warning_attachments_not_saved', count: @failed_attachment_count)

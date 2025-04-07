@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class UserTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     @admin = User.find(1)
     @jsmith = User.find(2)
@@ -29,40 +30,47 @@ class UserTest < ActiveSupport::TestCase
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_admin_scope_without_args_should_return_admin_users
     users = User.admin.to_a
     assert users.any?
     assert users.all? {|u| u.admin == true}
   end
 
+  # @rbs () -> bool
   def test_admin_scope_with_true_should_return_admin_users
     users = User.admin(true).to_a
     assert users.any?
     assert users.all? {|u| u.admin == true}
   end
 
+  # @rbs () -> bool
   def test_admin_scope_with_false_should_return_non_admin_users
     users = User.admin(false).to_a
     assert users.any?
     assert users.all? {|u| u.admin == false}
   end
 
+  # @rbs () -> bool
   def test_sorted_scope_should_sort_user_by_display_name
     # Use .active to ignore anonymous with localized display name
     assert_equal User.active.map {|u| u.name.downcase}.sort,
                  User.active.sorted.map {|u| u.name.downcase}
   end
 
+  # @rbs () -> bool
   def test_generate
     User.generate!(:firstname => 'Testing connection')
     User.generate!(:firstname => 'Testing connection')
     assert_equal 2, User.where(:firstname => 'Testing connection').count
   end
 
+  # @rbs () -> bool
   def test_truth
     assert_kind_of User, @jsmith
   end
 
+  # @rbs () -> bool
   def test_should_validate_status
     user = User.new
     user.status = 0
@@ -71,12 +79,14 @@ class UserTest < ActiveSupport::TestCase
     assert_include I18n.translate('activerecord.errors.messages.invalid'), user.errors[:status]
   end
 
+  # @rbs () -> bool
   def test_mail_should_be_stripped
     u = User.new
     u.mail = " foo@bar.com  "
     assert_equal "foo@bar.com", u.mail
   end
 
+  # @rbs () -> bool
   def test_should_create_email_address
     u = User.new(:firstname => "new", :lastname => "user")
     u.login = "create_email_address"
@@ -89,6 +99,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal true, u.email_address.notify
   end
 
+  # @rbs () -> bool
   def test_should_not_create_user_without_mail
     set_language_if_valid 'en'
     u = User.new(:firstname => "new", :lastname => "user")
@@ -97,6 +108,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal ["Email #{I18n.translate('activerecord.errors.messages.blank')}"], u.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_should_not_create_user_with_blank_mail
     set_language_if_valid 'en'
     u = User.new(:firstname => "new", :lastname => "user")
@@ -106,6 +118,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal ["Email #{I18n.translate('activerecord.errors.messages.blank')}"], u.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_should_not_update_user_with_blank_mail
     set_language_if_valid 'en'
     u = User.find(2)
@@ -114,6 +127,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal ["Email #{I18n.translate('activerecord.errors.messages.blank')}"], u.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_login_length_validation
     user = User.new(:firstname => "new", :lastname => "user", :mail => "newuser@somenet.foo")
     user.login = "x" * (User::LOGIN_LENGTH_LIMIT+1)
@@ -124,6 +138,7 @@ class UserTest < ActiveSupport::TestCase
     assert user.save
   end
 
+  # @rbs () -> bool
   def test_generate_password_should_respect_minimum_password_length
     with_settings :password_min_length => 15 do
       user = User.generate!(:generate_password => true)
@@ -131,6 +146,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_generate_password_should_not_generate_password_with_less_than_10_characters
     with_settings :password_min_length => 4 do
       user = User.generate!(:generate_password => true)
@@ -138,6 +154,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_generate_password_on_create_should_set_password
     user = User.new(:firstname => "new", :lastname => "user", :mail => "newuser@somenet.foo")
     user.login = "newuser"
@@ -148,6 +165,7 @@ class UserTest < ActiveSupport::TestCase
     assert user.check_password?(password)
   end
 
+  # @rbs () -> bool
   def test_generate_password_on_update_should_update_password
     user = User.find(2)
     hash = user.hashed_password
@@ -159,6 +177,7 @@ class UserTest < ActiveSupport::TestCase
     assert_not_equal hash, user.reload.hashed_password
   end
 
+  # @rbs () -> bool
   def test_create
     user = User.new(:firstname => "new", :lastname => "user", :mail => "newuser@somenet.foo")
 
@@ -178,6 +197,7 @@ class UserTest < ActiveSupport::TestCase
     assert user.save
   end
 
+  # @rbs () -> bool
   def test_user_before_create_should_set_the_mail_notification_to_the_default_setting
     user1 = User.generate!
     assert_equal 'only_assigned', user1.mail_notification
@@ -187,6 +207,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_user_login_should_be_case_insensitive
     u = User.new(:firstname => "new", :lastname => "user", :mail => "newuser@somenet.foo")
     u.login = 'newuser'
@@ -200,6 +221,7 @@ class UserTest < ActiveSupport::TestCase
     assert_include I18n.translate('activerecord.errors.messages.taken'), u.errors[:login]
   end
 
+  # @rbs () -> bool
   def test_mail_uniqueness_should_not_be_case_sensitive
     set_language_if_valid 'en'
     u = User.new(:firstname => "new", :lastname => "user", :mail => "newuser@somenet.foo")
@@ -214,6 +236,7 @@ class UserTest < ActiveSupport::TestCase
     assert_include "Email #{I18n.translate('activerecord.errors.messages.taken')}", u.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_update
     assert_equal "admin", @admin.login
     @admin.login = "john"
@@ -222,6 +245,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "john", @admin.login
   end
 
+  # @rbs () -> bool
   def test_update_should_not_fail_for_legacy_user_with_different_case_logins
     u1 = User.new(:firstname => "new", :lastname => "user", :mail => "newuser1@somenet.foo")
     u1.login = 'newuser1'
@@ -236,6 +260,7 @@ class UserTest < ActiveSupport::TestCase
     assert user.save, "Save failed"
   end
 
+  # @rbs () -> bool
   def test_destroy_should_delete_members_and_roles
     members = Member.where(:user_id => 2)
     ms = members.count
@@ -251,6 +276,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 0, Member.where(:user_id => 2).count
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_attachments
     set_tmp_attachments_directory
     attachment = Attachment.create!(:container => Project.find(1),
@@ -262,6 +288,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous, attachment.reload.author
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_comments
     comment = Comment.create!(
       :commented => News.create!(:project_id => 1,
@@ -275,6 +302,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous, comment.reload.author
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_issues
     issue = Issue.create!(:project_id => 1, :author_id => 2,
                           :tracker_id => 1, :subject => 'foo')
@@ -284,6 +312,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous, issue.reload.author
   end
 
+  # @rbs () -> bool
   def test_destroy_should_unassign_issues
     issue = Issue.create!(:project_id => 1, :author_id => 1,
                           :tracker_id => 1, :subject => 'foo', :assigned_to_id => 2)
@@ -293,6 +322,7 @@ class UserTest < ActiveSupport::TestCase
     assert_nil issue.reload.assigned_to
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_journals
     issue = Issue.generate!(:project_id => 1, :author_id => 2,
                           :tracker_id => 1, :subject => 'foo')
@@ -309,6 +339,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous, journal.updated_by
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_journal_details_old_value
     issue = Issue.generate!(:project_id => 1, :author_id => 1,
                           :tracker_id => 1, :subject => 'foo', :assigned_to_id => 2)
@@ -325,6 +356,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous.id.to_s, journal_detail.reload.old_value
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_journal_details_value
     issue = Issue.generate!(:project_id => 1, :author_id => 1,
                           :tracker_id => 1, :subject => 'foo')
@@ -341,6 +373,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous.id.to_s, journal_detail.reload.value
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_messages
     board = Board.create!(:project_id => 1, :name => 'Board', :description => 'Board')
     message = Message.create!(:board_id => board.id, :author_id => 2,
@@ -350,6 +383,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous, message.reload.author
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_news
     news = News.create!(:project_id => 1, :author_id => 2,
                         :title => 'foo', :description => 'foo')
@@ -358,6 +392,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous, news.reload.author
   end
 
+  # @rbs () -> bool
   def test_destroy_should_delete_private_queries
     query = Query.new(:name => 'foo', :visibility => Query::VISIBILITY_PRIVATE)
     query.project_id = 1
@@ -369,6 +404,7 @@ class UserTest < ActiveSupport::TestCase
     assert_nil Query.find_by_id(query.id)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_public_queries
     query = Query.new(:name => 'foo', :visibility => Query::VISIBILITY_PUBLIC)
     query.project_id = 1
@@ -380,6 +416,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous, query.reload.user
   end
 
+  # @rbs () -> bool
   def test_destroy_should_update_time_entries
     entry = TimeEntry.new(:hours => '2', :spent_on => Date.today,
                           :activity => TimeEntryActivity.create!(:name => 'foo'))
@@ -392,6 +429,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal User.anonymous, entry.reload.user
   end
 
+  # @rbs () -> bool
   def test_destroy_should_delete_tokens
     token = Token.create!(:user_id => 2, :value => 'foo')
 
@@ -400,6 +438,7 @@ class UserTest < ActiveSupport::TestCase
     assert_nil Token.find_by_id(token.id)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_delete_watchers
     issue = Issue.create!(:project_id => 1, :author_id => 1,
                           :tracker_id => 1, :subject => 'foo')
@@ -410,6 +449,7 @@ class UserTest < ActiveSupport::TestCase
     assert_nil Watcher.find_by_id(watcher.id)
   end
 
+  # @rbs () -> Array[untyped]
   def test_destroy_should_update_wiki_contents
     wiki_content = WikiContent.create!(
       :text => 'foo',
@@ -431,6 +471,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_should_nullify_issue_categories
     category = IssueCategory.create!(:project_id => 1, :assigned_to_id => 2, :name => 'foo')
 
@@ -439,6 +480,7 @@ class UserTest < ActiveSupport::TestCase
     assert_nil category.reload.assigned_to_id
   end
 
+  # @rbs () -> bool
   def test_destroy_should_nullify_changesets
     changeset =
       Changeset.
@@ -461,12 +503,14 @@ class UserTest < ActiveSupport::TestCase
     assert_nil changeset.reload.user_id
   end
 
+  # @rbs () -> bool
   def test_anonymous_user_should_not_be_destroyable
     assert_no_difference 'User.count' do
       assert_equal false, User.anonymous.destroy
     end
   end
 
+  # @rbs () -> bool
   def test_password_change_should_destroy_tokens
     recovery_token = Token.create!(:user_id => 2, :action => 'recovery')
     autologin_token = Token.create!(:user_id => 2, :action => 'autologin')
@@ -479,6 +523,7 @@ class UserTest < ActiveSupport::TestCase
     assert_nil Token.find_by_id(autologin_token.id)
   end
 
+  # @rbs () -> bool
   def test_mail_change_should_destroy_tokens
     recovery_token = Token.create!(:user_id => 2, :action => 'recovery')
     autologin_token = Token.create!(:user_id => 2, :action => 'autologin')
@@ -491,6 +536,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal autologin_token, Token.find_by_id(autologin_token.id)
   end
 
+  # @rbs () -> bool
   def test_change_on_other_fields_should_not_destroy_tokens
     recovery_token = Token.create!(:user_id => 2, :action => 'recovery')
     autologin_token = Token.create!(:user_id => 2, :action => 'autologin')
@@ -503,12 +549,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal autologin_token, Token.find_by_id(autologin_token.id)
   end
 
+  # @rbs () -> bool
   def test_validate_login_presence
     @admin.login = ""
     assert !@admin.save
     assert_equal 1, @admin.errors.count
   end
 
+  # @rbs () -> bool
   def test_validate_mail_notification_inclusion
     u = User.new
     u.mail_notification = 'foo'
@@ -516,6 +564,7 @@ class UserTest < ActiveSupport::TestCase
     assert_not_equal [], u.errors[:mail_notification]
   end
 
+  # @rbs () -> bool
   def test_password
     user = User.try_to_login("admin", "admin")
     assert_kind_of User, user
@@ -528,6 +577,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "admin", user.login
   end
 
+  # @rbs () -> bool
   def test_validate_password_length
     with_settings :password_min_length => '100' do
       user = User.new(:firstname => "new100",
@@ -539,6 +589,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_validate_password_format
     Setting::PASSWORD_CHAR_CLASSES.each do |key, regexp|
       with_settings :password_required_char_classes => key do
@@ -551,6 +602,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_validate_password_complexity
     set_language_if_valid 'en'
     user = users(:users_002)
@@ -570,6 +622,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_name_format
     assert_equal 'John S.', @jsmith.name(:firstname_lastinitial)
     assert_equal 'Smith, John', @jsmith.name(:lastname_comma_firstname)
@@ -577,6 +630,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 'J.-P. Lang', User.new(:firstname => 'Jean-Philippe', :lastname => 'Lang').name(:firstinitial_lastname)
   end
 
+  # @rbs () -> bool
   def test_name_should_use_setting_as_default_format
     with_settings :user_format => :firstname_lastname do
       assert_equal 'John Smith', @jsmith.reload.name
@@ -589,12 +643,14 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_lastname_should_accept_255_characters
     u = User.first
     u.lastname = 'a' * 255
     assert u.save
   end
 
+  # @rbs () -> bool
   def test_today_should_return_the_day_according_to_user_time_zone
     preference = User.find(1).pref
     date = Date.new(2012, 05, 15)
@@ -612,6 +668,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal '2012-05-15', User.find(1).today.to_s
   end
 
+  # @rbs () -> bool
   def test_time_to_date_should_return_the_date_according_to_user_time_zone
     preference = User.find(1).pref
     time = Time.gm(2012, 05, 15, 23, 30).utc # 2012-05-15 23:30 UTC
@@ -626,6 +683,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal time.localtime.to_date.to_s, User.find(1).time_to_date(time).to_s
   end
 
+  # @rbs () -> bool
   def test_convert_time_to_user_timezone_should_return_the_time_according_to_user_time_zone
     preference = User.find(1).pref
     time = Time.gm(2012, 05, 15, 23, 30).utc # 2012-05-15 23:30 UTC
@@ -642,6 +700,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal time_not_utc, User.find(1).convert_time_to_user_timezone(time_not_utc)
   end
 
+  # @rbs () -> bool
   def test_fields_for_order_statement_should_return_fields_according_user_format_setting
     with_settings :user_format => 'lastname_comma_firstname' do
       assert_equal ['users.lastname', 'users.firstname', 'users.id'],
@@ -649,6 +708,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_fields_for_order_statement_width_table_name_should_prepend_table_name
     with_settings :user_format => 'lastname_firstname' do
       assert_equal ['authors.lastname', 'authors.firstname', 'authors.id'],
@@ -656,6 +716,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_fields_for_order_statement_with_blank_format_should_return_default
     with_settings :user_format => '' do
       assert_equal ['users.firstname', 'users.lastname', 'users.id'],
@@ -663,6 +724,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_fields_for_order_statement_with_invalid_format_should_return_default
     with_settings :user_format => 'foo' do
       assert_equal ['users.firstname', 'users.lastname', 'users.id'],
@@ -680,6 +742,7 @@ class UserTest < ActiveSupport::TestCase
     assert_nil User.try_to_login("admin", "foo")
   end
 
+  # @rbs () -> bool
   def test_try_to_login_with_locked_user_should_return_nil
     @jsmith.status = User::STATUS_LOCKED
     @jsmith.save!
@@ -688,6 +751,7 @@ class UserTest < ActiveSupport::TestCase
     assert_nil user
   end
 
+  # @rbs () -> bool
   def test_try_to_login_with_locked_user_and_not_active_only_should_return_user
     @jsmith.status = User::STATUS_LOCKED
     @jsmith.save!
@@ -795,6 +859,7 @@ class UserTest < ActiveSupport::TestCase
     puts "Skipping LDAP tests."
   end
 
+  # @rbs () -> bool
   def test_create_anonymous
     AnonymousUser.delete_all
     anon = User.anonymous
@@ -802,6 +867,7 @@ class UserTest < ActiveSupport::TestCase
     assert_kind_of AnonymousUser, anon
   end
 
+  # @rbs () -> bool
   def test_ensure_single_anonymous_user
     AnonymousUser.delete_all
     anon1 = User.anonymous
@@ -816,6 +882,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 1, anon2.errors.count
   end
 
+  # @rbs () -> bool
   def test_atom_key
     assert_nil @jsmith.atom_token
     key = @jsmith.atom_key
@@ -825,6 +892,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal key, @jsmith.atom_key
   end
 
+  # @rbs () -> bool
   def test_atom_key_should_not_be_generated_twice
     assert_difference 'Token.count', 1 do
       key1 = @jsmith.atom_key
@@ -833,6 +901,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_api_key_should_not_be_generated_twice
     assert_difference 'Token.count', 1 do
       key1 = @jsmith.api_key
@@ -883,6 +952,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal user, User.find_by_api_key(token.value)
   end
 
+  # @rbs () -> bool
   def test_default_admin_account_changed_should_return_false_if_account_was_not_changed
     user = User.find_by_login("admin")
     user.password = "admin"
@@ -891,6 +961,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal false, User.default_admin_account_changed?
   end
 
+  # @rbs () -> bool
   def test_default_admin_account_changed_should_return_true_if_password_was_changed
     user = User.find_by_login("admin")
     user.password = "newpassword"
@@ -899,6 +970,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal true, User.default_admin_account_changed?
   end
 
+  # @rbs () -> bool
   def test_default_admin_account_changed_should_return_true_if_account_is_disabled
     user = User.find_by_login("admin")
     user.password = "admin"
@@ -908,6 +980,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal true, User.default_admin_account_changed?
   end
 
+  # @rbs () -> bool
   def test_default_admin_account_changed_should_return_true_if_account_does_not_exist
     user = User.find_by_login("admin")
     user.destroy
@@ -915,6 +988,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal true, User.default_admin_account_changed?
   end
 
+  # @rbs () -> bool
   def test_membership_with_project_should_return_membership
     project = Project.find(1)
 
@@ -924,6 +998,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal project, membership.project
   end
 
+  # @rbs () -> bool
   def test_membership_with_project_id_should_return_membership
     project = Project.find(1)
 
@@ -933,6 +1008,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal project, membership.project
   end
 
+  # @rbs () -> bool
   def test_membership_for_non_member_should_return_nil
     project = Project.find(1)
 
@@ -941,12 +1017,14 @@ class UserTest < ActiveSupport::TestCase
     assert_nil membership
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_member_on_public_project_should_return_roles_and_non_member
     roles = @jsmith.roles_for_project(Project.find(1))
     assert_kind_of Role, roles.first
     assert_equal ["Manager"], roles.map(&:name)
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_member_on_private_project_should_return_roles
     Project.find(1).update_attribute :is_public, false
 
@@ -955,12 +1033,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal ["Manager"], roles.map(&:name)
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_non_member_with_public_project_should_return_non_member
     set_language_if_valid 'en'
     roles = User.find(8).roles_for_project(Project.find(1))
     assert_equal ["Non member"], roles.map(&:name)
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_non_member_with_public_project_and_override_should_return_override_roles
     project = Project.find(1)
     Member.create!(:project => project, :principal => Group.non_member, :role_ids => [1, 2])
@@ -968,12 +1048,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal ["Developer", "Manager"], roles.map(&:name).sort
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_non_member_with_private_project_should_return_no_roles
     Project.find(1).update_attribute :is_public, false
     roles = User.find(8).roles_for_project(Project.find(1))
     assert_equal [], roles.map(&:name)
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_non_member_with_private_project_and_override_should_return_no_roles
     project = Project.find(1)
     project.update_attribute :is_public, false
@@ -982,12 +1064,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [], roles.map(&:name).sort
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_anonymous_with_public_project_should_return_anonymous
     set_language_if_valid 'en'
     roles = User.anonymous.roles_for_project(Project.find(1))
     assert_equal ["Anonymous"], roles.map(&:name)
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_anonymous_with_public_project_and_override_should_return_override_roles
     project = Project.find(1)
     Member.create!(:project => project, :principal => Group.anonymous, :role_ids => [1, 2])
@@ -995,12 +1079,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal ["Developer", "Manager"], roles.map(&:name).sort
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_anonymous_with_private_project_should_return_no_roles
     Project.find(1).update_attribute :is_public, false
     roles = User.anonymous.roles_for_project(Project.find(1))
     assert_equal [], roles.map(&:name)
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_with_anonymous_with_private_project_and_override_should_return_no_roles
     project = Project.find(1)
     project.update_attribute :is_public, false
@@ -1009,6 +1095,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [], roles.map(&:name).sort
   end
 
+  # @rbs () -> bool
   def test_roles_for_project_should_be_unique
     m = Member.new(:user_id => 1, :project_id => 1)
     m.member_roles.build(:role_id => 1)
@@ -1021,6 +1108,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [1], user.roles_for_project(project).map(&:id)
   end
 
+  # @rbs () -> bool
   def test_projects_by_role_for_user_with_role
     user = User.find(2)
     assert_kind_of Hash, user.projects_by_role
@@ -1029,6 +1117,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [2], user.projects_by_role[Role.find(2)].collect(&:id).sort
   end
 
+  # @rbs () -> bool
   def test_project_ids_by_role_should_not_poison_cache_when_first_called_from_chained_scopes
     user = User.find(2)
     project = Project.find(1)
@@ -1037,6 +1126,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [1, 2, 5], user.project_ids_by_role.values.flatten.sort
   end
 
+  # @rbs () -> bool
   def test_accessing_projects_by_role_with_no_projects_should_return_an_empty_array
     user = User.find(2)
     assert_equal [], user.projects_by_role[Role.find(3)]
@@ -1044,15 +1134,18 @@ class UserTest < ActiveSupport::TestCase
     assert_nil user.projects_by_role.values.detect(&:blank?)
   end
 
+  # @rbs () -> bool
   def test_projects_by_role_for_user_with_no_role
     user = User.generate!
     assert_equal({}, user.projects_by_role)
   end
 
+  # @rbs () -> bool
   def test_projects_by_role_for_anonymous
     assert_equal({}, User.anonymous.projects_by_role)
   end
 
+  # @rbs () -> bool
   def test_valid_notification_options
     # without memberships
     assert_equal 5, User.find(7).valid_notification_options.size
@@ -1060,17 +1153,20 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 6, User.find(2).valid_notification_options.size
   end
 
+  # @rbs () -> bool
   def test_valid_notification_options_class_method
     assert_equal 5, User.valid_notification_options.size
     assert_equal 5, User.valid_notification_options(User.find(7)).size
     assert_equal 6, User.valid_notification_options(User.find(2)).size
   end
 
+  # @rbs () -> bool
   def test_notified_project_ids_setter_should_coerce_to_unique_integer_array
     @jsmith.notified_project_ids = ["1", "123", "2u", "wrong", "12", 6, 12, -35, ""]
     assert_equal [1, 123, 2, 12, 6], @jsmith.notified_projects_ids
   end
 
+  # @rbs () -> bool
   def test_mail_notification_all
     @jsmith.mail_notification = 'all'
     @jsmith.notified_project_ids = []
@@ -1079,6 +1175,7 @@ class UserTest < ActiveSupport::TestCase
     assert @jsmith.projects.first.recipients.include?(@jsmith.mail)
   end
 
+  # @rbs () -> bool
   def test_mail_notification_selected
     @jsmith.mail_notification = 'selected'
     @jsmith.notified_project_ids = [1]
@@ -1087,6 +1184,7 @@ class UserTest < ActiveSupport::TestCase
     assert Project.find(1).recipients.include?(@jsmith.mail)
   end
 
+  # @rbs () -> bool
   def test_mail_notification_only_my_events
     @jsmith.mail_notification = 'only_my_events'
     @jsmith.notified_project_ids = []
@@ -1095,6 +1193,7 @@ class UserTest < ActiveSupport::TestCase
     assert !@jsmith.projects.first.recipients.include?(@jsmith.mail)
   end
 
+  # @rbs () -> bool
   def test_comments_sorting_preference
     assert !@jsmith.wants_comments_in_reverse_order?
     @jsmith.pref.comments_sorting = 'asc'
@@ -1103,12 +1202,14 @@ class UserTest < ActiveSupport::TestCase
     assert @jsmith.wants_comments_in_reverse_order?
   end
 
+  # @rbs () -> bool
   def test_find_by_mail_should_be_case_insensitive
     u = User.find_by_mail('JSmith@somenet.foo')
     assert_not_nil u
     assert_equal 'jsmith@somenet.foo', u.mail
   end
 
+  # @rbs () -> bool
   def test_random_password
     u = User.new
     u.random_password
@@ -1116,6 +1217,7 @@ class UserTest < ActiveSupport::TestCase
     assert u.password_confirmation.present?
   end
 
+  # @rbs () -> bool
   def test_random_password_include_required_characters
     with_settings :password_required_char_classes => Setting::PASSWORD_CHAR_CLASSES.keys do
       u = User.new(:firstname => "new", :lastname => "user", :login => "random", :mail => "random@somnet.foo")
@@ -1147,18 +1249,21 @@ class UserTest < ActiveSupport::TestCase
     assert !user.change_password_allowed?, "User allowed to change password, though auth source does not"
   end
 
+  # @rbs () -> bool
   def test_own_account_deletable_should_be_true_with_unsubscrive_enabled
     with_settings :unsubscribe => '1' do
       assert_equal true, User.find(2).own_account_deletable?
     end
   end
 
+  # @rbs () -> bool
   def test_own_account_deletable_should_be_false_with_unsubscrive_disabled
     with_settings :unsubscribe => '0' do
       assert_equal false, User.find(2).own_account_deletable?
     end
   end
 
+  # @rbs () -> bool
   def test_own_account_deletable_should_be_false_for_a_single_admin
     User.admin.where("id <> ?", 1).delete_all
 
@@ -1167,6 +1272,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_own_account_deletable_should_be_true_for_an_admin_if_other_admin_exists
     User.generate! do |user|
       user.admin = true
@@ -1252,6 +1358,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal true, @anonymous.allowed_to_globally?(:view_issues)
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_notify_about_issue
     project = Project.find(1)
     author = User.generate!
@@ -1275,6 +1382,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_notify_about_issue_for_previous_assignee
     assignee = User.generate!(:mail_notification => 'only_assigned')
     Member.create!(:user => assignee, :project_id => 1, :role_ids => [1])
@@ -1298,6 +1406,7 @@ class UserTest < ActiveSupport::TestCase
     assert new_assignee.notify_about?(issue)
   end
 
+  # @rbs () -> Array[untyped]
   def test_notify_about_news
     user = User.generate!
     news = News.new
@@ -1308,6 +1417,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_salt_unsalted_passwords
     # Restore a user with an unsalted password
     user = User.find(1)
@@ -1325,6 +1435,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal user, User.try_to_login(user.login, "unsalted")
   end
 
+  # @rbs () -> bool
   def test_bookmarked_project_ids
     # User with bookmarked projects
     assert_equal [1, 5], User.find(1).bookmarked_project_ids
@@ -1332,6 +1443,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [], User.find(2).bookmarked_project_ids
   end
 
+  # @rbs () -> bool
   def test_remove_custom_field_references_upon_destroy
     cf1 = IssueCustomField.create(field_format: 'user', name: 'user cf', is_for_all: true, tracker_ids: Tracker.pluck(:id))
     cf2 = IssueCustomField.create(field_format: 'user', name: 'users cf', is_for_all: true, multiple: true, tracker_ids: Tracker.pluck(:id))
@@ -1367,6 +1479,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal @dlopper.id.to_s, cv2a.value
   end
 
+  # @rbs () -> Array[untyped]
   def test_prune_should_destroy_unactivated_old_users
     User.generate!(:status => User::STATUS_REGISTERED, :created_on => 6.days.ago)
     User.generate!(:status => User::STATUS_REGISTERED, :created_on => 7.days.ago)

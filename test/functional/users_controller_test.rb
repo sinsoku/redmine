@@ -22,11 +22,13 @@ require_relative '../test_helper'
 class UsersControllerTest < Redmine::ControllerTest
   include Redmine::I18n
 
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 1 # admin
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
@@ -37,12 +39,14 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select "tr#user-#{locked.id}", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_status_filter
     get :index, params: { set_filter: 1, f: ['status'], op: {status: '='}, v: {status: [3]} }
     assert_response :success
     assert_select "tr.user", User.where(status: 3).count
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_firstname_filter
     get :index, params: { set_filter: 1, f: ['firstname'], op: {firstname: '~'}, v: {firstname: ['john']} }
     assert_response :success
@@ -50,6 +54,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'tr.user', 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_group_filter
     get :index, params: {
       set_filter: 1,
@@ -59,6 +64,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'tr.user', Group.find(10).users.count
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_show_2fa_filter_and_column_if_disabled
     with_settings twofa: "0" do
       get :index
@@ -73,6 +79,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_filter_by_twofa_yes
     with_settings twofa: "1" do
       user = User.find(1)
@@ -95,6 +102,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_filter_by_twofa_scheme
     with_settings twofa: "1" do
       user = User.find(1)
@@ -119,6 +127,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_filter_by_twofa_no
     with_settings twofa: "1" do
       user = User.find(1)
@@ -134,6 +143,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_filter_by_auth_source_none
     user = User.find(1)
     user.update_column :auth_source_id, 1
@@ -148,6 +158,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'tr#user-1', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_filter_by_auth_source
     user = User.find(1)
     user.update_column :auth_source_id, 1
@@ -168,6 +179,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_auth_source_column
     user = User.find(1)
     user.update_column :auth_source_id, 1
@@ -182,6 +194,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'tr#user-1', 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query
     query = UserQuery.create!(:name => 'My User Query', :description => 'Description for My User Query', :visibility => UserQuery::VISIBILITY_PUBLIC)
     get :index, :params => { :query_id => query.id }
@@ -191,6 +204,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select '#sidebar a.query.selected[title=?]', query.description, :text => query.name
   end
 
+  # @rbs () -> bool
   def test_index_csv
     with_settings :default_language => 'en' do
       user = User.logged.status(1).first
@@ -214,6 +228,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_custom_field_columns
     float_custom_field = UserCustomField.generate!(:name => 'float field', :field_format => 'float')
     date_custom_field = UserCustomField.generate!(:name => 'date field', :field_format => 'date')
@@ -238,6 +253,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_status_filter
     with_settings :default_language => 'en' do
       get :index, :params => {
@@ -255,6 +271,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_name_filter
     get :index, :params => {
       :set_filter => '1',
@@ -269,6 +286,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_equal 'text/csv; header=present', @response.media_type
   end
 
+  # @rbs () -> bool
   def test_index_csv_with_group_filter
     get :index, :params => {
       :set_filter => '1',
@@ -282,12 +300,14 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_equal 'text/csv; header=present', @response.media_type
   end
 
+  # @rbs () -> MatchData
   def test_index_csv_filename_without_query_id_param
     get :index, :params => {:format => 'csv'}
     assert_response :success
     assert_match /users.csv/, @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> MatchData
   def test_index_csv_filename_with_query_id_param
     query = UserQuery.create!(:name => 'My Query Name', :visibility => UserQuery::VISIBILITY_PUBLIC)
     get :index, :params => {:query_id => query.id, :format => 'csv'}
@@ -295,6 +315,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_match /my_query_name\.csv/, @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show
     @request.session[:user_id] = nil
     get :show, :params => {:id => 2}
@@ -305,6 +326,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'div#groups', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_visible_custom_fields
     @request.session[:user_id] = nil
     UserCustomField.find_by_name('Phone number').update_attribute :visible, true
@@ -314,6 +336,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'li.cf_4.string_cf', :text => /Phone number/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_hidden_custom_fields
     @request.session[:user_id] = nil
     UserCustomField.find_by_name('Phone number').update_attribute :visible, false
@@ -323,6 +346,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'li', :text => /Phone number/, :count => 0
   end
 
+  # @rbs () -> bool
   def test_show_should_not_fail_when_custom_values_are_nil
     user = User.find(2)
 
@@ -334,12 +358,14 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_show_inactive
     @request.session[:user_id] = nil
     get :show, :params => {:id => 5}
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_inactive_by_admin
     @request.session[:user_id] = 1
     get :show, :params => {:id => 5}
@@ -347,6 +373,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'h2', :text => /Dave2 Lopper2/
   end
 
+  # @rbs () -> bool
   def test_show_user_who_is_not_visible_should_return_404
     Role.anonymous.update! :users_visibility => 'members_of_visible_projects'
     user = User.generate!
@@ -356,6 +383,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_displays_memberships_based_on_project_visibility
     @request.session[:user_id] = 1
     get :show, :params => {:id => 2}
@@ -377,12 +405,14 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_show_current_should_require_authentication
     @request.session[:user_id] = nil
     get :show, :params => {:id => 'current'}
     assert_response :found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_current
     @request.session[:user_id] = 2
     get :show, :params => {:id => 'current'}
@@ -390,6 +420,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'h2', :text => /John Smith/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_issues_counts
     @request.session[:user_id] = 2
     get :show, :params => {:id => 2}
@@ -409,6 +440,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_user_should_list_user_groups
     @request.session[:user_id] = 1
     get :show, :params => {:id => 8}
@@ -421,6 +453,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_list_all_emails
     EmailAddress.create!(user_id: 3, address: 'dlopper@example.net')
     EmailAddress.create!(user_id: 3, address: 'dlopper@example.org')
@@ -435,6 +468,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     get :new
     assert_response :success
@@ -442,6 +476,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'label[for=?]>span.required', 'user_password', 1
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'User.count' do
       assert_difference 'ActionMailer::Base.deliveries.size' do
@@ -476,6 +511,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_mail_body_match 'secret', mail
   end
 
+  # @rbs () -> bool
   def test_create_with_preferences
     assert_difference 'User.count' do
       post :create, :params => {
@@ -508,6 +544,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_equal 'history', user.pref[:history_default_tab]
   end
 
+  # @rbs () -> bool
   def test_create_with_generate_password_should_email_the_password
     assert_difference 'User.count' do
       post :create, :params => {
@@ -535,6 +572,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert user.check_password?(password)
   end
 
+  # @rbs () -> bool
   def test_create_and_continue
     post :create, :params => {
       :user => {
@@ -549,6 +587,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_redirected_to '/users/new?user%5Bgenerate_password%5D=1'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     assert_no_difference 'User.count' do
       post :create, :params => {:user => {:login => 'foo'}}
@@ -557,6 +596,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select_error /Email cannot be blank/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure_sould_preserve_preference
     assert_no_difference 'User.count' do
       post :create, :params => {
@@ -578,6 +618,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'input#pref_no_self_notified[value="1"][checked=checked]'
   end
 
+  # @rbs () -> Array[untyped]
   def test_create_admin_should_send_security_notification
     ActionMailer::Base.deliveries.clear
     post :create, :params => {
@@ -616,6 +657,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_non_admin_should_not_send_security_notification
     ActionMailer::Base.deliveries.clear
 
@@ -634,6 +676,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_nil ActionMailer::Base.deliveries.last
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     with_settings :gravatar_enabled => '1' do
       get :edit, :params => {:id => 2}
@@ -645,6 +688,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'label[for=?]>span.required', 'user_password', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_registered_user
     assert User.find(2).register!
 
@@ -653,6 +697,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => 'Activate'
   end
 
+  # @rbs () -> bool
   def test_edit_should_be_denied_for_anonymous
     assert User.find(6).anonymous?
 
@@ -661,6 +706,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_edit_user_with_full_text_formatting_custom_field_should_not_fail
     field = UserCustomField.find(4)
     field.update_attribute :text_formatting, 'full'
@@ -670,6 +716,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_update
     ActionMailer::Base.deliveries.clear
 
@@ -687,6 +734,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert ActionMailer::Base.deliveries.empty?
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     assert_no_difference 'User.count' do
       put :update, :params => {
@@ -698,6 +746,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select_error /First name cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_update_with_group_ids_should_assign_groups
     put :update, :params => {
       :id => 2,
@@ -708,6 +757,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_equal [10], user.group_ids
   end
 
+  # @rbs () -> bool
   def test_update_with_activation_should_send_a_notification
     u = User.new(:firstname => 'Foo', :lastname => 'Bar',
                  :mail => 'foo.bar@somenet.foo', :language => 'fr')
@@ -731,6 +781,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_mail_body_match ll('fr', :notice_account_activated), mail
   end
 
+  # @rbs () -> bool
   def test_update_with_password_change_should_send_a_notification
     ActionMailer::Base.deliveries.clear
 
@@ -754,6 +805,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_mail_body_match 'newpass123', mail
   end
 
+  # @rbs () -> bool
   def test_update_with_password_change_by_admin_should_send_a_security_notification
     ActionMailer::Base.deliveries.clear
     user = User.find_by(login: 'jsmith')
@@ -770,6 +822,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_mail_body_match 'Your password has been changed.', mail
   end
 
+  # @rbs () -> bool
   def test_update_with_generate_password_should_email_the_password
     ActionMailer::Base.deliveries.clear
 
@@ -796,6 +849,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert u.check_password?(password)
   end
 
+  # @rbs () -> bool
   def test_update_without_generate_password_should_not_change_password
     put(
       :update,
@@ -815,6 +869,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert user.check_password?('jsmith')
   end
 
+  # @rbs () -> bool
   def test_update_user_switchin_from_auth_source_to_password_authentication
     # Configure as auth source
     u = User.find(2)
@@ -830,6 +885,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert u.check_password?('newpass123')
   end
 
+  # @rbs () -> bool
   def test_update_notified_project
     get :edit, :params => {:id => 2}
     assert_response :success
@@ -850,6 +906,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_equal [1, 2], u.notified_projects_ids.sort
   end
 
+  # @rbs () -> bool
   def test_update_status_should_not_update_attributes
     user = User.find(2)
     user.pref[:no_self_notified] = '1'
@@ -865,6 +922,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_equal '1', user.pref[:no_self_notified]
   end
 
+  # @rbs () -> Array[untyped]
   def test_update_assign_admin_should_send_security_notification
     ActionMailer::Base.deliveries.clear
     put :update, :params => {
@@ -891,6 +949,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_update_unassign_admin_should_send_security_notification
     user = User.find(2)
     user.admin = true
@@ -921,6 +980,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_lock_admin_should_send_security_notification
     user = User.find(2)
     user.admin = true
@@ -957,6 +1017,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_nil ActionMailer::Base.deliveries.last
   end
 
+  # @rbs () -> Array[untyped]
   def test_update_unlock_admin_should_send_security_notification
     user = User.find(5) # already locked
     user.admin = true
@@ -986,6 +1047,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_admin_unrelated_property_should_not_send_security_notification
     ActionMailer::Base.deliveries.clear
     put :update, :params => {
@@ -995,12 +1057,14 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_nil ActionMailer::Base.deliveries.last
   end
 
+  # @rbs () -> bool
   def test_update_should_be_denied_for_anonymous
     assert User.find(6).anonymous?
     put :update, :params => {:id => 6}
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_blank_email_should_not_raise_exception
     assert_no_difference 'User.count' do
       with_settings :gravatar_enabled => '1' do
@@ -1014,6 +1078,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select_error /Email cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_destroy
     assert_difference 'User.count', -1 do
       delete :destroy, :params => {:id => 2, :confirm => User.find(2).login}
@@ -1022,6 +1087,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_nil User.find_by_id(2)
   end
 
+  # @rbs () -> bool
   def test_destroy_with_lock_param_should_lock_instead
     assert_no_difference 'User.count' do
       delete :destroy, :params => {:id => 2, :lock => 'lock'}
@@ -1030,6 +1096,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert User.find_by_id(2).locked?
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_should_require_confirmation
     assert_no_difference 'User.count' do
       delete :destroy, :params => {:id => 2}
@@ -1038,6 +1105,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select '.warning', :text => /Are you sure you want to delete this user/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_should_require_correct_confirmation
     assert_no_difference 'User.count' do
       delete :destroy, :params => {:id => 2, :confirm => 'wrong'}
@@ -1046,6 +1114,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select '.warning', :text => /Are you sure you want to delete this user/
   end
 
+  # @rbs () -> bool
   def test_destroy_should_be_denied_for_non_admin_users
     @request.session[:user_id] = 3
 
@@ -1055,6 +1124,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_destroy_should_be_denied_for_anonymous
     assert User.find(6).anonymous?
     assert_no_difference 'User.count' do
@@ -1063,6 +1133,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_destroy_should_redirect_to_back_url_param
     assert_difference 'User.count', -1 do
       delete :destroy, :params => {:id => 2,
@@ -1072,6 +1143,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_redirected_to '/users?name=foo'
   end
 
+  # @rbs () -> Array[untyped]
   def test_destroy_active_admin_should_send_security_notification
     user = User.find(2)
     user.admin = true
@@ -1098,6 +1170,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_without_unsubscribe_is_denied
     user = User.find(2)
     user.update(admin: true) # Create other admin so self can be deleted
@@ -1110,6 +1183,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_last_admin_is_denied
     user = User.find(1)
     @request.session[:user_id] = user.id
@@ -1121,6 +1195,7 @@ class UsersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_bulk_destroy
     assert_difference 'User.count', -1 do
       delete :bulk_destroy, :params => {:ids => [2], :confirm => 'Yes'}
@@ -1129,6 +1204,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_nil User.find_by_id(2)
   end
 
+  # @rbs () -> bool
   def test_bulk_destroy_should_not_destroy_current_user
     assert_difference 'User.count', -1 do
       delete :bulk_destroy, :params => {:ids => [2, 1], :confirm => 'Yes'}
@@ -1137,6 +1213,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_nil User.find_by_id(2)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_destroy_should_require_confirmation
     assert_no_difference 'User.count' do
       delete :bulk_destroy, :params => {:ids => [2]}
@@ -1145,6 +1222,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select '.warning', :text => /You are about to delete the following users/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_destroy_should_require_correct_confirmation
     assert_no_difference 'User.count' do
       delete :bulk_destroy, :params => {:ids => [2], :confirm => 'wrong'}
@@ -1153,6 +1231,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_select '.warning', :text => /You are about to delete the following users/
   end
 
+  # @rbs () -> bool
   def test_bulk_destroy_should_be_denied_for_non_admin_users
     @request.session[:user_id] = 3
 
@@ -1162,6 +1241,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_bulk_destroy_should_be_denied_for_anonymous
     assert User.find(6).anonymous?
     assert_no_difference 'User.count' do
@@ -1170,6 +1250,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_bulk_lock
     assert_difference 'User.status(User::STATUS_LOCKED).count', 1 do
       delete :bulk_lock, :params => {:ids => [2]}
@@ -1178,6 +1259,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert User.find_by_id(2).locked?
   end
 
+  # @rbs () -> bool
   def test_bulk_unlock
     [8, 9].each do |id|
       user = User.find(id)
@@ -1194,6 +1276,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert User.find_by_id(9).active?
   end
 
+  # @rbs () -> bool
   def test_bulk_lock_should_not_lock_current_user
     assert_difference 'User.status(User::STATUS_LOCKED).count', 1 do
       delete :bulk_lock, :params => {:ids => [2, 1]}
@@ -1203,6 +1286,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert User.find_by_id(2).locked?
   end
 
+  # @rbs () -> bool
   def test_bulk_lock_should_be_denied_for_non_admin_users
     @request.session[:user_id] = 3
 
@@ -1212,6 +1296,7 @@ class UsersControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_bulk_lock_should_be_denied_for_anonymous
     assert User.find(6).anonymous?
     assert_no_difference 'User.status(User::STATUS_LOCKED).count' do

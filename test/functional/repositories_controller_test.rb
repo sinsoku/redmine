@@ -20,11 +20,13 @@
 require_relative '../test_helper'
 
 class RepositoriesControllerTest < Redmine::RepositoryControllerTest
+  # @rbs () -> nil
   def setup
     super
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     @request.session[:user_id] = 1
     get(
@@ -40,6 +42,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select 'input[name=?]:not([disabled])', 'repository[url]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_propose_enabled_scm_only
     @request.session[:user_id] = 1
     with_settings :enabled_scm => ['Mercurial', 'Git'] do
@@ -58,6 +61,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_type
     @request.session[:user_id] = 1
     get(
@@ -73,6 +77,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create
     @request.session[:user_id] = 1
     assert_difference 'Repository.count' do
@@ -95,6 +100,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_equal 'file:///test', repository.url
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     @request.session[:user_id] = 1
     assert_no_difference 'Repository.count' do
@@ -116,6 +122,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     @request.session[:user_id] = 1
     get(:edit, :params => {:id => 11})
@@ -123,6 +130,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select 'input[name=?][value=?][disabled=disabled]', 'repository[url]', 'svn://localhost/test'
   end
 
+  # @rbs () -> bool
   def test_update
     @request.session[:user_id] = 1
     put(
@@ -138,6 +146,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_equal 'test_update', Repository.find(11).password
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     @request.session[:user_id] = 1
     put(
@@ -153,6 +162,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select_error /Password is too long/
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 1
     assert_difference 'Repository.count', -1 do
@@ -162,6 +172,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_nil Repository.find_by_id(11)
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_show_with_autofetch_changesets_enabled_should_fetch_changesets
     Repository::Subversion.any_instance.expects(:fetch_changesets).once
     with_settings :autofetch_changesets => '1' do
@@ -169,6 +180,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_show_with_autofetch_changesets_disabled_should_not_fetch_changesets
     Repository::Subversion.any_instance.expects(:fetch_changesets).never
     with_settings :autofetch_changesets => '0' do
@@ -176,6 +188,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_show_with_closed_project_should_not_fetch_changesets
     Repository::Subversion.any_instance.expects(:fetch_changesets).never
     Project.find(1).close
@@ -184,6 +197,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> nil
   def test_show_without_main_repository_should_display_first_repository
     skip unless repository_configured?('subversion')
 
@@ -206,6 +220,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> nil
   def test_show_should_show_diff_button_depending_on_browse_repository_permission
     skip unless repository_configured?('subversion')
 
@@ -223,6 +238,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select 'input[value="View differences"]', :count => 0
   end
 
+  # @rbs () -> nil
   def test_fetch_changesets
     skip unless repository_configured?('subversion')
 
@@ -242,6 +258,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_revisions
     get(
       :revisions,
@@ -254,6 +271,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select 'table.changesets'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_revisions_for_other_repository
     repository = Repository::Subversion.create!(:project_id => 1, :identifier => 'foo', :url => 'file:///foo')
     get(
@@ -267,6 +285,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select 'table.changesets'
   end
 
+  # @rbs () -> bool
   def test_revisions_for_invalid_repository
     get(
       :revisions,
@@ -278,6 +297,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_revision
     get(
       :revision,
@@ -291,6 +311,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select 'h2', :text => 'Revision 1'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_revision_should_not_format_comments_when_disabled
     Changeset.where(:id => 100).update_all(:comments => 'Simple *text*')
     with_settings :commit_logs_formatting => '0' do
@@ -307,6 +328,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_revision_should_show_add_related_issue_form
     Role.find(1).add_permission! :manage_related_issues
     @request.session[:user_id] = 2
@@ -324,6 +346,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_revision_should_not_change_the_project_menu_link
     get(
       :revision,
@@ -337,6 +360,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select '#main-menu a.repository[href=?]', '/projects/ecookbook/repository'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_revision_with_before_nil_and_afer_normal
     get(
       :revision,
@@ -353,6 +377,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_add_related_issue
     @request.session[:user_id] = 2
     assert_difference 'Changeset.find(103).issues.size' do
@@ -375,6 +400,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_include 'Feature request #2', response.body
   end
 
+  # @rbs () -> bool
   def test_add_related_issue_should_accept_issue_id_with_sharp
     @request.session[:user_id] = 2
     assert_difference 'Changeset.find(103).issues.size' do
@@ -393,6 +419,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_equal [2], Changeset.find(103).issue_ids
   end
 
+  # @rbs () -> bool
   def test_add_related_issue_with_invalid_issue_id
     @request.session[:user_id] = 2
     assert_no_difference 'Changeset.find(103).issues.size' do
@@ -413,6 +440,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_include 'alert("Issue is invalid")', response.body
   end
 
+  # @rbs () -> bool
   def test_remove_related_issue
     Changeset.find(103).issues << Issue.find(1)
     Changeset.find(103).issues << Issue.find(2)
@@ -436,6 +464,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_include 'related-issue-2', response.body
   end
 
+  # @rbs () -> bool
   def test_graph_commits_per_month
     # Make sure there's some data to display
     latest = Project.find(1).repository.changesets.maximum(:commit_date)
@@ -457,6 +486,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_not_nil data['changes']
   end
 
+  # @rbs () -> bool
   def test_graph_commits_per_author
     get(
       :graph,
@@ -474,6 +504,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_not_nil data['changes']
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_committers
     @request.session[:user_id] = 2
     # add a commit with an unknown user
@@ -491,6 +522,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_select 'input[value=foo] + select option[selected=selected]', 0 # no option selected
   end
 
+  # @rbs () -> bool
   def test_get_committers_without_changesets
     Changeset.delete_all
     @request.session[:user_id] = 2
@@ -498,6 +530,7 @@ class RepositoriesControllerTest < Redmine::RepositoryControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_post_committers
     @request.session[:user_id] = 2
     # add a commit with an unknown user

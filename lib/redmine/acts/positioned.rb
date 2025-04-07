@@ -32,6 +32,7 @@ module Redmine
         #
         # * +scope+ - restricts what is to be considered a list. Must be a symbol
         # or an array of symbols
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_positioned(options = {})
           class_attribute :positioned_options
           self.positioned_options = {:scope => Array(options[:scope])}
@@ -45,22 +46,26 @@ module Redmine
       end
 
       module InstanceMethods
+        # @rbs (Class) -> Class
         def self.included(base)
           base.extend ClassMethods
         end
 
         private
 
+        # @rbs () -> (GroupCustomField::ActiveRecord_Relation | IssueCustomField::ActiveRecord_Relation | TimeEntryCustomField::ActiveRecord_Relation | TimeEntryActivity::ActiveRecord_Relation | ProjectCustomField::ActiveRecord_Relation | Board::ActiveRecord_Relation | CustomField::ActiveRecord_Relation | Role::ActiveRecord_Relation | Tracker::ActiveRecord_Relation | IssueStatus::ActiveRecord_Relation | IssuePriority::ActiveRecord_Relation | DocumentCategory::ActiveRecord_Relation | Enumeration::ActiveRecord_Relation | VersionCustomField::ActiveRecord_Relation | UserCustomField::ActiveRecord_Relation | TimeEntryActivityCustomField::ActiveRecord_Relation | IssuePriorityCustomField::ActiveRecord_Relation)
         def position_scope
           build_position_scope {|c| send(c)}
         end
 
+        # @rbs () -> (Board::ActiveRecord_Relation | ProjectCustomField::ActiveRecord_Relation | IssueCustomField::ActiveRecord_Relation | UserCustomField::ActiveRecord_Relation | TimeEntryActivityCustomField::ActiveRecord_Relation | TimeEntryCustomField::ActiveRecord_Relation | CustomField::ActiveRecord_Relation | IssuePriority::ActiveRecord_Relation | Tracker::ActiveRecord_Relation | IssueStatus::ActiveRecord_Relation | Role::ActiveRecord_Relation | TimeEntryActivity::ActiveRecord_Relation)
         def position_scope_was
           # this can be called in after_update or after_destroy callbacks
           # with different methods in Rails 5 for retrieving the previous value
           build_position_scope {|c| send(destroyed? ? "#{c}_was" : "#{c}_before_last_save")}
         end
 
+        # @rbs () -> (GroupCustomField::ActiveRecord_Relation | Board::ActiveRecord_Relation | IssueCustomField::ActiveRecord_Relation | TimeEntryCustomField::ActiveRecord_Relation | TimeEntryActivity::ActiveRecord_Relation | ProjectCustomField::ActiveRecord_Relation | UserCustomField::ActiveRecord_Relation | TimeEntryActivityCustomField::ActiveRecord_Relation | CustomField::ActiveRecord_Relation | Role::ActiveRecord_Relation | Tracker::ActiveRecord_Relation | IssueStatus::ActiveRecord_Relation | IssuePriority::ActiveRecord_Relation | DocumentCategory::ActiveRecord_Relation | Enumeration::ActiveRecord_Relation | VersionCustomField::ActiveRecord_Relation | IssuePriorityCustomField::ActiveRecord_Relation)
         def build_position_scope
           condition_hash = self.class.positioned_options[:scope].inject({}) do |h, column|
             h[column] = yield(column)
@@ -69,12 +74,14 @@ module Redmine
           self.class.unscoped.where(condition_hash)
         end
 
+        # @rbs () -> Integer?
         def set_default_position
           if position.nil?
             self.position = position_scope.maximum(:position).to_i + (new_record? ? 1 : 0)
           end
         end
 
+        # @rbs () -> Integer?
         def update_position
           if !new_record? && position_scope_changed?
             remove_position
@@ -88,10 +95,12 @@ module Redmine
           end
         end
 
+        # @rbs () -> Integer
         def insert_position
           position_scope.where("position >= ? AND id <> ?", position, id).update_all("position = position + 1")
         end
 
+        # @rbs () -> Integer
         def remove_position
           # this can be called in after_update or after_destroy callbacks
           # with different methods in Rails 5 for retrieving the previous value
@@ -99,10 +108,12 @@ module Redmine
           position_scope_was.where("position >= ? AND id <> ?", previous, id).update_all("position = position - 1")
         end
 
+        # @rbs () -> bool
         def position_scope_changed?
           saved_changes.keys.intersect?(self.class.positioned_options[:scope].map(&:to_s))
         end
 
+        # @rbs () -> nil
         def shift_positions
           offset = position_before_last_save <=> position
           min, max = [position, position_before_last_save].sort

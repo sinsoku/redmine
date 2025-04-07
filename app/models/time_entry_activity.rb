@@ -22,6 +22,7 @@ class TimeEntryActivity < Enumeration
 
   OptionName = :enumeration_activities
 
+  # @rbs (?Project?) -> TimeEntryActivity?
   def self.default(project=nil)
     default_activity = super()
 
@@ -33,6 +34,7 @@ class TimeEntryActivity < Enumeration
   end
 
   # Returns the available activities for the time entry
+  # @rbs (?Project?) -> TimeEntryActivity::ActiveRecord_Relation
   def self.available_activities(project=nil)
     if project.nil?
       TimeEntryActivity.shared.active
@@ -41,22 +43,27 @@ class TimeEntryActivity < Enumeration
     end
   end
 
+  # @rbs () -> Symbol
   def option_name
     OptionName
   end
 
+  # @rbs () -> TimeEntry::ActiveRecord_Relation
   def objects
     TimeEntry.where(:activity_id => self_and_descendants(1).map(&:id))
   end
 
+  # @rbs () -> Integer
   def objects_count
     objects.count
   end
 
+  # @rbs (TimeEntryActivity) -> Integer
   def transfer_relations(to)
     objects.update_all(:activity_id => to.id)
   end
 
+  # @rbs (?(AnonymousUser | User)?, ?Project?) -> Integer
   def self.default_activity_id(user=nil, project=nil)
     default_activities = []
     default_activity = nil

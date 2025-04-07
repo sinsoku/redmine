@@ -22,10 +22,12 @@ require_relative '../test_helper'
 class TimeEntryCustomFieldTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_custom_field_with_visible_set_to_false_should_validate_roles
     set_language_if_valid 'en'
     field = TimeEntryCustomField.new(:name => 'Field', :field_format => 'string', :visible => false)
@@ -35,6 +37,7 @@ class TimeEntryCustomFieldTest < ActiveSupport::TestCase
     assert field.save
   end
 
+  # @rbs () -> bool
   def test_changing_visible_to_true_should_clear_roles
     field = TimeEntryCustomField.create!(:name => 'Field', :field_format => 'string', :visible => false, :role_ids => [1, 2])
     assert_equal 2, field.roles.count
@@ -44,6 +47,7 @@ class TimeEntryCustomFieldTest < ActiveSupport::TestCase
     assert_equal 0, field.roles.count
   end
 
+  # @rbs () -> bool
   def test_safe_attributes_should_include_only_custom_fields_visible_to_user
     cf1 = TimeEntryCustomField.create!(:name => 'Visible field',
                                        :field_format => 'string',

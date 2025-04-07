@@ -27,19 +27,23 @@ class CustomFieldEnumeration < ApplicationRecord
 
   scope :active, lambda {where(:active => true)}
 
+  # @rbs () -> String
   def to_s
     name.to_s
   end
 
+  # @rbs () -> Integer
   def objects_count
     custom_values.count
   end
 
+  # @rbs () -> bool
   def in_use?
     objects_count > 0
   end
 
   alias :destroy_without_reassign :destroy
+  # @rbs (?CustomFieldEnumeration?) -> void
   def destroy(reassign_to=nil)
     if reassign_to
       custom_values.update_all(:value => reassign_to.id.to_s)
@@ -47,10 +51,12 @@ class CustomFieldEnumeration < ApplicationRecord
     destroy_without_reassign
   end
 
+  # @rbs () -> CustomValue::ActiveRecord_AssociationRelation
   def custom_values
     custom_field.custom_values.where(:value => id.to_s)
   end
 
+  # @rbs (GroupCustomField, ActionController::Parameters) -> ActionController::Parameters
   def self.update_each(custom_field, attributes)
     transaction do
       attributes.each do |enumeration_id, enumeration_attributes|
@@ -69,6 +75,7 @@ class CustomFieldEnumeration < ApplicationRecord
     end
   end
 
+  # @rbs (?String) -> Array[untyped]
   def self.fields_for_order_statement(table=nil)
     table ||= table_name
     columns = ['position']
@@ -77,6 +84,7 @@ class CustomFieldEnumeration < ApplicationRecord
 
   private
 
+  # @rbs () -> Integer
   def set_position
     max = self.class.where(:custom_field_id => custom_field_id).maximum(:position) || 0
     self.position = max + 1

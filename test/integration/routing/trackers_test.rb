@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingTrackersTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_trackers
     should_route 'GET /trackers' => 'trackers#index'
     should_route 'GET /trackers/new' => 'trackers#new'

@@ -18,10 +18,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class VersionCustomField < CustomField
+  # @rbs () -> Symbol
   def type_name
     :label_version_plural
   end
 
+  # @rbs (Project, ?User) -> bool
   def visible_by?(project, user=User.current)
     super || roles.intersect?(user.roles_for_project(project))
   end

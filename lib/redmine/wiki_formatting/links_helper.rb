@@ -42,6 +42,7 @@ module Redmine
                      }x unless const_defined?(:AUTO_LINK_RE)
 
       # Destructively replaces urls into clickable links
+      # @rbs (Redmine::WikiFormatting::Textile::Formatter | String) -> (Redmine::WikiFormatting::Textile::Formatter | String)?
       def auto_link!(text)
         text.gsub!(AUTO_LINK_RE) do
           all, leading, proto, url, post = $&, $1, $2, $3, $6
@@ -64,6 +65,7 @@ module Redmine
       end
 
       # Destructively replaces email addresses into clickable links
+      # @rbs (Redmine::WikiFormatting::Textile::Formatter | String) -> (Redmine::WikiFormatting::Textile::Formatter | String)?
       def auto_mailto!(text)
         # The maximum length of a local part is 64 characters (RFC 5321
         # Section 4.5.3.1.1), and the maximum length of a DNS label is
@@ -78,6 +80,7 @@ module Redmine
         end
       end
 
+      # @rbs (Redmine::WikiFormatting::Textile::Formatter | String) -> (Redmine::WikiFormatting::Textile::Formatter | String)
       def restore_redmine_links(html)
         # restore wiki links eg. [[Foo]]
         html.gsub!(%r{\[<a href="(.*?)">(.*?)</a>\]}) do

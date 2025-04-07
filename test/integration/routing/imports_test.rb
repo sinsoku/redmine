@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingImportsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_imports
     should_route 'GET /issues/imports/new' => 'imports#new', :type => 'IssueImport'
 

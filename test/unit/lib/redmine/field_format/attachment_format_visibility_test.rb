@@ -21,11 +21,13 @@ require_relative '../../../../test_helper'
 require 'redmine/field_format'
 
 class AttachmentFormatVisibilityTest < ActionView::TestCase
+  # @rbs () -> String
   def setup
     User.current = nil
     set_tmp_attachments_directory
   end
 
+  # @rbs () -> bool
   def test_attachment_should_be_visible_with_visible_custom_field
     field = IssueCustomField.generate!(:field_format => 'attachment', :visible => true)
     attachment = new_record(Attachment) do
@@ -40,6 +42,7 @@ class AttachmentFormatVisibilityTest < ActionView::TestCase
     assert attachment.visible?(User.anonymous)
   end
 
+  # @rbs () -> bool
   def test_attachment_should_be_visible_with_limited_visibility_custom_field
     field = IssueCustomField.generate!(:field_format => 'attachment', :visible => false, :role_ids => [1])
     attachment = new_record(Attachment) do

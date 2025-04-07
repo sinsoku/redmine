@@ -19,6 +19,7 @@
 
 module Redmine
   class SortCriteria < Array
+    # @rbs (?(Array[untyped] | Redmine::SortCriteria | String | ActionController::Parameters | Hash[untyped, untyped])?) -> void
     def initialize(arg=nil)
       super()
       if arg.is_a?(Array)
@@ -33,14 +34,17 @@ module Redmine
       normalize!
     end
 
+    # @rbs () -> String
     def to_param
       self.collect {|k, o| k + (o == 'desc' ? ':desc' : '')}.join(',')
     end
 
+    # @rbs () -> Array[untyped]
     def to_a
       Array.new(self)
     end
 
+    # @rbs (Symbol | String, String?) -> Redmine::SortCriteria
     def add!(key, asc)
       key = key.to_s
       delete_if {|k, o| k == key}
@@ -48,14 +52,17 @@ module Redmine
       normalize!
     end
 
+    # @rbs (*Symbol | String | Symbol? | String) -> Redmine::SortCriteria
     def add(*args)
       self.class.new(self).add!(*args)
     end
 
+    # @rbs () -> String?
     def first_key
       first.try(:first)
     end
 
+    # @rbs () -> bool
     def first_asc?
       first.try(:last) == 'asc'
     end
@@ -68,10 +75,12 @@ module Redmine
       self[arg].try(:last)
     end
 
+    # @rbs (Symbol) -> String?
     def order_for(key)
       detect {|k, order| key.to_s == k}.try(:last)
     end
 
+    # @rbs (Hash[untyped, untyped] | Array[untyped]) -> Array[untyped]?
     def sort_clause(sortable_columns)
       if sortable_columns.is_a?(Array)
         sortable_columns = sortable_columns.inject({}) {|h, k| h[k]=k; h}
@@ -88,6 +97,7 @@ module Redmine
 
     private
 
+    # @rbs () -> Redmine::SortCriteria
     def normalize!
       self.reject! {|s| s.first.blank?}
       self.uniq! {|s| s.first}
@@ -96,6 +106,7 @@ module Redmine
     end
 
     # Appends ASC/DESC to the sort criterion unless it has a fixed order
+    # @rbs (String | Arel::Nodes::SqlLiteral, String) -> (Arel::Nodes::SqlLiteral | String)
     def append_order(criterion, order)
       if / (asc|desc)$/i.match?(criterion)
         criterion

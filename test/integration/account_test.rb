@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class AccountTest < Redmine::IntegrationTest
+  # @rbs () -> bool
   def test_login
     get "/my/page"
     assert_redirected_to "/login?back_url=http%3A%2F%2Fwww.example.com%2Fmy%2Fpage"
@@ -29,6 +30,7 @@ class AccountTest < Redmine::IntegrationTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_login_should_set_session_token
     assert_difference 'Token.count' do
       log_user('jsmith', 'jsmith')
@@ -38,6 +40,7 @@ class AccountTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_autologin
     user = User.find(1)
     Token.delete_all
@@ -78,6 +81,7 @@ class AccountTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_autologin_should_use_autologin_cookie_name
     Token.delete_all
     Redmine::Configuration.stubs(:[]).with('autologin_cookie_name').returns('custom_autologin')
@@ -113,6 +117,7 @@ class AccountTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_lost_password
     Token.delete_all
 
@@ -151,6 +156,7 @@ class AccountTest < Redmine::IntegrationTest
     assert_equal false, Token.exists?(token.id), "Password recovery token was not deleted"
   end
 
+  # @rbs () -> bool
   def test_lost_password_expired_token
     Token.delete_all
 
@@ -202,6 +208,7 @@ class AccountTest < Redmine::IntegrationTest
     refute token.expired?
   end
 
+  # @rbs () -> bool
   def test_user_with_must_change_passwd_should_be_forced_to_change_its_password
     User.find_by_login('jsmith').update_attribute :must_change_passwd, true
 
@@ -214,6 +221,7 @@ class AccountTest < Redmine::IntegrationTest
     assert_redirected_to '/my/password'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_flash_message_should_use_user_language_when_redirecting_user_for_password_change
     user = User.find_by_login('jsmith')
     user.must_change_passwd = true
@@ -229,6 +237,7 @@ class AccountTest < Redmine::IntegrationTest
     assert_select 'div.error', :text => /richiesto che sia cambiata/
   end
 
+  # @rbs () -> bool
   def test_user_with_must_change_passwd_should_be_able_to_change_its_password
     User.find_by_login('jsmith').update_attribute :must_change_passwd, true
 
@@ -253,6 +262,7 @@ class AccountTest < Redmine::IntegrationTest
     assert_equal false, User.find_by_login('jsmith').must_change_passwd?
   end
 
+  # @rbs () -> bool
   def test_user_with_expired_password_should_be_forced_to_change_its_password
     User.find_by_login('jsmith').update_attribute :passwd_changed_on, 14.days.ago
 
@@ -267,6 +277,7 @@ class AccountTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_user_with_expired_password_should_be_able_to_change_its_password
     User.find_by_login('jsmith').update_attribute :passwd_changed_on, 14.days.ago
 
@@ -293,6 +304,7 @@ class AccountTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_register_with_automatic_activation
     Setting.self_registration = '3'
 
@@ -319,6 +331,7 @@ class AccountTest < Redmine::IntegrationTest
     assert_not_nil user.last_login_on
   end
 
+  # @rbs () -> bool
   def test_register_with_manual_activation
     Setting.self_registration = '2'
 
@@ -336,6 +349,7 @@ class AccountTest < Redmine::IntegrationTest
     assert !User.find_by_login('newuser').active?
   end
 
+  # @rbs () -> bool
   def test_register_with_email_activation
     Setting.self_registration = '1'
     Token.delete_all
@@ -363,6 +377,7 @@ class AccountTest < Redmine::IntegrationTest
     log_user('newuser', 'newpass123')
   end
 
+  # @rbs () -> bool
   def test_onthefly_registration
     # disable registration
     Setting.self_registration = '0'
@@ -379,6 +394,7 @@ class AccountTest < Redmine::IntegrationTest
     assert user.hashed_password.blank?
   end
 
+  # @rbs () -> bool
   def test_onthefly_registration_with_invalid_attributes
     # disable registration
     Setting.self_registration = '0'
@@ -408,6 +424,7 @@ class AccountTest < Redmine::IntegrationTest
     assert user.hashed_password.blank?
   end
 
+  # @rbs () -> bool
   def test_registered_user_should_be_able_to_get_a_new_activation_email
     Token.delete_all
 

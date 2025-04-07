@@ -18,10 +18,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module PrincipalMembershipsHelper
+  # @rbs (Group | User) -> ActiveSupport::SafeBuffer
   def render_principal_memberships(principal)
     render :partial => 'principal_memberships/index', :locals => {:principal => principal}
   end
 
+  # @rbs (User | Group) -> ActiveSupport::SafeBuffer
   def call_table_header_hook(principal)
     if principal.is_a?(Group)
       call_hook :view_groups_memberships_table_header, :group => principal
@@ -30,6 +32,7 @@ module PrincipalMembershipsHelper
     end
   end
 
+  # @rbs (User | Group, Member) -> ActiveSupport::SafeBuffer
   def call_table_row_hook(principal, membership)
     if principal.is_a?(Group)
       call_hook :view_groups_memberships_table_row, :group => principal, :membership => membership
@@ -38,6 +41,7 @@ module PrincipalMembershipsHelper
     end
   end
 
+  # @rbs (User | Group, *nil) -> String
   def new_principal_membership_path(principal, *args)
     if principal.is_a?(Group)
       new_group_membership_path(principal, *args)
@@ -46,6 +50,7 @@ module PrincipalMembershipsHelper
     end
   end
 
+  # @rbs (User | Group, *Member) -> String
   def edit_principal_membership_path(principal, *args)
     if principal.is_a?(Group)
       edit_group_membership_path(principal, *args)
@@ -54,6 +59,7 @@ module PrincipalMembershipsHelper
     end
   end
 
+  # @rbs (User | Group, Member, *nil) -> String
   def principal_membership_path(principal, membership, *args)
     if principal.is_a?(Group)
       group_membership_path(principal, membership, *args)

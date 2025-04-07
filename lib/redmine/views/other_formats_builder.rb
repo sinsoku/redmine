@@ -20,10 +20,12 @@
 module Redmine
   module Views
     class OtherFormatsBuilder
+      # @rbs (untyped) -> void
       def initialize(view)
         @view = view
       end
 
+      # @rbs (String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def link_to(name, options={})
         url = {:format => name.to_s.downcase}.merge(options.delete(:url) || {}).except('page')
         caption = options.delete(:caption) || name
@@ -32,6 +34,7 @@ module Redmine
       end
 
       # Preserves query parameters
+      # @rbs (String, ?Hash[untyped, untyped], ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def link_to_with_query_parameters(name, url={}, options={})
         params = @view.request.query_parameters.except(:page, :format).except(*url.keys)
         url = {:params => params, :page => nil, :format => name.to_s.downcase}.merge(url)

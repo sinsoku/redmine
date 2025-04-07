@@ -45,6 +45,7 @@ class ProjectsController < ApplicationController
   helper :trackers
 
   # Lists visible projects
+  # @rbs () -> (Array[untyped] | ActiveSupport::SafeBuffer | String | Project::ActiveRecord_Relation)?
   def index
     # try to redirect to the requested menu item
     if params[:jump] && redirect_to_menu_item(params[:jump])
@@ -82,6 +83,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]
   def autocomplete
     respond_to do |format|
       format.js do
@@ -94,6 +96,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def new
     @issue_custom_fields = IssueCustomField.sorted.to_a
     @trackers = Tracker.sorted.to_a
@@ -101,6 +104,7 @@ class ProjectsController < ApplicationController
     @project.safe_attributes = params[:project]
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def create
     @issue_custom_fields = IssueCustomField.sorted.to_a
     @trackers = Tracker.sorted.to_a
@@ -138,6 +142,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | bool)?
   def copy
     @issue_custom_fields = IssueCustomField.sorted.to_a
     @trackers = Tracker.sorted.to_a
@@ -167,6 +172,7 @@ class ProjectsController < ApplicationController
   end
 
   # Show @project
+  # @rbs () -> String?
   def show
     # try to redirect to the requested menu item
     if params[:jump] && redirect_to_project_menu_item(@project, params[:jump])
@@ -197,6 +203,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> Version::ActiveRecord_Relation
   def settings
     @issue_custom_fields = IssueCustomField.sorted.to_a
     @issue_category ||= IssueCategory.new
@@ -211,6 +218,7 @@ class ProjectsController < ApplicationController
   def edit
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer | bool)
   def update
     @project.safe_attributes = params[:project]
     if @project.save
@@ -232,6 +240,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | bool)
   def archive
     unless @project.archive
       error = l(:error_can_not_archive_project)
@@ -251,6 +260,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | bool)
   def unarchive
     unless @project.active?
       @project.unarchive
@@ -261,6 +271,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def bookmark
     jump_box = Redmine::ProjectJumpBox.new User.current
     if request.delete?
@@ -274,6 +285,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | bool)
   def close
     @project.close
     respond_to do |format|
@@ -282,6 +294,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | bool)
   def reopen
     @project.reopen
     respond_to do |format|
@@ -291,6 +304,7 @@ class ProjectsController < ApplicationController
   end
 
   # Delete @project
+  # @rbs () -> nil
   def destroy
     unless @project.deletable?
       deny_access
@@ -315,6 +329,7 @@ class ProjectsController < ApplicationController
   end
 
   # Delete selected projects
+  # @rbs () -> String?
   def bulk_destroy
     @projects = Project.where(id: params[:ids]).
       where.not(status: Project::STATUS_SCHEDULED_FOR_DELETION).to_a
@@ -334,14 +349,17 @@ class ProjectsController < ApplicationController
   private
 
   # Returns the ProjectEntry scope for index
+  # @rbs (?Hash[untyped, untyped]) -> Project::ActiveRecord_Relation
   def project_scope(options={})
     @query.results_scope(options)
   end
 
+  # @rbs () -> void
   def retrieve_project_query
     retrieve_query(ProjectQuery, false, :defaults => @default_columns_names)
   end
 
+  # @rbs () -> void
   def retrieve_default_query
     return if params[:query_id].present?
     return if api_request?

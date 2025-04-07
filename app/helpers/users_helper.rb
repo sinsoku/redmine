@@ -20,10 +20,12 @@
 module UsersHelper
   include ApplicationHelper
 
+  # @rbs (User) -> Array[untyped]
   def user_mail_notification_options(user)
     user.valid_notification_options.collect {|o| [l(o.last), o.first]}
   end
 
+  # @rbs (User) -> ActiveSupport::SafeBuffer
   def default_issue_query_options(user)
     global_queries = IssueQuery.for_all_projects
     global_public_queries = global_queries.only_public
@@ -36,6 +38,7 @@ module UsersHelper
     grouped_options_for_select(grouped, user.pref.default_issue_query)
   end
 
+  # @rbs (User) -> ActiveSupport::SafeBuffer
   def default_project_query_options(user)
     global_queries = ProjectQuery
     global_public_queries = global_queries.only_public
@@ -48,10 +51,12 @@ module UsersHelper
     grouped_options_for_select(grouped, user.pref.default_project_query)
   end
 
+  # @rbs () -> Array[untyped]
   def textarea_font_options
     [[l(:label_font_default), '']] + UserPreference::TEXTAREA_FONT_OPTIONS.map {|o| [l("label_font_#{o}"), o]}
   end
 
+  # @rbs () -> Array[untyped]
   def history_default_tab_options
     [[l('label_issue_history_notes'), 'notes'],
      [l('label_history'), 'history'],
@@ -61,10 +66,12 @@ module UsersHelper
      [l('label_last_tab_visited'), 'last_tab_visited']]
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def auto_watch_on_options
     UserPreference::AUTO_WATCH_ON_OPTIONS.index_by {|o| l("label_auto_watch_on_#{o}")}
   end
 
+  # @rbs (User) -> ActiveSupport::SafeBuffer
   def change_status_link(user)
     url = {:controller => 'users', :action => 'update', :id => user, :page => params[:page], :status => params[:status], :tab => nil}
 
@@ -77,18 +84,21 @@ module UsersHelper
     end
   end
 
+  # @rbs (User) -> ActiveSupport::SafeBuffer
   def additional_emails_link(user)
     if user.email_addresses.count > 1 || Setting.max_additional_emails.to_i > 0
       link_to sprite_icon('email', l(:label_email_address_plural)), user_email_addresses_path(@user), :class => 'icon icon-email-add', :remote => true
     end
   end
 
+  # @rbs (User) -> ActiveSupport::SafeBuffer
   def user_emails(user)
     emails = [user.mail]
     emails += user.email_addresses.order(:id).where(:is_default => false).pluck(:address)
     emails.map {|email| mail_to(email, nil)}.join(', ').html_safe
   end
 
+  # @rbs () -> Array[untyped]
   def user_settings_tabs
     tabs =
       [

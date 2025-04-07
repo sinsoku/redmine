@@ -24,12 +24,14 @@ class RedminePluginMigrationGenerator < Rails::Generators::NamedBase
   argument :migration, :type => :string
 
   class << self
+    # @rbs (String) -> String
     def next_migration_number(dirname)
       next_migration_number = current_migration_number(dirname) + 1
       ActiveRecord::Migration.next_migration_number(next_migration_number)
     end
   end
 
+  # @rbs () -> String
   def create_migration_file
     plugin_name = file_name.underscore
     plugin_path = File.join(Redmine::Plugin.directory, plugin_name)

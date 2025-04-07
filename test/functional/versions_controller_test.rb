@@ -21,10 +21,12 @@ require_relative '../test_helper'
 
 class VersionsControllerTest < Redmine::ControllerTest
   include Redmine::I18n
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index, :params => {:project_id => 1}
     assert_response :success
@@ -49,6 +51,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_completed_versions
     get :index, :params => {:project_id => 1, :completed => 1}
     assert_response :success
@@ -59,6 +62,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select 'h3', :text => Version.find(1).name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_tracker_ids
     (1..3).each do |tracker_id|
       Issue.generate! :project_id => 1, :fixed_version_id => 3, :tracker_id => tracker_id
@@ -70,6 +74,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select 'a.issue.tracker-3'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_showing_subprojects_versions
     version_name = "Subproject version"
     Version.create!(:project => Project.find(3), :name => version_name)
@@ -84,6 +89,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select '#sidebar input[id=?][value=?]', "with_subprojects", 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_prepend_shared_versions
     get :index, :params => {:project_id => 1}
     assert_response :success
@@ -98,6 +104,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_show_issue_assignee
     with_settings :gravatar_enabled => '1' do
       Issue.generate!(:project_id => 3, :fixed_version_id => 4, :assigned_to => User.find_by_login('jsmith'))
@@ -114,6 +121,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_subproject_checkbox_should_check_descendants_visibility
     project = Project.find(6)
     project.is_public = false
@@ -128,6 +136,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select '#sidebar input[id=?]', "with_subprojects", :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show
     with_settings :gravatar_enabled => '0' do
       get :show, :params => {:id => 2}
@@ -141,6 +150,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_show_issue_assignee
     with_settings :gravatar_enabled => '1' do
       get :show, :params => {:id => 2}
@@ -154,6 +164,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_issue_calculations_should_take_into_account_only_visible_issues
     issue_9 = Issue.find(9)
     issue_9.fixed_version_id = 4
@@ -178,6 +189,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select '.time-tracking td.total-hours a:first-child', :text => '2:00 hours'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_link_to_spent_time_on_version
     version = Version.generate!
     issue = Issue.generate(:fixed_version => version)
@@ -190,6 +202,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select '.total-hours a[href=?]', "/projects/ecookbook/time_entries?issue.fixed_version_id=#{version.id}&set_filter=1"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_nil_counts
     with_settings :default_language => 'en' do
       get :show, :params => {:id => 2, :status_by => 'category'}
@@ -203,6 +216,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_round_down_progress_percentages
     issue = Issue.find(12)
     issue.estimated_hours = 40
@@ -222,6 +236,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_link_to_new_issue
     @request.session[:user_id] = 1
     get :show, :params => {:id => 3}
@@ -230,6 +245,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select 'a.icon.icon-add', :text => 'New issue'
   end
 
+  # @rbs () -> bool
   def test_show_with_text_format
     version = Version.find(2)
     get :show, params: {id: version.id, format: :text}
@@ -242,6 +258,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_equal version.description, result[2]
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     @request.session[:user_id] = 2
     get :new, :params => {:project_id => '1'}
@@ -250,6 +267,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'version[status]', false
   end
 
+  # @rbs () -> bool
   def test_new_from_issue_form
     @request.session[:user_id] = 2
     get :new, :params => {:project_id => '1'}, :xhr => true
@@ -257,6 +275,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> bool
   def test_create
     @request.session[:user_id] = 2 # manager
     assert_difference 'Version.count' do
@@ -268,6 +287,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_equal 1, version.project_id
   end
 
+  # @rbs () -> bool
   def test_create_from_issue_form
     @request.session[:user_id] = 2
     assert_difference 'Version.count' do
@@ -282,6 +302,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_include 'test_add_version_from_issue_form', response.body
   end
 
+  # @rbs () -> bool
   def test_create_from_issue_form_with_failure
     @request.session[:user_id] = 2
     assert_no_difference 'Version.count' do
@@ -291,6 +312,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit
     @request.session[:user_id] = 2
     get :edit, :params => {:id => 2}
@@ -303,6 +325,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'version[name]', version.name
   end
 
+  # @rbs () -> bool
   def test_close_completed
     Version.update_all("status = 'open'")
     @request.session[:user_id] = 2
@@ -312,6 +335,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_not_nil Version.find_by_status('closed')
   end
 
+  # @rbs () -> bool
   def test_post_update
     @request.session[:user_id] = 2
     put :update, :params => {
@@ -328,6 +352,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_equal Date.today, version.effective_date
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_update_with_validation_failure
     @request.session[:user_id] = 2
     put :update, :params => {
@@ -341,6 +366,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 2
     assert_difference 'Version.count', -1 do
@@ -351,6 +377,7 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert_nil Version.find_by_id(3)
   end
 
+  # @rbs () -> bool
   def test_destroy_version_in_use_should_fail
     @request.session[:user_id] = 2
     assert_no_difference 'Version.count' do
@@ -362,11 +389,13 @@ class VersionsControllerTest < Redmine::ControllerTest
     assert Version.find_by_id(2)
   end
 
+  # @rbs () -> bool
   def test_issue_status_by
     get :status_by, :params => {:id => 2}, :xhr => true
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_issue_status_by_status
     get :status_by, :params => {:id => 2, :status_by => 'status'}, :xhr => true
     assert_response :success

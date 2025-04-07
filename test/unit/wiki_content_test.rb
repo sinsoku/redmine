@@ -20,12 +20,14 @@
 require_relative '../test_helper'
 
 class WikiContentTest < ActiveSupport::TestCase
+  # @rbs () -> WikiPage
   def setup
     User.current = nil
     @wiki = Wiki.find(1)
     @page = @wiki.pages.first
   end
 
+  # @rbs () -> bool
   def test_create
     page = WikiPage.new(:wiki => @wiki, :title => "Page")
     page.content = WikiContent.new(:text => "Content text", :author => User.find(1), :comments => "My comment")
@@ -42,6 +44,7 @@ class WikiContentTest < ActiveSupport::TestCase
     assert_equal content.text, content.versions.last.text
   end
 
+  # @rbs () -> Array[untyped]
   def test_create_should_send_email_notification
     ActionMailer::Base.deliveries.clear
     page = WikiPage.new(:wiki => @wiki, :title => "A new page")
@@ -57,6 +60,7 @@ class WikiContentTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_update_should_be_versioned
     content = @page.content
     version_count = content.version
@@ -75,6 +79,7 @@ class WikiContentTest < ActiveSupport::TestCase
     assert_equal "My new content", version.text
   end
 
+  # @rbs () -> bool
   def test_update_with_gzipped_history
     with_settings :wiki_compression => 'gzip' do
       content = @page.content
@@ -91,6 +96,7 @@ class WikiContentTest < ActiveSupport::TestCase
     assert_equal "My new content", version.text
   end
 
+  # @rbs () -> Array[untyped]
   def test_update_should_send_email_notification
     ActionMailer::Base.deliveries.clear
     content = @page.content
@@ -106,6 +112,7 @@ class WikiContentTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_fetch_history
     assert !@page.content.versions.empty?
     @page.content.versions.each do |version|
@@ -113,6 +120,7 @@ class WikiContentTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_large_text_should_not_be_truncated_to_64k
     page = WikiPage.new(:wiki => @wiki, :title => "Big page")
     page.content = WikiContent.new(:text => "a" * 500.kilobytes, :author => User.find(1))
@@ -121,6 +129,7 @@ class WikiContentTest < ActiveSupport::TestCase
     assert_equal 500.kilobytes, page.content.text.size
   end
 
+  # @rbs () -> bool
   def test_current_version
     content = WikiContent.find(11)
     assert_equal true, content.current_version?
@@ -128,17 +137,20 @@ class WikiContentTest < ActiveSupport::TestCase
     assert_equal false, content.versions.order('version ASC').first.current_version?
   end
 
+  # @rbs () -> bool
   def test_previous_for_first_version_should_return_nil
     content = WikiContentVersion.find_by_page_id_and_version(1, 1)
     assert_nil content.previous
   end
 
+  # @rbs () -> bool
   def test_previous_for_version_should_return_previous_version
     content = WikiContentVersion.find_by_page_id_and_version(1, 3)
     assert_not_nil content.previous
     assert_equal 2, content.previous.version
   end
 
+  # @rbs () -> bool
   def test_previous_for_version_with_gap_should_return_previous_available_version
     WikiContentVersion.find_by_page_id_and_version(1, 2).destroy
 
@@ -147,17 +159,20 @@ class WikiContentTest < ActiveSupport::TestCase
     assert_equal 1, content.previous.version
   end
 
+  # @rbs () -> bool
   def test_next_for_last_version_should_return_nil
     content = WikiContentVersion.find_by_page_id_and_version(1, 3)
     assert_nil content.next
   end
 
+  # @rbs () -> bool
   def test_next_for_version_should_return_next_version
     content = WikiContentVersion.find_by_page_id_and_version(1, 1)
     assert_not_nil content.next
     assert_equal 2, content.next.version
   end
 
+  # @rbs () -> bool
   def test_next_for_version_with_gap_should_return_next_available_version
     WikiContentVersion.find_by_page_id_and_version(1, 2).destroy
 

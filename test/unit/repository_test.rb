@@ -22,11 +22,13 @@ require_relative '../test_helper'
 class RepositoryTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> Repository::Subversion
   def setup
     User.current = nil
     @repository = Project.find(1).repository
   end
 
+  # @rbs () -> bool
   def test_blank_log_encoding_error_message
     set_language_if_valid 'en'
     repo =
@@ -41,6 +43,7 @@ class RepositoryTest < ActiveSupport::TestCase
                    repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_log_encoding_error_message_fr
     set_language_if_valid 'fr'
     repo =
@@ -53,6 +56,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_include 'Encodage des messages de commit doit être renseigné(e)', repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_create
     repository = Repository::Subversion.new(:project => Project.find(3))
     assert !repository.save
@@ -65,36 +69,42 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal repository, project.repository
   end
 
+  # @rbs () -> bool
   def test_2_repositories_with_same_identifier_in_different_projects_should_be_valid
     Repository::Subversion.create!(:project_id => 2, :identifier => 'foo', :url => 'file:///foo')
     r = Repository::Subversion.new(:project_id => 3, :identifier => 'foo', :url => 'file:///bar')
     assert r.save
   end
 
+  # @rbs () -> bool
   def test_2_repositories_with_same_identifier_should_not_be_valid
     Repository::Subversion.create!(:project_id => 3, :identifier => 'foo', :url => 'file:///foo')
     r = Repository::Subversion.new(:project_id => 3, :identifier => 'foo', :url => 'file:///bar')
     assert !r.save
   end
 
+  # @rbs () -> bool
   def test_2_repositories_with_blank_identifier_should_not_be_valid
     Repository::Subversion.create!(:project_id => 3, :identifier => '', :url => 'file:///foo')
     r = Repository::Subversion.new(:project_id => 3, :identifier => '', :url => 'file:///bar')
     assert !r.save
   end
 
+  # @rbs () -> bool
   def test_2_repositories_with_blank_identifier_and_one_as_default_should_not_be_valid
     Repository::Subversion.create!(:project_id => 3, :identifier => '', :url => 'file:///foo', :is_default => true)
     r = Repository::Subversion.new(:project_id => 3, :identifier => '', :url => 'file:///bar')
     assert !r.save
   end
 
+  # @rbs () -> bool
   def test_2_repositories_with_blank_and_nil_identifier_should_not_be_valid
     Repository::Subversion.create!(:project_id => 3, :identifier => nil, :url => 'file:///foo')
     r = Repository::Subversion.new(:project_id => 3, :identifier => '', :url => 'file:///bar')
     assert !r.save
   end
 
+  # @rbs () -> bool
   def test_first_repository_should_be_set_as_default
     repository1 =
       Repository::Subversion.
@@ -120,6 +130,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal [repository1, repository2], Project.find(3).repositories.sort
   end
 
+  # @rbs () -> bool
   def test_default_repository_should_be_one
     assert_equal 0, Project.find(3).repositories.count
     repository1 =
@@ -149,6 +160,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal [repository2, repository1], Project.find(3).repositories.sort
   end
 
+  # @rbs () -> bool
   def test_identifier_should_accept_letters_digits_dashes_and_underscores
     r =
       Repository::Subversion.
@@ -160,20 +172,24 @@ class RepositoryTest < ActiveSupport::TestCase
     assert r.save
   end
 
+  # @rbs () -> bool
   def test_identifier_should_not_be_frozen_for_a_new_repository
     assert_equal false, Repository.new.identifier_frozen?
   end
 
+  # @rbs () -> bool
   def test_identifier_should_not_be_frozen_for_a_saved_repository_with_blank_identifier
     Repository.where(:id => 10).update_all(["identifier = ''"])
     assert_equal false, Repository.find(10).identifier_frozen?
   end
 
+  # @rbs () -> bool
   def test_identifier_should_be_frozen_for_a_saved_repository_with_valid_identifier
     Repository.where(:id => 10).update_all(["identifier = 'abc123'"])
     assert_equal true, Repository.find(10).identifier_frozen?
   end
 
+  # @rbs () -> bool
   def test_identifier_should_not_accept_change_if_frozen
     r = Repository.new(:identifier => 'foo')
     r.stubs(:identifier_frozen?).returns(true)
@@ -182,6 +198,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal 'foo', r.identifier
   end
 
+  # @rbs () -> bool
   def test_identifier_should_accept_change_if_not_frozen
     r = Repository.new(:identifier => 'foo')
     r.stubs(:identifier_frozen?).returns(false)
@@ -190,6 +207,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal 'bar', r.identifier
   end
 
+  # @rbs () -> Repository::Subversion
   def test_destroy
     repository = Repository.find(10)
     changesets = repository.changesets.count
@@ -202,6 +220,7 @@ class RepositoryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Repository::Subversion
   def test_destroy_should_delete_parents_associations
     changeset = Changeset.find(102)
     changeset.parents = Changeset.where(:id => [100, 101]).to_a
@@ -210,6 +229,7 @@ class RepositoryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Repository::Subversion
   def test_destroy_should_delete_issues_associations
     changeset = Changeset.find(102)
     changeset.issues = Issue.where(:id => [1, 2]).to_a
@@ -218,6 +238,7 @@ class RepositoryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_should_not_create_with_disabled_scm
     # disable Subversion
     with_settings :enabled_scm => ['Mercurial', 'Git'] do
@@ -233,6 +254,7 @@ class RepositoryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_scan_changesets_for_issue_ids
     Setting.default_language = 'en'
     Setting.commit_ref_keywords = 'refs , references, IssueID'
@@ -281,6 +303,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal [], Issue.find(4).changesets
   end
 
+  # @rbs () -> bool
   def test_for_changeset_comments_strip
     repository =
       Repository::Mercurial.
@@ -304,6 +327,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal     "", changeset.long_comments
   end
 
+  # @rbs () -> bool
   def test_for_urls_strip_cvs
     repository =
       Repository::Cvs.
@@ -320,6 +344,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal 'foo', repository.root_url
   end
 
+  # @rbs () -> bool
   def test_for_urls_strip_subversion
     repository =
       Repository::Subversion.
@@ -332,6 +357,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal 'file:///dummy', repository.url
   end
 
+  # @rbs () -> bool
   def test_for_urls_strip_git
     repository =
       Repository::Git.
@@ -344,6 +370,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal 'c:\dummy', repository.url
   end
 
+  # @rbs () -> bool
   def test_manual_user_mapping
     assert_no_difference "Changeset.where('user_id <> 2').count" do
       c = Changeset.
@@ -370,6 +397,7 @@ class RepositoryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_auto_user_mapping_by_username
     c = Changeset.
          create!(
@@ -382,6 +410,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal User.find(2), c.user
   end
 
+  # @rbs () -> bool
   def test_auto_user_mapping_by_email
     c = Changeset.
           create!(
@@ -394,18 +423,21 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal User.find(2), c.user
   end
 
+  # @rbs () -> bool
   def test_filesystem_avaialbe
     klass = Repository::Filesystem
     assert klass.scm_adapter_class
     assert_equal true, klass.scm_available
   end
 
+  # @rbs () -> bool
   def test_extra_info_should_not_return_non_hash_value
     repo = Repository.new
     repo.extra_info = "foo"
     assert_nil repo.extra_info
   end
 
+  # @rbs () -> bool
   def test_merge_extra_info
     repo = Repository::Subversion.new(:project => Project.find(3))
     assert !repo.save
@@ -443,6 +475,7 @@ class RepositoryTest < ActiveSupport::TestCase
                  repo.extra_info["test_2"]["test_23"]
   end
 
+  # @rbs () -> Array[untyped]
   def test_sort_should_not_raise_an_error_with_nil_identifiers
     r1 = Repository.new
     r2 = Repository.new
@@ -452,6 +485,7 @@ class RepositoryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_stats_by_author_reflect_changesets_and_changes
     repository = Repository.find(10)
 
@@ -471,6 +505,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal expected, repository.stats_by_author
   end
 
+  # @rbs () -> bool
   def test_stats_by_author_honnor_committers
     # in fact it is really tested above, but let's have a dedicated test
     # to ensure things are dynamically linked to Users
@@ -480,6 +515,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal expected, repository.stats_by_author
   end
 
+  # @rbs () -> bool
   def test_stats_by_author_doesnt_drop_unmapped_users
     repository = Repository.find(10)
     Changeset.create!(
@@ -493,6 +529,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert repository.stats_by_author.has_key?("unnamed <foo@bar.net>")
   end
 
+  # @rbs () -> bool
   def test_stats_by_author_merge_correctly
     # as we honnor users->committer map and it's not injective,
     # we must be sure merges happen correctly and stats are not
@@ -517,12 +554,14 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_equal expected, repository.stats_by_author
   end
 
+  # @rbs () -> Array[untyped]
   def test_fetch_changesets
     # 2 repositories in fixtures
     Repository::Subversion.any_instance.expects(:fetch_changesets).twice.returns(true)
     Repository.fetch_changesets
   end
 
+  # @rbs () -> bool
   def test_repository_class
     assert_equal Repository::Subversion, Repository.repository_class('Subversion')
     assert_equal Repository::Git, Repository.repository_class('Git')
@@ -530,6 +569,7 @@ class RepositoryTest < ActiveSupport::TestCase
     assert_nil Repository.factory('Query')
   end
 
+  # @rbs () -> bool
   def test_factory
     assert_instance_of Repository::Subversion, Repository.factory('Subversion')
     assert_instance_of Repository::Git, Repository.factory('Git')

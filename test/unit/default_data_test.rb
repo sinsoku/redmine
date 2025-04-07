@@ -21,16 +21,19 @@ require_relative '../test_helper'
 
 class DefaultDataTest < ActiveSupport::TestCase
   include Redmine::I18n
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_no_data
     assert !Redmine::DefaultData::Loader::no_data?
     clear_data
     assert Redmine::DefaultData::Loader::no_data?
   end
 
+  # @rbs () -> bool
   def test_load
     clear_data
     assert Redmine::DefaultData::Loader::load('en')
@@ -41,6 +44,7 @@ class DefaultDataTest < ActiveSupport::TestCase
     assert Query.exists?
   end
 
+  # @rbs () -> Array[untyped]
   def test_load_for_all_language
     valid_languages.each do |lang|
       clear_data
@@ -56,6 +60,7 @@ class DefaultDataTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> void
   def clear_data
     Role.where("builtin = 0").delete_all
     Tracker.delete_all

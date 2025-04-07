@@ -39,10 +39,12 @@ class RepositoriesController < ApplicationController
 
   rescue_from Redmine::Scm::Adapters::CommandFailed, :with => :show_error_command_failed
 
+  # @rbs () -> bool
   def new
     @repository.is_default = @project.repository.nil?
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def create
     if @repository.save
       redirect_to settings_project_path(@project, :tab => 'repositories')
@@ -51,9 +53,11 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def update
     @repository.safe_attributes = params[:repository]
     if @repository.save
@@ -63,6 +67,7 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  # @rbs () -> String?
   def committers
     @committers = @repository.committers
     @users = @project.users.to_a
@@ -78,11 +83,13 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def destroy
     @repository.destroy if request.delete?
     redirect_to settings_project_path(@project, :tab => 'repositories')
   end
 
+  # @rbs () -> nil
   def show
     @repository.fetch_changesets if @project.active? && Setting.autofetch_changesets? && @path.empty?
 
@@ -118,6 +125,7 @@ class RepositoriesController < ApplicationController
     @changeset = @repository.find_changeset_by_name(@rev)
   end
 
+  # @rbs () -> nil
   def revisions
     @changeset_count = @repository.changesets.count
     @changeset_pages = Paginator.new @changeset_count,
@@ -220,6 +228,7 @@ class RepositoriesController < ApplicationController
     @changeset = @repository.find_changeset_by_name(@rev)
   end
 
+  # @rbs () -> nil
   def revision
     respond_to do |format|
       format.html
@@ -229,6 +238,7 @@ class RepositoriesController < ApplicationController
 
   # Adds a related issue to a changeset
   # POST /projects/:project_id/repository/(:repository_id/)revisions/:rev/issues
+  # @rbs () -> (bool | String)?
   def add_related_issue
     issue_id = params[:issue_id].to_s.delete_prefix('#')
     @issue = @changeset.find_referenced_issue_by_id(issue_id)
@@ -249,6 +259,7 @@ class RepositoriesController < ApplicationController
 
   # Removes a related issue from a changeset
   # DELETE /projects/:project_id/repository/(:repository_id/)revisions/:rev/issues/:issue_id
+  # @rbs () -> bool?
   def remove_related_issue
     @issue = Issue.visible.find_by_id(params[:issue_id])
     if @issue
@@ -296,6 +307,7 @@ class RepositoriesController < ApplicationController
   end
 
   # Returns JSON data for repository graphs
+  # @rbs () -> String
   def graph
     data = nil
     case params[:graph]
@@ -313,6 +325,7 @@ class RepositoriesController < ApplicationController
 
   private
 
+  # @rbs () -> (Repository::Git | Repository::Mercurial | Repository::Subversion)
   def build_new_repository_from_params
     scm = params[:repository_scm] || (Redmine::Scm::Base.all & Setting.enabled_scm).first
     unless @repository = Repository.factory(scm)
@@ -325,6 +338,7 @@ class RepositoriesController < ApplicationController
     @repository
   end
 
+  # @rbs () -> Project
   def find_repository
     @repository = Repository.find(params[:id])
     @project = @repository.project
@@ -334,6 +348,7 @@ class RepositoriesController < ApplicationController
 
   REV_PARAM_RE = %r{\A[a-f0-9]*\z}i
 
+  # @rbs () -> bool?
   def find_project_repository
     @project = Project.find(params[:id])
     if params[:repository_id].present?
@@ -355,6 +370,7 @@ class RepositoriesController < ApplicationController
     show_error_not_found
   end
 
+  # @rbs () -> nil
   def find_changeset
     if @rev.present?
       @changeset = @repository.find_changeset_by_name(@rev)
@@ -362,6 +378,7 @@ class RepositoriesController < ApplicationController
     show_error_not_found unless @changeset
   end
 
+  # @rbs () -> void
   def show_error_not_found
     render_error :message => l(:error_scm_not_found), :status => 404
   end
@@ -371,6 +388,7 @@ class RepositoriesController < ApplicationController
     render_error l(:error_scm_command_failed, exception.message)
   end
 
+  # @rbs (Repository::Subversion) -> Hash[untyped, untyped]
   def graph_commits_per_month(repository)
     date_to = User.current.today
     date_from = date_to << 11
@@ -401,6 +419,7 @@ class RepositoriesController < ApplicationController
     }
   end
 
+  # @rbs (Repository::Subversion) -> Hash[untyped, untyped]
   def graph_commits_per_author(repository)
     # data
     stats = repository.stats_by_author
@@ -439,6 +458,7 @@ class RepositoriesController < ApplicationController
     super
   end
 
+  # @rbs (String?) -> bool
   def valid_name?(rev)
     return true if rev.nil?
     return true if REV_PARAM_RE.match?(rev)

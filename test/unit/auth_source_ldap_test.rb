@@ -21,10 +21,12 @@ require_relative '../test_helper'
 
 class AuthSourceLdapTest < ActiveSupport::TestCase
   include Redmine::I18n
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_initialize
     auth_source = AuthSourceLdap.new
     assert_nil auth_source.id
@@ -47,11 +49,13 @@ class AuthSourceLdapTest < ActiveSupport::TestCase
     assert_nil auth_source.timeout
   end
 
+  # @rbs () -> bool
   def test_create
     a = AuthSourceLdap.new(:name => 'My LDAP', :host => 'ldap.example.net', :port => 389, :base_dn => 'dc=example,dc=net', :attr_login => 'sAMAccountName')
     assert a.save
   end
 
+  # @rbs () -> bool
   def test_should_strip_ldap_attributes
     a = AuthSourceLdap.new(:name => 'My LDAP', :host => 'ldap.example.net', :port => 389, :base_dn => 'dc=example,dc=net', :attr_login => 'sAMAccountName',
                            :attr_firstname => 'givenName ')
@@ -59,6 +63,7 @@ class AuthSourceLdapTest < ActiveSupport::TestCase
     assert_equal 'givenName', a.reload.attr_firstname
   end
 
+  # @rbs () -> bool
   def test_replace_port_zero_to_389
     a = AuthSourceLdap.new(
            :name => 'My LDAP', :host => 'ldap.example.net', :port => 0,
@@ -68,6 +73,7 @@ class AuthSourceLdapTest < ActiveSupport::TestCase
     assert_equal 389, a.port
   end
 
+  # @rbs () -> bool
   def test_filter_should_be_validated
     set_language_if_valid 'en'
 

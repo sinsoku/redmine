@@ -19,19 +19,23 @@
 
 module Redmine
   module Twofa
+    # @rbs (String, Class) -> Class
     def self.register_scheme(name, klass)
       initialize_schemes
       @@schemes[name] = klass
     end
 
+    # @rbs () -> Array[untyped]
     def self.available_schemes
       schemes.keys
     end
 
+    # @rbs (String) -> Class
     def self.for_twofa_scheme(name)
       schemes[name]
     end
 
+    # @rbs (User) -> Redmine::Twofa::Totp
     def self.for_user(user)
       for_twofa_scheme(user.twofa_scheme).try(:new, user)
     end
@@ -41,18 +45,21 @@ module Redmine
       users.each {|u| self.for_user(u).destroy_pairing_without_verify!}
     end
 
+    # @rbs () -> Hash[untyped, untyped]
     def self.schemes
       initialize_schemes
       @@schemes
     end
     private_class_method :schemes
 
+    # @rbs () -> void
     def self.initialize_schemes
       @@schemes ||= {}
       scan_builtin_schemes if @@schemes.blank?
     end
     private_class_method :initialize_schemes
 
+    # @rbs () -> Array[untyped]
     def self.scan_builtin_schemes
       Dir[Rails.root.join('lib', 'redmine', 'twofa', '*.rb')].each do |file|
         require file

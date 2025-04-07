@@ -23,11 +23,13 @@ class SearchHelperTest < Redmine::HelperTest
   include SearchHelper
   include ERB::Util
 
+  # @rbs () -> bool
   def test_highlight_single_token
     assert_equal 'This is a <span class="highlight token-0">token</span>.',
                  highlight_tokens('This is a token.', %w(token))
   end
 
+  # @rbs () -> bool
   def test_highlight_multiple_tokens
     assert_equal(
       'This is a <span class="highlight token-0">token</span> and ' \
@@ -37,6 +39,7 @@ class SearchHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_highlight_should_not_exceed_maximum_length
     s = (('1234567890' * 100) + ' token ') * 100
     r = highlight_tokens(s, %w(token))
@@ -44,6 +47,7 @@ class SearchHelperTest < Redmine::HelperTest
     assert r.length <= 1300
   end
 
+  # @rbs () -> bool
   def test_highlight_multibyte
     s = ('й' * 200) + ' token ' + ('й' * 200)
     r = highlight_tokens(s, %w(token))
@@ -55,6 +59,7 @@ class SearchHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_issues_filter_path
     # rubocop:disable Layout/LineLength
     assert_equal(

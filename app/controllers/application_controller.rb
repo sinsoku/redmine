@@ -40,12 +40,14 @@ class ApplicationController < ActionController::Base
 
   layout 'base'
 
+  # @rbs () -> bool?
   def verify_authenticity_token
     unless api_request?
       super
     end
   end
 
+  # @rbs () -> bool
   def handle_unverified_request
     unless api_request?
       begin
@@ -73,6 +75,7 @@ class ApplicationController < ActionController::Base
 
   include Redmine::SudoMode::Controller
 
+  # @rbs () -> bool?
   def session_expiration
     if session[:user_id] && Rails.application.config.redmine_verify_sessions != false
       if session_expired? && !try_to_autologin
@@ -84,10 +87,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @rbs () -> bool
   def session_expired?
     ! User.verify_session_token(session[:user_id], session[:tk])
   end
 
+  # @rbs (User) -> String?
   def start_user_session(user)
     session[:user_id] = user.id
     session[:tk] = user.generate_session_token
@@ -99,6 +104,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @rbs () -> bool
   def user_setup
     # Check the settings cache for each request
     Setting.check_cache
@@ -109,6 +115,7 @@ class ApplicationController < ActionController::Base
 
   # Returns the current user or nil if no user is logged in
   # and starts a session if needed
+  # @rbs () -> User?
   def find_current_user
     user = nil
     unless api_request?
@@ -164,10 +171,12 @@ class ApplicationController < ActionController::Base
     user
   end
 
+  # @rbs () -> String
   def autologin_cookie_name
     Redmine::Configuration['autologin_cookie_name'].presence || 'autologin'
   end
 
+  # @rbs () -> User?
   def try_to_autologin
     if cookies[autologin_cookie_name] && Setting.autologin?
       # auto-login feature starts a new session
@@ -181,6 +190,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Sets the logged in user
+  # @rbs (User?) -> (AnonymousUser | String)?
   def logged_user=(user)
     reset_session
     if user && user.is_a?(User)
@@ -192,6 +202,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Logs out current user
+  # @rbs () -> void
   def logout_user
     if User.current.logged?
       if autologin = cookies.delete(autologin_cookie_name)
@@ -203,6 +214,7 @@ class ApplicationController < ActionController::Base
   end
 
   # check if login is globally required to access the application
+  # @rbs () -> bool?
   def check_if_login_required
     # no check needed if user is already logged in
     return true if User.current.logged?
@@ -210,6 +222,7 @@ class ApplicationController < ActionController::Base
     require_login if Setting.login_required?
   end
 
+  # @rbs () -> String?
   def check_password_change
     if session[:pwd]
       if User.current.must_change_password?
@@ -221,6 +234,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @rbs (Redmine::Twofa::Totp) -> String
   def init_twofa_pairing_and_send_code_for(twofa)
     twofa.init_pairing!
     if twofa.send_code(controller: 'twofa', action: 'activate')
@@ -229,6 +243,7 @@ class ApplicationController < ActionController::Base
     redirect_to controller: 'twofa', action: 'activate_confirm', scheme: twofa.scheme_name
   end
 
+  # @rbs () -> String?
   def check_twofa_activation
     if session[:must_activate_twofa]
       if User.current.must_activate_twofa?
@@ -246,6 +261,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @rbs (?AnonymousUser | User) -> Symbol
   def set_localization(user=User.current)
     lang = nil
     if user && user.logged?
@@ -262,6 +278,7 @@ class ApplicationController < ActionController::Base
     set_language_if_valid(lang)
   end
 
+  # @rbs () -> bool
   def require_login
     unless User.current.logged?
       # Extract only the basic url parameters on non-GET requests
@@ -296,6 +313,7 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  # @rbs () -> bool?
   def require_admin
     return unless require_login
 
@@ -306,11 +324,13 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  # @rbs () -> bool
   def deny_access
     User.current.logged? ? render_403 : require_login
   end
 
   # Authorize the user for the requested action
+  # @rbs (?String, ?String, ?bool) -> bool
   def authorize(ctrl = params[:controller], action = params[:action], global = false)
     allowed = User.current.allowed_to?({:controller => ctrl, :action => action}, @project || @projects, :global => global)
     if allowed
@@ -329,11 +349,13 @@ class ApplicationController < ActionController::Base
   end
 
   # Authorize the user for the requested action outside a project
+  # @rbs (?String, ?String, ?bool) -> bool
   def authorize_global(ctrl = params[:controller], action = params[:action], global = true)
     authorize(ctrl, action, global)
   end
 
   # Find project of id params[:id]
+  # @rbs (?String) -> (Project | bool)
   def find_project(project_id=params[:id])
     @project = Project.find(project_id)
   rescue ActiveRecord::RecordNotFound
@@ -341,11 +363,13 @@ class ApplicationController < ActionController::Base
   end
 
   # Find project of id params[:project_id]
+  # @rbs () -> (Project | bool)
   def find_project_by_project_id
     find_project(params[:project_id])
   end
 
   # Find project of id params[:id] if present
+  # @rbs () -> (Project | bool)?
   def find_optional_project_by_id
     if params[:id].present?
       find_project(params[:id])
@@ -354,6 +378,7 @@ class ApplicationController < ActionController::Base
 
   # Find a project based on params[:project_id]
   # and authorize the user for the requested action
+  # @rbs () -> bool
   def find_optional_project
     if params[:project_id].present?
       @project = Project.find(params[:project_id])
@@ -365,12 +390,14 @@ class ApplicationController < ActionController::Base
   end
 
   # Finds and sets @project based on @object.project
+  # @rbs () -> Project
   def find_project_from_association
     render_404 unless @object.present?
 
     @project = @object.project
   end
 
+  # @rbs () -> (IssueCategory | News | Member | Version | bool | Document)
   def find_model_object
     model = self.class.model_object
     if model
@@ -387,6 +414,7 @@ class ApplicationController < ActionController::Base
 
   # Find the issue whose id is the :id parameter
   # Raises a Unauthorized exception if the issue is not visible
+  # @rbs () -> (Project | bool)?
   def find_issue
     # Issue.visible.find(...) can not be used to redirect user to the login form
     # if the issue actually exists but requires authentication
@@ -400,6 +428,7 @@ class ApplicationController < ActionController::Base
 
   # Find issues with a single :id param or :ids array param
   # Raises a Unauthorized exception if one of the issues is not visible
+  # @rbs () -> (Project | bool)?
   def find_issues
     @issues = Issue.
       where(:id => (params[:id] || params[:ids])).
@@ -416,6 +445,7 @@ class ApplicationController < ActionController::Base
     render_404
   end
 
+  # @rbs () -> Array[untyped]
   def find_attachments
     if (attachments = params[:attachments]).present?
       att = attachments.values.collect do |attachment|
@@ -426,6 +456,7 @@ class ApplicationController < ActionController::Base
     @attachments = att || []
   end
 
+  # @rbs (ActionController::Parameters?) -> (ActionController::Parameters | Hash[untyped, untyped])
   def parse_params_for_bulk_update(params)
     attributes = (params || {}).reject {|k, v| v.blank?}
     if custom = attributes[:custom_field_values]
@@ -435,6 +466,7 @@ class ApplicationController < ActionController::Base
     replace_none_values_with_blank(attributes)
   end
 
+  # @rbs ((ActionController::Parameters | Hash[untyped, untyped])?) -> (ActionController::Parameters | Hash[untyped, untyped])
   def replace_none_values_with_blank(params)
     attributes = (params || {})
     attributes.each_key {|k| attributes[k] = '' if attributes[k] == 'none'}
@@ -466,6 +498,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @rbs () -> bool
   def record_project_usage
     if @project && @project.id && User.current.logged? && User.current.allowed_to?(:view_project, @project)
       Redmine::ProjectJumpBox.new(User.current).project_used(@project)
@@ -473,6 +506,7 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  # @rbs () -> String?
   def back_url
     url = params[:back_url]
     if url.nil? && referer = request.env['HTTP_REFERER']
@@ -482,6 +516,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :back_url
 
+  # @rbs (String, ?Hash[untyped, untyped]) -> bool?
   def redirect_back_or_default(default, options={})
     if back_url = validate_back_url(params[:back_url].to_s)
       redirect_to(back_url)
@@ -496,6 +531,7 @@ class ApplicationController < ActionController::Base
 
   # Returns a validated URL string if back_url is a valid url for redirection,
   # otherwise false
+  # @rbs (String?) -> (bool | String)
   def validate_back_url(back_url)
     return false if back_url.blank?
 
@@ -543,6 +579,7 @@ class ApplicationController < ActionController::Base
   helper_method :valid_back_url?
 
   # Redirects to the request referer if present, redirects to args or call block otherwise.
+  # @rbs (*String | nil) -> (String | ActiveSupport::SafeBuffer)
   def redirect_to_referer_or(*args, &block)
     if referer = request.headers["Referer"]
       redirect_to referer
@@ -557,18 +594,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> bool
   def render_403(options={})
     @project = nil
     render_error({:message => :notice_not_authorized, :status => 403}.merge(options))
     return false
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> bool
   def render_404(options={})
     render_error({:message => :notice_file_not_found, :status => 404}.merge(options))
     return false
   end
 
   # Renders an error response
+  # @rbs (Hash[untyped, untyped] | String) -> (ActiveSupport::SafeBuffer | bool)
   def render_error(arg)
     arg = {:message => arg} unless arg.is_a?(Hash)
 
@@ -593,6 +633,7 @@ class ApplicationController < ActionController::Base
 
   # Filter for actions that provide an API response
   # but have no HTML representation for non admin users
+  # @rbs () -> (bool | ActiveSupport::SafeBuffer)
   def require_admin_or_api_request
     return true if api_request?
 
@@ -608,10 +649,12 @@ class ApplicationController < ActionController::Base
   # Picks which layout to use based on the request
   #
   # @return [boolean, string] name of the layout to use or false for no layout
+  # @rbs () -> (String | bool)
   def use_layout
     request.xhr? ? false : 'base'
   end
 
+  # @rbs (Array[untyped], ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_feed(items, options={})
     @items = (items || []).to_a
     @items.sort! {|x, y| y.event_datetime <=> x.event_datetime}
@@ -629,6 +672,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @rbs (?String) -> bool
   def accept_atom_auth?(action=action_name)
     self.class.accept_atom_auth.include?(action.to_sym)
   end
@@ -641,12 +685,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @rbs (?String) -> bool
   def accept_api_auth?(action=action_name)
     self.class.accept_api_auth.include?(action.to_sym)
   end
 
   # Returns the number of objects that should be displayed
   # on the paginated list
+  # @rbs () -> Integer
   def per_page_option
     per_page = nil
     if params[:per_page] && Setting.per_page_options_array.include?(params[:per_page].to_s.to_i)
@@ -662,6 +708,7 @@ class ApplicationController < ActionController::Base
 
   # Returns offset and limit used to retrieve objects
   # for an API response based on offset, limit and page parameters
+  # @rbs (?ActionController::Parameters | Hash[untyped, untyped]) -> Array[untyped]
   def api_offset_and_limit(options=params)
     if options[:offset].present?
       offset = options[:offset].to_i
@@ -686,6 +733,7 @@ class ApplicationController < ActionController::Base
 
   # qvalues http header parser
   # code taken from webrick
+  # @rbs (String) -> Array[untyped]
   def parse_qvalues(value)
     tmp = []
     if value
@@ -706,15 +754,18 @@ class ApplicationController < ActionController::Base
   end
 
   # Returns a string that can be used as filename value in Content-Disposition header
+  # @rbs (String) -> String
   def filename_for_content_disposition(name)
     name
   end
 
+  # @rbs () -> bool?
   def api_request?
     %w(xml json).include? params[:format]
   end
 
   # Returns the API key present in the request
+  # @rbs () -> String?
   def api_key_from_request
     if params[:key].present?
       params[:key].to_s
@@ -724,22 +775,26 @@ class ApplicationController < ActionController::Base
   end
 
   # Returns the API 'switch user' value if present
+  # @rbs () -> String?
   def api_switch_user_from_request
     request.headers["X-Redmine-Switch-User"].to_s.presence
   end
 
   # Renders a warning flash if obj has unsaved attachments
+  # @rbs (Issue | Message | WikiPage | Project | Version | News | Document) -> String?
   def render_attachment_warning_if_needed(obj)
     flash[:warning] = l(:warning_attachments_not_saved, obj.unsaved_attachments.size) if obj.unsaved_attachments.present?
   end
 
   # Rescues an invalid query statement. Just in case...
+  # @rbs (Query::StatementInvalid) -> ActiveSupport::SafeBuffer
   def query_statement_invalid(exception)
     logger.error "Query::StatementInvalid: #{exception.message}" if logger
     session.delete(:issue_query)
     render_error l(:error_query_statement_invalid)
   end
 
+  # @rbs (Query::QueryError) -> bool
   def query_error(exception)
     Rails.logger.debug "#{exception.class.name}: #{exception.message}"
     Rails.logger.debug "    #{exception.backtrace.join("\n    ")}"
@@ -748,22 +803,26 @@ class ApplicationController < ActionController::Base
   end
 
   # Renders a 204 response for successful updates or deletions via the API
+  # @rbs () -> bool
   def render_api_ok
     render_api_head :no_content
   end
 
   # Renders a head API response
+  # @rbs (Symbol) -> bool
   def render_api_head(status)
     head status
   end
 
   # Renders API response on validation failure
   # for an object or an array of objects
+  # @rbs (IssueCategory | Group | Attachment | News | Member | Issue | IssueQuery | Project | User | Version | Array[untyped] | TimeEntry | IssueRelation) -> String
   def render_validation_errors(objects)
     messages = Array.wrap(objects).map {|object| object.errors.full_messages}.flatten
     render_api_errors(messages)
   end
 
+  # @rbs (*Array[untyped] | String) -> String
   def render_api_errors(*messages)
     @error_messages = messages.flatten
     render :template => 'common/error_messages', :format => [:api], :status => :unprocessable_content, :layout => nil
@@ -771,6 +830,7 @@ class ApplicationController < ActionController::Base
 
   # Overrides #_include_layout? so that #render with no arguments
   # doesn't use the layout for api requests
+  # @rbs (*Hash[untyped, untyped]) -> bool
   def _include_layout?(*args)
     api_request? ? false : super
   end

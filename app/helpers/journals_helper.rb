@@ -21,11 +21,13 @@ module JournalsHelper
   include Redmine::QuoteReply::Helper
 
   # Returns the attachments of a journal that are displayed as thumbnails
+  # @rbs (Journal) -> Array[untyped]
   def journal_thumbnail_attachments(journal)
     journal.attachments.select(&:thumbnailable?)
   end
 
   # Returns the action links for an issue journal
+  # @rbs (Issue, Journal, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_journal_actions(issue, journal, options={})
     links = []
     dropbown_links = []
@@ -65,16 +67,19 @@ module JournalsHelper
     safe_join(links, ' ') + actions_dropdown {safe_join(dropbown_links, ' ')}
   end
 
+  # @rbs (Issue, Journal, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_notes(issue, journal, options={})
     content_tag('div', textilizable(journal, :notes), :id => "journal-#{journal.id}-notes", :class => "wiki")
   end
 
+  # @rbs (Journal) -> ActiveSupport::SafeBuffer
   def render_private_notes_indicator(journal)
     content = journal.private_notes? ? l(:field_is_private) : ''
     css_classes = journal.private_notes? ? 'badge badge-private private' : ''
     content_tag('span', content.html_safe, :id => "journal-#{journal.id}-private_notes", :class => css_classes)
   end
 
+  # @rbs (Journal) -> ActiveSupport::SafeBuffer?
   def render_journal_update_info(journal)
     return if journal.created_on == journal.updated_on
 

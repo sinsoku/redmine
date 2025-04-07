@@ -26,6 +26,7 @@ class RepositoriesMercurialControllerTest < Redmine::RepositoryControllerTest
   PRJ_ID     = 3
   NUM_REV    = 43
 
+  # @rbs () -> bool
   def setup
     super
     User.current = nil
@@ -44,6 +45,7 @@ class RepositoriesMercurialControllerTest < Redmine::RepositoryControllerTest
     puts "TODO: Mercurial functional test fails " \
          "when Encoding.default_external is not UTF-8. " \
          "Current value is '#{Encoding.default_external}'"
+    # @rbs () -> bool
     def test_fake; assert true end
   elsif File.directory?(REPOSITORY_PATH)
 
@@ -661,6 +663,7 @@ class RepositoriesMercurialControllerTest < Redmine::RepositoryControllerTest
     end
   else
     puts "Mercurial test repository NOT FOUND. Skipping functional tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

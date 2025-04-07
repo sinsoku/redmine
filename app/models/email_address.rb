@@ -50,6 +50,7 @@ class EmailAddress < ApplicationRecord
 
   safe_attributes 'address'
 
+  # @rbs () -> void
   def destroy
     if is_default?
       false
@@ -60,6 +61,7 @@ class EmailAddress < ApplicationRecord
 
   # Returns true if the email domain is allowed regarding allowed/denied
   # domains defined in application settings, otherwise false
+  # @rbs (String) -> bool
   def self.valid_domain?(domain_or_email)
     denied, allowed =
       [:email_domains_denied, :email_domains_allowed].map do |setting|
@@ -73,6 +75,7 @@ class EmailAddress < ApplicationRecord
   end
 
   # Returns true if domain belongs to domains list.
+  # @rbs (String, String) -> bool
   def self.domain_in?(domain, domains)
     domain = domain.downcase
     domains = domains.to_s.split(/[\s,]+/) unless domains.is_a?(Array)
@@ -84,6 +87,7 @@ class EmailAddress < ApplicationRecord
   private
 
   # send a security notification to user that a new email address was added
+  # @rbs () -> Array[untyped]?
   def deliver_security_notification_create
     # only deliver if this isn't the only address.
     # in that case, the user is just being created and
@@ -98,6 +102,7 @@ class EmailAddress < ApplicationRecord
   end
 
   # send a security notification to user that an email has been changed (notified/not notified)
+  # @rbs () -> Array[untyped]
   def deliver_security_notification_update
     if saved_change_to_address?
       options = {
@@ -117,6 +122,7 @@ class EmailAddress < ApplicationRecord
   end
 
   # send a security notification to user that an email address was deleted
+  # @rbs () -> Array[untyped]
   def deliver_security_notification_destroy
     deliver_security_notification(
       recipients: [address],
@@ -127,6 +133,7 @@ class EmailAddress < ApplicationRecord
   end
 
   # generic method to send security notifications for email addresses
+  # @rbs (?Hash[untyped, untyped]) -> Array[untyped]
   def deliver_security_notification(options={})
     Mailer.deliver_security_notification(
       user,
@@ -141,6 +148,7 @@ class EmailAddress < ApplicationRecord
   # Delete all outstanding password reset tokens on email change.
   # This helps to keep the account secure in case the associated email account
   # was compromised.
+  # @rbs () -> Integer?
   def destroy_tokens
     if saved_change_to_address? || destroyed?
       tokens = ['recovery']
@@ -148,6 +156,7 @@ class EmailAddress < ApplicationRecord
     end
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_email_domain
     domain = address.partition('@').last
     return if self.class.valid_domain?(domain)

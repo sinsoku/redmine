@@ -29,6 +29,7 @@ class Token < ApplicationRecord
   class << self
     attr_reader :actions
 
+    # @rbs (Symbol, Hash[untyped, untyped]) -> void
     def add_action(name, options)
       options.assert_valid_keys(:max_instances, :validity_time)
       @actions ||= {}
@@ -44,20 +45,24 @@ class Token < ApplicationRecord
   add_action :session,   max_instances: 10, validity_time: nil
   add_action :twofa_backup_code, max_instances: 10, validity_time: nil
 
+  # @rbs () -> String
   def generate_new_token
     self.value = Token.generate_token_value
   end
 
   # Return true if token has expired
+  # @rbs () -> bool
   def expired?
     validity_time = self.class.invalid_when_created_before(action)
     validity_time.present? && created_on < validity_time
   end
 
+  # @rbs () -> Integer
   def max_instances
     Token.actions.has_key?(action) ? Token.actions[action][:max_instances] : 1
   end
 
+  # @rbs (?String?) -> Time?
   def self.invalid_when_created_before(action = nil)
     if Token.actions.has_key?(action)
       validity_time = Token.actions[action][:validity_time]
@@ -72,6 +77,7 @@ class Token < ApplicationRecord
   end
 
   # Delete all expired tokens
+  # @rbs () -> Integer
   def self.destroy_expired
     t = Token.arel_table
 
@@ -93,6 +99,7 @@ class Token < ApplicationRecord
   end
 
   # Returns the active user who owns the key for the given action
+  # @rbs (String, String, ?(Integer | Float)?) -> User?
   def self.find_active_user(action, key, validity_days=nil)
     user = find_user(action, key, validity_days)
     if user && user.active?
@@ -101,6 +108,7 @@ class Token < ApplicationRecord
   end
 
   # Returns the user who owns the key for the given action
+  # @rbs (String, String, ?(Integer | Float)?) -> (User | AnonymousUser)?
   def self.find_user(action, key, validity_days=nil)
     token = find_token(action, key, validity_days)
     if token
@@ -110,6 +118,7 @@ class Token < ApplicationRecord
 
   # Returns the token for action and key with an optional
   # validity duration (in number of days)
+  # @rbs (String, String, ?(Integer | Float)?) -> Token?
   def self.find_token(action, key, validity_days=nil)
     action = action.to_s
     key = key.to_s
@@ -125,6 +134,7 @@ class Token < ApplicationRecord
     token
   end
 
+  # @rbs () -> String
   def self.generate_token_value
     Redmine::Utils.random_hex(20)
   end
@@ -132,6 +142,7 @@ class Token < ApplicationRecord
   private
 
   # Removes obsolete tokens (same user and action)
+  # @rbs () -> Integer?
   def delete_previous_tokens
     if user
       scope = Token.where(:user_id => user.id, :action => action)

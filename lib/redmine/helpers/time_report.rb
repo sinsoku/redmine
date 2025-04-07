@@ -22,6 +22,7 @@ module Redmine
     class TimeReport
       attr_reader :criteria, :columns, :hours, :total_hours, :periods
 
+      # @rbs (Project?, Array[untyped]?, String?, TimeEntry::ActiveRecord_Relation) -> void
       def initialize(project, criteria, columns, time_entry_scope)
         @project = project
 
@@ -36,12 +37,14 @@ module Redmine
         run
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def available_criteria
         @available_criteria || load_available_criteria
       end
 
       private
 
+      # @rbs () -> nil
       def run
         unless @criteria.empty?
           time_columns = %w(tyear tmonth tweek spent_on)
@@ -102,6 +105,7 @@ module Redmine
         end
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def load_available_criteria
         @available_criteria = {
           'project' => {:sql => "#{TimeEntry.table_name}.project_id",

@@ -41,6 +41,7 @@ class UsersController < ApplicationController
 
   require_sudo_mode :create, :update, :destroy
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer | Array[untyped])
   def index
     use_session = !request.format.csv?
     retrieve_query(UserQuery, use_session)
@@ -87,6 +88,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def show
     unless @user.visible?
       render_404
@@ -116,6 +118,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # @rbs () -> AuthSource::ActiveRecord_Relation
   def new
     @user = User.new(:language => Setting.default_language,
                      :mail_notification => Setting.default_notification_option)
@@ -123,6 +126,7 @@ class UsersController < ApplicationController
     @auth_sources = AuthSource.all
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def create
     @user = User.new(:language => Setting.default_language,
                      :mail_notification => Setting.default_notification_option,
@@ -163,11 +167,13 @@ class UsersController < ApplicationController
     end
   end
 
+  # @rbs () -> Member
   def edit
     @auth_sources = AuthSource.all
     @membership ||= Member.new
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer | bool)
   def update
     is_updating_password = params[:user][:password].present? && (@user.auth_source_id.nil? || params[:user][:auth_source_id].blank?)
     if is_updating_password
@@ -209,6 +215,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | bool)?
   def destroy
     return render_error status: 422 if @user == User.current && !@user.own_account_deletable?
 
@@ -227,6 +234,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # @rbs () -> String?
   def bulk_destroy
     @users = User.logged.where(id: params[:ids]).where.not(id: User.current)
     (render_404; return) unless @users.any?
@@ -238,16 +246,19 @@ class UsersController < ApplicationController
     end
   end
 
+  # @rbs () -> String?
   def bulk_lock
     bulk_update_status(params[:ids], User::STATUS_LOCKED)
   end
 
+  # @rbs () -> String
   def bulk_unlock
     bulk_update_status(params[:ids], User::STATUS_ACTIVE)
   end
 
   private
 
+  # @rbs (?bool) -> (User | bool)?
   def find_user(logged = true)
     if params[:id] == 'current'
       require_login || return
@@ -261,6 +272,7 @@ class UsersController < ApplicationController
     render_404
   end
 
+  # @rbs (Array[untyped], Integer) -> String?
   def bulk_update_status(user_ids, status)
     users = User.logged.where(id: user_ids).where.not(id: User.current)
     (render_404; return) unless users.any?

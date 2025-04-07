@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingNewsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_news_scoped_under_project
     should_route 'GET /projects/foo/news' => 'news#index', :project_id => 'foo'
     should_route 'GET /projects/foo/news.atom' => 'news#index', :project_id => 'foo', :format => 'atom'
@@ -27,6 +28,7 @@ class RoutingNewsTest < Redmine::RoutingTest
     should_route 'POST /projects/foo/news' => 'news#create', :project_id => 'foo'
   end
 
+  # @rbs () -> bool
   def test_news
     should_route 'GET /news' => 'news#index'
     should_route 'GET /news/new' => 'news#new'

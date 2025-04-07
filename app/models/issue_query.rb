@@ -82,6 +82,7 @@ class IssueQuery < Query
   after_update { projects.clear unless visibility == VISIBILITY_PUBLIC }
   scope :for_all_projects, ->{ where(project_id: nil) }
 
+  # @rbs (?project: Project | nil, ?user: AnonymousUser | User | nil) -> IssueQuery?
   def self.default(project: nil, user: User.current)
     # user default
     if user&.logged? && (query_id = user.pref.default_issue_query).present?
@@ -101,38 +102,46 @@ class IssueQuery < Query
     nil
   end
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super(attributes)
     self.filters ||= {'status_id' => {:operator => "o", :values => [""]}}
   end
 
+  # @rbs () -> bool
   def draw_relations
     r = options[:draw_relations]
     r.nil? || r == '1'
   end
 
+  # @rbs (String?) -> void
   def draw_relations=(arg)
     options[:draw_relations] = (arg == '0' ? '0' : nil)
   end
 
+  # @rbs () -> bool
   def draw_progress_line
     r = options[:draw_progress_line]
     r == '1'
   end
 
+  # @rbs (String?) -> void
   def draw_progress_line=(arg)
     options[:draw_progress_line] = (arg == '1' ? '1' : nil)
   end
 
+  # @rbs () -> bool
   def draw_selected_columns
     r = options[:draw_selected_columns]
     r == '1'
   end
 
+  # @rbs (String?) -> void
   def draw_selected_columns=(arg)
     options[:draw_selected_columns] = (arg == '1' ? '1' : nil)
   end
 
+  # @rbs (ActionController::Parameters | Hash[untyped, untyped], ?Hash[untyped, untyped]?) -> IssueQuery
   def build_from_params(params, defaults={})
     super
     self.draw_relations =
@@ -149,6 +158,7 @@ class IssueQuery < Query
     self
   end
 
+  # @rbs () -> void
   def initialize_available_filters
     add_available_filter(
       "status_id",
@@ -299,6 +309,7 @@ class IssueQuery < Query
     end
   end
 
+  # @rbs () -> Array[untyped]
   def available_columns
     return @available_columns if @available_columns
 
@@ -356,6 +367,7 @@ class IssueQuery < Query
     @available_columns
   end
 
+  # @rbs () -> Array[untyped]
   def default_columns_names
     @default_columns_names ||= begin
       default_columns = Setting.issue_list_default_columns.map(&:to_sym)
@@ -364,19 +376,23 @@ class IssueQuery < Query
     end
   end
 
+  # @rbs () -> Array[untyped]
   def default_totalable_names
     Setting.issue_list_default_totals.map(&:to_sym)
   end
 
+  # @rbs () -> Array[untyped]
   def default_sort_criteria
     [['id', 'desc']]
   end
 
+  # @rbs () -> Issue::ActiveRecord_Relation?
   def base_scope
     Issue.visible.joins(:status, :project).where(statement)
   end
 
   # Returns the issue count
+  # @rbs () -> Integer?
   def issue_count
     base_scope.count
   rescue ::ActiveRecord::StatementInvalid => e
@@ -384,15 +400,18 @@ class IssueQuery < Query
   end
 
   # Returns sum of all the issue's estimated_hours
+  # @rbs (Issue::ActiveRecord_Relation) -> (Float | Hash[untyped, untyped])
   def total_for_estimated_hours(scope)
     map_total(scope.sum(:estimated_hours)) {|t| t.to_f.round(2)}
   end
 
+  # @rbs (Issue::ActiveRecord_Relation) -> (Float | Hash[untyped, untyped])
   def total_for_estimated_remaining_hours(scope)
     map_total(scope.sum(ESTIMATED_REMAINING_HOURS_SQL)) {|t| t.to_f.round(2)}
   end
 
   # Returns sum of all the issue's time entries hours
+  # @rbs (Issue::ActiveRecord_Relation) -> (Hash[untyped, untyped] | Float)
   def total_for_spent_hours(scope)
     total = scope.joins(:time_entries).
       where(TimeEntry.visible_condition(User.current)).
@@ -403,6 +422,7 @@ class IssueQuery < Query
 
   # Returns the issues
   # Valid options are :order, :offset, :limit, :include, :conditions
+  # @rbs (?Hash[untyped, untyped]) -> Array[untyped]?
   def issues(options={})
     order_option = [group_by_sort_order, (options[:order] || sort_clause)].flatten.reject(&:blank?)
     # The default order of IssueQuery is issues.id DESC(by IssueQuery#default_sort_criteria)
@@ -454,6 +474,7 @@ class IssueQuery < Query
   end
 
   # Returns the issues ids
+  # @rbs (?Hash[untyped, untyped]) -> Array[untyped]
   def issue_ids(options={})
     order_option = [group_by_sort_order, (options[:order] || sort_clause)].flatten.reject(&:blank?)
     # The default order of IssueQuery is issues.id DESC(by IssueQuery#default_sort_criteria)
@@ -476,6 +497,7 @@ class IssueQuery < Query
 
   # Returns the journals
   # Valid options are :order, :offset, :limit
+  # @rbs (?Hash[untyped, untyped]) -> Array[untyped]
   def journals(options={})
     Journal.visible.
       joins(:issue => [:project, :status]).
@@ -491,6 +513,7 @@ class IssueQuery < Query
 
   # Returns the versions
   # Valid options are :conditions
+  # @rbs (?Hash[untyped, untyped]) -> Array[untyped]
   def versions(options={})
     Version.visible.
       where(project_statement).
@@ -502,6 +525,7 @@ class IssueQuery < Query
     raise StatementInvalid.new(e.message)
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_notes_field(field, operator, value)
     subquery = "SELECT 1 FROM #{Journal.table_name}" +
       " WHERE #{Journal.table_name}.journalized_type='Issue' AND #{Journal.table_name}.journalized_id=#{Issue.table_name}.id" +
@@ -510,6 +534,7 @@ class IssueQuery < Query
     "#{operator.start_with?('!') ? "NOT EXISTS" : "EXISTS"} (#{subquery})"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_updated_by_field(field, operator, value)
     neg = (operator == '!' ? 'NOT' : '')
     subquery = "SELECT 1 FROM #{Journal.table_name}" +
@@ -520,6 +545,7 @@ class IssueQuery < Query
     "#{neg} EXISTS (#{subquery})"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_last_updated_by_field(field, operator, value)
     neg = (operator == '!' ? 'NOT' : '')
     subquery = "SELECT 1 FROM #{Journal.table_name} sj" +
@@ -531,6 +557,7 @@ class IssueQuery < Query
     "#{neg} EXISTS (#{subquery})"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_spent_time_field(field, operator, value)
     first, second = value.first.to_f, value.second.to_f
     sql_op =
@@ -548,6 +575,7 @@ class IssueQuery < Query
       "WHERE issue_id = #{Issue.table_name}.id), 0) #{sql_op}"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_watcher_id_field(field, operator, value)
     db_table = Watcher.table_name
     me_ids = [0, User.current.id]
@@ -573,6 +601,7 @@ class IssueQuery < Query
     "#{Issue.table_name}.id #{ operator == '=' ? 'IN' : 'NOT IN' } (#{sql})"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_member_of_group_field(field, operator, value)
     if operator == '*' # Any group
       groups = Group.givable
@@ -592,6 +621,7 @@ class IssueQuery < Query
     '(' + sql_for_field("assigned_to_id", operator, members_of_groups, Issue.table_name, "assigned_to_id", false) + ')'
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_assigned_to_role_field(field, operator, value)
     case operator
     when "*", "!*" # Member / Not member
@@ -646,6 +676,7 @@ class IssueQuery < Query
     "(#{nl} #{sw} EXISTS (#{subquery}))"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_fixed_version_status_field(field, operator, value)
     where = sql_for_field(field, operator, value, Version.table_name, "status")
     version_id_scope = project ? project.shared_versions : Version.visible
@@ -655,6 +686,7 @@ class IssueQuery < Query
     "(#{nl} #{sql_for_field("fixed_version_id", "=", version_ids, Issue.table_name, "fixed_version_id")})"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_fixed_version_due_date_field(field, operator, value)
     where = sql_for_field(field, operator, value, Version.table_name, "effective_date")
     version_id_scope = project ? project.shared_versions : Version.visible
@@ -664,6 +696,7 @@ class IssueQuery < Query
     "(#{nl} #{sql_for_field("fixed_version_id", "=", version_ids, Issue.table_name, "fixed_version_id")})"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_is_private_field(field, operator, value)
     op = (operator == "=" ? 'IN' : 'NOT IN')
     va =
@@ -673,6 +706,7 @@ class IssueQuery < Query
     "#{Issue.table_name}.is_private #{op} (#{va})"
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_attachment_field(field, operator, value)
     case operator
     when "*", "!*"
@@ -688,6 +722,7 @@ class IssueQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_attachment_description_field(field, operator, value)
     cond_description = "a.description IS NOT NULL AND a.description <> ''"
     c =
@@ -705,6 +740,7 @@ class IssueQuery < Query
     "EXISTS (SELECT 1 FROM #{Attachment.table_name} a WHERE a.container_type = 'Issue' AND a.container_id = #{Issue.table_name}.id AND (#{c}))"
   end
 
+  # @rbs (String, String, Array[untyped] | String) -> String
   def sql_for_parent_id_field(field, operator, value)
     case operator
     when "="
@@ -738,6 +774,7 @@ class IssueQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped] | String) -> String
   def sql_for_child_id_field(field, operator, value)
     case operator
     when "="
@@ -763,6 +800,7 @@ class IssueQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_updated_on_field(field, operator, value)
     case operator
     when "!*"
@@ -774,6 +812,7 @@ class IssueQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_issue_id_field(field, operator, value)
     if operator == "="
       # accepts a comma separated list of ids
@@ -788,6 +827,7 @@ class IssueQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped], ?Hash[untyped, untyped]) -> String
   def sql_for_relations(field, operator, value, options={})
     relation_options = IssueRelation::TYPES[field]
     return relation_options unless relation_options
@@ -849,10 +889,12 @@ class IssueQuery < Query
     "(#{sql})"
   end
 
+  # @rbs (String, String, Array[untyped], ?Hash[untyped, untyped]) -> String
   def sql_for_project_status_field(field, operator, value, options={})
     sql_for_field(field, operator, value, Project.table_name, "status")
   end
 
+  # @rbs (String?, String, Array[untyped]) -> String
   def sql_for_any_searchable_field(field, operator, value)
     question = value.first
 
@@ -897,6 +939,7 @@ class IssueQuery < Query
     end
   end
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def find_assigned_to_id_filter_values(values)
     Principal.visible.where(:id => values).map {|p| [p.name, p.id.to_s]}
   end
@@ -906,6 +949,7 @@ class IssueQuery < Query
     alias_method :"sql_for_#{relation_type}_field", :sql_for_relations
   end
 
+  # @rbs (String | Arel::Nodes::SqlLiteral) -> String?
   def joins_for_order_statement(order_options)
     joins = [super]
 

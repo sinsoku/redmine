@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class EnumerationTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_objects_count
     # low priority
     assert_equal 6, Enumeration.find(4).objects_count
@@ -31,6 +33,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert_equal 0, Enumeration.find(7).objects_count
   end
 
+  # @rbs () -> bool
   def test_in_use
     # low priority
     assert Enumeration.find(4).in_use?
@@ -38,6 +41,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert !Enumeration.find(7).in_use?
   end
 
+  # @rbs () -> bool
   def test_default
     e = Enumeration.default
     assert e.is_a?(Enumeration)
@@ -46,6 +50,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert_equal 'Default Enumeration', e.name
   end
 
+  # @rbs () -> bool
   def test_default_non_active
     e = Enumeration.find(12)
     assert e.is_a?(Enumeration)
@@ -56,6 +61,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert !e.active?
   end
 
+  # @rbs () -> bool
   def test_create
     e = Enumeration.new(:name => 'Not default', :is_default => false)
     e.type = 'Enumeration'
@@ -63,6 +69,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert_equal 'Default Enumeration', Enumeration.default.name
   end
 
+  # @rbs () -> bool
   def test_create_as_default
     e = Enumeration.new(:name => 'Very urgent', :is_default => true)
     e.type = 'Enumeration'
@@ -70,40 +77,47 @@ class EnumerationTest < ActiveSupport::TestCase
     assert_equal e, Enumeration.default
   end
 
+  # @rbs () -> bool
   def test_update_default
     e = Enumeration.default
     e.update(:name => 'Changed', :is_default => true)
     assert_equal e, Enumeration.default
   end
 
+  # @rbs () -> bool
   def test_update_default_to_non_default
     e = Enumeration.default
     e.update(:name => 'Changed', :is_default => false)
     assert_nil Enumeration.default
   end
 
+  # @rbs () -> bool
   def test_change_default
     e = Enumeration.find_by_name('Default Enumeration')
     e.update(:name => 'Changed Enumeration', :is_default => true)
     assert_equal e, Enumeration.default
   end
 
+  # @rbs () -> bool
   def test_destroy_with_reassign
     Enumeration.find(4).destroy(Enumeration.find(6))
     assert_not Issue.where(:priority_id => 4).exists?
     assert_equal 6, Enumeration.find(6).objects_count
   end
 
+  # @rbs () -> bool
   def test_should_be_customizable
     assert Enumeration.included_modules.include?(Redmine::Acts::Customizable::InstanceMethods)
   end
 
+  # @rbs () -> bool
   def test_should_belong_to_a_project
     association = Enumeration.reflect_on_association(:project)
     assert association, "No Project association found"
     assert_equal :belongs_to, association.macro
   end
 
+  # @rbs () -> bool
   def test_should_act_as_tree
     enumeration = Enumeration.find(4)
 
@@ -111,6 +125,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert enumeration.respond_to?(:children)
   end
 
+  # @rbs () -> bool
   def test_is_override
     # Defaults to off
     enumeration = Enumeration.find(4)
@@ -121,6 +136,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert enumeration.is_override?
   end
 
+  # @rbs () -> Array[untyped]
   def test_get_subclasses
     classes = Enumeration.get_subclasses
     assert_include IssuePriority, classes
@@ -132,6 +148,7 @@ class EnumerationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_list_should_be_scoped_for_each_type
     Enumeration.delete_all
 
@@ -142,6 +159,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert_equal [1, 2, 1], [a, b, c].map {|e| e.reload.position}
   end
 
+  # @rbs () -> bool
   def test_override_should_be_created_with_same_position_as_parent
     Enumeration.delete_all
 
@@ -152,6 +170,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert_equal [1, 2, 2], [a, b, override].map {|e| e.reload.position}
   end
 
+  # @rbs () -> bool
   def test_override_position_should_be_updated_with_parent_position
     Enumeration.delete_all
 
@@ -164,6 +183,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert_equal [2, 1, 1], [a, b, override].map {|e| e.reload.position}
   end
 
+  # @rbs () -> bool
   def test_destroying_override_should_not_update_positions
     Enumeration.delete_all
     Issue.delete_all
@@ -178,6 +198,7 @@ class EnumerationTest < ActiveSupport::TestCase
     assert_equal [1, 2, 3], [a, b, c].map {|e| e.reload.position}
   end
 
+  # @rbs () -> bool
   def test_spaceship_operator_with_incomparable_value_should_return_nil
     e = Enumeration.first
     assert_nil e <=> nil

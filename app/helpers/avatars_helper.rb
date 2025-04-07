@@ -20,6 +20,7 @@
 module AvatarsHelper
   include GravatarHelper::PublicMethods
 
+  # @rbs ((User | Group)?, ?Hash[untyped, untyped]) -> (String | ActiveSupport::SafeBuffer)
   def assignee_avatar(user, options={})
     return '' unless user
 
@@ -27,6 +28,7 @@ module AvatarsHelper
     avatar(user, options).to_s.html_safe
   end
 
+  # @rbs (AnonymousUser | User, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def author_avatar(user, options={})
     return '' unless user
 
@@ -36,6 +38,7 @@ module AvatarsHelper
 
   # Returns the avatar image tag for the given +user+ if avatars are enabled
   # +user+ can be a User or a string that will be scanned for an email address (eg. 'joe <joe@foo.bar>')
+  # @rbs ((AnonymousUser | User | Group | String)?, ?Hash[untyped, untyped]) -> (String | ActiveSupport::SafeBuffer)?
   def avatar(user, options = {})
     if Setting.gravatar_enabled?
       options[:default] = Setting.gravatar_default
@@ -62,6 +65,7 @@ module AvatarsHelper
   end
 
   # Returns a link to edit user's avatar if avatars are enabled
+  # @rbs (User, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer?
   def avatar_edit_link(user, options={})
     if Setting.gravatar_enabled?
       url = Redmine::Configuration['avatar_server_url']
@@ -71,10 +75,12 @@ module AvatarsHelper
 
   private
 
+  # @rbs (?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def anonymous_avatar(options={})
     image_tag 'anonymous.png', GravatarHelper::DEFAULT_OPTIONS.except(:default, :rating, :ssl).merge(options)
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def group_avatar(options={})
     image_tag 'group.png', GravatarHelper::DEFAULT_OPTIONS.except(:default, :rating, :ssl).merge(options)
   end

@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class WikisControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_get_destroy_should_ask_confirmation
     set_tmp_attachments_directory
     @request.session[:user_id] = 1
@@ -33,6 +35,7 @@ class WikisControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_destroy_should_reinitialize_empty_wiki
     set_tmp_attachments_directory
     @request.session[:user_id] = 1
@@ -46,6 +49,7 @@ class WikisControllerTest < Redmine::ControllerTest
     assert_equal "Wiki", new_wiki.start_page
   end
 
+  # @rbs () -> bool
   def test_not_found
     @request.session[:user_id] = 1
     post :destroy, :params => {:id => 999, :confirm => 1}

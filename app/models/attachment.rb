@@ -91,6 +91,7 @@ class Attachment < ApplicationRecord
   safe_attributes 'filename', 'content_type', 'description'
 
   # Returns an unsaved copy of the attachment
+  # @rbs (?Hash[untyped, untyped]?) -> Attachment
   def copy(attributes=nil)
     copy = self.class.new
     copy.attributes = self.attributes.dup.except("id", "downloads")
@@ -98,12 +99,14 @@ class Attachment < ApplicationRecord
     copy
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_max_file_size
     if @temp_file && self.filesize > Setting.attachment_max_size.to_i.kilobytes
       errors.add(:base, l(:error_attachment_too_big, :max_size => Setting.attachment_max_size.to_i.kilobytes))
     end
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_file_extension
     extension = File.extname(filename)
     unless self.class.valid_extension?(extension)
@@ -111,6 +114,7 @@ class Attachment < ApplicationRecord
     end
   end
 
+  # @rbs (ActionDispatch::Http::UploadedFile | String | StringIO | Rack::RewindableInput | Rack::Test::UploadedFile | Redmine::MockFile) -> Integer
   def file=(incoming_file)
     unless incoming_file.nil?
       @temp_file = incoming_file
@@ -129,6 +133,7 @@ class Attachment < ApplicationRecord
     nil
   end
 
+  # @rbs (String) -> String
   def filename=(arg)
     write_attribute :filename, sanitize_filename(arg.to_s)
     filename
@@ -136,6 +141,7 @@ class Attachment < ApplicationRecord
 
   # Copies the temporary file to its final location
   # and computes its hash
+  # @rbs () -> nil
   def files_to_final_location
     if @temp_file
       self.disk_directory = target_directory
@@ -168,6 +174,7 @@ class Attachment < ApplicationRecord
   end
 
   # Deletes the file from the file system if it's not referenced by other attachments
+  # @rbs () -> Array[untyped]?
   def delete_from_disk
     if Attachment.where("disk_filename = ? AND id <> ?", disk_filename, id).empty?
       delete_from_disk!
@@ -175,10 +182,12 @@ class Attachment < ApplicationRecord
   end
 
   # Returns file's location on disk
+  # @rbs () -> String
   def diskfile
     File.join(self.class.storage_path, disk_directory.to_s, disk_filename.to_s)
   end
 
+  # @rbs () -> String
   def title
     title = filename.dup
     if description.present?
@@ -187,14 +196,17 @@ class Attachment < ApplicationRecord
     title
   end
 
+  # @rbs () -> Attachment
   def increment_download
     increment!(:downloads)
   end
 
+  # @rbs () -> Project?
   def project
     container.try(:project)
   end
 
+  # @rbs (?User | AnonymousUser) -> bool
   def visible?(user=User.current)
     if container_id
       container && container.attachments_visible?(user)
@@ -203,6 +215,7 @@ class Attachment < ApplicationRecord
     end
   end
 
+  # @rbs (?User) -> bool
   def editable?(user=User.current)
     if container_id
       container && container.attachments_editable?(user)
@@ -211,6 +224,7 @@ class Attachment < ApplicationRecord
     end
   end
 
+  # @rbs (?User | AnonymousUser) -> bool
   def deletable?(user=User.current)
     if container_id
       container && container.attachments_deletable?(user)
@@ -219,10 +233,12 @@ class Attachment < ApplicationRecord
     end
   end
 
+  # @rbs () -> bool
   def image?
     !!(self.filename =~ /\.(bmp|gif|jpg|jpe|jpeg|png|webp)$/i)
   end
 
+  # @rbs () -> bool
   def thumbnailable?
     Redmine::Thumbnail.convert_available? && (
       image? || (is_pdf? && Redmine::Thumbnail.gs_available?)
@@ -231,6 +247,7 @@ class Attachment < ApplicationRecord
 
   # Returns the full path the attachment thumbnail, or nil
   # if the thumbnail cannot be generated.
+  # @rbs (?Hash[untyped, untyped]) -> String?
   def thumbnail(options={})
     if thumbnailable? && readable?
       size = options[:size].to_i
@@ -260,40 +277,49 @@ class Attachment < ApplicationRecord
   end
 
   # Deletes all thumbnails
+  # @rbs () -> void
   def self.clear_thumbnails
     Dir.glob(File.join(thumbnails_storage_path, "*.thumb")).each do |file|
       File.delete file
     end
   end
 
+  # @rbs () -> bool
   def is_text?
     Redmine::MimeType.is_type?('text', filename) || Redmine::SyntaxHighlighting.filename_supported?(filename)
   end
 
+  # @rbs () -> bool
   def is_markdown?
     Redmine::MimeType.of(filename) == 'text/markdown'
   end
 
+  # @rbs () -> bool
   def is_textile?
     Redmine::MimeType.of(filename) == 'text/x-textile'
   end
 
+  # @rbs () -> bool
   def is_image?
     Redmine::MimeType.is_type?('image', filename)
   end
 
+  # @rbs () -> bool
   def is_diff?
     /\.(patch|diff)$/i.match?(filename)
   end
 
+  # @rbs () -> bool
   def is_pdf?
     Redmine::MimeType.of(filename) == "application/pdf"
   end
 
+  # @rbs () -> bool
   def is_video?
     Redmine::MimeType.is_type?('video', filename)
   end
 
+  # @rbs () -> bool
   def is_audio?
     Redmine::MimeType.is_type?('audio', filename)
   end
@@ -303,16 +329,19 @@ class Attachment < ApplicationRecord
   end
 
   # Returns true if the file is readable
+  # @rbs () -> bool
   def readable?
     disk_filename.present? && File.readable?(diskfile)
   end
 
   # Returns the attachment token
+  # @rbs () -> String
   def token
     "#{id}.#{digest}"
   end
 
   # Finds an attachment that matches the given token and that has no container
+  # @rbs (String) -> Attachment?
   def self.find_by_token(token)
     if token.to_s =~ /^(\d+)\.([0-9a-f]+)$/
       attachment_id, attachment_digest = $1, $2
@@ -328,6 +357,7 @@ class Attachment < ApplicationRecord
   # Returns a Hash of the results:
   # :files => array of the attached files
   # :unsaved => array of the files that could not be attached
+  # @rbs (WikiPage | Issue | Project | Version | Document, (ActionController::Parameters | Array[untyped] | Hash[untyped, untyped])?) -> Hash[untyped, untyped]
   def self.attach_files(obj, attachments)
     result = obj.save_attachments(attachments, User.current)
     obj.attach_saved_attachments
@@ -344,6 +374,7 @@ class Attachment < ApplicationRecord
   #     7 => {:filename => 'bar', :description => 'file description'}
   #   })
   #
+  # @rbs (Array[untyped], Hash[untyped, untyped] | ActionController::Parameters) -> bool
   def self.update_attachments(attachments, params)
     converted = {}
     params.each {|key, val| converted[key.to_i] = val}
@@ -363,6 +394,7 @@ class Attachment < ApplicationRecord
     saved
   end
 
+  # @rbs (Attachment::ActiveRecord_Associations_CollectionProxy | Array[untyped] | Attachment::ActiveRecord_Relation, String) -> Attachment?
   def self.latest_attach(attachments, filename)
     return unless filename.valid_encoding?
 
@@ -371,10 +403,12 @@ class Attachment < ApplicationRecord
     end
   end
 
+  # @rbs (?ActiveSupport::Duration) -> Array[untyped]
   def self.prune(age=1.day)
     Attachment.where("created_on < ? AND (container_type IS NULL OR container_type = '')", Time.now - age).destroy_all
   end
 
+  # @rbs (Array[untyped]) -> String?
   def self.archive_attachments(attachments)
     attachments = attachments.select(&:readable?)
     return nil if attachments.blank?
@@ -403,6 +437,7 @@ class Attachment < ApplicationRecord
   end
 
   # Moves an existing attachment to its target directory
+  # @rbs () -> bool
   def move_to_target_directory!
     return unless !new_record? & readable?
 
@@ -427,6 +462,7 @@ class Attachment < ApplicationRecord
 
   # Moves existing attachments that are stored at the root of the files
   # directory (ie. created before Redmine 2.3) to their target subdirectories
+  # @rbs () -> void
   def self.move_from_root_to_target_directory
     Attachment.where("disk_directory IS NULL OR disk_directory = ''").find_each do |attachment|
       attachment.move_to_target_directory!
@@ -442,6 +478,7 @@ class Attachment < ApplicationRecord
   end
 
   # Updates attachment digest to SHA256
+  # @rbs () -> void
   def update_digest_to_sha256!
     if readable?
       sha = Digest::SHA256.new
@@ -456,6 +493,7 @@ class Attachment < ApplicationRecord
 
   # Returns true if the extension is allowed regarding allowed/denied
   # extensions defined in application settings, otherwise false
+  # @rbs (String) -> bool
   def self.valid_extension?(extension)
     denied, allowed = [:attachment_extensions_denied, :attachment_extensions_allowed].map do |setting|
       Setting.send(setting)
@@ -471,6 +509,7 @@ class Attachment < ApplicationRecord
   end
 
   # Returns true if extension belongs to extensions list.
+  # @rbs (String, String) -> bool
   def self.extension_in?(extension, extensions)
     extension = extension.downcase.sub(/\A\.+/, '')
 
@@ -482,17 +521,20 @@ class Attachment < ApplicationRecord
   end
 
   # Returns true if attachment's extension belongs to extensions list.
+  # @rbs (String, String) -> bool
   def extension_in?(extensions)
     self.class.extension_in?(File.extname(filename), extensions)
   end
 
   # returns either MD5 or SHA256 depending on the way self.digest was computed
+  # @rbs () -> String
   def digest_type
     digest.size < 64 ? "MD5" : "SHA256" if digest.present?
   end
 
   private
 
+  # @rbs () -> Integer?
   def reuse_existing_file_if_possible
     original_diskfile = diskfile
     original_filename = disk_filename
@@ -524,6 +566,7 @@ class Attachment < ApplicationRecord
   end
 
   # Physically deletes the file from the file system
+  # @rbs () -> Array[untyped]
   def delete_from_disk!
     FileUtils.rm_f(diskfile) if disk_filename.present?
     Dir[thumbnail_path("*")].each do |thumb|
@@ -531,11 +574,13 @@ class Attachment < ApplicationRecord
     end
   end
 
+  # @rbs (String | Integer) -> String
   def thumbnail_path(size)
     File.join(self.class.thumbnails_storage_path,
               "#{digest}_#{filesize}_#{size}.thumb")
   end
 
+  # @rbs (String) -> String
   def sanitize_filename(value)
     # get only the filename, not the whole path
     just_filename = value.gsub(/\A.*(\\|\/)/m, '')
@@ -545,6 +590,7 @@ class Attachment < ApplicationRecord
   end
 
   # Returns the subdirectory in which the attachment will be saved
+  # @rbs () -> String
   def target_directory
     time = created_on || DateTime.now
     time.strftime("%Y/%m")
@@ -553,6 +599,7 @@ class Attachment < ApplicationRecord
   # Singleton class method is public
   class << self
     # Claims a unique ASCII or hashed filename, yields the open file handle
+    # @rbs (String, ?String?) -> void
     def create_diskfile(filename, directory=nil, &)
       timestamp = DateTime.now.strftime("%y%m%d%H%M%S")
       ascii = ''

@@ -21,6 +21,7 @@ require_relative '../test_helper'
 
 class IssuesTest < Redmine::IntegrationTest
   # create an issue
+  # @rbs () -> bool
   def test_add_issue
     log_user('jsmith', 'jsmith')
 
@@ -56,6 +57,7 @@ class IssuesTest < Redmine::IntegrationTest
     assert_equal 1, issue.status.id
   end
 
+  # @rbs () -> bool
   def test_create_issue_by_anonymous_without_permission_should_fail
     Role.anonymous.remove_permission! :add_issues
 
@@ -73,6 +75,7 @@ class IssuesTest < Redmine::IntegrationTest
     assert_response :found
   end
 
+  # @rbs () -> bool
   def test_create_issue_by_anonymous_with_custom_permission_should_succeed
     Role.anonymous.remove_permission! :add_issues
     Member.create!(:project_id => 1, :principal => Group.anonymous, :role_ids => [3])
@@ -93,6 +96,7 @@ class IssuesTest < Redmine::IntegrationTest
   end
 
   # add then remove 2 attachments to an issue
+  # @rbs () -> bool
   def test_issue_attachments
     log_user('jsmith', 'jsmith')
     set_tmp_attachments_directory
@@ -123,6 +127,7 @@ class IssuesTest < Redmine::IntegrationTest
     assert_equal 0, Issue.find(1).attachments.length
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_add_attachment_form
     log_user('jsmith', 'jsmith')
     role = Role.find(1)
@@ -164,6 +169,7 @@ class IssuesTest < Redmine::IntegrationTest
     assert_select 'div#new-attachments', 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_check_permission_for_add_attachment
     log_user('jsmith', 'jsmith')
     role = Role.find(1)
@@ -197,6 +203,7 @@ class IssuesTest < Redmine::IntegrationTest
     assert_select '.flash', '1 file(s) could not be saved.'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_next_and_previous_links_should_be_displayed_after_query_grouped_and_sorted_by_version
     with_settings :default_language => 'en' do
       get '/projects/ecookbook/issues?set_filter=1&group_by=fixed_version&sort=priority:desc,fixed_version,id'
@@ -209,6 +216,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_next_and_previous_links_should_be_displayed_after_filter
     with_settings :default_language => 'en' do
       get '/projects/ecookbook/issues?set_filter=1&tracker_id=1'
@@ -222,6 +230,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_next_and_previous_links_should_be_displayed_after_saved_query
     query =
       IssueQuery.create!(
@@ -240,6 +249,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_other_formats_links_on_index
     get '/projects/ecookbook/issues'
 
@@ -248,6 +258,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_other_formats_links_on_index_without_project_id_in_url
     get('/issues', :params => {:project_id => 'ecookbook'})
     %w(Atom PDF CSV).each do |format|
@@ -255,6 +266,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_pagination_links_on_index
     with_settings :per_page_options => '2' do
       get '/projects/ecookbook/issues'
@@ -263,6 +275,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_pagination_links_should_preserve_query_parameters
     with_settings :per_page_options => '2' do
       get '/projects/ecookbook/issues?foo=bar'
@@ -271,6 +284,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_pagination_links_should_not_use_params_as_url_options
     with_settings :per_page_options => '2' do
       get '/projects/ecookbook/issues?host=foo'
@@ -279,24 +293,28 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_sort_links_on_index
     get '/projects/ecookbook/issues'
 
     assert_select 'a[href=?]', '/projects/ecookbook/issues?sort=subject%2Cid%3Adesc', :text => 'Subject'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_sort_links_should_preserve_query_parameters
     get '/projects/ecookbook/issues?foo=bar'
 
     assert_select 'a[href=?]', '/projects/ecookbook/issues?foo=bar&sort=subject%2Cid%3Adesc', :text => 'Subject'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_sort_links_should_not_use_params_as_url_options
     get '/projects/ecookbook/issues?host=foo'
 
     assert_select 'a[href=?]', '/projects/ecookbook/issues?host=foo&sort=subject%2Cid%3Adesc', :text => 'Subject'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_issue_with_user_custom_field
     @field = IssueCustomField.create!(:name => 'Tester', :field_format => 'user', :is_for_all => true, :trackers => Tracker.all)
     Role.anonymous.add_permission! :add_issues, :edit_issues
@@ -359,6 +377,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_using_invalid_http_verbs
     log_user('jsmith', 'jsmith')
     subject = 'Updated by an invalid http verb'
@@ -372,6 +391,7 @@ class IssuesTest < Redmine::IntegrationTest
     assert_not_equal subject, Issue.find(1).subject
   end
 
+  # @rbs () -> bool
   def test_get_watch_should_be_invalid
     log_user('jsmith', 'jsmith')
 
@@ -381,6 +401,7 @@ class IssuesTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_invalid_operators_should_render_404
     get '/projects/ecookbook/issues', :params => {
       'set_filter' => '1',

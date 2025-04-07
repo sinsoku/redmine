@@ -26,6 +26,7 @@ class CustomFieldsController < ApplicationController
   before_action :find_custom_field, :only => [:edit, :update, :destroy]
   accept_api_auth :index
 
+  # @rbs () -> (Hash[untyped, untyped] | CustomField::ActiveRecord_Relation)
   def index
     respond_to do |format|
       format.html do
@@ -39,11 +40,13 @@ class CustomFieldsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def new
     @custom_field.field_format = 'string' if @custom_field.field_format.blank?
     @custom_field.default_value = nil
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def create
     if @custom_field.save
       flash[:notice] = l(:notice_successful_create)
@@ -58,9 +61,11 @@ class CustomFieldsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (bool | ActiveSupport::SafeBuffer)
   def update
     @custom_field.safe_attributes = params[:custom_field]
     if @custom_field.save
@@ -80,6 +85,7 @@ class CustomFieldsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def destroy
     begin
       if @custom_field.destroy
@@ -93,6 +99,7 @@ class CustomFieldsController < ApplicationController
 
   private
 
+  # @rbs () -> (ActionController::Parameters | ActiveSupport::SafeBuffer)?
   def build_new_custom_field
     @custom_field = CustomField.new_subclass_instance(params[:type])
     if @custom_field.nil?
@@ -105,6 +112,7 @@ class CustomFieldsController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | IssueCustomField)
   def find_custom_field
     @custom_field = CustomField.find(params[:id])
   rescue ActiveRecord::RecordNotFound

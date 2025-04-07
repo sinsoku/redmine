@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingAccountTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_account
     should_route 'GET  /login' => 'account#login'
     should_route 'POST /login' => 'account#login'

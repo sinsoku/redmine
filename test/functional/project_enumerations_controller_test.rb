@@ -22,11 +22,13 @@ require_relative '../test_helper'
 class ProjectEnumerationsControllerTest < Redmine::ControllerTest
   self.use_transactional_tests = false
 
+  # @rbs () -> String
   def setup
     @request.session[:user_id] = nil
     Setting.default_language = 'en'
   end
 
+  # @rbs () -> bool
   def test_update_to_override_system_activities
     @request.session[:user_id] = 2 # manager
     billable_field = TimeEntryActivityCustomField.find_by_name("Billable")
@@ -82,6 +84,7 @@ class ProjectEnumerationsControllerTest < Redmine::ControllerTest
     assert_nil project.time_entry_activities.find_by_name("QA"), "Custom QA activity created when it wasn't modified"
   end
 
+  # @rbs () -> bool
   def test_update_should_not_create_project_specific_activities_when_setting_empty_value_in_custom_field_with_default_value_of_nil
     system_activity = TimeEntryActivity.find(9) # Design
     custom_field_value = system_activity.custom_field_values.detect{|cfv| cfv.custom_field.id == 7}
@@ -102,6 +105,7 @@ class ProjectEnumerationsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_will_update_project_specific_activities
     @request.session[:user_id] = 2 # manager
 
@@ -154,6 +158,7 @@ class ProjectEnumerationsControllerTest < Redmine::ControllerTest
     assert !activity_two.active?
   end
 
+  # @rbs () -> bool
   def test_update_when_creating_new_activities_will_convert_existing_data
     assert_equal 3, TimeEntry.where(:activity_id => 9, :project_id => 1).count
 
@@ -185,6 +190,7 @@ class ProjectEnumerationsControllerTest < Redmine::ControllerTest
                  "No Time Entries assigned to the project activity"
   end
 
+  # @rbs () -> bool
   def test_update_when_creating_new_activities_will_not_convert_existing_data_if_an_exception_is_raised
     # TODO: Need to cause an exception on create but these tests
     # aren't setup for mocking.  Just create a record now so the
@@ -222,6 +228,7 @@ class ProjectEnumerationsControllerTest < Redmine::ControllerTest
                  "Time Entries are not assigned to system activities"
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 2 # manager
     project_activity = TimeEntryActivity.new({
@@ -247,6 +254,7 @@ class ProjectEnumerationsControllerTest < Redmine::ControllerTest
     assert_nil TimeEntryActivity.find_by_id(project_activity_two.id)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_reassign_time_entries_back_to_the_system_activity
     @request.session[:user_id] = 2 # manager
     project_activity = TimeEntryActivity.new({

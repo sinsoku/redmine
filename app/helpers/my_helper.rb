@@ -19,6 +19,7 @@
 
 module MyHelper
   # Renders the blocks
+  # @rbs (Array[untyped]?, User, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_blocks(blocks, user, options={})
     s = ''.html_safe
 
@@ -31,6 +32,7 @@ module MyHelper
   end
 
   # Renders a single block
+  # @rbs (String, User) -> ActiveSupport::SafeBuffer?
   def render_block(block, user)
     content = render_block_content(block, user)
     if content.present?
@@ -46,6 +48,7 @@ module MyHelper
   end
 
   # Renders a single block content
+  # @rbs (String, User) -> ActiveSupport::SafeBuffer?
   def render_block_content(block, user)
     unless block_definition = Redmine::MyPage.find_block(block)
       Rails.logger.warn("Unknown block \"#{block}\" found in #{user.login} (id=#{user.id}) preferences")
@@ -66,6 +69,7 @@ module MyHelper
   end
 
   # Returns the select tag used to add a block to My page
+  # @rbs (User) -> ActiveSupport::SafeBuffer
   def block_select_tag(user)
     blocks_in_use = user.pref.my_page_layout.values.flatten
     options = content_tag('option')
@@ -75,6 +79,7 @@ module MyHelper
     select_tag('block', options, :id => "block-select", :onchange => "$('#block-form').submit();")
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_calendar_block(block, settings)
     calendar = Redmine::Helpers::Calendar.new(User.current.today, current_language, :week)
     calendar.events = Issue.visible.
@@ -87,12 +92,14 @@ module MyHelper
     render :partial => 'my/blocks/calendar', :locals => {:calendar => calendar, :block => block}
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_documents_block(block, settings)
     documents = Document.visible.order("#{Document.table_name}.created_on DESC").limit(10).to_a
 
     render :partial => 'my/blocks/documents', :locals => {:block => block, :documents => documents}
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_issuesassignedtome_block(block, settings)
     query = IssueQuery.new(:name => l(:label_assigned_to_me_issues), :user => User.current)
     query.add_filter 'assigned_to_id', '=', ['me']
@@ -104,6 +111,7 @@ module MyHelper
     render :partial => 'my/blocks/issues', :locals => {:query => query, :issues => issues, :block => block}
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_issuesreportedbyme_block(block, settings)
     query = IssueQuery.new(:name => l(:label_reported_issues), :user => User.current)
     query.add_filter 'author_id', '=', ['me']
@@ -115,6 +123,7 @@ module MyHelper
     render :partial => 'my/blocks/issues', :locals => {:query => query, :issues => issues, :block => block}
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_issuesupdatedbyme_block(block, settings)
     query = IssueQuery.new(:name => l(:label_updated_issues), :user => User.current)
     query.add_filter 'updated_by', '=', ['me']
@@ -126,6 +135,7 @@ module MyHelper
     render :partial => 'my/blocks/issues', :locals => {:query => query, :issues => issues, :block => block}
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_issueswatched_block(block, settings)
     query = IssueQuery.new(:name => l(:label_watched_issues), :user => User.current)
     query.add_filter 'watcher_id', '=', ['me']
@@ -137,6 +147,7 @@ module MyHelper
     render :partial => 'my/blocks/issues', :locals => {:query => query, :issues => issues, :block => block}
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_issuequery_block(block, settings)
     query = IssueQuery.visible.find_by_id(settings[:query_id])
 
@@ -151,6 +162,7 @@ module MyHelper
     end
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_news_block(block, settings)
     news = News.visible.
       where(:project => User.current.projects).
@@ -163,6 +175,7 @@ module MyHelper
     render :partial => 'my/blocks/news', :locals => {:block => block, :news => news}
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_timelog_block(block, settings)
     days = settings[:days].to_i
     days = 7 if days < 1 || days > 365
@@ -179,6 +192,7 @@ module MyHelper
     render :partial => 'my/blocks/timelog', :locals => {:block => block, :entries => entries, :entries_by_day => entries_by_day, :days => days}
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_activity_block(block, settings)
     events_by_day = Redmine::Activity::Fetcher.new(User.current, :author => User.current).events(nil, nil, :limit => 10).group_by {|event| User.current.time_to_date(event.event_datetime)}
 

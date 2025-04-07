@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingAuthSourcesTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_auth_sources
     should_route 'GET /auth_sources' => 'auth_sources#index'
     should_route 'GET /auth_sources/new' => 'auth_sources#new'

@@ -28,6 +28,7 @@ class QueriesController < ApplicationController
 
   include QueriesHelper
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def index
     case params[:format]
     when 'xml', 'json'
@@ -49,6 +50,7 @@ class QueriesController < ApplicationController
     end
   end
 
+  # @rbs () -> (IssueQuery | ProjectQuery | TimeEntryQuery)
   def new
     @query = query_class.new
     @query.user = User.current
@@ -56,6 +58,7 @@ class QueriesController < ApplicationController
     @query.build_from_params(params)
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def create
     @query = query_class.new
     @query.user = User.current
@@ -70,9 +73,11 @@ class QueriesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def update
     update_query_from_params
 
@@ -84,12 +89,14 @@ class QueriesController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def destroy
     @query.destroy
     redirect_to_items(:set_filter => 1)
   end
 
   # Returns the values for a query filter
+  # @rbs () -> String
   def filter
     q = query_class.new
     if params[:project_id].present?
@@ -108,6 +115,7 @@ class QueriesController < ApplicationController
     render_404
   end
 
+  # @rbs () -> Symbol?
   def current_menu_item
     return unless @query
     return if query_layout == 'admin'
@@ -115,12 +123,14 @@ class QueriesController < ApplicationController
     @query.queried_class.to_s.underscore.pluralize.to_sym
   end
 
+  # @rbs (Project?) -> Symbol
   def current_menu(project)
     super unless query_layout == 'admin'
   end
 
   private
 
+  # @rbs () -> bool?
   def find_query
     @query = Query.find(params[:id])
     @project = @query.project
@@ -129,6 +139,7 @@ class QueriesController < ApplicationController
     render_404
   end
 
+  # @rbs () -> void
   def update_query_from_params
     @query.project = params[:query_is_for_all] ? nil : @project
     @query.build_from_params(params)
@@ -145,11 +156,13 @@ class QueriesController < ApplicationController
     @query
   end
 
+  # @rbs (Hash[untyped, untyped]) -> String
   def redirect_to_items(options)
     method = "redirect_to_#{@query.class.name.underscore}"
     send method, options
   end
 
+  # @rbs (Hash[untyped, untyped]) -> String
   def redirect_to_issue_query(options)
     if params[:gantt]
       if @project
@@ -168,14 +181,17 @@ class QueriesController < ApplicationController
     end
   end
 
+  # @rbs (Hash[untyped, untyped]) -> String
   def redirect_to_time_entry_query(options)
     redirect_to _time_entries_path(@project, nil, options)
   end
 
+  # @rbs (Hash[untyped, untyped]) -> String
   def redirect_to_project_query(options)
     redirect_to projects_path(options)
   end
 
+  # @rbs (Hash[untyped, untyped]) -> String
   def redirect_to_project_admin_query(options)
     redirect_to admin_projects_path(options)
   end
@@ -184,6 +200,7 @@ class QueriesController < ApplicationController
     redirect_to users_path(options)
   end
 
+  # @rbs () -> String
   def query_layout
     @query&.layout || 'base'
   end
@@ -194,6 +211,7 @@ class QueriesController < ApplicationController
 
   # Returns the Query subclass, IssueQuery by default
   # for compatibility with previous behaviour
+  # @rbs () -> Class
   def query_class
     Query.get_subclass(params[:type] || 'IssueQuery')
   end

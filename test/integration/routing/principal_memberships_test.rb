@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingPrincipalMembershipsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_user_memberships
     should_route 'GET /users/123/memberships/new' => 'principal_memberships#new', :user_id => '123'
     should_route 'POST /users/123/memberships' => 'principal_memberships#create', :user_id => '123'
@@ -28,6 +29,7 @@ class RoutingPrincipalMembershipsTest < Redmine::RoutingTest
     should_route 'DELETE /users/123/memberships/55' => 'principal_memberships#destroy', :user_id => '123', :id => '55'
   end
 
+  # @rbs () -> bool
   def test_group_memberships
     should_route 'GET /groups/123/memberships/new' => 'principal_memberships#new', :group_id => '123'
     should_route 'POST /groups/123/memberships' => 'principal_memberships#create', :group_id => '123'

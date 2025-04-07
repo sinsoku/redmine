@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class ApplicationTest < Redmine::IntegrationTest
   include Redmine::I18n
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_set_localization
     Setting.default_language = 'en'
 
@@ -46,6 +47,7 @@ class ApplicationTest < Redmine::IntegrationTest
     assert_select "html[lang=?]", "en"
   end
 
+  # @rbs () -> bool
   def test_token_based_access_should_not_start_session
     # issue of a private project
     get '/issues/4.atom'
@@ -57,11 +59,13 @@ class ApplicationTest < Redmine::IntegrationTest
     assert_nil session[:user_id]
   end
 
+  # @rbs () -> bool
   def test_missing_template_should_respond_with_4xx
     get '/login.png'
     assert_response :not_acceptable
   end
 
+  # @rbs () -> bool
   def test_invalid_token_should_call_custom_handler
     ActionController::Base.allow_forgery_protection = true
     post '/issues'
@@ -71,6 +75,7 @@ class ApplicationTest < Redmine::IntegrationTest
     ActionController::Base.allow_forgery_protection = false
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_localization_should_be_set_correctly_on_invalid_token
     ActionController::Base.allow_forgery_protection = true
     Setting.default_language = 'en'
@@ -82,6 +87,7 @@ class ApplicationTest < Redmine::IntegrationTest
     ActionController::Base.allow_forgery_protection = false
   end
 
+  # @rbs () -> bool
   def test_require_login_with_pdf_format_should_not_error
     with_settings :login_required => '1' do
       get '/issues/1.pdf'
@@ -89,6 +95,7 @@ class ApplicationTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_find_optional_project_should_not_error
     Role.anonymous.remove_permission! :view_gantt
     with_settings :login_required => '0' do
@@ -97,6 +104,7 @@ class ApplicationTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> bool
   def test_find_optional_project_should_render_404_for_logged_users
     log_user('jsmith', 'jsmith')
 

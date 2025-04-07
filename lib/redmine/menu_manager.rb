@@ -24,6 +24,7 @@ module Redmine
     end
 
     module MenuController
+      # @rbs (Class) -> Class
       def self.included(base)
         base.class_attribute :main_menu
         base.main_menu = true
@@ -43,6 +44,7 @@ module Redmine
         #
         # The default menu item name for a controller is controller_name by default
         # Eg. the default menu item name for ProjectsController is :projects
+        # @rbs (Symbol, ?Hash[untyped, untyped]) -> void
         def menu_item(id, options = {})
           if actions = options[:only]
             actions = [] << actions unless actions.is_a?(Array)
@@ -53,10 +55,12 @@ module Redmine
         end
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def menu_items
         self.class.menu_items
       end
 
+      # @rbs (Project?) -> Symbol?
       def current_menu(project)
         if project && !project.new_record?
           :project_menu
@@ -66,6 +70,7 @@ module Redmine
       end
 
       # Returns the menu item name according to the current action
+      # @rbs () -> Symbol
       def current_menu_item
         @current_menu_item ||= menu_items[controller_name.to_sym][:actions][action_name.to_sym] ||
                                  menu_items[controller_name.to_sym][:default]
@@ -73,12 +78,14 @@ module Redmine
 
       # Redirects user to the menu item
       # Returns false if user is not authorized
+      # @rbs (String) -> bool
       def redirect_to_menu_item(name)
         redirect_to_project_menu_item(nil, name)
       end
 
       # Redirects user to the menu item of the given project
       # Returns false if user is not authorized
+      # @rbs (Project?, String) -> bool
       def redirect_to_project_menu_item(project, name)
         menu = project.nil? ? :application_menu : :project_menu
         item = Redmine::MenuManager.items(menu).detect {|i| i.name.to_s == name.to_s}
@@ -94,22 +101,26 @@ module Redmine
 
     module MenuHelper
       # Returns the current menu item name
+      # @rbs () -> Symbol?
       def current_menu_item
         controller.current_menu_item
       end
 
       # Renders the application main menu
+      # @rbs (Project?) -> ActiveSupport::SafeBuffer
       def render_main_menu(project)
         if menu_name = controller.current_menu(project)
           render_menu(menu_name, project)
         end
       end
 
+      # @rbs (Project?) -> bool
       def display_main_menu?(project)
         menu_name = controller.current_menu(project)
         menu_name.present? && Redmine::MenuManager.items(menu_name).children.present?
       end
 
+      # @rbs (Symbol, ?Project?) -> ActiveSupport::SafeBuffer?
       def render_menu(menu, project=nil)
         links = []
         menu_items_for(menu, project) do |node|
@@ -118,6 +129,7 @@ module Redmine
         links.empty? ? nil : content_tag('ul', links.join.html_safe)
       end
 
+      # @rbs (Redmine::MenuManager::MenuItem, ?Project?) -> ActiveSupport::SafeBuffer?
       def render_menu_node(node, project=nil)
         if node.children.present? || !node.child_menus.nil?
           return render_menu_node_with_children(node, project)
@@ -128,6 +140,7 @@ module Redmine
         end
       end
 
+      # @rbs (Redmine::MenuManager::MenuItem, ?Project?) -> ActiveSupport::SafeBuffer?
       def render_menu_node_with_children(node, project=nil)
         caption, url, selected = extract_node_details(node, project)
 
@@ -155,6 +168,7 @@ module Redmine
       end
 
       # Returns a list of unattached children menu items
+      # @rbs (Redmine::MenuManager::MenuItem, Project?) -> ActiveSupport::SafeBuffer?
       def render_unattached_children_menu(node, project)
         return nil unless node.child_menus
 
@@ -171,6 +185,7 @@ module Redmine
         end
       end
 
+      # @rbs (Redmine::MenuManager::MenuItem, String, (String | Hash[untyped, untyped])?, bool) -> ActiveSupport::SafeBuffer
       def render_single_menu_node(item, caption, url, selected)
         options = item.html_options(:selected => selected)
 
@@ -190,6 +205,7 @@ module Redmine
         link_to(label, use_absolute_controller(url), options)
       end
 
+      # @rbs (Redmine::MenuManager::MenuItem, Project) -> ActiveSupport::SafeBuffer
       def render_unattached_menu_item(menu_item, project)
         raise MenuError, ":child_menus must be an array of MenuItems" unless menu_item.is_a? MenuItem
 
@@ -198,6 +214,7 @@ module Redmine
         end
       end
 
+      # @rbs (Symbol, ?Project?) -> Array[untyped]?
       def menu_items_for(menu, project=nil)
         items = []
         Redmine::MenuManager.items(menu).root.children.each do |node|
@@ -212,6 +229,7 @@ module Redmine
         return block_given? ? nil : items
       end
 
+      # @rbs (Redmine::MenuManager::MenuItem, ?Project?) -> Array[untyped]
       def extract_node_details(node, project=nil)
         item = node
         url =
@@ -232,6 +250,7 @@ module Redmine
       end
 
       # See MenuItem#allowed?
+      # @rbs (Redmine::MenuManager::MenuItem | String, User | AnonymousUser, Project?) -> bool?
       def allowed_node?(node, user, project)
         unless node.is_a? MenuItem
           raise MenuError, ":child_menus must be an array of MenuItems"
@@ -242,6 +261,7 @@ module Redmine
 
       # Prevent hash type URLs (e.g. {controller: 'foo', action: 'bar}) from being namespaced
       # when menus are rendered from views in namespaced controllers in plugins or engines
+      # @rbs (String | Hash[untyped, untyped]) -> (String | Hash[untyped, untyped])
       def use_absolute_controller(url)
         if url.is_a?(Hash) && url[:controller].present? && !url[:controller].start_with?('/')
           url[:controller] = "/#{url[:controller]}"
@@ -251,6 +271,7 @@ module Redmine
     end
 
     class << self
+      # @rbs (Symbol) -> (Redmine::MenuManager::MenuItem | Redmine::MenuManager::Mapper)
       def map(menu_name)
         @items ||= {}
         mapper = Mapper.new(menu_name.to_sym, @items)
@@ -261,6 +282,7 @@ module Redmine
         end
       end
 
+      # @rbs (Symbol) -> Redmine::MenuManager::MenuNode
       def items(menu_name)
         @items[menu_name.to_sym] || MenuNode.new(:root, {})
       end
@@ -269,6 +291,7 @@ module Redmine
     class Mapper
       attr_reader :menu, :menu_items
 
+      # @rbs (Symbol, Hash[untyped, untyped]) -> void
       def initialize(menu, items)
         items[menu] ||= MenuNode.new(:root, {})
         @menu = menu
@@ -288,6 +311,7 @@ module Redmine
       #   eg. :children => Proc.new {|project| [Redmine::MenuManager::MenuItem.new(...)] }
       # * last: menu item will stay at the end (eg. :last => true)
       # * html_options: a hash of html options that are passed to link_to
+      # @rbs (Symbol, (String | Hash[untyped, untyped] | Symbol)?, ?Hash[untyped, untyped]) -> Redmine::MenuManager::MenuItem
       def push(name, url, options={})
         options = options.dup
 
@@ -328,6 +352,7 @@ module Redmine
       end
 
       # Removes a menu item
+      # @rbs (Symbol) -> Redmine::MenuManager::MenuItem?
       def delete(name)
         if found = self.find(name)
           @menu_items.remove!(found)
@@ -335,14 +360,17 @@ module Redmine
       end
 
       # Checks if a menu item exists
+      # @rbs (Symbol) -> bool
       def exists?(name)
         @menu_items.any? {|node| node.name == name}
       end
 
+      # @rbs (Symbol) -> (Redmine::MenuManager::MenuItem | Redmine::MenuManager::MenuNode)?
       def find(name)
         @menu_items.find {|node| node.name == name}
       end
 
+      # @rbs (Symbol) -> Integer
       def position_of(name)
         @menu_items.each do |node|
           if node.name == name
@@ -357,12 +385,14 @@ module Redmine
       attr_accessor :parent
       attr_reader :last_items_count, :name
 
+      # @rbs (Symbol, ?Hash[untyped, untyped]?) -> void
       def initialize(name, content = nil)
         @name = name
         @children = []
         @last_items_count = 0
       end
 
+      # @rbs () -> Array[untyped]?
       def children
         if block_given?
           @children.each {|child| yield child}
@@ -372,21 +402,25 @@ module Redmine
       end
 
       # Returns the number of descendants + 1
+      # @rbs () -> Integer
       def size
         @children.inject(1) {|sum, node| sum + node.size}
       end
 
+      # @rbs (*untyped, **untyped) -> Array[untyped]?
       def each(...)
         yield self
         children {|child| child.each(...)}
       end
 
       # Adds a child at first position
+      # @rbs (Redmine::MenuManager::MenuItem) -> Redmine::MenuManager::MenuItem
       def prepend(child)
         add_at(child, 0)
       end
 
       # Adds a child at given position
+      # @rbs (Redmine::MenuManager::MenuItem, Integer) -> Redmine::MenuManager::MenuItem
       def add_at(child, position)
         @children.insert(position, child)
         child.parent = self
@@ -394,6 +428,7 @@ module Redmine
       end
 
       # Adds a child as last child
+      # @rbs (Redmine::MenuManager::MenuItem) -> Redmine::MenuManager::MenuItem
       def add_last(child)
         add_at(child, -1)
         @last_items_count += 1
@@ -401,6 +436,7 @@ module Redmine
       end
 
       # Adds a child
+      # @rbs (Redmine::MenuManager::MenuItem) -> Redmine::MenuManager::MenuItem
       def add(child)
         position = @children.size - @last_items_count
         add_at(child, position)
@@ -408,6 +444,7 @@ module Redmine
       alias :<< :add
 
       # Removes a child
+      # @rbs (Redmine::MenuManager::MenuItem) -> Redmine::MenuManager::MenuItem
       def remove!(child)
         @children.delete(child)
         @last_items_count -= +1 if child && child.last
@@ -416,11 +453,13 @@ module Redmine
       end
 
       # Returns the position for this node in it's parent
+      # @rbs () -> Integer
       def position
         self.parent.children.index(self)
       end
 
       # Returns the root for this node
+      # @rbs () -> Redmine::MenuManager::MenuNode
       def root
         root = self
         root = root.parent while root.parent
@@ -433,6 +472,7 @@ module Redmine
       attr_reader :name, :url, :param, :condition, :parent,
                   :child_menus, :last, :permission, :icon, :plugin
 
+      # @rbs (Symbol | String, (String | Hash[untyped, untyped] | Symbol)?, ?Hash[untyped, untyped]) -> void
       def initialize(name, url, options={})
         if options[:if] && !options[:if].respond_to?(:call)
           raise ArgumentError, "Invalid option :if for menu item '#{name}'"
@@ -465,6 +505,7 @@ module Redmine
         super(@name.to_sym)
       end
 
+      # @rbs (?Project?) -> String
       def caption(project=nil)
         if @caption.is_a?(Proc)
           c = @caption.call(project).to_s
@@ -479,6 +520,7 @@ module Redmine
         end
       end
 
+      # @rbs (?Hash[untyped, untyped]) -> Hash[untyped, untyped]
       def html_options(options={})
         if options[:selected]
           o = @html_options.dup
@@ -493,6 +535,7 @@ module Redmine
       #
       # * Checking the permission or the url target (project only)
       # * Checking the conditions of the item
+      # @rbs (AnonymousUser | User, Project?) -> bool
       def allowed?(user, project)
         if url.blank?
           # this is a virtual node that is only there for its children to be diplayed in the menu

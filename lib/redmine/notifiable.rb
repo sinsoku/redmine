@@ -24,6 +24,7 @@ module Redmine
     end
 
     # TODO: Plugin API for adding a new notification?
+    # @rbs () -> Array[untyped]
     def self.all
       notifications = []
       notifications << Notifiable.new('issue_added')

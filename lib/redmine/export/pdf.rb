@@ -27,6 +27,7 @@ module Redmine
         include Redmine::I18n
         attr_accessor :footer_date
 
+        # @rbs (Symbol, ?String) -> void
         def initialize(lang, orientation='P')
           set_language_if_valid lang
           super(orientation, 'mm', 'A4')
@@ -45,10 +46,12 @@ module Redmine
           set_display_mode('default', 'OneColumn')
         end
 
+        # @rbs (String, Integer) -> void
         def SetFontStyle(style, size)
           set_font(@font_for_content, style, size)
         end
 
+        # @rbs (String, ?String, ?Integer | Float, ?String) -> Integer?
         def SetFont(family, style='', size=0, fontfile='')
           style = +style
           # FreeSerif Bold Thai font has problem.
@@ -65,18 +68,22 @@ module Redmine
           RDMPdfEncoding::rdm_from_utf8(txt, "UTF-8")
         end
 
+        # @rbs (String) -> String
         def formatted_text(text)
           Redmine::WikiFormatting.to_html(Setting.text_formatting, text)
         end
 
+        # @rbs (Integer | Rational | Float, ?Integer, ?(String | ActiveSupport::SafeBuffer)?, ?Integer | String, ?Integer, ?String, ?Integer, ?String) -> Integer
         def RDMCell(w, h=0, txt='', border=0, ln=0, align='', fill=0, link='')
           cell(w, h, txt, border, ln, align, fill, link)
         end
 
+        # @rbs (Integer | Float, ?Integer | Float, ?String | ActiveSupport::SafeBuffer, ?Integer | String, ?String, ?Integer, ?Integer) -> Integer
         def RDMMultiCell(w, h=0, txt='', border=0, align='', fill=0, ln=1)
           multi_cell(w, h, txt, border, align, fill, ln)
         end
 
+        # @rbs (Integer, Integer, String, String, ?ActiveSupport::SafeBuffer | String, ?Attachment::ActiveRecord_Associations_CollectionProxy | Array[untyped], ?Integer | String, ?Integer, ?Integer) -> Integer
         def RDMwriteFormattedCell(w, h, x, y, txt='', attachments=[], border=0, ln=1, fill=0)
           @attachments = attachments
 
@@ -95,11 +102,13 @@ module Redmine
           writeHTMLCell(w, h, x, y, css_tag + txt, border, ln, fill)
         end
 
+        # @rbs (Integer, Integer, String, String, ?String, ?Attachment::ActiveRecord_Associations_CollectionProxy | Array[untyped], ?String, ?Integer, ?Integer) -> Integer
         def RDMwriteHTMLCell(w, h, x, y, txt='', attachments=[], border=0, ln=1, fill=0)
           txt = formatted_text(txt)
           RDMwriteFormattedCell(w, h, x, y, txt, attachments, border, ln, fill)
         end
 
+        # @rbs (String) -> nil
         def get_image_filename(attrname)
           atta = RDMPdfEncoding.attach(@attachments, attrname, "UTF-8")
           if atta
@@ -119,6 +128,7 @@ module Redmine
           end
         end
 
+        # @rbs (String) -> String
         def get_sever_url(url)
           if !empty_string(url) and url.start_with?('/')
             Setting.host_name.split('/')[0] + url
@@ -127,6 +137,7 @@ module Redmine
           end
         end
 
+        # @rbs () -> void
         def Footer
           set_font(@font_for_footer, 'I', 8)
           set_x(15)
@@ -141,11 +152,13 @@ module Redmine
       end
 
       class RDMPdfEncoding
+        # @rbs (String?, String) -> String
         def self.rdm_from_utf8(txt, encoding)
           txt ||= ''
           Redmine::CodesetUtil.from_utf8(txt, encoding).b
         end
 
+        # @rbs (Attachment::ActiveRecord_Relation | Attachment::ActiveRecord_Associations_CollectionProxy, String, String) -> Attachment?
         def self.attach(attachments, filename, encoding)
           filename_utf8 = Redmine::CodesetUtil.to_utf8(filename, encoding)
           atta = nil

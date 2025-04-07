@@ -22,10 +22,12 @@ require_relative '../test_helper'
 class MailHandlerControllerTest < Redmine::ControllerTest
   FIXTURES_PATH = File.dirname(__FILE__) + '/../fixtures/mail_handler'
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_should_create_issue
     # Enable API and set a key
     with_settings(
@@ -48,6 +50,7 @@ class MailHandlerControllerTest < Redmine::ControllerTest
     assert_response :created
   end
 
+  # @rbs () -> bool
   def test_should_create_issue_with_options
     # Enable API and set a key
     with_settings(
@@ -75,6 +78,7 @@ class MailHandlerControllerTest < Redmine::ControllerTest
     assert_equal true, issue.is_private
   end
 
+  # @rbs () -> bool
   def test_should_update_issue
     # Enable API and set a key
     with_settings(
@@ -96,6 +100,7 @@ class MailHandlerControllerTest < Redmine::ControllerTest
     assert_response :created
   end
 
+  # @rbs () -> bool
   def test_should_respond_with_422_if_not_created
     Project.find('onlinestore').destroy
     with_settings(
@@ -116,6 +121,7 @@ class MailHandlerControllerTest < Redmine::ControllerTest
     assert_response :unprocessable_content
   end
 
+  # @rbs () -> bool
   def test_should_not_allow_with_api_disabled
     # Disable API
     with_settings(
@@ -137,6 +143,7 @@ class MailHandlerControllerTest < Redmine::ControllerTest
     assert_include 'Access denied', response.body
   end
 
+  # @rbs () -> bool
   def test_should_not_allow_with_wrong_key
     with_settings(
       :mail_handler_api_enabled => 1,
@@ -157,6 +164,7 @@ class MailHandlerControllerTest < Redmine::ControllerTest
     assert_include 'Access denied', response.body
   end
 
+  # @rbs () -> bool
   def test_new
     with_settings(
       :mail_handler_api_enabled => 1,
@@ -167,6 +175,7 @@ class MailHandlerControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_should_skip_verify_authenticity_token
     ActionController::Base.allow_forgery_protection = true
     assert_nothing_raised {test_should_create_issue}

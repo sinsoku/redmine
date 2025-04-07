@@ -29,6 +29,7 @@ class EnumerationsController < ApplicationController
 
   helper :custom_fields
 
+  # @rbs () -> (Array[untyped] | bool)?
   def index
     respond_to do |format|
       format.html
@@ -43,9 +44,11 @@ class EnumerationsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def new
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def create
     if request.post? && @enumeration.save
       flash[:notice] = l(:notice_successful_create)
@@ -55,9 +58,11 @@ class EnumerationsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def update
     if @enumeration.update(enumeration_params)
       respond_to do |format|
@@ -75,6 +80,7 @@ class EnumerationsController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def destroy
     if !@enumeration.in_use?
       # No associated objects
@@ -91,6 +97,7 @@ class EnumerationsController < ApplicationController
 
   private
 
+  # @rbs () -> (ActionController::Parameters | bool | Hash[untyped, untyped])
   def build_new_enumeration
     class_name = params[:enumeration] && params[:enumeration][:type] || params[:type]
     @enumeration = Enumeration.new_subclass_instance(class_name)
@@ -101,12 +108,14 @@ class EnumerationsController < ApplicationController
     end
   end
 
+  # @rbs () -> (IssuePriority | DocumentCategory | bool | TimeEntryActivity)
   def find_enumeration
     @enumeration = Enumeration.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
+  # @rbs () -> ActionController::Parameters?
   def enumeration_params
     # can't require enumeration on #new action
     cf_ids = @enumeration.available_custom_fields.map {|c| c.multiple? ? {c.id.to_s => []} : c.id.to_s}

@@ -82,11 +82,13 @@ class Journal < ApplicationRecord
   safe_attributes 'updated_by'
 
   # Returns a SQL condition to filter out journals with notes that are not visible to user
+  # @rbs (?AnonymousUser | User, ?Hash[untyped, untyped]) -> String
   def self.visible_notes_condition(user=User.current, options={})
     private_notes_permission = Project.allowed_to_condition(user, :view_private_notes, options)
     sanitize_sql_for_conditions(["(#{table_name}.private_notes = ? OR #{table_name}.user_id = ? OR (#{private_notes_permission}))", false, user.id])
   end
 
+  # @rbs (*Hash[untyped, untyped] | nil) -> void
   def initialize(*args)
     super
     if journalized
@@ -98,6 +100,7 @@ class Journal < ApplicationRecord
     end
   end
 
+  # @rbs (*nil | Hash[untyped, untyped]) -> bool
   def save(*args)
     journalize_changes
     # Do not save an empty journal
@@ -105,6 +108,7 @@ class Journal < ApplicationRecord
   end
 
   # Returns journal details that are visible to user
+  # @rbs (?User | AnonymousUser) -> Array[untyped]
   def visible_details(user=User.current)
     details.select do |detail|
       if detail.property == 'cf'
@@ -119,28 +123,34 @@ class Journal < ApplicationRecord
 
   # Returns the JournalDetail for the given attribute, or nil if the attribute
   # was not updated
+  # @rbs (String) -> JournalDetail?
   def detail_for_attribute(attribute)
     details.detect {|detail| detail.prop_key == attribute}
   end
 
   # Returns the new status if the journal contains a status change, otherwise nil
+  # @rbs () -> IssueStatus?
   def new_status
     s = new_value_for('status_id')
     s ? IssueStatus.find_by_id(s.to_i) : nil
   end
 
+  # @rbs (String) -> String?
   def new_value_for(prop)
     detail_for_attribute(prop).try(:value)
   end
 
+  # @rbs (AnonymousUser | User) -> bool
   def editable_by?(usr)
     usr && usr.logged? && (usr.allowed_to?(:edit_issue_notes, project) || (self.user == usr && usr.allowed_to?(:edit_own_issue_notes, project)))
   end
 
+  # @rbs () -> Project
   def project
     journalized.respond_to?(:project) ? journalized.project : nil
   end
 
+  # @rbs () -> Array[untyped]
   def attachments
     @attachments ||= begin
       ids = details.select {|d| d.property == 'attachment' && d.value.present?}.map(&:prop_key)
@@ -148,11 +158,13 @@ class Journal < ApplicationRecord
     end
   end
 
+  # @rbs (*nil | User) -> bool
   def visible?(*args)
     journalized.visible?(*args)
   end
 
   # Returns a string of css classes
+  # @rbs () -> String
   def css_classes
     s = +'journal'
     s << ' has-notes' unless notes.blank?
@@ -161,14 +173,17 @@ class Journal < ApplicationRecord
     s
   end
 
+  # @rbs () -> bool
   def notify?
     @notify != false
   end
 
+  # @rbs (bool) -> bool
   def notify=(arg)
     @notify = arg
   end
 
+  # @rbs () -> Array[untyped]
   def notified_users
     notified = journalized.notified_users
     if private_notes?
@@ -181,11 +196,13 @@ class Journal < ApplicationRecord
     notified_users.map(&:mail)
   end
 
+  # @rbs () -> Array[untyped]
   def notified_watchers
     notified = journalized.notified_watchers
     select_journal_visible_user(notified)
   end
 
+  # @rbs () -> Array[untyped]
   def notified_mentions
     notified = super
     select_journal_visible_user(notified)
@@ -196,6 +213,7 @@ class Journal < ApplicationRecord
   end
 
   # Sets @custom_field instance variable on journals details using a single query
+  # @rbs (Array[untyped]) -> Array[untyped]
   def self.preload_journals_details_custom_fields(journals)
     field_ids = journals.map(&:details).flatten.select {|d| d.property == 'cf'}.map(&:prop_key).uniq
     if field_ids.any?
@@ -212,6 +230,7 @@ class Journal < ApplicationRecord
   end
 
   # Stores the values of the attributes and custom fields of the journalized object
+  # @rbs () -> Journal
   def start
     if journalized
       @attributes_before_change = journalized.journalized_attribute_names.inject({}) do |h, attribute|
@@ -227,6 +246,7 @@ class Journal < ApplicationRecord
   end
 
   # Adds a journal detail for an attachment that was added or removed
+  # @rbs (Attachment, Symbol) -> JournalDetail::ActiveRecord_Associations_CollectionProxy
   def journalize_attachment(attachment, added_or_removed)
     key = (added_or_removed == :removed ? :old_value : :value)
     details <<
@@ -238,6 +258,7 @@ class Journal < ApplicationRecord
   end
 
   # Adds a journal detail for an issue relation that was added or removed
+  # @rbs (IssueRelation, Symbol) -> void
   def journalize_relation(relation, added_or_removed)
     key = (added_or_removed == :removed ? :old_value : :value)
     details <<
@@ -251,6 +272,7 @@ class Journal < ApplicationRecord
   private
 
   # Generates journal details for attribute and custom field changes
+  # @rbs () -> void
   def journalize_changes
     # attributes changes
     if @attributes_before_change
@@ -298,16 +320,19 @@ class Journal < ApplicationRecord
   end
 
   # Adds a journal detail for an attribute change
+  # @rbs (String, (Integer | Date | String | Float)?, (Integer | Date | String | Float)?) -> JournalDetail::ActiveRecord_Associations_CollectionProxy
   def add_attribute_detail(attribute, old_value, value)
     add_detail('attr', attribute, old_value, value)
   end
 
   # Adds a journal detail for a custom field value change
+  # @rbs (Integer, String?, String?) -> JournalDetail::ActiveRecord_Associations_CollectionProxy
   def add_custom_field_detail(custom_field_id, old_value, value)
     add_detail('cf', custom_field_id, old_value, value)
   end
 
   # Adds a journal detail
+  # @rbs (String, String | Integer, (Integer | String | Date | Float)?, (Integer | Date | String | Float)?) -> JournalDetail::ActiveRecord_Associations_CollectionProxy
   def add_detail(property, prop_key, old_value, value)
     details <<
       JournalDetail.new(
@@ -318,6 +343,7 @@ class Journal < ApplicationRecord
       )
   end
 
+  # @rbs () -> bool
   def split_private_notes
     if private_notes?
       if notes.present?
@@ -337,6 +363,7 @@ class Journal < ApplicationRecord
     true
   end
 
+  # @rbs () -> Watcher::ActiveRecord_Associations_CollectionProxy?
   def add_watcher
     if user&.active? &&
         user.allowed_to?(:add_issue_watchers, project) &&
@@ -346,6 +373,7 @@ class Journal < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def send_notification
     if notify? &&
         (
@@ -361,6 +389,7 @@ class Journal < ApplicationRecord
     end
   end
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def select_journal_visible_user(notified)
     if private_notes?
       notified = notified.select {|user| user.allowed_to?(:view_private_notes, journalized.project)}

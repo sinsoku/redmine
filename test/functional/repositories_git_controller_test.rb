@@ -27,6 +27,7 @@ class RepositoriesGitControllerTest < Redmine::RepositoryControllerTest
   PRJ_ID     = 3
   NUM_REV = 29
 
+  # @rbs () -> bool
   def setup
     super
     @not_utf8_external = Encoding.default_external.to_s != 'UTF-8'
@@ -43,6 +44,7 @@ class RepositoriesGitControllerTest < Redmine::RepositoryControllerTest
     assert @repository
   end
 
+  # @rbs () -> bool
   def test_create_and_update
     @request.session[:user_id] = 1
     assert_difference 'Repository.count' do
@@ -814,6 +816,7 @@ class RepositoriesGitControllerTest < Redmine::RepositoryControllerTest
     end
   else
     puts "Git test repository NOT FOUND. Skipping functional tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 

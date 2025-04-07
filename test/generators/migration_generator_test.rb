@@ -36,6 +36,7 @@ class MigrationGeneratorTest < Rails::Generators::TestCase
     Redmine::Plugin.directory = @plugin_directory
   end
 
+  # @rbs () -> bool
   def test_migration_file_name_is_snake_case
     g = generator ['MigrationDemo', 'AddMigrationTable']
 
@@ -53,6 +54,7 @@ class MigrationGeneratorTest < Rails::Generators::TestCase
 
   private
 
+  # @rbs (RedminePluginMigrationGenerator, String, Symbol) -> void
   def assert_name(generator, value, method)
     assert_equal value, generator.send(method)
   end

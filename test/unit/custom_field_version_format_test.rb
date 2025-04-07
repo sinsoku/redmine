@@ -20,17 +20,20 @@
 require_relative '../test_helper'
 
 class CustomFieldVersionFormatTest < ActiveSupport::TestCase
+  # @rbs () -> IssueCustomField
   def setup
     User.current = nil
     @field = IssueCustomField.create!(:name => 'Tester', :field_format => 'version')
   end
 
+  # @rbs () -> bool
   def test_possible_values_options_with_no_arguments
     Version.delete_all
     assert_equal [], @field.possible_values_options
     assert_equal [], @field.possible_values_options(nil)
   end
 
+  # @rbs () -> bool
   def test_possible_values_options_with_project_resource
     project = Project.find(1)
     possible_values_options = @field.possible_values_options(project.issues.first)
@@ -38,6 +41,7 @@ class CustomFieldVersionFormatTest < ActiveSupport::TestCase
     assert_equal project.shared_versions.sort.map {|u| [u.name, u.id.to_s]}, possible_values_options
   end
 
+  # @rbs () -> bool
   def test_possible_values_options_with_array
     projects = Project.find([1, 2])
     possible_values_options = @field.possible_values_options(projects)
@@ -45,17 +49,20 @@ class CustomFieldVersionFormatTest < ActiveSupport::TestCase
     assert_equal (projects.first.shared_versions & projects.last.shared_versions).sort.map {|u| [u.name, u.id.to_s]}, possible_values_options
   end
 
+  # @rbs () -> bool
   def test_cast_blank_value
     assert_nil @field.cast_value(nil)
     assert_nil @field.cast_value("")
   end
 
+  # @rbs () -> bool
   def test_cast_valid_value
     version = @field.cast_value("2")
     assert_kind_of Version, version
     assert_equal Version.find(2), version
   end
 
+  # @rbs () -> bool
   def test_cast_invalid_value
     assert_nil @field.cast_value("187")
   end

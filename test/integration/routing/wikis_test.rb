@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingWikisTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_wikis
     should_route 'GET /projects/foo/wiki/destroy' => 'wikis#destroy', :id => 'foo'
     should_route 'POST /projects/foo/wiki/destroy' => 'wikis#destroy', :id => 'foo'

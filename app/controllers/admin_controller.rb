@@ -31,10 +31,12 @@ class AdminController < ApplicationController
   helper :projects_queries
   helper :projects
 
+  # @rbs () -> bool
   def index
     @no_configuration_data = Redmine::DefaultData::Loader::no_data?
   end
 
+  # @rbs () -> nil
   def projects
     retrieve_query(ProjectAdminQuery, false, :defaults => @default_columns_names)
     @entry_count = @query.result_count
@@ -44,12 +46,14 @@ class AdminController < ApplicationController
     render :action => "projects", :layout => false if request.xhr?
   end
 
+  # @rbs () -> Array[untyped]
   def plugins
     @plugins = Redmine::Plugin.all
   end
 
   # Loads the default configuration
   # (roles, trackers, statuses, workflow, enumerations)
+  # @rbs () -> String
   def default_configuration
     if request.post?
       begin
@@ -62,6 +66,7 @@ class AdminController < ApplicationController
     redirect_to admin_path
   end
 
+  # @rbs () -> String
   def test_email
     begin
       Mailer.deliver_test_email(User.current)
@@ -72,6 +77,7 @@ class AdminController < ApplicationController
     redirect_to settings_path(:tab => 'notifications')
   end
 
+  # @rbs () -> nil
   def info
     @checklist = [
       [:text_default_administrator_account_changed, User.default_admin_account_changed?],

@@ -22,6 +22,7 @@ class WikisController < ApplicationController
   before_action :find_project, :authorize
 
   # Delete a project's wiki
+  # @rbs () -> String?
   def destroy
     if request.post? && params[:confirm] && @project.wiki
       if @project.wiki.destroy

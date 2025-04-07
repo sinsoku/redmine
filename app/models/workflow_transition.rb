@@ -20,6 +20,7 @@
 class WorkflowTransition < WorkflowRule
   validates_presence_of :new_status
 
+  # @rbs (Array[untyped] | Tracker, Array[untyped] | Role, ActionController::Parameters | Hash[untyped, untyped]) -> Hash[untyped, untyped]
   def self.replace_transitions(trackers, roles, transitions)
     trackers = Array.wrap trackers
     roles = Array.wrap roles

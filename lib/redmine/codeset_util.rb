@@ -19,6 +19,7 @@
 
 module Redmine
   module CodesetUtil
+    # @rbs (String?) -> String?
     def self.replace_invalid_utf8(str)
       return nil if str.nil?
 
@@ -31,6 +32,7 @@ module Redmine
       str
     end
 
+    # @rbs (String?, String) -> String?
     def self.to_utf8(str, encoding)
       return if str.nil?
 
@@ -50,6 +52,7 @@ module Redmine
       str
     end
 
+    # @rbs (String?) -> String?
     def self.to_utf8_by_setting(str)
       return if str.nil?
 
@@ -57,6 +60,7 @@ module Redmine
       self.to_utf8_by_setting_internal(str).force_encoding('UTF-8')
     end
 
+    # @rbs (String) -> String
     def self.to_utf8_by_setting_internal(str)
       return if str.nil?
 
@@ -78,6 +82,7 @@ module Redmine
       self.replace_invalid_utf8(str).force_encoding('UTF-8')
     end
 
+    # @rbs (String | ActiveSupport::SafeBuffer, String) -> (String | ActiveSupport::SafeBuffer)
     def self.from_utf8(str, encoding)
       return if str.nil?
 
@@ -92,6 +97,7 @@ module Redmine
       end
     end
 
+    # @rbs (String) -> String?
     def self.guess_encoding(str)
       return if str.nil?
 

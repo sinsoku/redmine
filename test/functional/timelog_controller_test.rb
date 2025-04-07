@@ -22,11 +22,13 @@ require_relative '../test_helper'
 class TimelogControllerTest < Redmine::ControllerTest
   include Redmine::I18n
 
+  # @rbs () -> String
   def setup
     super
     Setting.default_language = 'en'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     @request.session[:user_id] = 3
     get :new
@@ -43,6 +45,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'time_entry[user_id]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_project_id
     @request.session[:user_id] = 3
     get :new, :params => {:project_id => 1}
@@ -53,6 +56,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'time_entry[project_id]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_issue_id
     @request.session[:user_id] = 3
     get :new, :params => {:issue_id => 2}
@@ -64,6 +68,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'time_entry[project_id]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_without_project_should_prefill_the_form
     @request.session[:user_id] = 3
     get :new, :params => {:time_entry => {:project_id => '1'}}
@@ -74,6 +79,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_new_without_project_should_deny_without_permission
     Role.all.each {|role| role.remove_permission! :log_time}
     @request.session[:user_id] = 3
@@ -82,6 +88,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_select_default_role_activity
     developer = Role.find(2)
     developer.default_time_entry_activity_id = 9
@@ -95,6 +102,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_select_default_global_activity_for_user_roles_without_default_activities
     @request.session[:user_id] = 3
     get :new, :params => {:project_id => 1}
@@ -104,6 +112,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_only_show_active_time_entry_activities
     @request.session[:user_id] = 3
     get :new, :params => {:project_id => 1}
@@ -111,6 +120,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'option', :text => 'Inactive Activity', :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_show_user_select_if_user_has_permission
     Role.find_by_name('Manager').add_permission! :log_time_for_other_users
     @request.session[:user_id] = 2
@@ -126,6 +136,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_user_select_should_include_current_user_if_is_logged
     @request.session[:user_id] = 1
 
@@ -137,6 +148,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_not_show_user_select_if_user_does_not_have_permission
     @request.session[:user_id] = 2
 
@@ -145,6 +157,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'time_entry[user_id]', 0
   end
 
+  # @rbs () -> bool
   def test_post_new_as_js_should_update_activity_options
     @request.session[:user_id] = 3
     post :new, :params => {:time_entry => {:project_id => 1}, :format => 'js'}
@@ -152,6 +165,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_include '#time_entry_activity_id', response.body
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_existing_time
     @request.session[:user_id] = 2
     get :edit, :params => {:id => 2, :project_id => nil}
@@ -165,6 +179,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'a.user.active', :text => 'Redmine Admin'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_with_an_existing_time_entry_with_inactive_activity
     te = TimeEntry.find(1)
     te.activity = TimeEntryActivity.find_by_name("Inactive Activity")
@@ -178,6 +193,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'option', :text => '--- Please select ---'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_show_projects_select
     @request.session[:user_id] = 2
     get :edit, :params => {:id => 2, :project_id => nil}
@@ -186,6 +202,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'time_entry[project_id]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_validate_back_url
     @request.session[:user_id] = 2
 
@@ -199,6 +216,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/projects/ecookbook/time_entries', {:text => 'Cancel'}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_with_an_existing_time_entry_with_locked_user
     user = User.find(3)
     entry = TimeEntry.generate!(:user_id => user.id, :comments => "Time entry on a future locked user")
@@ -221,6 +239,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_for_other_user
     Role.find_by_name('Manager').add_permission! :log_time_for_other_users
     @request.session[:user_id] = 2
@@ -236,6 +255,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_create
     @request.session[:user_id] = 3
     assert_difference 'TimeEntry.count' do
@@ -266,6 +286,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 3, t.user_id
   end
 
+  # @rbs () -> bool
   def test_post_create_with_blank_issue
     @request.session[:user_id] = 3
     assert_difference 'TimeEntry.count' do
@@ -293,6 +314,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 3, t.user_id
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_on_project_with_time_tracking_disabled_should_fail
     Project.find(1).disable_module! :time_tracking
 
@@ -307,6 +329,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_on_project_without_permission_should_fail
     Role.find(1).remove_permission! :log_time
 
@@ -321,6 +344,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_on_issue_in_project_with_time_tracking_disabled_should_fail
     Project.find(1).disable_module! :time_tracking
 
@@ -336,6 +360,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_on_issue_in_project_without_permission_should_fail
     Role.find(1).remove_permission! :log_time
 
@@ -351,6 +376,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_on_issue_that_is_not_visible_should_not_disclose_subject
     issue = Issue.generate!(:subject => "issue_that_is_not_visible", :is_private => true)
     assert !issue.visible?(User.find(3))
@@ -370,6 +396,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert !response.body.include?('issue_that_is_not_visible')
   end
 
+  # @rbs () -> bool
   def test_create_for_other_user
     Role.find_by_name('Manager').add_permission! :log_time_for_other_users
     @request.session[:user_id] = 2
@@ -395,6 +422,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 2, t.author_id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_for_other_user_should_fail_without_permission
     Role.find_by_name('Manager').remove_permission! :log_time_for_other_users
     @request.session[:user_id] = 2
@@ -417,6 +445,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select_error /User is invalid/
   end
 
+  # @rbs () -> bool
   def test_create_and_continue_at_project_level
     @request.session[:user_id] = 2
     assert_difference 'TimeEntry.count' do
@@ -434,6 +463,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_and_continue_at_issue_level
     @request.session[:user_id] = 2
     assert_difference 'TimeEntry.count' do
@@ -451,6 +481,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_and_continue_with_project_id
     @request.session[:user_id] = 2
     assert_difference 'TimeEntry.count' do
@@ -468,6 +499,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_and_continue_with_issue_id
     @request.session[:user_id] = 2
     assert_difference 'TimeEntry.count' do
@@ -485,6 +517,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_without_log_time_permission_should_be_denied
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :log_time
@@ -500,6 +533,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_without_project_and_issue_should_fail
     @request.session[:user_id] = 2
     post :create, :params => {:time_entry => {:issue_id => ''}}
@@ -508,6 +542,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select_error /Project cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_create_with_failure
     @request.session[:user_id] = 2
     post :create, :params => {
@@ -522,6 +557,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_create_without_project
     @request.session[:user_id] = 2
     assert_difference 'TimeEntry.count' do
@@ -541,6 +577,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 1, time_entry.project_id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_without_project_should_fail_with_issue_not_inside_project
     @request.session[:user_id] = 2
     assert_no_difference 'TimeEntry.count' do
@@ -559,6 +596,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select_error /Issue is invalid/
   end
 
+  # @rbs () -> bool
   def test_create_without_project_should_deny_without_permission
     @request.session[:user_id] = 2
     Project.find(3).disable_module!(:time_tracking)
@@ -578,6 +616,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_without_project_with_failure
     @request.session[:user_id] = 2
     assert_no_difference 'TimeEntry.count' do
@@ -598,6 +637,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update
     entry = TimeEntry.find(1)
     assert_equal 1, entry.issue_id
@@ -619,6 +659,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 2, entry.user_id
   end
 
+  # @rbs () -> bool
   def test_update_should_allow_to_change_issue_to_another_project
     entry = TimeEntry.generate!(:issue_id => 1)
 
@@ -636,6 +677,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 3, entry.project_id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_should_not_allow_to_change_issue_to_an_invalid_project
     entry = TimeEntry.generate!(:issue_id => 1)
     Project.find(3).disable_module!(:time_tracking)
@@ -651,6 +693,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select_error /Issue is invalid/
   end
 
+  # @rbs () -> bool
   def test_update_should_allow_to_change_project
     entry = TimeEntry.generate!(:project_id => 1)
 
@@ -667,6 +710,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 2, entry.project_id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_should_fail_with_issue_from_another_project
     entry = TimeEntry.generate!(:project_id => 1, :issue_id => 1)
 
@@ -682,6 +726,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select_error /Issue is invalid/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_should_fail_when_changing_user_without_permission
     Role.find_by_name('Manager').remove_permission! :log_time_for_other_users
     @request.session[:user_id] = 2
@@ -697,6 +742,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select_error /User is invalid/
   end
 
+  # @rbs () -> bool
   def test_update_should_allow_updating_existing_entry_logged_on_a_locked_user
     entry = TimeEntry.generate!(:user_id => 2, :hours => 4, :comments => "Time entry on a future locked user")
     Role.find_by_name('Manager').add_permission! :log_time_for_other_users
@@ -717,6 +763,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 6.0, entry.hours
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_edit
     @request.session[:user_id] = 2
 
@@ -747,6 +794,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_get_bulk_edit_on_different_projects
     @request.session[:user_id] = 2
 
@@ -754,6 +802,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_edit_on_different_projects_should_propose_only_common_activites
     project = Project.find(3)
     TimeEntryActivity.create!(:name => 'QA', :project => project, :parent => TimeEntryActivity.find_by_name('QA'), :active => false)
@@ -767,6 +816,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_bulk_edit_on_same_project_should_propose_project_activities
     project = Project.find(1)
     override_activity = TimeEntryActivity.create!({:name => "QA override", :parent => TimeEntryActivity.find_by_name("QA"), :project => project})
@@ -782,6 +832,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_bulk_edit_with_edit_own_time_entries_permission
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :edit_time_entries
@@ -792,6 +843,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_bulk_update
     @request.session[:user_id] = 2
     # update time entry activity
@@ -802,6 +854,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal [9, 9], TimeEntry.where(:id => [1, 2]).collect {|i| i.activity_id}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_bulk_update_with_failure
     @request.session[:user_id] = 2
     post :bulk_update, :params => {:ids => [1, 2], :time_entry => {:hours => 'A'}}
@@ -810,6 +863,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select_error /Failed to save 2 time entrie/
   end
 
+  # @rbs () -> bool
   def test_bulk_update_on_different_projects
     @request.session[:user_id] = 2
     # makes user a manager on the other project
@@ -823,6 +877,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal [9, 9, 9], TimeEntry.where(:id => [1, 2, 4]).collect {|i| i.activity_id}
   end
 
+  # @rbs () -> bool
   def test_bulk_update_on_different_projects_without_rights
     @request.session[:user_id] = 3
     user = User.find(3)
@@ -834,6 +889,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_bulk_update_with_edit_own_time_entries_permission
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :edit_time_entries
@@ -844,6 +900,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :found
   end
 
+  # @rbs () -> bool
   def test_bulk_update_with_edit_own_time_entries_permissions_should_be_denied_for_time_entries_of_other_user
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :edit_time_entries
@@ -853,6 +910,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_bulk_update_custom_field
     @request.session[:user_id] = 2
     post(
@@ -866,6 +924,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ["0", "0"], TimeEntry.where(:id => [1, 2]).collect {|i| i.custom_value_for(10).value}
   end
 
+  # @rbs () -> bool
   def test_bulk_update_clear_custom_field
     field = TimeEntryCustomField.generate!(:field_format => 'string')
     @request.session[:user_id] = 2
@@ -880,6 +939,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ["", ""], TimeEntry.where(:id => [1, 2]).collect {|i| i.custom_value_for(field).value}
   end
 
+  # @rbs () -> bool
   def test_post_bulk_update_should_redirect_back_using_the_back_url_parameter
     @request.session[:user_id] = 2
     post :bulk_update, :params => {:ids => [1, 2], :back_url => '/time_entries'}
@@ -888,6 +948,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_redirected_to '/time_entries'
   end
 
+  # @rbs () -> bool
   def test_post_bulk_update_should_not_redirect_back_using_the_back_url_parameter_off_the_host
     @request.session[:user_id] = 2
     post :bulk_update, :params => {:ids => [1, 2], :back_url => 'http://google.com'}
@@ -896,6 +957,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_redirected_to :controller => 'timelog', :action => 'index', :project_id => Project.find(1).identifier
   end
 
+  # @rbs () -> bool
   def test_post_bulk_update_without_edit_permission_should_be_denied
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :edit_time_entries
@@ -904,6 +966,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 2
 
@@ -913,6 +976,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_nil TimeEntry.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_fail
     # simulate that this fails (e.g. due to a plugin), see #5700
     TimeEntry.any_instance.expects(:destroy).returns(false)
@@ -924,6 +988,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_not_nil TimeEntry.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_redirect_to_referer
     referer = 'http://test.host/time_entries?utf8=✓&set_filter=1&&f%5B%5D=user_id&op%5Buser_id%5D=%3D&v%5Buser_id%5D%5B%5D=me'
     @request.env["HTTP_REFERER"] = referer
@@ -933,6 +998,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_redirected_to referer
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_all_projects
     get :index
     assert_response :success
@@ -944,6 +1010,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select '.query-totals>span', 1
   end
 
+  # @rbs () -> bool
   def test_index_with_default_query_setting
     with_settings :time_entry_list_defaults => {'column_names' => %w(spent_on issue user hours), 'totalable_names' => []} do
       get :index
@@ -967,6 +1034,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ['Project', 'Date', 'Issue', 'User', 'Hours'], columns_in_list
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_default_query_setting_using_custom_field
     field = TimeEntryCustomField.create!(:name => 'Foo', :field_format => 'int')
 
@@ -987,6 +1055,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select '.query-totals>span', 2
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_all_projects_should_show_log_time_link
     @request.session[:user_id] = 2
     get :index
@@ -995,6 +1064,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/time_entries/new', :text => /Log time/
   end
 
+  # @rbs () -> bool
   def test_index_my_spent_time
     @request.session[:user_id] = 2
     get :index, :params => {:user_id => 'me', :c => ['user']}
@@ -1004,6 +1074,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ["John Smith"], users
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_at_project_level
     @request.session[:user_id] = 2
 
@@ -1023,6 +1094,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', "/projects/ecookbook/time_entries/new"
   end
 
+  # @rbs () -> bool
   def test_index_with_display_subprojects_issues_to_false_should_not_include_subproject_entries
     entry = TimeEntry.generate!(:project => Project.find(3))
 
@@ -1035,6 +1107,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_display_subprojects_issues_to_false_and_subproject_filter_should_include_subproject_entries
     entry = TimeEntry.generate!(:project => Project.find(3))
 
@@ -1047,6 +1120,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_at_project_level_with_issue_id_short_filter
     issue = Issue.generate!(:project_id => 1)
     TimeEntry.generate!(:issue => issue, :hours => 4)
@@ -1060,6 +1134,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', "/issues/#{issue.id}/time_entries/new"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_at_project_level_with_issue_fixed_version_id_short_filter
     version = Version.generate!(:project_id => 1)
     issue = Issue.generate!(:project_id => 1, :fixed_version => version)
@@ -1071,6 +1146,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select '.total-for-hours', :text => 'Hours: 5:00'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_at_project_level_with_multiple_issue_fixed_version_ids
     version = Version.generate!(:project_id => 1)
     version2 = Version.generate!(:project_id => 1)
@@ -1095,6 +1171,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select '.total-for-hours', :text => 'Hours: 5:00'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_at_project_level_with_date_range
     get(
       :index,
@@ -1112,6 +1189,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'form#query_form[action=?]', '/projects/ecookbook/time_entries'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_at_project_level_with_date_range_using_from_and_to_params
     get(
       :index,
@@ -1128,6 +1206,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'form#query_form[action=?]', '/projects/ecookbook/time_entries'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_at_project_level_with_period
     get :index, :params => {
       :project_id => 'ecookbook',
@@ -1140,6 +1219,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'form#query_form[action=?]', '/projects/ecookbook/time_entries'
   end
 
+  # @rbs () -> bool
   def test_index_should_sort_by_spent_on_and_created_on
     t1 =
       TimeEntry.create!(
@@ -1192,6 +1272,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Array[untyped]
   def test_index_should_sort_by_tweek_and_spent_on
     t1 = TimeEntry.generate!(:spent_on => '2012-06-10') # tyear:2012, tweek:23
     t2 = TimeEntry.generate!(:spent_on => '2012-06-11') # tyear:2012, tweek:24
@@ -1219,6 +1300,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_activity_filter
     activity = TimeEntryActivity.create!(:name => 'Activity')
     entry = TimeEntry.generate!(:issue_id => 1, :hours => 4.5, :activity => activity)
@@ -1236,6 +1318,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select "table.time-entries tbody tr", 1
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_status_filter
     Issue.where(:status_id => 4).update_all(:status_id => 2)
     issue = Issue.generate!(:project_id => 1, :tracker_id => 1, :status_id => 4)
@@ -1266,6 +1349,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal [3], css_select('input[name="ids[]"]').map {|e| e.attr(:value)}
   end
 
+  # @rbs () -> bool
   def test_index_with_project_status_filter
     project = Project.find(3)
     project.close
@@ -1287,6 +1371,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_not_include '4', time_entries
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_issue_status_column
     issue = Issue.generate!(:project_id => 1, :tracker_id => 1, :status_id => 4)
     entry = TimeEntry.generate!(:issue => issue)
@@ -1300,6 +1385,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'td.issue-status', :text => issue.status.name
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_status_sort
     TimeEntry.delete_all
     TimeEntry.generate!(:issue => Issue.generate!(:project_id => 1, :tracker_id => 1, :status_id => 1))
@@ -1318,6 +1404,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal IssueStatus.where(:id => [1, 5, 3]).sorted.pluck(:name), values
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_tracker_filter
     Issue.where(:tracker_id => 2).update_all(:tracker_id => 1)
     issue = Issue.generate!(:project_id => 1, :tracker_id => 2)
@@ -1332,6 +1419,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal [entry.id.to_s], css_select('input[name="ids[]"]').map {|e| e.attr(:value)}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_issue_tracker_column
     issue = Issue.generate!(:project_id => 1, :tracker_id => 2)
     entry = TimeEntry.generate!(:issue => issue)
@@ -1343,6 +1431,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'td.issue-tracker', :text => issue.tracker.name
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_tracker_sort
     TimeEntry.delete_all
     TimeEntry.generate!(:issue => Issue.generate!(:tracker_id => 1))
@@ -1361,6 +1450,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal Tracker.where(:id => [1, 2, 3]).sorted.pluck(:name), values
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_category_filter
     get :index, :params => {
       :project_id => 'ecookbook',
@@ -1372,6 +1462,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ['1', '2'], css_select('input[name="ids[]"]').map {|e| e.attr(:value)}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_issue_category_column
     get :index, :params => {
       :project_id => 'ecookbook',
@@ -1382,6 +1473,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'td.issue-category', :text => 'Printing'
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_parent_filter
     issue1 = Issue.generate!(project_id: 'ecookbook', parent_id: 2)
     entry1 = TimeEntry.generate!(issue: issue1, hours: 2.5)
@@ -1398,6 +1490,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal [entry1.id, entry2.id].sort, css_select('input[name="ids[]"]').map {|e| e.attr(:value).to_i}.sort
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_issue_parent_column
     issue = Issue.generate!(project_id: 'ecookbook', parent_id: 2)
     entry = TimeEntry.generate!(issue: issue, hours: 2.5)
@@ -1411,6 +1504,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'td.issue-parent', text: "#{issue.parent.tracker} ##{issue.parent.id}"
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_parent_sort
     issue1 = Issue.generate!(project_id: 'ecookbook', parent_id: 2)
     entry1 = TimeEntry.generate!(issue: issue1, hours: 2.5)
@@ -1428,6 +1522,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ["#{issue1.parent.tracker} ##{issue1.parent.id}", "#{issue2.parent.tracker} ##{issue2.parent.id}"].sort, values.sort
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_issue_fixed_version_column
     issue = Issue.find(1)
     issue.fixed_version = Version.find(3)
@@ -1442,6 +1537,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'td.issue-fixed_version', :text => '2.0'
   end
 
+  # @rbs () -> bool
   def test_index_with_author_filter
     get :index, :params => {
       :project_id => 'ecookbook',
@@ -1453,6 +1549,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ['1'], css_select('input[name="ids[]"]').map {|e| e.attr(:value)}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_author_column
     get :index, :params => {
       :project_id => 'ecookbook',
@@ -1463,6 +1560,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'td.author', :text => 'Redmine Admin'
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_category_sort
     issue = Issue.find(3)
     issue.category_id = 2
@@ -1479,6 +1577,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ['Printing', 'Printing', 'Recipes'], values
   end
 
+  # @rbs () -> bool
   def test_index_with_issue_fixed_version_sort
     issue = Issue.find(1)
     issue.fixed_version = Version.find(3)
@@ -1498,6 +1597,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal ['1.0', '2.0', '2.0'], values
   end
 
+  # @rbs () -> bool
   def test_index_with_filter_on_issue_custom_field
     issue =
       Issue.generate!(
@@ -1518,6 +1618,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_issue_custom_field_column
     issue =
       Issue.generate!(
@@ -1533,6 +1634,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'td.issue_cf_2', :text => 'filter_on_issue_custom_field'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_disclose_issue_data
     category = IssueCategory.find 2
     issue =
@@ -1555,6 +1657,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'td.issue_cf_2', :text => 'filter_on_issue_custom_field', :count => 0
   end
 
+  # @rbs () -> bool
   def test_index_should_not_filter_by_invisible_issue_data
     issue =
       Issue.generate!(
@@ -1584,6 +1687,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal [], css_select('input[name="ids[]"]').map {|e| e.attr(:value)}
   end
 
+  # @rbs () -> bool
   def test_indext_should_not_sort_by_invisible_issue_data
     category1 = IssueCategory.find 1
     category2 = IssueCategory.find 2
@@ -1629,6 +1733,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal [entry1.id.to_s, entry2.id.to_s], css_select('input[name="ids[]"]').map {|e| e.attr(:value)}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_time_entry_custom_field_column
     field = TimeEntryCustomField.generate!(:field_format => 'string')
     entry = TimeEntry.generate!(:hours => 2.5, :custom_field_values => {field.id => 'CF Value'})
@@ -1641,6 +1746,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select "td.#{field_name}", :text => 'CF Value'
   end
 
+  # @rbs () -> bool
   def test_index_with_time_entry_custom_field_sorting
     field = TimeEntryCustomField.generate!(:field_format => 'string', :name => 'String Field')
     TimeEntry.generate!(:hours => 2.5, :custom_field_values => {field.id => 'CF Value 1'})
@@ -1661,6 +1767,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_equal 3, values.size
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_invalid_date_filter_should_not_validate
     @request.session[:user_id] = 2
     get(
@@ -1676,6 +1783,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'table.time-entries', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_query
     query = TimeEntryQuery.new(:project_id => 1, :name => 'Time Entry Query', :description => 'Description for Time Entry Query', :visibility => 2)
     query.save!
@@ -1687,6 +1795,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select '#sidebar a.query.selected[title=?]', query.description, :text => query.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom_feed
     get :index, :params => {:project_id => 1, :format => 'atom'}
     assert_response :success
@@ -1694,6 +1803,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_select 'entry > title', :text => /7:39 hours/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_at_project_level_should_include_csv_export_dialog
     get :index, :params => {
       :project_id => 'ecookbook',
@@ -1719,6 +1829,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_cross_project_should_include_csv_export_dialog
     get :index
     assert_response :success
@@ -1728,6 +1839,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv_all_projects
     with_settings :date_format => '%m/%d/%Y' do
       get :index, :params => {:format => 'csv'}
@@ -1746,6 +1858,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_csv
     with_settings :date_format => '%m/%d/%Y' do
       get :index, :params => {:project_id => 1, :format => 'csv'}
@@ -1754,18 +1867,21 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_index_csv_filename_query_name_param
     get :index, :params => {:format => 'csv'}
     assert_response :success
     assert_match /timelog.csv/, @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> MatchData
   def test_index_csv_filename_with_query_name_param
     get :index, :params => {:query_name => 'My Query Name', :format => 'csv'}
     assert_response :success
     assert_match /my_query_name\.csv/, @response.headers['Content-Disposition']
   end
 
+  # @rbs () -> bool
   def test_index_csv_should_fill_issue_column_with_tracker_id_and_subject
     issue = Issue.find(1)
     entry = TimeEntry.generate!(:issue => issue, :comments => "Issue column content test")
@@ -1776,6 +1892,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_include "#{issue.tracker} #1: #{issue.subject}", line
   end
 
+  # @rbs () -> bool
   def test_index_csv_should_fill_issue_column_with_issue_id_if_issue_that_is_not_visible
     @request.session[:user_id] = 3
     issue = Issue.generate!(:author_id => 1, :is_private => true)
@@ -1789,6 +1906,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     assert_include "##{issue.id}", line
   end
 
+  # @rbs () -> nil
   def test_index_grouped_by_created_on
     skip unless TimeEntryQuery.new.groupable_columns.detect {|c| c.name == :created_on}
 
@@ -1806,6 +1924,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_grouped_by_issue
     get(
       :index,
@@ -1821,6 +1940,7 @@ class TimelogControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_inline_issue_long_text_custom_field_column
     field = IssueCustomField.create!(:name => 'Long text', :field_format => 'text', :full_width_layout => '1',
       :tracker_ids => [1], :is_for_all => true)

@@ -22,17 +22,20 @@ require_relative '../test_helper'
 class IssueImportTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> Symbol
   def setup
     User.current = nil
     set_language_if_valid 'en'
   end
 
+  # @rbs () -> bool
   def test_authorized
     assert  IssueImport.authorized?(User.find(1)) # admins
     assert  IssueImport.authorized?(User.find(2)) # has import_issues permission
     assert !IssueImport.authorized?(User.find(3)) # does not have permission
   end
 
+  # @rbs () -> bool
   def test_create_versions_should_create_missing_versions
     import = generate_import_with_mapping
     import.mapping.merge!('fixed_version' => '9', 'create_versions' => '1')
@@ -46,6 +49,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal '2.1', version.name
   end
 
+  # @rbs () -> bool
   def test_create_categories_should_create_missing_categories
     import = generate_import_with_mapping
     import.mapping.merge!('category' => '10', 'create_categories' => '1')
@@ -59,6 +63,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal 'New category', category.name
   end
 
+  # @rbs () -> bool
   def test_mapping_with_fixed_tracker
     import = generate_import_with_mapping
     import.mapping['tracker'] = 'value:2'
@@ -68,6 +73,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal [2], issues.map(&:tracker_id).uniq
   end
 
+  # @rbs () -> bool
   def test_mapping_with_mapped_tracker
     import = generate_import_with_mapping
     import.mapping['tracker'] = '13'
@@ -77,6 +83,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal [1, 2, 1], issues.map(&:tracker_id)
   end
 
+  # @rbs () -> bool
   def test_should_not_import_with_default_tracker_when_tracker_is_invalid
     Tracker.find_by_name('Feature request').update!(:name => 'Feature')
 
@@ -90,6 +97,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_include "Tracker cannot be blank", item.message
   end
 
+  # @rbs () -> bool
   def test_status_should_be_set
     import = generate_import_with_mapping
     import.mapping['status'] = '14'
@@ -99,6 +107,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal ['New', 'New', 'Assigned'], issues.map {|x| x.status.name}
   end
 
+  # @rbs () -> bool
   def test_parent_should_be_set
     import = generate_import_with_mapping
     import.mapping['parent_issue_id'] = '5'
@@ -110,6 +119,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal 2, issues[2].parent_id
   end
 
+  # @rbs () -> bool
   def test_import_utf8_with_bom
     import = generate_import_with_mapping('import_issues_utf8_with_bom.csv')
     import.settings['encoding'] = 'UTF-8'
@@ -119,6 +129,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal 3, issues.count
   end
 
+  # @rbs () -> bool
   def test_backward_and_forward_reference_to_parent_should_work
     import = generate_import('import_subtasks.csv')
     import.settings = {
@@ -132,6 +143,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal child2, grandchild.parent
   end
 
+  # @rbs () -> bool
   def test_references_with_unique_id
     import = generate_import_with_mapping('import_subtasks_with_unique_id.csv')
     import.settings['mapping'] = {'project_id' => '1', 'unique_id' => '0', 'tracker' => '1', 'subject' => '2', 'parent_issue_id' => '3', 'relation_follows' => '4'}
@@ -155,6 +167,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert IssueRelation.where('issue_from_id' => issues(:issues_002).id, 'issue_to_id' => green.id, 'delay' => 3, 'relation_type' => 'precedes').present?
   end
 
+  # @rbs () -> bool
   def test_follow_relation
     import = generate_import_with_mapping('import_subtasks.csv')
     import.settings['mapping'] = {'project_id' => '1', 'tracker' => '1', 'subject' => '2', 'relation_relates' => '4'}
@@ -182,6 +195,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert one_two_one.relations.any? {|r| r.other_issue(one_two_one) == one_two}
   end
 
+  # @rbs () -> bool
   def test_delayed_relation
     import = generate_import_with_mapping('import_subtasks.csv')
     import.settings['mapping'] = {'project_id' => '1', 'tracker' => '1', 'subject' => '2', 'relation_precedes' => '5'}
@@ -211,6 +225,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert one_two_one.relations_from.any? {|r| r.issue_to == one_two && r.delay == -1}
   end
 
+  # @rbs () -> bool
   def test_parent_and_follows_relation
     import = generate_import_with_mapping('import_subtasks_with_relations.csv')
     import.settings['mapping'] = {
@@ -259,6 +274,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal Date.new(2020, 2, 3), third.due_date
   end
 
+  # @rbs () -> bool
   def test_import_with_relations_and_invalid_issue_should_not_fail
     import = generate_import_with_mapping('import_issues_with_relation_and_invalid_issues.csv')
     import.settings['mapping'] = {
@@ -281,6 +297,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal 1, second.relations_to.count
   end
 
+  # @rbs () -> bool
   def test_assignee_should_be_set
     import = generate_import_with_mapping
     import.mapping['assigned_to'] = '11'
@@ -290,6 +307,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal [User.find(3), nil, nil], issues.map(&:assigned_to)
   end
 
+  # @rbs () -> bool
   def test_user_custom_field_should_be_set
     field = IssueCustomField.generate!(:field_format => 'user', :is_for_all => true, :trackers => Tracker.all)
     import = generate_import_with_mapping
@@ -300,6 +318,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal '3', issues.first.custom_field_value(field)
   end
 
+  # @rbs () -> bool
   def test_list_custom_field_should_be_set
     field = CustomField.find(1)
     field.tracker_ids = Tracker.ids
@@ -314,6 +333,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal '', issues.third.custom_field_value(1)
   end
 
+  # @rbs () -> bool
   def test_multiple_list_custom_field_should_be_set
     field = CustomField.find(1)
     field.tracker_ids = Tracker.ids
@@ -329,6 +349,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal [''], issues.third.custom_field_value(1)
   end
 
+  # @rbs () -> bool
   def test_is_private_should_be_set_based_on_user_locale
     import = generate_import_with_mapping
     import.mapping['is_private'] = '6'
@@ -338,6 +359,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal [false, true, false], issues.map(&:is_private)
   end
 
+  # @rbs () -> bool
   def test_dates_should_be_parsed_using_date_format_setting
     field = IssueCustomField.generate!(:field_format => 'date', :is_for_all => true, :trackers => Tracker.all)
     import = generate_import_with_mapping('import_dates.csv')
@@ -361,6 +383,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal Date.parse('2019-05-28'), issue.start_date
   end
 
+  # @rbs () -> bool
   def test_date_format_should_default_to_user_language
     user = User.generate!(:language => 'fr')
     import = Import.new
@@ -371,6 +394,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal '%d/%m/%Y', import.settings['date_format']
   end
 
+  # @rbs () -> bool
   def test_run_should_remove_the_file
     import = generate_import_with_mapping
     file_path = import.filepath
@@ -380,6 +404,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert !File.exist?(file_path)
   end
 
+  # @rbs () -> bool
   def test_run_should_consider_project_shared_versions
     system_version = Version.generate!(:project_id => 2, :sharing => 'system', :name => '2.1')
     system_version.save!
@@ -392,6 +417,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert [nil, 3, system_version.id], issues.map(&:fixed_version_id)
   end
 
+  # @rbs () -> bool
   def test_set_default_settings_with_project_id
     import = Import.new
     import.set_default_settings(:project_id => 3)
@@ -399,6 +425,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal 3, import.mapping['project_id']
   end
 
+  # @rbs () -> bool
   def test_set_default_settings_with_project_identifier
     import = Import.new
     import.set_default_settings(:project_id => 'ecookbook')
@@ -406,6 +433,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_equal 1, import.mapping['project_id']
   end
 
+  # @rbs () -> bool
   def test_set_default_settings_without_project_id
     import = Import.new
     import.set_default_settings
@@ -413,6 +441,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_empty import.mapping
   end
 
+  # @rbs () -> bool
   def test_set_default_settings_with_invalid_project_should_not_fail
     import = Import.new
     import.set_default_settings(:project_id => 'abc')
@@ -420,6 +449,7 @@ class IssueImportTest < ActiveSupport::TestCase
     assert_empty import.mapping
   end
 
+  # @rbs () -> bool
   def test_set_default_settings_should_guess_encoding
     import = generate_import('import_iso8859-1.csv')
     user = User.generate!(:language => 'ja')
@@ -438,6 +468,7 @@ class IssueImportTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_set_default_settings_should_use_general_csv_encoding_when_cannnot_guess_encoding
     import = generate_import('import_iso8859-1.csv')
     user = User.generate!(:language => 'ja')
@@ -450,6 +481,7 @@ class IssueImportTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_encoding_guessing_respects_multibyte_boundaries
     # Reading a specified number of bytes from the beginning of this file
     # may stop in the middle of a multi-byte character, which can lead to
@@ -467,6 +499,7 @@ class IssueImportTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_set_default_settings_should_detect_field_wrapper
     to_test = {
       'import_issues.csv' => '"',

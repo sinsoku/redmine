@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class IssueNestedSetConcurrencyTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
 
+  # @rbs () -> nil
   def setup
     skip if sqlite?
     if mysql?
@@ -33,6 +34,7 @@ class IssueNestedSetConcurrencyTest < ActiveSupport::TestCase
     CustomField.destroy_all
   end
 
+  # @rbs () -> Integer
   def teardown
     Issue.delete_all
   end

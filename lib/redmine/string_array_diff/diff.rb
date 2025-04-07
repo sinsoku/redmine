@@ -42,6 +42,7 @@ module Redmine
     class Diff
       VERSION = 0.3
 
+      # @rbs (Array[untyped], Array[untyped]) -> Array[untyped]
       def Diff.lcs(a, b)
         astart = 0
         bstart = 0
@@ -92,6 +93,7 @@ module Redmine
         return mvector
       end
 
+      # @rbs (Array[untyped], Array[untyped]) -> void
       def makediff(a, b)
         mvector = Diff.lcs(a, b)
         ai = bi = 0
@@ -146,6 +148,7 @@ module Redmine
 
       attr_reader :diffs, :difftype
 
+      # @rbs (Array[untyped], ?Array[untyped], ?nil) -> void
       def initialize(diffs_or_a, b = nil, isstring = nil)
         if b.nil?
           @diffs = diffs_or_a
@@ -158,15 +161,18 @@ module Redmine
         end
       end
 
+      # @rbs (Integer, Integer) -> void
       def match(ai, bi)
         @diffs.push @curdiffs unless @curdiffs.empty?
         @curdiffs = []
       end
 
+      # @rbs (Integer, String) -> Array[untyped]
       def discarda(i, elem)
         @curdiffs.push ['-', i, elem]
       end
 
+      # @rbs (Integer, String) -> void
       def discardb(i, elem)
         @curdiffs.push ['+', i, elem]
       end

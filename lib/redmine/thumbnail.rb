@@ -33,6 +33,7 @@ module Redmine
     ALLOWED_TYPES = %w(image/bmp image/gif image/jpeg image/png image/webp application/pdf)
 
     # Generates a thumbnail for the source image to target
+    # @rbs (String, String, Integer, ?bool) -> String?
     def self.generate(source, target, size, is_pdf = false)
       return nil unless convert_available?
       return nil if is_pdf && !gs_available?
@@ -72,6 +73,7 @@ module Redmine
       target
     end
 
+    # @rbs () -> bool
     def self.convert_available?
       return @convert_available if defined?(@convert_available)
 
@@ -85,6 +87,7 @@ module Redmine
       @convert_available
     end
 
+    # @rbs () -> bool
     def self.gs_available?
       return @gs_available if defined?(@gs_available)
 
@@ -98,6 +101,7 @@ module Redmine
       @gs_available
     end
 
+    # @rbs () -> ActiveSupport::BroadcastLogger
     def self.logger
       Rails.logger
     end

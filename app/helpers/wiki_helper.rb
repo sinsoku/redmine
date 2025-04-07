@@ -20,6 +20,7 @@
 module WikiHelper
   include Redmine::Export::PDF::WikiPdfHelper
 
+  # @rbs (Hash[untyped, untyped] | Array[untyped], ?WikiPage?, ?WikiPage?, ?Integer) -> ActiveSupport::SafeBuffer
   def wiki_page_options_for_select(pages, selected = nil, parent = nil, level = 0)
     pages = pages.group_by(&:parent) unless pages.is_a?(Hash)
     s = (+'').html_safe
@@ -36,6 +37,7 @@ module WikiHelper
     s
   end
 
+  # @rbs (WikiPage) -> ActiveSupport::SafeBuffer
   def wiki_page_wiki_options_for_select(page)
     projects = Project.allowed_to(:rename_wiki_pages).joins(:wiki).preload(:wiki).to_a
     projects << page.project unless projects.include?(page.project)
@@ -46,6 +48,7 @@ module WikiHelper
     end
   end
 
+  # @rbs (WikiPage) -> ActiveSupport::SafeBuffer?
   def wiki_page_breadcrumb(page)
     breadcrumb(
       page.ancestors.reverse.collect do |parent|
@@ -60,6 +63,7 @@ module WikiHelper
   end
 
   # Returns the path for the Cancel link when editing a wiki page
+  # @rbs (WikiPage) -> String
   def wiki_page_edit_cancel_path(page)
     if page.new_record?
       if parent = page.parent
@@ -72,6 +76,7 @@ module WikiHelper
     end
   end
 
+  # @rbs (WikiContentVersion | WikiContent) -> ActiveSupport::SafeBuffer
   def wiki_content_update_info(content)
     l(:label_updated_time_by, :author => link_to_user(content.author), :age => time_tag(content.updated_on)).html_safe
   end

@@ -104,6 +104,7 @@ class Setting < ApplicationRecord
   @cached_settings = {}
   @cached_cleared_on = Time.now
 
+  # @rbs () -> (String | Array[untyped] | Symbol | Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess)?
   def value
     v = read_attribute(:value)
     # Unserialize serialized settings
@@ -115,16 +116,19 @@ class Setting < ApplicationRecord
     v
   end
 
+  # @rbs ((Integer | String | Array[untyped] | Symbol | Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess)?) -> String
   def value=(v)
     v = v.to_yaml if v && available_settings[name] && available_settings[name]['serialized']
     write_attribute(:value, v.to_s)
   end
 
   # Returns the value of the setting named name
+  # @rbs (Symbol | String) -> (String | Array[untyped] | Symbol | Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess)?
   def self.[](name)
     @cached_settings[name] ||= find_or_default(name).value
   end
 
+  # @rbs (Symbol | String, (String | Integer | Array[untyped] | ActiveSupport::HashWithIndifferentAccess | Hash[untyped, untyped] | Symbol)?) -> (String | Array[untyped] | ActiveSupport::HashWithIndifferentAccess | Hash[untyped, untyped] | Symbol)
   def self.[]=(name, v)
     setting = find_or_default(name)
     setting.value = v || ''
@@ -134,6 +138,7 @@ class Setting < ApplicationRecord
   end
 
   # Updates multiple settings from params and sends a security notification if needed
+  # @rbs (ActiveSupport::HashWithIndifferentAccess | Hash[untyped, untyped]) -> Array[untyped]?
   def self.set_all_from_params(settings)
     return nil unless settings.is_a?(Hash)
 
@@ -158,6 +163,7 @@ class Setting < ApplicationRecord
     nil
   end
 
+  # @rbs (Hash[untyped, untyped]) -> Array[untyped]
   def self.validate_all_from_params(settings)
     messages = []
     [
@@ -196,6 +202,7 @@ class Setting < ApplicationRecord
   end
 
   # Sets a setting value from params
+  # @rbs (Symbol, String | Array[untyped] | Hash[untyped, untyped]) -> void
   def self.set_from_params(name, params)
     params = params.dup
     params.delete_if {|v| v.blank?} if params.is_a?(Array)
@@ -215,6 +222,7 @@ class Setting < ApplicationRecord
   # params = {:keywords => ['fixes', 'closes'], :status_id => ["3", "5"], :done_ratio => ["", "100"]}
   # Setting.commit_update_keywords_from_params(params)
   # # => [{'keywords => 'fixes', 'status_id' => "3"}, {'keywords => 'closes', 'status_id' => "5", 'done_ratio' => "100"}]
+  # @rbs (Hash[untyped, untyped]) -> Array[untyped]
   def self.commit_update_keywords_from_params(params)
     s = []
     if params.is_a?(Hash) && params.key?(:keywords) && params.values.all?(Array)
@@ -238,24 +246,29 @@ class Setting < ApplicationRecord
     params
   end
 
+  # @rbs () -> bool
   def self.twofa_required?
     twofa == '2'
   end
 
+  # @rbs () -> bool
   def self.twofa_optional?
     %w[1 3].include? twofa
   end
 
+  # @rbs () -> bool
   def self.twofa_required_for_administrators?
     twofa == '3'
   end
 
   # Helper that returns an array based on per_page_options setting
+  # @rbs () -> Array[untyped]
   def self.per_page_options_array
     per_page_options.split(%r{[\s,]}).collect(&:to_i).select {|n| n > 0}.sort
   end
 
   # Helper that returns a Hash with single update keywords as keys
+  # @rbs () -> Array[untyped]
   def self.commit_update_keywords_array
     a = []
     if commit_update_keywords.is_a?(Array)
@@ -276,6 +289,7 @@ class Setting < ApplicationRecord
   # Checks if settings have changed since the values were read
   # and clears the cache hash if it's the case
   # Called once per request
+  # @rbs () -> void
   def self.check_cache
     settings_updated_on = Setting.maximum(:updated_on)
     if settings_updated_on && @cached_cleared_on <= settings_updated_on
@@ -284,12 +298,14 @@ class Setting < ApplicationRecord
   end
 
   # Clears the settings cache
+  # @rbs () -> bool
   def self.clear_cache
     @cached_settings.clear
     @cached_cleared_on = Time.now
     logger.info "Settings cache cleared." if logger
   end
 
+  # @rbs (Redmine::Plugin) -> Symbol
   def self.define_plugin_setting(plugin)
     if plugin.settings
       name = "plugin_#{plugin.id}"
@@ -300,6 +316,7 @@ class Setting < ApplicationRecord
   # Defines getter and setter for each setting
   # Then setting values can be read using: Setting.some_setting_name
   # or set using Setting.some_setting_name = "some value"
+  # @rbs (String, ?Hash[untyped, untyped]) -> Symbol
   def self.define_setting(name, options={})
     available_settings[name.to_s] = options
 
@@ -336,6 +353,7 @@ class Setting < ApplicationRecord
 
   private
 
+  # @rbs ((String | Array[untyped] | Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess | Integer)?) -> (String | Array[untyped] | Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess | Integer)?
   def force_utf8_strings(arg)
     if arg.is_a?(String)
       arg.dup.force_encoding('UTF-8')
@@ -356,6 +374,7 @@ class Setting < ApplicationRecord
 
   # Returns the Setting instance for the setting named name
   # (record found in database or new record with default value)
+  # @rbs (Symbol | String) -> Setting
   def self.find_or_default(name)
     name = name.to_s
     raise "There's no setting named #{name}" unless available_settings.has_key?(name)

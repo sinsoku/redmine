@@ -21,6 +21,7 @@ require_relative '../test_helper'
 
 class AttachmentsVisibilityTest < Redmine::ControllerTest
   tests AttachmentsController
+  # @rbs () -> Attachment
   def setup
     User.current = nil
     set_tmp_attachments_directory
@@ -33,6 +34,7 @@ class AttachmentsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_attachment_should_be_visible
     @request.session[:user_id] = 2 # manager
     get :show, :params => {:id => @attachment.id}
@@ -43,6 +45,7 @@ class AttachmentsVisibilityTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_attachment_should_be_visible_with_permission
     @request.session[:user_id] = 3 # developer
     get :show, :params => {:id => @attachment.id}
