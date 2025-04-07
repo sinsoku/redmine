@@ -19,6 +19,7 @@
 
 module EmailAddressesHelper
   # Returns a link to enable or disable notifications for the address
+  # @rbs (EmailAddress) -> ActiveSupport::SafeBuffer
   def toggle_email_address_notify_link(address)
     if address.notify?
       link_to(

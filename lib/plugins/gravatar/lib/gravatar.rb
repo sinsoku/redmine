@@ -46,6 +46,7 @@ module GravatarHelper
     end
 
     # Return the HTML img tag for the given email address's gravatar.
+    # @rbs (String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
     def gravatar(email, options={})
       src = h(gravatar_url(email, options))
       options = DEFAULT_OPTIONS.merge(options)
@@ -58,11 +59,13 @@ module GravatarHelper
     end
 
     # Returns the base Gravatar URL for the given email hash
+    # @rbs (String) -> String
     def gravatar_api_url(hash)
       +"#{Redmine::Configuration['avatar_server_url']}/avatar/#{hash}"
     end
 
     # Return the gravatar URL for the given email address.
+    # @rbs (String, ?Hash[untyped, untyped]) -> String
     def gravatar_url(email, options={})
       email_hash = Digest::SHA256.hexdigest(email)
       options = DEFAULT_OPTIONS.merge(options)

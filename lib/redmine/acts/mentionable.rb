@@ -25,6 +25,7 @@ module Redmine
       end
 
       module ClassMethods
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_mentionable(options = {})
           class_attribute :mentionable_attributes
           self.mentionable_attributes = options[:attributes]
@@ -38,10 +39,12 @@ module Redmine
       end
 
       module InstanceMethods
+        # @rbs (Class) -> Class
         def self.included(base)
           base.extend ClassMethods
         end
 
+        # @rbs () -> Array[untyped]
         def notified_mentions
           notified = mentioned_users.to_a
           notified.reject! {|user| user.mail.blank? || user.mail_notification == 'none'}
@@ -53,6 +56,7 @@ module Redmine
 
         private
 
+        # @rbs () -> ActiveSupport::HashWithIndifferentAccess
         def parse_mentions
           mentionable_attrs = self.mentionable_attributes
           saved_mentionable_attrs = self.saved_changes.select{|a| mentionable_attrs.include?(a)}
@@ -63,6 +67,7 @@ module Redmine
           end
         end
 
+        # @rbs (String?, String) -> User::ActiveRecord_Relation?
         def get_mentioned_users(old_content, new_content)
           self.mentioned_users = []
 
@@ -75,6 +80,7 @@ module Redmine
           end
         end
 
+        # @rbs (String?) -> Array[untyped]
         def scan_for_mentioned_users(content)
           return [] if content.nil?
 

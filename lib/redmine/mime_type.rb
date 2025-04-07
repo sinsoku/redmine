@@ -57,11 +57,13 @@ module Redmine
     end
 
     # returns all full mime types for a given (top level) type
+    # @rbs (String) -> Array[untyped]
     def self.by_type(type)
       MIME_TYPES.keys.select{|m| m.start_with? "#{type}/"}
     end
 
     # returns mime type for name or nil if unknown
+    # @rbs (String) -> String?
     def self.of(name)
       ext = File.extname(name.to_s)[1..-1]
       if ext
@@ -72,11 +74,13 @@ module Redmine
 
     # Returns the css class associated to
     # the mime type of name
+    # @rbs (String) -> String?
     def self.css_class_of(name)
       mimetype = of(name)
       mimetype&.tr('/', '-')
     end
 
+    # @rbs (String) -> String?
     def self.main_mimetype_of(name)
       mimetype = of(name)
       mimetype&.split('/')&.first
@@ -84,6 +88,7 @@ module Redmine
 
     # return true if mime-type for name is type/*
     # otherwise false
+    # @rbs (String, String) -> bool
     def self.is_type?(type, name)
       main_mimetype = main_mimetype_of(name)
       type.to_s == main_mimetype

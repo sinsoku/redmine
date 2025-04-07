@@ -20,14 +20,17 @@
 require_relative '../test_helper'
 
 class SessionsTest < Redmine::IntegrationTest
+  # @rbs () -> bool
   def setup
     Rails.application.config.redmine_verify_sessions = true
   end
 
+  # @rbs () -> bool
   def teardown
     Rails.application.config.redmine_verify_sessions = false
   end
 
+  # @rbs () -> bool
   def test_change_password_kills_sessions
     log_user('jsmith', 'jsmith')
 
@@ -40,6 +43,7 @@ class SessionsTest < Redmine::IntegrationTest
     assert flash[:error].include?('Your session has expired')
   end
 
+  # @rbs () -> bool
   def test_lock_user_kills_sessions
     log_user('jsmith', 'jsmith')
 
@@ -52,6 +56,7 @@ class SessionsTest < Redmine::IntegrationTest
     assert flash[:error].include?('Your session has expired')
   end
 
+  # @rbs () -> bool
   def test_update_user_does_not_kill_sessions
     log_user('jsmith', 'jsmith')
 
@@ -63,6 +68,7 @@ class SessionsTest < Redmine::IntegrationTest
     assert_response :ok
   end
 
+  # @rbs () -> bool
   def test_change_password_generates_a_new_token_for_current_session
     log_user('jsmith', 'jsmith')
     assert_not_nil token = session[:tk]
@@ -84,6 +90,7 @@ class SessionsTest < Redmine::IntegrationTest
     assert_response :ok
   end
 
+  # @rbs () -> bool
   def test_simultaneous_sessions_should_be_valid
     first = open_session do |session|
       session.post "/login", :params => {:username => 'jsmith', :password => 'jsmith'}

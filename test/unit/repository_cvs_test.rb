@@ -28,6 +28,7 @@ class RepositoryCvsTest < ActiveSupport::TestCase
   MODULE_NAME    = 'test'
   CHANGESETS_NUM = 7
 
+  # @rbs () -> bool
   def setup
     User.current = nil
     @project = Project.find(3)
@@ -38,6 +39,7 @@ class RepositoryCvsTest < ActiveSupport::TestCase
     assert @repository
   end
 
+  # @rbs () -> bool
   def test_blank_module_error_message
     set_language_if_valid 'en'
     repo = Repository::Cvs.new(
@@ -51,6 +53,7 @@ class RepositoryCvsTest < ActiveSupport::TestCase
                    repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_module_error_message_fr
     set_language_if_valid 'fr'
     repo = Repository::Cvs.new(
@@ -65,6 +68,7 @@ class RepositoryCvsTest < ActiveSupport::TestCase
     assert_include 'Module doit être renseigné(e)', repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_cvsroot_error_message
     set_language_if_valid 'en'
     repo = Repository::Cvs.new(
@@ -78,6 +82,7 @@ class RepositoryCvsTest < ActiveSupport::TestCase
                    repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_cvsroot_error_message_fr
     set_language_if_valid 'fr'
     repo = Repository::Cvs.new(
@@ -92,6 +97,7 @@ class RepositoryCvsTest < ActiveSupport::TestCase
     assert_include 'CVSROOT doit être renseigné(e)', repo.errors.full_messages
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_root_url_should_be_validated_against_regexp_set_in_configuration
     Redmine::Configuration.with 'scm_cvs_path_regexp' => '/cvspath/[a-z]+' do
       repo = Repository::Cvs.new(
@@ -265,6 +271,7 @@ class RepositoryCvsTest < ActiveSupport::TestCase
 
   else
     puts "CVS test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

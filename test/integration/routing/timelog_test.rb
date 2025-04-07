@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingTimelogsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_timelogs_global
     should_route 'GET /time_entries' => 'timelog#index'
     should_route 'GET /time_entries.csv' => 'timelog#index', :format => 'csv'
@@ -34,6 +35,7 @@ class RoutingTimelogsTest < Redmine::RoutingTest
     should_route 'DELETE /time_entries/22' => 'timelog#destroy', :id => '22'
   end
 
+  # @rbs () -> bool
   def test_timelogs_scoped_under_project
     should_route 'GET /projects/foo/time_entries' => 'timelog#index', :project_id => 'foo'
     should_route 'GET /projects/foo/time_entries.csv' => 'timelog#index', :project_id => 'foo', :format => 'csv'
@@ -42,11 +44,13 @@ class RoutingTimelogsTest < Redmine::RoutingTest
     should_route 'POST /projects/foo/time_entries' => 'timelog#create', :project_id => 'foo'
   end
 
+  # @rbs () -> bool
   def test_timelogs_scoped_under_issues
     should_route 'GET  /issues/234/time_entries/new' => 'timelog#new', :issue_id => '234'
     should_route 'POST /issues/234/time_entries' => 'timelog#create', :issue_id => '234'
   end
 
+  # @rbs () -> bool
   def test_timelogs_report
     should_route 'GET /time_entries/report' => 'timelog#report'
     should_route 'GET /time_entries/report.csv' => 'timelog#report', :format => 'csv'
@@ -55,6 +59,7 @@ class RoutingTimelogsTest < Redmine::RoutingTest
     should_route 'GET /projects/foo/time_entries/report.csv' => 'timelog#report', :project_id => 'foo', :format => 'csv'
   end
 
+  # @rbs () -> bool
   def test_timelogs_bulk_edit
     should_route 'GET /time_entries/bulk_edit' => 'timelog#bulk_edit'
     should_route 'POST /time_entries/bulk_edit' => 'timelog#bulk_edit'

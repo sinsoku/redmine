@@ -20,15 +20,18 @@
 require_relative '../test_helper'
 
 class WikiContentVersionTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_should_respond_to_attachments
     v = WikiContentVersion.find(2)
     assert v.respond_to?(:attachments)
   end
 
+  # @rbs () -> WikiContentVersion
   def test_destroy
     v = WikiContentVersion.find(2)
 
@@ -37,6 +40,7 @@ class WikiContentVersionTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_last_version_should_revert_content
     v = WikiContentVersion.find(3)
 
@@ -57,6 +61,7 @@ class WikiContentVersionTest < ActiveSupport::TestCase
     assert_equal v.updated_on, c.updated_on
   end
 
+  # @rbs () -> bool
   def test_destroy_all_versions_should_delete_page
     WikiContentVersion.find(1).destroy
     WikiContentVersion.find(2).destroy

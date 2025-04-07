@@ -34,6 +34,7 @@ class MessagesController < ApplicationController
   REPLIES_PER_PAGE = 25 unless const_defined?(:REPLIES_PER_PAGE)
 
   # Show a topic and its replies
+  # @rbs () -> nil
   def show
     page = params[:page]
     # Find the page of the requested reply
@@ -56,6 +57,7 @@ class MessagesController < ApplicationController
   end
 
   # Create a new topic
+  # @rbs () -> String?
   def new
     @message = Message.new
     @message.author = User.current
@@ -73,6 +75,7 @@ class MessagesController < ApplicationController
   end
 
   # Reply to a topic
+  # @rbs () -> String
   def reply
     @reply = Message.new
     @reply.author = User.current
@@ -89,6 +92,7 @@ class MessagesController < ApplicationController
   end
 
   # Edit a message
+  # @rbs () -> String?
   def edit
     (render_403; return false) unless @message.editable_by?(User.current)
     @message.safe_attributes = params[:message]
@@ -104,6 +108,7 @@ class MessagesController < ApplicationController
   end
 
   # Delete a messages
+  # @rbs () -> String
   def destroy
     (render_403; return false) unless @message.destroyable_by?(User.current)
     r = @message.to_param
@@ -116,6 +121,7 @@ class MessagesController < ApplicationController
     end
   end
 
+  # @rbs () -> bool?
   def quote
     @subject = @message.subject
     @subject = "RE: #{@subject}" unless @subject.starts_with?('RE:')
@@ -132,6 +138,7 @@ class MessagesController < ApplicationController
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def preview
     message = @board.messages.find_by_id(params[:id])
     @text = params[:text] ? params[:text] : nil
@@ -141,6 +148,7 @@ class MessagesController < ApplicationController
 
   private
 
+  # @rbs () -> (Message | bool)?
   def find_message
     return unless find_board
 
@@ -150,6 +158,7 @@ class MessagesController < ApplicationController
     render_404
   end
 
+  # @rbs () -> Project?
   def find_board
     @board = Board.includes(:project).find(params[:board_id])
     @project = @board.project

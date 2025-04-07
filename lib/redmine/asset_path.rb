@@ -21,6 +21,7 @@ module Redmine
   class AssetPath
     attr_reader :paths, :prefix, :version
 
+    # @rbs (Pathname, Array[untyped], ?String) -> void
     def initialize(base_dir, paths, prefix=nil)
       @base_dir = base_dir
       @paths  = paths
@@ -29,6 +30,7 @@ module Redmine
       @version = Rails.application.config.assets.version
     end
 
+    # @rbs (transition_map: Hash[untyped, untyped], assets: Hash[untyped, untyped], load_path: Redmine::AssetLoadPath | nil) -> nil
     def update(transition_map:, assets:, load_path:)
       each_file do |file, intermediate_path, logical_path|
         @transition.add_src  intermediate_path, logical_path
@@ -44,6 +46,7 @@ module Redmine
       nil
     end
 
+    # @rbs () -> void
     def each_file
       paths.each do |path|
         without_dotfiles(all_files_from_tree(path)).each do |file|
@@ -91,6 +94,7 @@ module Redmine
         other.ascend.any?(path)
       end
 
+      # @rbs (transition_map: Hash[untyped, untyped], assets: Hash[untyped, untyped], load_path: Redmine::AssetLoadPath | nil) -> nil
       def update(transition_map)
         product = src.to_a.product(dest.to_a).select{|t| t[0] != t[1]}
         maps = product.map do |t|
@@ -120,10 +124,12 @@ module Redmine
       end
     end
 
+    # @rbs (Array[untyped]) -> Array[untyped]
     def without_dotfiles(files)
       files.reject { |file| file.basename.to_s.starts_with?(".") }
     end
 
+    # @rbs (Pathname) -> Array[untyped]
     def all_files_from_tree(path)
       path.children.flat_map { |child| child.directory? ? all_files_from_tree(child) : child }
     end
@@ -132,6 +138,7 @@ module Redmine
   class AssetLoadPath < Propshaft::LoadPath
     attr_reader :extension_paths, :default_asset_path, :transition_map
 
+    # @rbs (ActiveSupport::OrderedOptions, Propshaft::Compilers) -> void
     def initialize(config, compilers)
       @extension_paths    = config.redmine_extension_paths
       @default_asset_path = config.redmine_default_asset_path
@@ -151,6 +158,7 @@ module Redmine
       end
     end
 
+    # @rbs () -> Hash[untyped, untyped]
     def assets_by_path
       merge_required = @cached_assets_by_path.nil?
       super
@@ -182,6 +190,7 @@ module Redmine
       [paths, default_asset_path.paths, extension_paths.map{|path| path.paths}].flatten.compact
     end
 
+    # @rbs () -> void
     def clear_cache
       @transition_map = nil
       super
@@ -189,11 +198,13 @@ module Redmine
   end
 
   class Asset < Propshaft::Asset
+    # @rbs (Pathname, logical_path: String, load_path: Redmine::AssetLoadPath | nil, transition_map: Hash[untyped, untyped]) -> void
     def initialize(file, logical_path:, load_path:, transition_map:)
       @transition_map = transition_map
       super(file, logical_path: logical_path, load_path: load_path)
     end
 
+    # @rbs () -> String
     def content
       if conversion = @transition_map[logical_path.dirname.to_s]
         convert_path super, conversion
@@ -204,6 +215,7 @@ module Redmine
 
     ASSET_URL_PATTERN = /(url\(\s*["']?([^"'\s)]+)\s*["']?\s*\))/ unless defined? ASSET_URL_PATTERN
 
+    # @rbs (String, Hash[untyped, untyped]) -> String
     def convert_path(input, conversion)
       input.gsub(ASSET_URL_PATTERN) do |matched|
         conversion.each do |key, val|

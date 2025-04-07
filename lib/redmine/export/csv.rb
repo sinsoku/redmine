@@ -22,6 +22,7 @@ require 'csv'
 module Redmine
   module Export
     module CSV
+      # @rbs (*untyped, **untyped) -> String
       def self.generate(...)
         Base.generate(...)
       end
@@ -30,6 +31,7 @@ module Redmine
         include Redmine::I18n
 
         class << self
+          # @rbs (?Hash[untyped, untyped]) -> String
           def generate(options = {}, &)
             col_sep = (options[:field_separator].presence || l(:general_csv_separator))
             encoding = Encoding.find(options[:encoding]) rescue Encoding.find(l(:general_csv_encoding))
@@ -45,6 +47,7 @@ module Redmine
           end
         end
 
+        # @rbs (Array[untyped]) -> Redmine::Export::CSV::Base
         def <<(row)
           row = row.map do |field|
             case field

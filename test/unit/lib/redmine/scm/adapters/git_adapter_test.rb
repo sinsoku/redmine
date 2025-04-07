@@ -706,6 +706,7 @@ class GitAdapterTest < ActiveSupport::TestCase
 
   else
     puts "Git test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

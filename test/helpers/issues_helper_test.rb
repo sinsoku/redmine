@@ -24,20 +24,24 @@ class IssuesHelperTest < Redmine::HelperTest
   include CustomFieldsHelper
   include ERB::Util
 
+  # @rbs () -> bool
   def test_issue_heading
     assert_equal "Bug #1", issue_heading(Issue.find(1))
   end
 
+  # @rbs () -> bool
   def test_issues_destroy_confirmation_message_with_one_root_issue
     assert_equal l(:text_issues_destroy_confirmation),
                  issues_destroy_confirmation_message(Issue.find(1))
   end
 
+  # @rbs () -> bool
   def test_issues_destroy_confirmation_message_with_an_arrayt_of_root_issues
     assert_equal l(:text_issues_destroy_confirmation),
                  issues_destroy_confirmation_message(Issue.find([1, 2]))
   end
 
+  # @rbs () -> bool
   def test_issues_destroy_confirmation_message_with_one_parent_issue
     Issue.find(2).update! :parent_issue_id => 1
     assert_equal l(:text_issues_destroy_confirmation) + "\n" +
@@ -45,12 +49,14 @@ class IssuesHelperTest < Redmine::HelperTest
                  issues_destroy_confirmation_message(Issue.find(1))
   end
 
+  # @rbs () -> bool
   def test_issues_destroy_confirmation_message_with_one_parent_issue_and_its_child
     Issue.find(2).update! :parent_issue_id => 1
     assert_equal l(:text_issues_destroy_confirmation),
                  issues_destroy_confirmation_message(Issue.find([1, 2]))
   end
 
+  # @rbs () -> bool
   def test_issues_destroy_confirmation_message_with_issues_that_share_descendants
     root = Issue.generate!
     child = Issue.generate!(:parent_issue_id => root.id)
@@ -227,6 +233,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_match 'error281.txt', show_detail(detail, true)
   end
 
+  # @rbs () -> bool
   def test_show_detail_relation_added
     detail = JournalDetail.new(:property => 'relation',
                                :prop_key => 'precedes',
@@ -237,6 +244,7 @@ class IssuesHelperTest < Redmine::HelperTest
                  show_detail(detail, false)
   end
 
+  # @rbs () -> bool
   def test_show_detail_relation_added_with_inexistant_issue
     inexistant_issue_number = 9999
     assert_nil  Issue.find_by_id(inexistant_issue_number)
@@ -247,6 +255,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_equal "<strong>Precedes</strong> <i>Issue ##{inexistant_issue_number}</i> added", show_detail(detail, false)
   end
 
+  # @rbs () -> bool
   def test_show_detail_relation_added_should_not_disclose_issue_that_is_not_visible
     issue = Issue.generate!(:is_private => true)
     detail = JournalDetail.new(:property => 'relation',
@@ -257,6 +266,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_equal "<strong>Precedes</strong> <i>Issue ##{issue.id}</i> added", show_detail(detail, false)
   end
 
+  # @rbs () -> bool
   def test_show_detail_relation_deleted
     detail = JournalDetail.new(:property  => 'relation',
                                :prop_key  => 'precedes',
@@ -269,6 +279,7 @@ class IssuesHelperTest < Redmine::HelperTest
                  show_detail(detail, false)
   end
 
+  # @rbs () -> bool
   def test_show_detail_relation_deleted_with_inexistant_issue
     inexistant_issue_number = 9999
     assert_nil  Issue.find_by_id(inexistant_issue_number)
@@ -279,6 +290,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_equal "<strong>Precedes</strong> deleted (<i>Issue #9999</i>)", show_detail(detail, false)
   end
 
+  # @rbs () -> bool
   def test_show_detail_relation_deleted_should_not_disclose_issue_that_is_not_visible
     issue = Issue.generate!(:is_private => true)
     detail = JournalDetail.new(:property => 'relation',
@@ -289,6 +301,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_equal "<strong>Precedes</strong> deleted (<i>Issue ##{issue.id}</i>)", show_detail(detail, false)
   end
 
+  # @rbs () -> bool
   def test_details_to_strings_with_multiple_values_removed_from_custom_field
     field = IssueCustomField.generate!(:name => 'User', :field_format => 'user', :multiple => true)
     details = []
@@ -299,6 +312,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_equal ["<strong>User</strong> deleted (<del><i>Dave Lopper, Redmine Admin</i></del>)"], details_to_strings(details, false)
   end
 
+  # @rbs () -> bool
   def test_details_to_strings_with_multiple_values_added_to_custom_field
     field = IssueCustomField.generate!(:name => 'User', :field_format => 'user', :multiple => true)
     details = []
@@ -309,6 +323,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_equal ["<strong>User</strong> <i>Dave Lopper, Redmine Admin</i> added"], details_to_strings(details, false)
   end
 
+  # @rbs () -> bool
   def test_details_to_strings_with_multiple_values_added_and_removed_from_custom_field
     field = IssueCustomField.generate!(:name => 'User', :field_format => 'user', :multiple => true)
     details = []
@@ -332,10 +347,12 @@ class IssuesHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_find_name_by_reflection_should_return_nil_for_missing_record
     assert_nil find_name_by_reflection('status', 99)
   end
 
+  # @rbs () -> bool
   def test_issue_due_date_details
     travel_to Time.parse('2019-06-01 23:00:00 UTC') do
       User.current = User.first
@@ -357,6 +374,7 @@ class IssuesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_url_for_new_subtask
     issue = Issue.find(1)
     params = {:issue => {:parent_issue_id => issue.id, :tracker_id => issue.tracker.id}}
@@ -364,6 +382,7 @@ class IssuesHelperTest < Redmine::HelperTest
                  url_for_new_subtask(issue)
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_spent_hours_details_should_link_to_project_time_entries_depending_on_cross_project_setting
     %w(descendants).each do |setting|
       with_settings :cross_project_subtasks => setting do
@@ -375,6 +394,7 @@ class IssuesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_spent_hours_details_should_link_to_global_time_entries_depending_on_cross_project_setting
     %w(system tree hierarchy).each do |setting|
       with_settings :cross_project_subtasks => setting do
@@ -386,6 +406,7 @@ class IssuesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_render_issues_stats
     html = render_issues_stats(1, 1, {:issue_id => '15,16'})
 
@@ -394,6 +415,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_include '<a href="/issues?issue_id=15%2C16&amp;set_filter=true&amp;status_id=c">1 closed</a>', html
   end
 
+  # @rbs () -> bool
   def test_render_issue_relations
     issue = Issue.generate!(:status_id => 1)
     closed_issue = Issue.generate!(:status_id => 5)
@@ -424,6 +446,7 @@ class IssuesHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_render_descendants_stats
     parent = Issue.generate!(:status_id => 1)
     child = Issue.generate!(:parent_issue_id => parent.id, :status_id => 1)
@@ -436,6 +459,7 @@ class IssuesHelperTest < Redmine::HelperTest
     assert_include "<a href=\"/issues?parent_id=~#{parent.id}&amp;set_filter=true&amp;status_id=c\">1 closed</a>", html
   end
 
+  # @rbs () -> bool
   def test_render_relations_stats
     issue = Issue.generate!(:status_id => 1)
     relations = []

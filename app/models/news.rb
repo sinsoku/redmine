@@ -46,15 +46,18 @@ class News < ApplicationRecord
 
   safe_attributes 'title', 'summary', 'description'
 
+  # @rbs (?User | AnonymousUser) -> bool
   def visible?(user=User.current)
     !user.nil? && user.allowed_to?(:view_news, project)
   end
 
   # Returns true if the news can be commented by user
+  # @rbs (?User | AnonymousUser) -> bool
   def commentable?(user=User.current)
     user.allowed_to?(:comment_news, project)
   end
 
+  # @rbs () -> Array[untyped]
   def notified_users
     project.users.select {|user| user.notify_about?(self) && user.allowed_to?(:view_news, project)}
   end
@@ -64,6 +67,7 @@ class News < ApplicationRecord
   end
 
   # Returns the users that should be cc'd when a new news is added
+  # @rbs () -> Array[untyped]
   def notified_watchers_for_added_news
     watchers = []
     if m = project.enabled_module('news')
@@ -81,16 +85,19 @@ class News < ApplicationRecord
   end
 
   # returns latest news for projects visible by user
+  # @rbs (?AnonymousUser | User, ?Integer) -> Array[untyped]
   def self.latest(user = User.current, count = 5)
     visible(user).preload(:author, :project).order("#{News.table_name}.created_on DESC").limit(count).to_a
   end
 
   private
 
+  # @rbs () -> Watcher
   def add_author_as_watcher
     Watcher.create(:watchable => self, :user => author)
   end
 
+  # @rbs () -> Array[untyped]?
   def send_notification
     if Setting.notified_events.include?('news_added')
       Mailer.deliver_news_added(self)

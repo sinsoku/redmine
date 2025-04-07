@@ -24,10 +24,12 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
   tests IssuesController
   self.use_transactional_tests = false
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_stale_issue_should_not_update_the_issue
     issue = Issue.find(2)
     @request.session[:user_id] = 2
@@ -64,6 +66,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_stale_issue_should_save_attachments
     set_tmp_attachments_directory
     issue = Issue.find(2)
@@ -104,6 +107,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'attachments[p0][filename]', 'testfile.txt'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_stale_issue_without_notes_should_not_show_add_notes_option
     issue = Issue.find(2)
     @request.session[:user_id] = 2
@@ -127,6 +131,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert_select 'input[name=conflict_resolution][value=cancel]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_stale_issue_should_show_conflicting_journals
     @request.session[:user_id] = 2
 
@@ -148,6 +153,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert_select 'div.conflict', :text => /Some notes with Redmine links/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_stale_issue_without_previous_journal_should_show_all_journals
     @request.session[:user_id] = 2
 
@@ -170,6 +176,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert_select 'div.conflict', :text => /Journal notes/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_stale_issue_should_show_private_journals_with_permission_only
     journal = Journal.create!(:journalized => Issue.find(1), :notes => 'Privates notes', :private_notes => true, :user_id => 1)
 
@@ -204,6 +211,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert_select '.conflict-journal', :text => /Privates notes/, :count => 0
   end
 
+  # @rbs () -> bool
   def test_update_stale_issue_with_overwrite_conflict_resolution_should_update
     @request.session[:user_id] = 2
 
@@ -230,6 +238,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert journal.details.any?
   end
 
+  # @rbs () -> bool
   def test_update_stale_issue_with_add_notes_conflict_resolution_should_update
     @request.session[:user_id] = 2
 
@@ -257,6 +266,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert journal.details.empty?
   end
 
+  # @rbs () -> bool
   def test_update_stale_issue_with_add_notes_conflict_resolution_should_preserve_private_notes
     @request.session[:user_id] = 2
 
@@ -282,6 +292,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert journal.details.empty?
   end
 
+  # @rbs () -> bool
   def test_update_stale_issue_with_cancel_conflict_resolution_should_redirect_without_updating
     @request.session[:user_id] = 2
 
@@ -305,6 +316,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     assert_nil issue.fixed_version_id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_put_update_with_spent_time_and_failure_should_not_add_spent_time
     @request.session[:user_id] = 2
 
@@ -333,6 +345,7 @@ class IssuesControllerTransactionTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_should_rescue_invalid_sql_query
     IssueQuery.any_instance.stubs(:statement).returns("INVALID STATEMENT")
 

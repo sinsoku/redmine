@@ -29,6 +29,7 @@ class EnabledModule < ApplicationRecord
   private
 
   # after_create callback used to do things when a module is enabled
+  # @rbs () -> Wiki?
   def module_enabled
     case name
     when 'wiki'

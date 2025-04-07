@@ -20,22 +20,26 @@
 require_relative '../test_helper'
 
 class MyControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     @request.session[:user_id] = 2
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
     assert_select 'h2', 'My page'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page
     get :page
     assert_response :success
     assert_select 'h2', 'My page'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_timelog_block
     preferences = User.find(2).pref
     preferences[:my_page_layout] = {'top' => ['timelog']}
@@ -61,6 +65,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_assigned_issues_block_and_no_custom_settings
     preferences = User.find(2).pref
     preferences.my_page_layout = {'top' => ['issuesassignedtome']}
@@ -78,6 +83,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_assigned_issues_block_and_custom_columns
     preferences = User.find(2).pref
     preferences.my_page_layout = {'top' => ['issuesassignedtome']}
@@ -91,6 +97,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_assigned_issues_block_and_custom_sort
     preferences = User.find(2).pref
     preferences.my_page_layout = {'top' => ['issuesassignedtome']}
@@ -103,6 +110,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_issuequery_block_and_no_settings
     user = User.find(2)
     user.pref.my_page_layout = {'top' => ['issuequery']}
@@ -119,6 +127,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_issuequery_block_and_global_query
     user = User.find(2)
     query =
@@ -143,6 +152,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_issuequery_block_and_project_query
     user = User.find(2)
     query =
@@ -168,6 +178,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_issuequery_block_and_query_should_display_custom_columns
     user = User.find(2)
     query =
@@ -191,6 +202,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_multiple_issuequery_blocks
     user = User.find(2)
     query1 =
@@ -224,6 +236,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_activity
     user = User.find(2)
     user.pref.my_page_layout = {'top' => ['activity']}
@@ -246,6 +259,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_updated_issues_block
     preferences = User.find(2).pref
     preferences.my_page_layout = {'top' => ['issuesupdatedbyme']}
@@ -273,6 +287,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_all_blocks
     blocks = Redmine::MyPage.blocks.keys
     preferences = User.find(2).pref
@@ -284,6 +299,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_select 'div.mypage-box', blocks.size
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_assigned_issues_block_should_not_show_issues_from_closed_projects
     preferences = User.find(2).pref
     preferences.my_page_layout = {'top' => ['issuesassignedtome']}
@@ -314,6 +330,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_reported_issues_block_should_not_show_issues_from_closed_projects
     preferences = User.find(2).pref
     preferences.my_page_layout = {'top' => ['issuesreportedbyme']}
@@ -344,6 +361,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_watched_issues_block_should_not_show_issues_from_closed_projects
     preferences = User.find(2).pref
     preferences.my_page_layout = {'top' => ['issueswatched']}
@@ -378,12 +396,14 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_my_account_should_show_editable_custom_fields
     get :account
     assert_response :success
     assert_select 'input[name=?]', 'user[custom_field_values][4]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_my_account_should_not_show_non_editable_custom_fields
     UserCustomField.find(4).update_attribute :editable, false
 
@@ -392,12 +412,14 @@ class MyControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'user[custom_field_values][4]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_my_account_should_show_language_select
     get :account
     assert_response :success
     assert_select 'select[name=?]', 'user[language]'
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_my_account_with_avatar_enabled_should_link_to_edit_avatar
     with_settings :gravatar_enabled => '1' do
       Redmine::Configuration.with 'avatar_server_url' => 'https://gravatar.com' do
@@ -408,6 +430,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_my_account_should_not_show_language_select_with_force_default_language_for_loggedin
     with_settings :force_default_language_for_loggedin => '1' do
       get :account
@@ -416,6 +439,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_page_with_calendar
     date = '2020-10-21'
     subject = 'calendar on my page'
@@ -459,6 +483,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_account
     put(
       :account,
@@ -484,6 +509,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert user.groups.empty?
   end
 
+  # @rbs () -> bool
   def test_update_account_should_send_security_notification
     ActionMailer::Base.deliveries.clear
     put(
@@ -510,6 +536,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert mail.to.include?('foobar@example.com')
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_my_account_notify_about_high_priority_issues_preference
     # normally, preference should be shown
     get :account
@@ -549,11 +576,13 @@ class MyControllerTest < Redmine::ControllerTest
     assert_select 'label[for="pref_notify_about_high_priority_issues"]', false
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_my_account_should_show_destroy_link
     get :account
     assert_select 'a[href="/my/account/destroy"]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_destroy_should_display_the_destroy_confirmation
     get :destroy
     assert_response :success
@@ -562,6 +591,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_destroy_without_confirmation_should_not_destroy_account
     assert_no_difference 'User.count' do
       post :destroy
@@ -569,6 +599,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> MatchData
   def test_post_destroy_without_confirmation_should_destroy_account
     assert_difference 'User.count', -1 do
       post(
@@ -582,6 +613,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_match /deleted/i, flash[:notice]
   end
 
+  # @rbs () -> bool
   def test_post_destroy_with_unsubscribe_not_allowed_should_not_destroy_account
     User.any_instance.stubs(:own_account_deletable?).returns(false)
 
@@ -596,6 +628,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_redirected_to '/my/account'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_change_password
     get :password
     assert_response :success
@@ -604,6 +637,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_select 'input[type=password][name=new_password_confirmation][autocomplete=new-password]'
   end
 
+  # @rbs () -> bool
   def test_update_password
     post(
       :password,
@@ -617,6 +651,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert User.try_to_login('jsmith', 'secret123')
   end
 
+  # @rbs () -> bool
   def test_update_password_with_non_matching_confirmation
     post(
       :password,
@@ -631,6 +666,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert User.try_to_login('jsmith', 'jsmith')
   end
 
+  # @rbs () -> bool
   def test_update_password_with_wrong_password
     # wrong password
     post(
@@ -646,6 +682,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert User.try_to_login('jsmith', 'jsmith')
   end
 
+  # @rbs () -> bool
   def test_change_password_should_redirect_if_user_cannot_change_its_password
     User.find(2).update_attribute(:auth_source_id, 1)
 
@@ -654,6 +691,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_redirected_to '/my/account'
   end
 
+  # @rbs () -> Array[untyped]
   def test_update_password_should_send_security_notification
     ActionMailer::Base.deliveries.clear
     post(
@@ -671,6 +709,7 @@ class MyControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_page_with_blank_preferences
     user = User.generate!(:language => 'en')
     @request.session[:user_id] = user.id
@@ -694,6 +733,7 @@ class MyControllerTest < Redmine::ControllerTest
                  user.reload.pref.my_page_settings('issuesassignedtome'))
   end
 
+  # @rbs () -> bool
   def test_add_block
     post(
       :add_block,
@@ -705,6 +745,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert User.find(2).pref[:my_page_layout]['top'].include?('issueswatched')
   end
 
+  # @rbs () -> bool
   def test_add_block_xhr
     post(
       :add_block,
@@ -717,6 +758,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_include 'issueswatched', User.find(2).pref[:my_page_layout]['top']
   end
 
+  # @rbs () -> bool
   def test_add_invalid_block_should_error
     post(
       :add_block,
@@ -727,6 +769,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_response :unprocessable_content
   end
 
+  # @rbs () -> bool
   def test_remove_block
     post(
       :remove_block,
@@ -738,6 +781,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert !User.find(2).pref[:my_page_layout].values.flatten.include?('issuesassignedtome')
   end
 
+  # @rbs () -> bool
   def test_remove_block_xhr
     post(
       :remove_block,
@@ -751,6 +795,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert !User.find(2).pref[:my_page_layout].values.flatten.include?('issuesassignedtome')
   end
 
+  # @rbs () -> bool
   def test_order_blocks
     pref = User.find(2).pref
     pref.my_page_layout = {'left' => ['news', 'calendar', 'documents']}
@@ -768,6 +813,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_equal ['documents', 'calendar', 'news'], User.find(2).pref.my_page_layout['left']
   end
 
+  # @rbs () -> bool
   def test_move_block
     pref = User.find(2).pref
     pref.my_page_layout = {'left' => ['news', 'documents'], 'right' => ['calendar']}
@@ -787,6 +833,7 @@ class MyControllerTest < Redmine::ControllerTest
                  User.find(2).pref.my_page_layout)
   end
 
+  # @rbs () -> bool
   def test_reset_atom_key_with_existing_key
     @previous_token_value = User.find(2).atom_key # Will generate one if it's missing
     post :reset_atom_key
@@ -797,6 +844,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_redirected_to '/my/account'
   end
 
+  # @rbs () -> bool
   def test_reset_atom_key_without_existing_key
     Token.delete_all
     assert_nil User.find(2).atom_token
@@ -807,12 +855,14 @@ class MyControllerTest < Redmine::ControllerTest
     assert_redirected_to '/my/account'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_api_key
     get :show_api_key
     assert_response :success
     assert_select 'pre', User.find(2).api_key
   end
 
+  # @rbs () -> bool
   def test_reset_api_key_with_existing_key
     @previous_token_value = User.find(2).api_key # Will generate one if it's missing
     post :reset_api_key
@@ -823,6 +873,7 @@ class MyControllerTest < Redmine::ControllerTest
     assert_redirected_to '/my/account'
   end
 
+  # @rbs () -> bool
   def test_reset_api_key_without_existing_key
     assert_nil User.find(2).api_token
     post :reset_api_key

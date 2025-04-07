@@ -20,22 +20,26 @@
 require_relative '../test_helper'
 
 class AdminControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 1 # admin
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_select 'div.nodata', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_no_configuration_data
     delete_configuration_data
     get :index
     assert_select 'div.nodata'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_projects_should_show_only_active_projects_by_default
     p = Project.find(1)
     p.update_column :status, 5
@@ -48,6 +52,7 @@ class AdminControllerTest < Redmine::ControllerTest
     assert_select 'tr.project td.name', :text => p.name, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_projects_with_status_filter
     p = Project.find(1)
     p.update_column :status, 5
@@ -65,6 +70,7 @@ class AdminControllerTest < Redmine::ControllerTest
     assert_select 'tr.project td.name a', :text => p.name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_projects_with_name_filter
     get(
       :projects,
@@ -81,6 +87,7 @@ class AdminControllerTest < Redmine::ControllerTest
     assert_select 'tr.project', 1
   end
 
+  # @rbs () -> bool
   def test_load_default_configuration_data
     delete_configuration_data
     post(
@@ -94,6 +101,7 @@ class AdminControllerTest < Redmine::ControllerTest
     assert IssueStatus.find_by_name('Nouveau')
   end
 
+  # @rbs () -> MatchData
   def test_load_default_configuration_data_should_rescue_error
     delete_configuration_data
     Redmine::DefaultData::Loader.stubs(:load).raises(StandardError.new("Something went wrong"))
@@ -108,6 +116,7 @@ class AdminControllerTest < Redmine::ControllerTest
     assert_match /Something went wrong/, flash[:error]
   end
 
+  # @rbs () -> bool
   def test_test_email
     user = User.find(1)
     user.pref.no_self_notified = '1'
@@ -122,6 +131,7 @@ class AdminControllerTest < Redmine::ControllerTest
     assert_equal [user.mail], mail.to
   end
 
+  # @rbs () -> MatchData
   def test_test_email_failure_should_display_the_error
     Mailer.stubs(:test_email).raises(StandardError, 'Some error message')
     post :test_email
@@ -129,6 +139,7 @@ class AdminControllerTest < Redmine::ControllerTest
     assert_match /Some error message/, flash[:error]
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_no_plugins
     Redmine::Plugin.stubs(:registered_plugins).returns({})
 
@@ -137,6 +148,7 @@ class AdminControllerTest < Redmine::ControllerTest
     assert_select '.nodata'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_plugins
     # Register a few plugins
     Redmine::Plugin.register :foo do
@@ -168,11 +180,13 @@ class AdminControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_info
     get :info
     assert_response :success
   end
 
+  # @rbs () -> Redmine::MenuManager::MenuItem
   def test_admin_menu_plugin_extension
     Redmine::MenuManager.map :admin_menu do |menu|
       menu.push :test_admin_menu_plugin_extension, '/foo/bar', :caption => 'Test'
@@ -189,6 +203,7 @@ class AdminControllerTest < Redmine::ControllerTest
 
   private
 
+  # @rbs () -> void
   def delete_configuration_data
     Role.where('builtin = 0').delete_all
     Tracker.delete_all

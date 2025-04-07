@@ -28,6 +28,7 @@ class FilesController < ApplicationController
   helper :sort
   include SortHelper
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def index
     sort_init 'filename', 'asc'
     sort_update 'filename' => "#{Attachment.table_name}.filename",
@@ -45,10 +46,12 @@ class FilesController < ApplicationController
     end
   end
 
+  # @rbs () -> Version::ActiveRecord_AssociationRelation
   def new
     @versions = @project.versions.sorted
   end
 
+  # @rbs () -> (bool | ActiveSupport::SafeBuffer | String)
   def create
     version_id = params[:version_id] || (params[:file] && params[:file][:version_id])
     container = version_id.blank? ? @project : @project.versions.find_by_id(version_id)

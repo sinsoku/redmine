@@ -22,6 +22,7 @@ module Redmine
   class UnifiedDiff < Array
     attr_reader :diff_type, :diff_style
 
+    # @rbs (String, ?Hash[untyped, untyped]) -> void
     def initialize(diff, options={})
       super()
       options.assert_valid_keys(:type, :style, :max_lines)
@@ -53,6 +54,7 @@ module Redmine
       self
     end
 
+    # @rbs () -> bool
     def truncated?; @truncated; end
   end
 end

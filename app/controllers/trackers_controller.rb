@@ -25,6 +25,7 @@ class TrackersController < ApplicationController
   before_action :require_admin_or_api_request, :only => :index
   accept_api_auth :index
 
+  # @rbs () -> nil
   def index
     @trackers = Tracker.sorted.preload(:default_status).to_a
     respond_to do |format|
@@ -33,6 +34,7 @@ class TrackersController < ApplicationController
     end
   end
 
+  # @rbs () -> Project::ActiveRecord_Relation
   def new
     @tracker ||= Tracker.new(:default_status => IssueStatus.sorted.first)
     @tracker.safe_attributes = params[:tracker]
@@ -43,6 +45,7 @@ class TrackersController < ApplicationController
     @projects = Project.all
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def create
     @tracker = Tracker.new
     @tracker.safe_attributes = params[:tracker]
@@ -59,11 +62,13 @@ class TrackersController < ApplicationController
     render :action => 'new'
   end
 
+  # @rbs () -> Project::ActiveRecord_Relation
   def edit
     @tracker ||= Tracker.find(params[:id])
     @projects = Project.all
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def update
     @tracker = Tracker.find(params[:id])
     @tracker.safe_attributes = params[:tracker]
@@ -86,6 +91,7 @@ class TrackersController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def destroy
     @tracker = Tracker.find(params[:id])
     unless @tracker.issues.empty?
@@ -100,6 +106,7 @@ class TrackersController < ApplicationController
     redirect_to trackers_path
   end
 
+  # @rbs () -> IssueCustomField::ActiveRecord_Relation?
   def fields
     if request.post? && params[:trackers]
       params[:trackers].each do |tracker_id, tracker_params|

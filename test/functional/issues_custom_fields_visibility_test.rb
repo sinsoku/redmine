@@ -21,6 +21,7 @@ require_relative '../test_helper'
 
 class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
   tests IssuesController
+  # @rbs () -> Array[untyped]
   def setup
     CustomField.destroy_all
     Issue.delete_all
@@ -54,6 +55,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_show_should_show_visible_custom_fields_only
     @users_to_test.each do |user, fields|
       @request.session[:user_id] = user.id
@@ -68,6 +70,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_show_should_show_visible_custom_fields_only_in_api
     @users_to_test.each do |user, fields|
       with_settings :rest_api_enabled => '1' do
@@ -91,6 +94,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_show_should_show_visible_custom_fields_only_in_history
     @issue.init_journal(User.find(1))
     @issue.custom_field_values = {@field1.id => 'NewValue0', @field2.id => 'NewValue1', @field3.id => 'NewValue2'}
@@ -109,6 +113,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_show_should_show_visible_custom_fields_only_in_history_api
     @issue.init_journal(User.find(1))
     @issue.custom_field_values = {@field1.id => 'NewValue0', @field2.id => 'NewValue1', @field3.id => 'NewValue2'}
@@ -136,6 +141,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_edit_should_show_visible_custom_fields_only
     Role.anonymous.add_permission! :edit_issues
 
@@ -152,6 +158,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_update_should_update_visible_custom_fields_only
     Role.anonymous.add_permission! :edit_issues
 
@@ -181,6 +188,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_index_should_show_visible_custom_fields_only
     @users_to_test.each do |user, fields|
       @request.session[:user_id] = user.id
@@ -200,6 +208,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_index_as_csv_should_show_visible_custom_fields_only
     @users_to_test.each do |user, fields|
       @request.session[:user_id] = user.id
@@ -220,6 +229,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_with_partial_custom_field_visibility
     CustomValue.delete_all
     Issue.delete_all
@@ -262,6 +272,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     assert_equal %w(ValueA ValueC), issues_in_list.map{|i| i.custom_field_value(@field2)}
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_create_should_send_notifications_according_custom_fields_visibility
     # anonymous user is never notified
     users_to_test = @users_to_test.reject {|k, v| k.anonymous?}
@@ -306,6 +317,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_update_should_send_notifications_according_custom_fields_visibility
     # anonymous user is never notified
     users_to_test = @users_to_test.reject {|k, v| k.anonymous?}
@@ -345,6 +357,7 @@ class IssuesCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_updating_hidden_custom_fields_only_should_not_notifiy_user
     # anonymous user is never notified
     users_to_test = @users_to_test.reject {|k, v| k.anonymous?}

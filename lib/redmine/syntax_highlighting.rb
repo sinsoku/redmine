@@ -22,6 +22,7 @@ module Redmine
     class << self
       attr_reader :highlighter
 
+      # @rbs (String) -> Module
       def highlighter=(name)
         if name.is_a?(Module)
           @highlighter = name
@@ -30,18 +31,21 @@ module Redmine
         end
       end
 
+      # @rbs (String, String) -> String
       def highlight_by_filename(text, filename)
         highlighter.highlight_by_filename(text, filename)
       rescue
         ERB::Util.h(text)
       end
 
+      # @rbs (String, String) -> String
       def highlight_by_language(text, language)
         highlighter.highlight_by_language(text, language)
       rescue
         ERB::Util.h(text)
       end
 
+      # @rbs (String) -> bool
       def language_supported?(language)
         if highlighter.respond_to? :language_supported?
           highlighter.language_supported? language
@@ -52,6 +56,7 @@ module Redmine
         false
       end
 
+      # @rbs (String) -> bool
       def filename_supported?(filename)
         if highlighter.respond_to? :filename_supported?
           highlighter.filename_supported? filename
@@ -67,11 +72,13 @@ module Redmine
       # Customized formatter based on Rouge::Formatters::HTMLLinewise
       # Syntax highlighting is completed within each line.
       class CustomHTMLLinewise < ::Rouge::Formatter
+        # @rbs (Rouge::Formatters::HTML) -> void
         def initialize(formatter)
           super()
           @formatter = formatter
         end
 
+        # @rbs (Enumerator) -> void
         def stream(tokens, &)
           token_lines(tokens) do |line|
             line.each do |tok, val|
@@ -85,6 +92,7 @@ module Redmine
       class << self
         # Highlights +text+ as the content of +filename+
         # Should not return line numbers nor outer pre tag
+        # @rbs (String, String) -> String
         def highlight_by_filename(text, filename)
           # TODO: Delete the following workaround for #30434 and
           # test_syntax_highlight_should_normalize_line_endings in
@@ -100,16 +108,19 @@ module Redmine
 
         # Highlights +text+ using +language+ syntax
         # Should not return outer pre tag
+        # @rbs (String, String) -> String
         def highlight_by_language(text, language)
           lexer =
             find_lexer(language.to_s.downcase) || ::Rouge::Lexers::PlainText
           ::Rouge.highlight(text, lexer, ::Rouge::Formatters::HTML)
         end
 
+        # @rbs (String) -> bool
         def language_supported?(language)
           find_lexer(language.to_s.downcase) ? true : false
         end
 
+        # @rbs (String) -> bool
         def filename_supported?(filename)
           !::Rouge::Lexer.guesses(:filename => filename).empty?
         end
@@ -126,6 +137,7 @@ module Redmine
           'xhtml' => 'html'
         }
 
+        # @rbs (String) -> Class?
         def find_lexer(language)
           ::Rouge::Lexer.find(language) ||
             ::Rouge::Lexer.find(LANG_ALIASES[language])

@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class ProjectsQueriesHelperTest < Redmine::HelperTest
   include ProjectsQueriesHelper
 
+  # @rbs () -> bool
   def test_csv_value
     c_status = QueryColumn.new(:status)
     c_parent_id = QueryColumn.new(:parent_id)

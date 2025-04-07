@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module GroupsHelper
+  # @rbs (Group) -> Array[untyped]
   def group_settings_tabs(group)
     tabs = []
     tabs << {:name => 'general', :partial => 'groups/general', :label => :label_general}
@@ -26,6 +27,7 @@ module GroupsHelper
     tabs
   end
 
+  # @rbs (Group, ?Integer) -> ActiveSupport::SafeBuffer
   def render_principals_for_new_group_users(group, limit=100)
     scope = User.active.sorted.not_in_group(group).like(params[:q])
     principal_count = scope.count

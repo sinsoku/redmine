@@ -20,11 +20,13 @@
 require_relative '../test_helper'
 
 class WorkflowsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 1 # admin
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
@@ -33,11 +35,13 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/workflows/edit?role_id=1&tracker_id=2', :content => count.to_s
   end
 
+  # @rbs () -> bool
   def test_get_edit
     get :edit
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_with_role_and_tracker
     WorkflowTransition.delete_all
     WorkflowTransition.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 2, :new_status_id => 3)
@@ -60,6 +64,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=checkbox][name=?]', 'transitions[1][1][always]', 0
   end
 
+  # @rbs () -> bool
   def test_get_edit_with_role_and_tracker_should_not_include_statuses_from_roles_without_workflow_permissions
     WorkflowTransition.delete_all
     WorkflowTransition.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 2, :new_status_id => 3)
@@ -81,6 +86,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> bool
   def test_get_edit_with_role_and_tracker_should_not_include_only_identity_workflows
     WorkflowTransition.delete_all
     WorkflowTransition.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 1, :new_status_id => 1)
@@ -97,6 +103,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_include_allowed_statuses_for_new_issues
     WorkflowTransition.delete_all
     WorkflowTransition.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 0, :new_status_id => 1)
@@ -107,6 +114,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=checkbox][name=?][value="1"][checked=checked]', 'transitions[0][1][always]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_with_all_roles_and_all_trackers
     get :edit, :params => {:role_id => 'all', :tracker_id => 'all'}
     assert_response :success
@@ -119,6 +127,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_with_role_and_tracker_and_all_statuses
     WorkflowTransition.delete_all
 
@@ -133,6 +142,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=checkbox][name=?]', 'transitions[0][1][always]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_show_checked_disabled_transition_checkbox_between_same_statuses
     get :edit, :params => {:role_id => 2, :tracker_id => 1}
     assert_response :success
@@ -145,6 +155,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_edit
     WorkflowTransition.delete_all
 
@@ -163,6 +174,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_not      WorkflowTransition.where(:role_id => 2, :tracker_id => 1, :old_status_id => 5, :new_status_id => 4).exists?
   end
 
+  # @rbs () -> bool
   def test_post_edit_with_allowed_statuses_for_new_issues
     WorkflowTransition.delete_all
 
@@ -180,6 +192,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_equal 2, WorkflowTransition.where(:tracker_id => 1, :role_id => 2).count
   end
 
+  # @rbs () -> bool
   def test_post_edit_with_additional_transitions
     WorkflowTransition.delete_all
 
@@ -211,12 +224,14 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert w.assignee
   end
 
+  # @rbs () -> bool
   def test_get_permissions
     get :permissions
 
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_permissions_with_role_and_tracker
     WorkflowPermission.delete_all
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 2, :old_status_id => 2, :field_name => 'assigned_to_id', :rule => 'required')
@@ -260,6 +275,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_permissions_with_required_custom_field_should_not_show_required_option
     cf = IssueCustomField.create!(:name => 'Foo', :field_format => 'string', :tracker_ids => [1], :is_required => true)
 
@@ -275,6 +291,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_permissions_should_disable_hidden_custom_fields
     cf1 = IssueCustomField.generate!(:tracker_ids => [1], :visible => true)
     cf2 = IssueCustomField.generate!(:tracker_ids => [1], :visible => false, :role_ids => [1])
@@ -291,6 +308,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_permissions_with_missing_permissions_for_roles_should_default_to_no_change
     WorkflowPermission.delete_all
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 2, :old_status_id => 1, :field_name => 'assigned_to_id', :rule => 'required')
@@ -304,6 +322,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_permissions_with_different_permissions_for_roles_should_default_to_no_change
     WorkflowPermission.delete_all
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 2, :old_status_id => 1, :field_name => 'assigned_to_id', :rule => 'required')
@@ -318,6 +337,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_permissions_with_same_permissions_for_roles_should_default_to_permission
     WorkflowPermission.delete_all
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 2, :old_status_id => 1, :field_name => 'assigned_to_id', :rule => 'required')
@@ -332,6 +352,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_get_permissions_with_role_and_tracker_and_all_statuses_should_show_all_statuses
     WorkflowTransition.delete_all
 
@@ -345,6 +366,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_permissions_should_set_css_class
     WorkflowPermission.delete_all
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 2, :old_status_id => 1, :field_name => 'assigned_to_id', :rule => 'required')
@@ -357,6 +379,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_select 'td.required > select[name=?]', "permissions[1][#{cf.id}]"
   end
 
+  # @rbs () -> bool
   def test_post_permissions
     WorkflowPermission.delete_all
 
@@ -382,6 +405,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert workflows.detect {|wf| wf.old_status_id == 2 && wf.field_name == 'fixed_version_id' && wf.rule == 'readonly'}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_copy
     get :copy
     assert_response :success
@@ -400,6 +424,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_copy_one_to_one
     source_transitions = status_transitions(:tracker_id => 1, :role_id => 2)
 
@@ -411,6 +436,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_equal source_transitions, status_transitions(:tracker_id => 3, :role_id => 1)
   end
 
+  # @rbs () -> bool
   def test_post_copy_one_to_many
     source_transitions = status_transitions(:tracker_id => 1, :role_id => 2)
 
@@ -425,6 +451,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_equal source_transitions, status_transitions(:tracker_id => 3, :role_id => 3)
   end
 
+  # @rbs () -> bool
   def test_post_copy_many_to_many
     source_t2 = status_transitions(:tracker_id => 2, :role_id => 2)
     source_t3 = status_transitions(:tracker_id => 3, :role_id => 2)
@@ -440,6 +467,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     assert_equal source_t3, status_transitions(:tracker_id => 3, :role_id => 3)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_copy_with_incomplete_source_specification_should_fail
     assert_no_difference 'WorkflowRule.count' do
       post :duplicate, :params => {
@@ -451,6 +479,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_copy_with_incomplete_target_specification_should_fail
     assert_no_difference 'WorkflowRule.count' do
       post :duplicate, :params => {
@@ -463,6 +492,7 @@ class WorkflowsControllerTest < Redmine::ControllerTest
   end
 
   # Returns an array of status transitions that can be compared
+  # @rbs (Hash[untyped, untyped]) -> Array[untyped]
   def status_transitions(conditions)
     WorkflowTransition.
       where(conditions).

@@ -22,10 +22,12 @@ class DocumentCategory < Enumeration
 
   OptionName = :enumeration_doc_categories
 
+  # @rbs () -> Symbol
   def option_name
     OptionName
   end
 
+  # @rbs () -> Integer
   def objects_count
     documents.count
   end
@@ -34,6 +36,7 @@ class DocumentCategory < Enumeration
     documents.update_all(:category_id => to.id)
   end
 
+  # @rbs () -> DocumentCategory
   def self.default
     d = super
     d = first if d.nil?

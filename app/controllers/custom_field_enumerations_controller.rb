@@ -27,10 +27,12 @@ class CustomFieldEnumerationsController < ApplicationController
 
   helper :custom_fields
 
+  # @rbs () -> CustomFieldEnumeration::ActiveRecord_AssociationRelation
   def index
     @values = @custom_field.enumerations.order(:position)
   end
 
+  # @rbs () -> String?
   def create
     @value = @custom_field.enumerations.build
     @value.attributes = enumeration_params
@@ -41,6 +43,7 @@ class CustomFieldEnumerationsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def update_each
     saved = CustomFieldEnumeration.update_each(@custom_field, update_each_params)
     if saved
@@ -49,6 +52,7 @@ class CustomFieldEnumerationsController < ApplicationController
     redirect_to :action => 'index'
   end
 
+  # @rbs () -> String?
   def destroy
     reassign_to = @custom_field.enumerations.find_by_id(params[:reassign_to_id])
     if reassign_to.nil? && @value.in_use?
@@ -62,22 +66,26 @@ class CustomFieldEnumerationsController < ApplicationController
 
   private
 
+  # @rbs () -> GroupCustomField
   def find_custom_field
     @custom_field = CustomField.find(params[:custom_field_id])
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
+  # @rbs () -> CustomFieldEnumeration
   def find_enumeration
     @value = @custom_field.enumerations.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
+  # @rbs () -> ActionController::Parameters
   def enumeration_params
     params.require(:custom_field_enumeration).permit(:name, :active, :position)
   end
 
+  # @rbs () -> ActionController::Parameters
   def update_each_params
     # params.require(:custom_field_enumerations).permit(:name, :active, :position) does not work here with param like this:
     # "custom_field_enumerations":{"0":{"name": ...}, "1":{"name...}}

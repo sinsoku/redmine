@@ -25,6 +25,7 @@ class RepositoriesGitTest < Redmine::IntegrationTest
   PRJ_ID     = 3
   NUM_REV = 29
 
+  # @rbs () -> bool
   def setup
     User.current = nil
     @project    = Project.find(PRJ_ID)
@@ -107,6 +108,7 @@ class RepositoriesGitTest < Redmine::IntegrationTest
     end
   else
     puts "Git test repository NOT FOUND. Skipping integration tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

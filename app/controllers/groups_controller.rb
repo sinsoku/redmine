@@ -30,6 +30,7 @@ class GroupsController < ApplicationController
   helper :custom_fields
   helper :principal_memberships
 
+  # @rbs () -> (Array[untyped] | Hash[untyped, untyped])
   def index
     respond_to do |format|
       format.html do
@@ -49,6 +50,7 @@ class GroupsController < ApplicationController
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def show
     respond_to do |format|
       format.html do
@@ -58,10 +60,12 @@ class GroupsController < ApplicationController
     end
   end
 
+  # @rbs () -> Group
   def new
     @group = Group.new
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def create
     @group = Group.new
     @group.safe_attributes = params[:group]
@@ -83,9 +87,11 @@ class GroupsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (bool | String | ActiveSupport::SafeBuffer)
   def update
     @group.safe_attributes = params[:group]
 
@@ -101,6 +107,7 @@ class GroupsController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | String)
   def destroy
     @group.destroy
 
@@ -110,9 +117,11 @@ class GroupsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def new_users
   end
 
+  # @rbs () -> (bool | String)?
   def add_users
     @users = User.not_in_group(@group).where(:id => (params[:user_id] || params[:user_ids])).to_a
     @group.users << @users
@@ -129,6 +138,7 @@ class GroupsController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | String)?
   def remove_user
     @group.users.delete(User.find(params[:user_id])) if request.delete?
     respond_to do |format|
@@ -138,6 +148,7 @@ class GroupsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def autocomplete_for_user
     respond_to do |format|
       format.js
@@ -146,12 +157,14 @@ class GroupsController < ApplicationController
 
   private
 
+  # @rbs () -> (Group | GroupNonMember | bool)
   def find_group
     @group = Group.visible.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def user_count_by_group_id
     User.joins(:groups).group(:group_id).count.transform_keys(&:to_i)
   end

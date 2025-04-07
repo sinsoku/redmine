@@ -23,6 +23,7 @@ class ContextMenusController < ApplicationController
 
   before_action :find_issues, :only => :issues
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def issues
     if @issues.size == 1
       @issue = @issues.first
@@ -64,6 +65,7 @@ class ContextMenusController < ApplicationController
     render :layout => false
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def time_entries
     @time_entries = TimeEntry.where(:id => params[:ids]).
       preload(:project => :time_entry_activities).

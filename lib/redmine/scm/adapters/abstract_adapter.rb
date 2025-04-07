@@ -69,6 +69,7 @@ module Redmine
           end
         end
 
+        # @rbs (String, ?String, ?String, ?String, ?nil) -> void
         def initialize(url, root_url=nil, login=nil, password=nil,
                        path_encoding=nil)
           @url = url
@@ -90,10 +91,12 @@ module Redmine
           respond_to?(:annotate)
         end
 
+        # @rbs () -> String?
         def root_url
           @root_url
         end
 
+        # @rbs () -> String
         def url
           @url
         end
@@ -187,6 +190,7 @@ module Redmine
 
         private
 
+        # @rbs () -> String
         def retrieve_root_url
           info = self.info
           info ? info.root_url : nil
@@ -202,10 +206,12 @@ module Redmine
           str
         end
 
+        # @rbs () -> ActiveSupport::BroadcastLogger
         def logger
           self.class.logger
         end
 
+        # @rbs (String, ?Hash[untyped, untyped]) -> (Array[untyped] | IO)
         def shellout(cmd, options = {}, &)
           self.class.shellout(cmd, options, &)
         end
@@ -239,10 +245,12 @@ module Redmine
 
         # Singleton class method is public
         class << self
+          # @rbs () -> ActiveSupport::BroadcastLogger
           def logger
             Rails.logger
           end
 
+          # @rbs (String, ?Hash[untyped, untyped]) -> (Array[untyped] | IO)
           def shellout(cmd, options = {}, &block)
             if logger && logger.debug?
               logger.debug "Shelling out: #{strip_credential(cmd)}"
@@ -298,6 +306,7 @@ module Redmine
           end
         end
 
+        # @rbs (String) -> Hash[untyped, untyped]
         def parse_xml(xml)
           if RUBY_PLATFORM == 'java'
             xml = xml.sub(%r{<\?xml[^>]*\?>}, '')
@@ -324,6 +333,7 @@ module Redmine
 
       class Info
         attr_accessor :root_url, :lastrev
+        # @rbs (?Hash[untyped, untyped]) -> void
         def initialize(attributes={})
           self.root_url = attributes[:root_url] if attributes[:root_url]
           self.lastrev = attributes[:lastrev]
@@ -439,6 +449,7 @@ module Redmine
       end
 
       module ScmData
+        # @rbs (String) -> (bool | Integer)
         def self.binary?(data)
           unless data.empty?
             data.index("\x00") || data.count("\x00-\x1f\x7f", "^\t\r\n").fdiv(data.size) > 0.1

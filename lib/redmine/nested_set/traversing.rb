@@ -28,26 +28,31 @@ module Redmine
       end
 
       # Returns true if the element has no parent
+      # @rbs () -> bool
       def root?
         parent_id.nil?
       end
 
       # Returns true if the element has a parent
+      # @rbs () -> bool
       def child?
         !root?
       end
 
       # Returns true if the element has no children
+      # @rbs () -> bool
       def leaf?
         new_record? || (rgt - lft == 1)
       end
 
       # Returns the root element (ancestor with no parent)
+      # @rbs () -> Project
       def root
         self_and_ancestors.first
       end
 
       # Returns the children
+      # @rbs () -> (Project::ActiveRecord_Relation | Issue::ActiveRecord_Relation)
       def children
         if id.nil?
           nested_set_scope.none
@@ -57,16 +62,19 @@ module Redmine
       end
 
       # Returns the descendants that have no children
+      # @rbs () -> Issue::ActiveRecord_Relation
       def leaves
         descendants.where("#{self.class.table_name}.rgt - #{self.class.table_name}.lft = ?", 1)
       end
 
       # Returns the siblings
+      # @rbs () -> Project::ActiveRecord_Relation
       def siblings
         nested_set_scope.where(:parent_id => parent_id).where("#{self.class.table_name}.id <> ?", id)
       end
 
       # Returns the ancestors
+      # @rbs () -> (Project::ActiveRecord_Relation | Issue::ActiveRecord_Relation)
       def ancestors
         if root?
           nested_set_scope.none
@@ -76,21 +84,25 @@ module Redmine
       end
 
       # Returns the element and its ancestors
+      # @rbs () -> (Project::ActiveRecord_Relation | Issue::ActiveRecord_Relation)
       def self_and_ancestors
         nested_set_scope.where("#{self.class.table_name}.lft <= ? AND #{self.class.table_name}.rgt >= ?", lft, rgt)
       end
 
       # Returns true if the element is an ancestor of other
+      # @rbs (Issue | Project) -> bool
       def is_ancestor_of?(other)
         same_nested_set_scope?(other) && other.lft > lft && other.rgt < rgt
       end
 
       # Returns true if the element equals other or is an ancestor of other
+      # @rbs (Issue | Project) -> bool
       def is_or_is_ancestor_of?(other)
         other == self || is_ancestor_of?(other)
       end
 
       # Returns the descendants
+      # @rbs () -> (Project::ActiveRecord_Relation | Issue::ActiveRecord_Relation)
       def descendants
         if leaf?
           nested_set_scope.none
@@ -100,21 +112,25 @@ module Redmine
       end
 
       # Returns the element and its descendants
+      # @rbs () -> (Issue::ActiveRecord_Relation | Project::ActiveRecord_Relation)
       def self_and_descendants
         nested_set_scope.where("#{self.class.table_name}.lft >= ? AND #{self.class.table_name}.rgt <= ?", lft, rgt)
       end
 
       # Returns true if the element is a descendant of other
+      # @rbs (Project | Issue) -> bool
       def is_descendant_of?(other)
         same_nested_set_scope?(other) && other.lft < lft && other.rgt > rgt
       end
 
       # Returns true if the element equals other or is a descendant of other
+      # @rbs (Project) -> bool
       def is_or_is_descendant_of?(other)
         other == self || is_descendant_of?(other)
       end
 
       # Returns the ancestors, the element and its descendants
+      # @rbs () -> Project::ActiveRecord_Relation
       def hierarchy
         nested_set_scope.where(
           "#{self.class.table_name}.lft >= :lft AND #{self.class.table_name}.rgt <= :rgt" +

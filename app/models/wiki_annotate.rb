@@ -20,6 +20,7 @@
 class WikiAnnotate
   attr_reader :lines, :content
 
+  # @rbs (WikiContentVersion) -> void
   def initialize(content)
     @content = content
     current = content

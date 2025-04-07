@@ -20,30 +20,35 @@
 require_relative '../test_helper'
 
 class VersionsHelperTest < Redmine::HelperTest
+  # @rbs () -> MatchData
   def test_version_filtered_issues_path_sharing_none
     version = Version.new(:name => 'test', :sharing => 'none')
     version.project = Project.find(5)
     assert_match '/projects/private-child/issues?', version_filtered_issues_path(version)
   end
 
+  # @rbs () -> MatchData
   def test_version_filtered_issues_path_sharing_descendants
     version = Version.new(:name => 'test', :sharing => 'descendants')
     version.project = Project.find(5)
     assert_match '/projects/private-child/issues?', version_filtered_issues_path(version)
   end
 
+  # @rbs () -> MatchData
   def test_version_filtered_issues_path_sharing_hierarchy
     version = Version.new(:name => 'test', :sharing => 'hierarchy')
     version.project = Project.find(5)
     assert_match '/projects/private-child/issues?', version_filtered_issues_path(version)
   end
 
+  # @rbs () -> MatchData
   def test_version_filtered_issues_path_sharing_tree
     version = Version.new(:name => 'test', :sharing => 'tree')
     version.project = Project.find(5)
     assert_match '/projects/ecookbook/issues?', version_filtered_issues_path(version)
   end
 
+  # @rbs () -> MatchData
   def test_version_filtered_issues_path_sharing_tree_without_permission_to_root_project
     EnabledModule.where("name = 'issue_tracking' AND project_id = 1").delete_all
     version = Version.new(:name => 'test', :sharing => 'tree')
@@ -52,12 +57,14 @@ class VersionsHelperTest < Redmine::HelperTest
     assert_match '/issues?', version_filtered_issues_path(version)
   end
 
+  # @rbs () -> MatchData
   def test_version_filtered_issues_path_sharing_system
     version = Version.new(:name => 'test', :sharing => 'system')
     version.project = Project.find(5)
     assert_match /^\/issues\?/, version_filtered_issues_path(version)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_link_to_new_issue_should_return_link_to_add_issue
     version = Version.find(3)
     project = Project.find(1)
@@ -75,6 +82,7 @@ class VersionsHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_link_to_new_issue_should_return_nil_if_version_status_is_not_open
     # locked version
     version = Version.find(2)
@@ -84,6 +92,7 @@ class VersionsHelperTest < Redmine::HelperTest
     assert_nil link_to_new_issue(version, project)
   end
 
+  # @rbs () -> bool
   def test_link_to_new_issue_should_return_nil_if_user_does_not_have_permission_to_add_issue
     Role.find(1).remove_permission! :add_issues
     version = Version.find(3)
@@ -93,6 +102,7 @@ class VersionsHelperTest < Redmine::HelperTest
     assert_nil link_to_new_issue(version, project)
   end
 
+  # @rbs () -> bool
   def test_link_to_new_issue_should_return_nil_if_no_tracker_is_available_for_project
     trackers = Tracker::CORE_FIELDS - %w(fixed_version_id)
     # disable fixed_version_id field for all trackers
@@ -108,6 +118,7 @@ class VersionsHelperTest < Redmine::HelperTest
     assert_nil link_to_new_issue(version, project)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_link_to_new_issue_should_take_into_account_user_permissions_on_fixed_version_id_field
     WorkflowPermission.delete_all
     WorkflowPermission.create!(:role_id => 1, :tracker_id => 1,

@@ -129,6 +129,7 @@ class Issue < ApplicationRecord
   after_commit :create_parent_issue_journal
 
   # Returns a SQL conditions string used to find all issues visible by the specified user
+  # @rbs (AnonymousUser | User, ?Hash[untyped, untyped]) -> String
   def self.visible_condition(user, options={})
     Project.allowed_to_condition(user, :view_issues, options) do |role, user|
       sql =
@@ -164,6 +165,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns true if usr or current user is allowed to view the issue
+  # @rbs (?(User | AnonymousUser)?) -> bool
   def visible?(usr=nil)
     (usr || User.current).allowed_to?(:view_issues, self.project) do |role, user|
       visible =
@@ -189,41 +191,49 @@ class Issue < ApplicationRecord
   end
 
   # Returns true if user or current user is allowed to edit or add notes to the issue
+  # @rbs (?AnonymousUser | User) -> bool
   def editable?(user=User.current)
     attributes_editable?(user) || notes_addable?(user)
   end
 
   # Returns true if user or current user is allowed to edit the issue
+  # @rbs (?User | AnonymousUser) -> bool
   def attributes_editable?(user=User.current)
     user_tracker_permission?(user, :edit_issues) || (
       user_tracker_permission?(user, :edit_own_issues) && author == user
     )
   end
 
+  # @rbs (?AnonymousUser | User) -> bool
   def attachments_addable?(user=User.current)
     attributes_editable?(user) || notes_addable?(user)
   end
 
   # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_editable?
+  # @rbs (?User | AnonymousUser) -> bool
   def attachments_editable?(user=User.current)
     attributes_editable?(user)
   end
 
   # Returns true if user or current user is allowed to add notes to the issue
+  # @rbs (?User | AnonymousUser) -> bool
   def notes_addable?(user=User.current)
     user_tracker_permission?(user, :add_issue_notes)
   end
 
   # Returns true if user or current user is allowed to delete the issue
+  # @rbs (?AnonymousUser | User) -> bool
   def deletable?(user=User.current)
     user_tracker_permission?(user, :delete_issues)
   end
 
   # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_deletable?
+  # @rbs (?User | AnonymousUser) -> bool
   def attachments_deletable?(user=User.current)
     attributes_editable?(user)
   end
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super
     if new_record?
@@ -233,6 +243,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs (*nil | Hash[untyped, untyped]) -> bool?
   def create_or_update(*args)
     super()
   ensure
@@ -247,6 +258,7 @@ class Issue < ApplicationRecord
   # first).
   # The issue is reloaded by the nested_set before being deleted so
   # the lock_version condition should not be an issue but we handle it.
+  # @rbs () -> Issue
   def destroy
     super
   rescue ActiveRecord::StaleObjectError, ActiveRecord::RecordNotFound
@@ -263,6 +275,7 @@ class Issue < ApplicationRecord
   end
 
   alias :base_reload :reload
+  # @rbs (*nil) -> Issue?
   def reload(*args)
     @workflow_rule_by_attribute = nil
     @assignable_versions = nil
@@ -276,10 +289,12 @@ class Issue < ApplicationRecord
   end
 
   # Overrides Redmine::Acts::Customizable::InstanceMethods#available_custom_fields
+  # @rbs () -> Array[untyped]
   def available_custom_fields
     (project && tracker) ? (project.all_issue_custom_fields & tracker.custom_fields) : []
   end
 
+  # @rbs (?(User | AnonymousUser)?) -> Array[untyped]
   def visible_custom_field_values(user=nil)
     user_real = user || User.current
     custom_field_values.select do |value|
@@ -288,11 +303,13 @@ class Issue < ApplicationRecord
   end
 
   # Overrides Redmine::Acts::Customizable::InstanceMethods#set_custom_field_default?
+  # @rbs (CustomValue) -> bool
   def set_custom_field_default?(custom_value)
     new_record? || project_id_changed?|| tracker_id_changed?
   end
 
   # Copies attributes from another issue, arg can be an id or an Issue
+  # @rbs (Issue | Integer, ?Hash[untyped, untyped]) -> Issue
   def copy_from(arg, options={})
     issue = arg.is_a?(Issue) ? arg : Issue.visible.find(arg)
     self.attributes =
@@ -324,6 +341,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns an unsaved copy of the issue
+  # @rbs (?Hash[untyped, untyped]?, ?Hash[untyped, untyped]) -> Issue
   def copy(attributes=nil, copy_options={})
     copy = self.class.new.copy_from(self, copy_options)
     copy.attributes = attributes if attributes
@@ -331,10 +349,12 @@ class Issue < ApplicationRecord
   end
 
   # Returns true if the issue is a copy
+  # @rbs () -> bool
   def copy?
     @copied_from.present?
   end
 
+  # @rbs (Integer | String) -> Integer
   def status_id=(status_id)
     if status_id.to_s != self.status_id.to_s
       self.status = (status_id.present? ? IssueStatus.find_by_id(status_id) : nil)
@@ -343,6 +363,7 @@ class Issue < ApplicationRecord
   end
 
   # Sets the status.
+  # @rbs (IssueStatus?) -> IssueStatus?
   def status=(status)
     if status != self.status
       @workflow_rule_by_attribute = nil
@@ -350,21 +371,25 @@ class Issue < ApplicationRecord
     association(:status).writer(status)
   end
 
+  # @rbs ((String | Integer)?) -> (String | Integer)?
   def priority_id=(pid)
     self.priority = nil
     write_attribute(:priority_id, pid)
   end
 
+  # @rbs ((String | Integer)?) -> (String | Integer)?
   def category_id=(cid)
     self.category = nil
     write_attribute(:category_id, cid)
   end
 
+  # @rbs ((Integer | String)?) -> (Integer | String)?
   def fixed_version_id=(vid)
     self.fixed_version = nil
     write_attribute(:fixed_version_id, vid)
   end
 
+  # @rbs ((String | Integer)?) -> Integer?
   def tracker_id=(tracker_id)
     if tracker_id.to_s != self.tracker_id.to_s
       self.tracker = (tracker_id.present? ? Tracker.find_by_id(tracker_id) : nil)
@@ -377,6 +402,7 @@ class Issue < ApplicationRecord
   # * the status was the default for the previous tracker
   # * or if the status was not part of the new tracker statuses
   # * or the status was nil
+  # @rbs (Tracker?) -> Tracker?
   def tracker=(tracker)
     tracker_was = self.tracker
     association(:tracker).writer(tracker)
@@ -393,6 +419,7 @@ class Issue < ApplicationRecord
     self.tracker
   end
 
+  # @rbs (Integer | String | Project) -> Integer?
   def project_id=(project_id)
     if project_id.to_s != self.project_id.to_s
       self.project = (project_id.present? ? Project.find_by_id(project_id) : nil)
@@ -411,6 +438,7 @@ class Issue < ApplicationRecord
   #   project if it exists, or clear it if it doesn't.
   # * for new issue, set the fixed_version to the project default version
   #   if it's a valid fixed_version.
+  # @rbs (Project?, ?bool) -> Project?
   def project=(project, keep_tracker=false)
     project_was = self.project
     association(:project).writer(project)
@@ -452,6 +480,7 @@ class Issue < ApplicationRecord
     self.project
   end
 
+  # @rbs (String?) -> String?
   def description=(arg)
     if arg.is_a?(String)
       arg = arg.gsub(/(\r\n|\n|\r)/, "\r\n")
@@ -459,11 +488,13 @@ class Issue < ApplicationRecord
     write_attribute(:description, arg)
   end
 
+  # @rbs () -> Array[untyped]
   def deleted_attachment_ids
     Array(@deleted_attachment_ids).map(&:to_i)
   end
 
   # Overrides assign_attributes so that project and tracker get assigned first
+  # @rbs (Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess | ActiveSupport::OrderedHash, *nil) -> nil
   def assign_attributes(new_attributes, *args)
     return if new_attributes.nil?
 
@@ -478,10 +509,12 @@ class Issue < ApplicationRecord
     super(attrs, *args)
   end
 
+  # @rbs (Hash[untyped, untyped] | ActiveSupport::OrderedHash) -> nil
   def attributes=(new_attributes)
     assign_attributes new_attributes
   end
 
+  # @rbs ((Integer | Float | String)?) -> (Integer | Float | String)?
   def estimated_hours=(h)
     write_attribute :estimated_hours, (h.is_a?(String) ? (h.to_hours || h) : h)
   end
@@ -529,6 +562,7 @@ class Issue < ApplicationRecord
     'deleted_attachment_ids',
     :if => lambda {|issue, user| issue.attachments_deletable?(user)})
 
+  # @rbs (?(User | AnonymousUser)?) -> Array[untyped]
   def safe_attribute_names(user=nil)
     names = super
     names -= disabled_core_fields
@@ -553,6 +587,7 @@ class Issue < ApplicationRecord
   # Should be called from controllers instead of #attributes=
   # attr_accessible is too rough because we still want things like
   # Issue.new(:project => foo) to work
+  # @rbs (Hash[untyped, untyped] | ActionController::Parameters, ?AnonymousUser | User) -> nil
   def safe_attributes=(attrs, user=User.current)
     if attrs.respond_to?(:to_unsafe_hash)
       attrs = attrs.to_unsafe_hash
@@ -633,11 +668,13 @@ class Issue < ApplicationRecord
     assign_attributes attrs
   end
 
+  # @rbs () -> Array[untyped]
   def disabled_core_fields
     tracker ? tracker.disabled_core_fields : []
   end
 
   # Returns the custom_field_values that can be edited by the given user
+  # @rbs (?(User | AnonymousUser)?) -> Array[untyped]
   def editable_custom_field_values(user=nil)
     read_only = read_only_attribute_names(user)
     visible_custom_field_values(user).reject do |value|
@@ -646,6 +683,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns the custom fields that can be edited by the given user
+  # @rbs (?User?) -> Array[untyped]
   def editable_custom_fields(user=nil)
     editable_custom_field_values(user).map(&:custom_field).uniq
   end
@@ -658,6 +696,7 @@ class Issue < ApplicationRecord
   # Examples:
   #   issue.read_only_attribute_names # => ['due_date', '2']
   #   issue.read_only_attribute_names(user) # => []
+  # @rbs (?(User | AnonymousUser)?) -> Array[untyped]
   def read_only_attribute_names(user=nil)
     workflow_rule_by_attribute(user).reject {|attr, rule| rule != 'readonly'}.keys
   end
@@ -670,11 +709,13 @@ class Issue < ApplicationRecord
   # Examples:
   #   issue.required_attribute_names # => ['due_date', '2']
   #   issue.required_attribute_names(user) # => []
+  # @rbs (?(User | AnonymousUser)?) -> Array[untyped]
   def required_attribute_names(user=nil)
     workflow_rule_by_attribute(user).reject {|attr, rule| rule != 'required'}.keys
   end
 
   # Returns true if the attribute is required for user
+  # @rbs (String | Integer, ?nil) -> bool
   def required_attribute?(name, user=nil)
     required_attribute_names(user).include?(name.to_s)
   end
@@ -683,6 +724,7 @@ class Issue < ApplicationRecord
   #
   # Examples:
   #   issue.workflow_rule_by_attribute # => {'due_date' => 'required', 'start_date' => 'readonly'}
+  # @rbs (?(User | AnonymousUser)?) -> Hash[untyped, untyped]
   def workflow_rule_by_attribute(user=nil)
     return @workflow_rule_by_attribute if @workflow_rule_by_attribute && user.nil?
 
@@ -733,6 +775,7 @@ class Issue < ApplicationRecord
   end
   private :workflow_rule_by_attribute
 
+  # @rbs () -> Integer?
   def done_ratio
     if Issue.use_status_for_done_ratio? && status && status.default_done_ratio
       status.default_done_ratio
@@ -741,14 +784,17 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> bool
   def self.use_status_for_done_ratio?
     Setting.issue_done_ratio == 'issue_status'
   end
 
+  # @rbs () -> bool
   def self.use_field_for_done_ratio?
     Setting.issue_done_ratio == 'issue_field'
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_issue
     if due_date && start_date && (start_date_changed? || due_date_changed?) && due_date < start_date
       errors.add :due_date, :greater_than_start_date
@@ -816,6 +862,7 @@ class Issue < ApplicationRecord
   end
 
   # Validates the issue against additional workflow requirements
+  # @rbs () -> Array[untyped]
   def validate_required_fields
     user = new_record? ? author : current_journal.try(:user)
 
@@ -837,6 +884,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_permissions
     if @attributes_set_by && new_record? && copy?
       unless allowed_target_trackers(@attributes_set_by).include?(tracker)
@@ -849,6 +897,7 @@ class Issue < ApplicationRecord
   # so that custom values that are not editable are not validated (eg. a custom field that
   # is marked as required should not trigger a validation error if the user is not allowed
   # to edit this field).
+  # @rbs () -> Array[untyped]?
   def validate_custom_field_values
     user = new_record? ? author : current_journal.try(:user)
     if new_record? || custom_field_values_changed?
@@ -858,27 +907,32 @@ class Issue < ApplicationRecord
 
   # Set the done_ratio using the status if that setting is set.  This will keep the done_ratios
   # even if the user turns off the setting later
+  # @rbs () -> Integer?
   def update_done_ratio_from_issue_status
     if Issue.use_status_for_done_ratio? && status && status.default_done_ratio
       self.done_ratio = status.default_done_ratio
     end
   end
 
+  # @rbs (AnonymousUser | User, ?(String | Issue)?) -> Journal
   def init_journal(user, notes = "")
     @current_journal ||= Journal.new(:journalized => self, :user => user, :notes => notes)
   end
 
   # Returns the current journal or nil if it's not initialized
+  # @rbs () -> Journal?
   def current_journal
     @current_journal
   end
 
   # Clears the current journal
+  # @rbs () -> nil
   def clear_journal
     @current_journal = nil
   end
 
   # Returns the names of attributes that are journalized when updating the issue
+  # @rbs () -> Array[untyped]
   def journalized_attribute_names
     names = Issue.column_names - %w(id root_id lft rgt lock_version created_on updated_on closed_on)
     if tracker
@@ -888,6 +942,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns the id of the last journal or nil
+  # @rbs () -> Integer?
   def last_journal_id
     if new_record?
       nil
@@ -897,6 +952,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns a scope for journals that have an id greater than journal_id
+  # @rbs (String) -> Journal::ActiveRecord_AssociationRelation
   def journals_after(journal_id)
     scope = journals.reorder("#{Journal.table_name}.id ASC")
     if journal_id.present?
@@ -907,6 +963,7 @@ class Issue < ApplicationRecord
 
   # Returns the journals that are visible to user with their index
   # Used to display the issue history
+  # @rbs (?AnonymousUser | User) -> Array[untyped]
   def visible_journals_with_index(user=User.current)
     result = journals.
       preload(:details).
@@ -926,6 +983,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns the assignee immediately prior to the current one from the issue history
+  # @rbs () -> User?
   def prior_assigned_to
     prior_assigned_to_id =
       journals.joins(:details)
@@ -939,6 +997,7 @@ class Issue < ApplicationRecord
 
   # Returns the initial status of the issue
   # Returns nil for a new issue
+  # @rbs () -> IssueStatus?
   def status_was
     if status_id_changed?
       if status_id_was.to_i > 0
@@ -950,16 +1009,19 @@ class Issue < ApplicationRecord
   end
 
   # Return true if the issue is closed, otherwise false
+  # @rbs () -> bool
   def closed?
     status.present? && status.is_closed?
   end
 
   # Returns true if the issue was closed when loaded
+  # @rbs () -> bool
   def was_closed?
     status_was.present? && status_was.is_closed?
   end
 
   # Return true if the issue is being reopened
+  # @rbs () -> bool
   def reopening?
     if new_record?
       false
@@ -970,6 +1032,7 @@ class Issue < ApplicationRecord
   alias :reopened? :reopening?
 
   # Return true if the issue is being closed
+  # @rbs () -> bool
   def closing?
     if new_record?
       closed?
@@ -979,11 +1042,13 @@ class Issue < ApplicationRecord
   end
 
   # Returns true if the issue is overdue
+  # @rbs () -> bool
   def overdue?
     due_date.present? && (due_date < User.current.today) && !closed?
   end
 
   # Is the amount of work done less than it should for the due date
+  # @rbs () -> bool
   def behind_schedule?
     return false if start_date.nil? || due_date.nil?
 
@@ -997,6 +1062,7 @@ class Issue < ApplicationRecord
   end
 
   # Users the issue can be assigned to
+  # @rbs () -> Array[untyped]
   def assignable_users
     return [] if project.nil?
 
@@ -1009,6 +1075,7 @@ class Issue < ApplicationRecord
   end
 
   # Versions that the issue can be assigned to
+  # @rbs () -> Array[untyped]
   def assignable_versions
     return @assignable_versions if @assignable_versions
     return [] if project.nil?
@@ -1029,11 +1096,13 @@ class Issue < ApplicationRecord
   end
 
   # Returns true if this issue is blocked by another issue that is still open
+  # @rbs () -> bool
   def blocked?
     relations_to.any? {|ir| ir.relation_type == 'blocks' && ir.issue_from&.closed? == false}
   end
 
   # Returns true if this issue can be closed and if not, returns false and populates the reason
+  # @rbs () -> bool
   def closable?
     if descendants.open.any?
       @transition_warning = l(:notice_issue_not_closable_by_open_tasks)
@@ -1047,6 +1116,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns true if this issue can be reopen and if not, returns false and populates the reason
+  # @rbs () -> bool
   def reopenable?
     if ancestors.open(false).any?
       @transition_warning = l(:notice_issue_not_reopenable_by_closed_parent_issue)
@@ -1057,11 +1127,13 @@ class Issue < ApplicationRecord
 
   # Returns the default status of the issue based on its tracker
   # Returns nil if tracker is nil
+  # @rbs () -> IssueStatus?
   def default_status
     tracker.try(:default_status)
   end
 
   # Returns an array of statuses that user is able to apply
+  # @rbs (?AnonymousUser | User, ?bool) -> Array[untyped]
   def new_statuses_allowed_to(user=User.current, include_default=false)
     initial_status = nil
     if new_record?
@@ -1106,12 +1178,14 @@ class Issue < ApplicationRecord
   end
 
   # Returns the original tracker
+  # @rbs () -> Tracker
   def tracker_was
     Tracker.find_by_id(tracker_id_in_database)
   end
 
   # Returns the previous assignee whenever we're before the save
   # or in after_* callbacks
+  # @rbs () -> (User | Group)?
   def previous_assignee
     previous_assigned_to_id =
       if assigned_to_id_change_to_be_saved.nil?
@@ -1125,6 +1199,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns the users that should be notified
+  # @rbs () -> Array[untyped]
   def notified_users
     # Author and assignee are always notified unless they have been
     # locked or don't want to be notified
@@ -1142,24 +1217,29 @@ class Issue < ApplicationRecord
   end
 
   # Returns the email addresses that should be notified
+  # @rbs () -> Array[untyped]
   def recipients
     notified_users.collect(&:mail)
   end
 
+  # @rbs () -> bool
   def notify?
     @notify != false
   end
 
+  # @rbs (bool) -> bool
   def notify=(arg)
     @notify = arg
   end
 
   # Returns the number of hours spent on this issue
+  # @rbs () -> Float
   def spent_hours
     @spent_hours ||= time_entries.sum(:hours) || 0.0
   end
 
   # Returns the total number of hours spent on this issue and its descendants
+  # @rbs () -> Float
   def total_spent_hours
     @total_spent_hours ||=
       if leaf?
@@ -1169,6 +1249,7 @@ class Issue < ApplicationRecord
       end
   end
 
+  # @rbs () -> Float?
   def total_estimated_hours
     if leaf?
       estimated_hours
@@ -1178,10 +1259,12 @@ class Issue < ApplicationRecord
   end
 
   # Returns the number of estimated remaining hours on this issue
+  # @rbs () -> (Integer | Float)
   def estimated_remaining_hours
     (estimated_hours || 0) * (100 - (done_ratio || 0)) / 100
   end
 
+  # @rbs () -> IssueRelation::Relations
   def relations
     @relations ||= IssueRelation::Relations.new(
       self,
@@ -1189,6 +1272,7 @@ class Issue < ApplicationRecord
     )
   end
 
+  # @rbs () -> User?
   def last_updated_by
     if @last_updated_by
       @last_updated_by.presence
@@ -1197,6 +1281,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> String
   def last_notes
     if @last_notes
       @last_notes
@@ -1222,6 +1307,7 @@ class Issue < ApplicationRecord
   end
 
   # Preloads visible spent time for a collection of issues
+  # @rbs (Array[untyped], ?AnonymousUser | User) -> Array[untyped]
   def self.load_visible_spent_hours(issues, user=User.current)
     if issues.any?
       hours_by_issue_id = TimeEntry.visible(user).where(:issue_id => issues.map(&:id)).group(:issue_id).sum(:hours)
@@ -1232,6 +1318,7 @@ class Issue < ApplicationRecord
   end
 
   # Preloads visible total spent time for a collection of issues
+  # @rbs (Array[untyped], ?AnonymousUser | User) -> Array[untyped]
   def self.load_visible_total_spent_hours(issues, user=User.current)
     if issues.any?
       hours_by_issue_id = TimeEntry.visible(user).joins(:issue).
@@ -1245,6 +1332,7 @@ class Issue < ApplicationRecord
   end
 
   # Preloads visible relations for a collection of issues
+  # @rbs (Array[untyped], ?AnonymousUser) -> Array[untyped]
   def self.load_visible_relations(issues, user=User.current)
     if issues.any?
       issue_ids = issues.map(&:id)
@@ -1266,6 +1354,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns a scope of the given issues and their descendants
+  # @rbs (Array[untyped]) -> Issue::ActiveRecord_Relation
   def self.self_and_descendants(issues)
     Issue.joins(
       "JOIN #{Issue.table_name} ancestors" +
@@ -1276,6 +1365,7 @@ class Issue < ApplicationRecord
   end
 
   # Preloads users who updated last a collection of issues
+  # @rbs (Array[untyped], ?User | AnonymousUser) -> Array[untyped]
   def self.load_visible_last_updated_by(issues, user=User.current)
     if issues.any?
       issue_ids = issues.map(&:id)
@@ -1295,6 +1385,7 @@ class Issue < ApplicationRecord
   end
 
   # Preloads visible last notes for a collection of issues
+  # @rbs (Array[untyped], ?AnonymousUser | User) -> Array[untyped]
   def self.load_visible_last_notes(issues, user=User.current)
     if issues.any?
       issue_ids = issues.map(&:id)
@@ -1320,6 +1411,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns true if this issue blocks the other issue, otherwise returns false
+  # @rbs (Issue) -> bool
   def blocks?(other)
     all = [self]
     last = [self]
@@ -1339,6 +1431,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns true if the other issue might be rescheduled if the start/due dates of this issue change
+  # @rbs (Issue) -> bool
   def would_reschedule?(other)
     all = [self]
     last = [self]
@@ -1359,12 +1452,14 @@ class Issue < ApplicationRecord
   end
 
   # Returns an array of issues that duplicate this one
+  # @rbs () -> Array[untyped]
   def duplicates
     relations_to.select {|r| r.relation_type == IssueRelation::TYPE_DUPLICATES}.collect {|r| r.issue_from}
   end
 
   # Returns the due date or the target due date if any
   # Used on gantt chart
+  # @rbs () -> Date?
   def due_before
     due_date || (fixed_version ? fixed_version.effective_date : nil)
   end
@@ -1379,10 +1474,12 @@ class Issue < ApplicationRecord
   end
 
   # Returns the duration in working days
+  # @rbs () -> Integer
   def working_duration
     (start_date && due_date) ? working_days(start_date, due_date) : 0
   end
 
+  # @rbs (?bool) -> Date?
   def soonest_start(reload=false)
     if @soonest_start.nil? || reload
       relations_to.reload if reload
@@ -1398,6 +1495,7 @@ class Issue < ApplicationRecord
 
   # Sets start_date on the given date or the next working day
   # and changes due_date to keep the same working duration.
+  # @rbs (Date) -> void
   def reschedule_on(date)
     wd = working_duration
     date = next_working_date(date)
@@ -1407,6 +1505,7 @@ class Issue < ApplicationRecord
 
   # Reschedules the issue on the given date or the next working day and saves the record.
   # If the issue is a parent task, this is done by rescheduling its subtasks.
+  # @rbs (Date, ?Journal?) -> bool?
   def reschedule_on!(date, journal=nil)
     return if date.nil?
 
@@ -1443,18 +1542,22 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> bool
   def dates_derived?
     !leaf? && Setting.parent_issue_dates == 'derived'
   end
 
+  # @rbs () -> bool
   def priority_derived?
     !leaf? && Setting.parent_issue_priority == 'derived'
   end
 
+  # @rbs () -> bool
   def done_ratio_derived?
     !leaf? && Setting.parent_issue_done_ratio == 'derived'
   end
 
+  # @rbs (Issue) -> Integer
   def <=>(issue)
     return nil unless issue.is_a?(Issue)
 
@@ -1465,11 +1568,13 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> String
   def to_s
     "#{tracker} ##{id}: #{subject}"
   end
 
   # Returns a string of css classes that apply to the issue
+  # @rbs (?AnonymousUser | User) -> String
   def css_classes(user=User.current)
     s = "issue tracker-#{tracker_id} status-#{status_id} #{priority.try(:css_classes)}"
     s << ' closed' if closed?
@@ -1487,6 +1592,7 @@ class Issue < ApplicationRecord
   end
 
   # Unassigns issues from +version+ if it's no longer shared with issue's project
+  # @rbs (Version) -> Array[untyped]
   def self.update_versions_from_sharing_change(version)
     # Update issues assigned to the version
     update_versions(["#{Issue.table_name}.fixed_version_id = ?", version.id])
@@ -1494,6 +1600,7 @@ class Issue < ApplicationRecord
 
   # Unassigns issues from versions that are no longer shared
   # after +project+ was moved
+  # @rbs (Project) -> Array[untyped]
   def self.update_versions_from_hierarchy_change(project)
     moved_project_ids = project.self_and_descendants.reload.pluck(:id)
     # Update issues of the moved projects and issues assigned to a version of a moved project
@@ -1504,6 +1611,7 @@ class Issue < ApplicationRecord
       )
   end
 
+  # @rbs ((Integer | String)?) -> String?
   def parent_issue_id=(arg)
     s = arg.to_s.strip.presence
     if s && (m = s.match(%r{\A#?(\d+)\z})) && (@parent_issue = Issue.find_by_id(m[1]))
@@ -1517,6 +1625,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> (Integer | String)?
   def parent_issue_id
     if @invalid_parent_issue_id
       @invalid_parent_issue_id
@@ -1529,12 +1638,14 @@ class Issue < ApplicationRecord
 
   alias :parent_issue :parent
 
+  # @rbs () -> Integer?
   def set_parent_id
     self.parent_id = parent_issue_id
   end
 
   # Returns true if issue's project is a valid
   # parent issue project
+  # @rbs (?Issue?) -> bool
   def valid_parent_project?(issue=parent)
     return true if issue.nil? || issue.project_id == project_id
 
@@ -1553,6 +1664,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns an issue scope based on project and scope
+  # @rbs (Project?, ?String?) -> (Issue::ActiveRecord_Relation | Class)
   def self.cross_project_scope(project, scope=nil)
     if project.nil?
       return Issue
@@ -1580,30 +1692,37 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs (Project, ?bool) -> Array[untyped]
   def self.by_tracker(project, with_subprojects=false)
     count_and_group_by(:project => project, :association => :tracker, :with_subprojects => with_subprojects)
   end
 
+  # @rbs (Project, ?bool) -> Array[untyped]
   def self.by_version(project, with_subprojects=false)
     count_and_group_by(:project => project, :association => :fixed_version, :with_subprojects => with_subprojects)
   end
 
+  # @rbs (Project, ?bool) -> Array[untyped]
   def self.by_priority(project, with_subprojects=false)
     count_and_group_by(:project => project, :association => :priority, :with_subprojects => with_subprojects)
   end
 
+  # @rbs (Project, ?bool) -> Array[untyped]
   def self.by_category(project, with_subprojects=false)
     count_and_group_by(:project => project, :association => :category, :with_subprojects => with_subprojects)
   end
 
+  # @rbs (Project, ?bool) -> Array[untyped]
   def self.by_assigned_to(project, with_subprojects=false)
     count_and_group_by(:project => project, :association => :assigned_to, :with_subprojects => with_subprojects)
   end
 
+  # @rbs (Project, ?bool) -> Array[untyped]
   def self.by_author(project, with_subprojects=false)
     count_and_group_by(:project => project, :association => :author, :with_subprojects => with_subprojects)
   end
 
+  # @rbs (Project) -> Array[untyped]
   def self.by_subproject(project)
     r = count_and_group_by(:project => project, :with_subprojects => true, :association => :project)
     r.reject {|r| r["project_id"] == project.id.to_s}
@@ -1616,6 +1735,7 @@ class Issue < ApplicationRecord
   # * project - Project to search in.
   # * with_subprojects - Includes subprojects issues if set to true.
   # * association - Symbol. Association for grouping.
+  # @rbs (Hash[untyped, untyped]) -> Array[untyped]
   def self.count_and_group_by(options)
     assoc = reflect_on_association(options[:association])
     select_field = assoc.foreign_key
@@ -1638,6 +1758,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns a scope of projects that user can assign the subtask
+  # @rbs (?User) -> Project::ActiveRecord_Relation
   def allowed_target_projects_for_subtask(user=User.current)
     if parent_issue_id.present?
       scope = filter_projects_scope(Setting.cross_project_subtasks)
@@ -1647,6 +1768,7 @@ class Issue < ApplicationRecord
   end
 
   # Returns a scope of projects that user can assign the issue to
+  # @rbs (?AnonymousUser | User, ?String?) -> Project::ActiveRecord_Relation
   def allowed_target_projects(user=User.current, scope=nil)
     current_project = new_record? ? nil : project
     if scope
@@ -1658,6 +1780,7 @@ class Issue < ApplicationRecord
 
   # Returns a scope of projects that user can assign issues to
   # If current_project is given, it will be included in the scope
+  # @rbs (?AnonymousUser | User, ?String?) -> Project::ActiveRecord_Relation
   def self.allowed_target_projects(user=User.current, current_project=nil, scope=nil)
     condition = Project.allowed_to_condition(user, :add_issues)
     if current_project
@@ -1672,11 +1795,13 @@ class Issue < ApplicationRecord
   end
 
   # Returns a scope of trackers that user can assign the issue to
+  # @rbs (Project?, ?User | AnonymousUser, ?Integer?) -> (Tracker::ActiveRecord_AssociationRelation | Tracker::ActiveRecord_Relation)
   def allowed_target_trackers(user=User.current)
     self.class.allowed_target_trackers(project, user, tracker_id_was)
   end
 
   # Returns a scope of trackers that user can assign project issues to
+  # @rbs (Project?, ?User | AnonymousUser, ?Integer?) -> (Tracker::ActiveRecord_AssociationRelation | Tracker::ActiveRecord_Relation)
   def self.allowed_target_trackers(project, user=User.current, current_tracker=nil)
     if project
       scope = project.trackers.sorted
@@ -1698,6 +1823,7 @@ class Issue < ApplicationRecord
 
   private
 
+  # @rbs (User | AnonymousUser, Symbol) -> bool
   def user_tracker_permission?(user, permission)
     if project && !project.active?
       perm = Redmine::AccessControl.permission(permission)
@@ -1715,6 +1841,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def after_project_change
     # Update project_id on related time entries
     TimeEntry.where({:issue_id => id}).update_all(["project_id = ?", project_id])
@@ -1746,6 +1873,7 @@ class Issue < ApplicationRecord
   # Callback for after the creation of an issue by copy
   # * adds a "copied to" relation with the copied issue
   # * copies subtasks from the copied issue
+  # @rbs () -> bool?
   def after_create_from_copy
     return unless copy? && !@after_create_from_copy_handled
 
@@ -1817,6 +1945,7 @@ class Issue < ApplicationRecord
     @after_create_from_copy_handled = true
   end
 
+  # @rbs () -> Issue?
   def update_nested_set_attributes
     if saved_change_to_parent_id?
       update_nested_set_attributes_on_parent_change
@@ -1825,6 +1954,7 @@ class Issue < ApplicationRecord
   end
 
   # Updates the nested set for when an existing issue is moved
+  # @rbs () -> bool?
   def update_nested_set_attributes_on_parent_change
     former_parent_id = parent_id_before_last_save
     # delete invalid relations of all descendants
@@ -1837,6 +1967,7 @@ class Issue < ApplicationRecord
     recalculate_attributes_for(former_parent_id) if former_parent_id
   end
 
+  # @rbs () -> bool?
   def update_parent_attributes
     if parent_id
       recalculate_attributes_for(parent_id)
@@ -1844,6 +1975,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs (Integer) -> bool
   def recalculate_attributes_for(issue_id)
     if issue_id && p = Issue.find_by_id(issue_id)
       if p.priority_derived?
@@ -1901,6 +2033,7 @@ class Issue < ApplicationRecord
   class << self
     # Update issues so their versions are not pointing to a
     # fixed_version that is not shared with the issue's project
+    # @rbs (?Array[untyped]) -> Array[untyped]
     def update_versions(conditions=nil)
       # Only need to update issues with a fixed_version from
       # a different project and that is not systemwide shared
@@ -1929,6 +2062,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def delete_selected_attachments
     if deleted_attachment_ids.present?
       objects = attachments.where(:id => deleted_attachment_ids.map(&:to_i))
@@ -1937,6 +2071,7 @@ class Issue < ApplicationRecord
   end
 
   # Callback on file attachment
+  # @rbs (Attachment) -> JournalDetail::ActiveRecord_Associations_CollectionProxy?
   def attachment_added(attachment)
     if current_journal && !attachment.new_record? && !copy?
       current_journal.journalize_attachment(attachment, :added)
@@ -1944,6 +2079,7 @@ class Issue < ApplicationRecord
   end
 
   # Callback on attachment deletion
+  # @rbs (Attachment) -> bool?
   def attachment_removed(attachment)
     if current_journal && !attachment.new_record?
       current_journal.journalize_attachment(attachment, :removed)
@@ -1952,6 +2088,7 @@ class Issue < ApplicationRecord
   end
 
   # Called after a relation is added
+  # @rbs (IssueRelation) -> bool?
   def relation_added(relation)
     if current_journal
       current_journal.journalize_relation(relation, :added)
@@ -1960,6 +2097,7 @@ class Issue < ApplicationRecord
   end
 
   # Called after a relation is removed
+  # @rbs (IssueRelation) -> bool
   def relation_removed(relation)
     if current_journal
       current_journal.journalize_relation(relation, :removed)
@@ -1968,6 +2106,7 @@ class Issue < ApplicationRecord
   end
 
   # Default assignment based on project or category
+  # @rbs () -> User?
   def default_assign
     if assigned_to.nil?
       if category && category.assigned_to
@@ -1979,6 +2118,7 @@ class Issue < ApplicationRecord
   end
 
   # Updates start/due dates of following issues
+  # @rbs () -> Array[untyped]?
   def reschedule_following_issues
     if saved_change_to_start_date? || saved_change_to_due_date?
       relations_from.each do |relation|
@@ -1988,6 +2128,7 @@ class Issue < ApplicationRecord
   end
 
   # Closes duplicates if the issue is being closed
+  # @rbs () -> Array[untyped]?
   def close_duplicates
     if Setting.close_duplicate_issues? && closing?
       duplicates.each do |duplicate|
@@ -2008,6 +2149,7 @@ class Issue < ApplicationRecord
 
   # Make sure updated_on is updated when adding a note and set updated_on now
   # so we can set closed_on with the same value on closing
+  # @rbs () -> ActiveSupport::TimeWithZone?
   def force_updated_on_change
     if @current_journal || changed?
       self.updated_on = current_time_from_proper_timezone
@@ -2020,6 +2162,7 @@ class Issue < ApplicationRecord
   # Callback for setting closed_on when the issue is closed.
   # The closed_on attribute stores the time of the last closing
   # and is preserved when the issue is reopened.
+  # @rbs () -> ActiveSupport::TimeWithZone?
   def update_closed_on
     if closing?
       self.closed_on = updated_on
@@ -2028,12 +2171,14 @@ class Issue < ApplicationRecord
 
   # Saves the changes in a Journal
   # Called after_save
+  # @rbs () -> bool?
   def create_journal
     if current_journal
       current_journal.save
     end
   end
 
+  # @rbs () -> bool?
   def create_parent_issue_journal
     return if persisted? && !saved_change_to_parent_id?
     return if destroyed? && @without_nested_set_update
@@ -2069,6 +2214,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> Watcher::ActiveRecord_Associations_CollectionProxy?
   def add_auto_watcher
     if author&.active? &&
         author.allowed_to?(:add_issue_watchers, project) &&
@@ -2078,12 +2224,14 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def send_notification
     if notify? && Setting.notified_events.include?('issue_added')
       Mailer.deliver_issue_add(self)
     end
   end
 
+  # @rbs () -> Integer?
   def clear_disabled_fields
     if tracker
       tracker.disabled_core_fields.each do |attribute|
@@ -2094,6 +2242,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs (?String?) -> (Project::ActiveRecord_Relation | Class)
   def filter_projects_scope(scope=nil)
     case scope
     when 'system'
@@ -2111,6 +2260,7 @@ class Issue < ApplicationRecord
     end
   end
 
+  # @rbs (User | AnonymousUser) -> Array[untyped]
   def roles_for_workflow(user)
     roles = user.admin ? Role.all.to_a : user.roles_for_project(project)
     roles.select(&:consider_workflow?)

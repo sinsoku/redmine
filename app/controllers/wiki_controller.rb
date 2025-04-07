@@ -45,6 +45,7 @@ class WikiController < ApplicationController
   include Redmine::Export::PDF
 
   # List of pages, sorted alphabetically and by parent (hierarchy)
+  # @rbs () -> Hash[untyped, untyped]?
   def index
     load_pages_for_index
 
@@ -57,11 +58,13 @@ class WikiController < ApplicationController
   end
 
   # List of page, by last update
+  # @rbs () -> Hash[untyped, untyped]
   def date_index
     load_pages_for_index
     @pages_by_date = @pages.group_by {|p| p.updated_on.to_date}
   end
 
+  # @rbs () -> String?
   def new
     @page = WikiPage.new(:wiki => @wiki, :title => params[:title])
     unless User.current.allowed_to?(:edit_wiki_pages, @project)
@@ -82,6 +85,7 @@ class WikiController < ApplicationController
   end
 
   # display a page (in editing mode if it doesn't exist)
+  # @rbs () -> nil
   def show
     if params[:version] && !User.current.allowed_to?(:view_wiki_edits, @project)
       deny_access
@@ -125,6 +129,7 @@ class WikiController < ApplicationController
   end
 
   # edit an existing page or a new one
+  # @rbs () -> bool?
   def edit
     return render_403 unless editable?
 
@@ -152,6 +157,7 @@ class WikiController < ApplicationController
   end
 
   # Creates a new page or updates an existing one
+  # @rbs () -> (String | ActiveSupport::SafeBuffer | bool)
   def update
     @page = @wiki.find_or_new_page(params[:id])
     return render_403 unless editable?
@@ -215,6 +221,7 @@ class WikiController < ApplicationController
   end
 
   # rename a page
+  # @rbs () -> String?
   def rename
     return render_403 unless editable?
 
@@ -228,12 +235,14 @@ class WikiController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def protect
     @page.update_attribute :protected, params[:protected]
     redirect_to project_wiki_page_path(@project, @page.title)
   end
 
   # show page history
+  # @rbs () -> nil
   def history
     @version_count = @page.content.versions.count
     @version_pages = Paginator.new @version_count, per_page_option, params['page']
@@ -248,11 +257,13 @@ class WikiController < ApplicationController
     render :layout => false if request.xhr?
   end
 
+  # @rbs () -> bool?
   def diff
     @diff = @page.diff(params[:version], params[:version_from])
     render_404 unless @diff
   end
 
+  # @rbs () -> bool?
   def annotate
     @annotate = @page.annotate(params[:version])
     render_404 unless @annotate
@@ -260,6 +271,7 @@ class WikiController < ApplicationController
 
   # Removes a wiki page and its history
   # Children can be either set as root pages, removed or reassigned to another parent page
+  # @rbs () -> (String | bool)?
   def destroy
     return render_403 unless editable?
 
@@ -295,6 +307,7 @@ class WikiController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | bool)
   def destroy_version
     return render_403 unless editable?
 
@@ -307,6 +320,7 @@ class WikiController < ApplicationController
   end
 
   # Export wiki to a single pdf or html file
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def export
     @pages = @wiki.pages.
                       includes([:content, {:attachments => :author}]).
@@ -322,6 +336,7 @@ class WikiController < ApplicationController
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def preview
     page = @wiki.find_page(params[:id])
     # page is nil when previewing a new page
@@ -335,6 +350,7 @@ class WikiController < ApplicationController
     render :partial => 'common/preview'
   end
 
+  # @rbs () -> String
   def add_attachment
     return render_403 unless editable?
 
@@ -345,6 +361,7 @@ class WikiController < ApplicationController
 
   private
 
+  # @rbs () -> bool?
   def find_wiki
     @project = Project.find(params[:project_id])
     @wiki = @project.wiki
@@ -354,6 +371,7 @@ class WikiController < ApplicationController
   end
 
   # Finds the requested page or a new page if it doesn't exist
+  # @rbs () -> String?
   def find_existing_or_new_page
     @page = @wiki.find_or_new_page(params[:id])
     if @wiki.page_found_with_redirect?
@@ -362,6 +380,7 @@ class WikiController < ApplicationController
   end
 
   # Finds the requested page and returns a 404 error if it doesn't exist
+  # @rbs () -> nil
   def find_existing_page
     @page = @wiki.find_page(params[:id])
     if @page.nil?
@@ -373,6 +392,7 @@ class WikiController < ApplicationController
     end
   end
 
+  # @rbs (WikiPage) -> String
   def redirect_to_page(page)
     if page.project && page.project.visible?
       redirect_to :action => action_name, :project_id => page.project, :id => page.title
@@ -382,17 +402,20 @@ class WikiController < ApplicationController
   end
 
   # Returns true if the current user is allowed to edit the page, otherwise false
+  # @rbs (?WikiPage) -> bool
   def editable?(page = @page)
     page.editable_by?(User.current)
   end
 
   # Returns the default content of a new wiki page
+  # @rbs (WikiPage) -> String
   def initial_page_content(page)
     helper = Redmine::WikiFormatting.helper_for(Setting.text_formatting)
     extend helper unless self.instance_of?(helper)
     helper.instance_method(:initial_page_content).bind_call(self, page)
   end
 
+  # @rbs () -> void
   def load_pages_for_index
     @pages = @wiki.pages.with_updated_on.
                 includes(:wiki => :project).

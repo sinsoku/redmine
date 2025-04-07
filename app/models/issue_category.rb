@@ -35,6 +35,7 @@ class IssueCategory < ApplicationRecord
 
   # Destroy the category
   # If a category is specified, issues are reassigned to this category
+  # @rbs (?IssueCategory?) -> void
   def destroy(reassign_to = nil)
     if reassign_to && reassign_to.is_a?(IssueCategory) && reassign_to.project == self.project
       Issue.where({:category_id => id}).update_all({:category_id => reassign_to.id})
@@ -42,11 +43,13 @@ class IssueCategory < ApplicationRecord
     destroy_without_reassign
   end
 
+  # @rbs (IssueCategory) -> Integer
   def <=>(category)
     return nil unless category.is_a?(IssueCategory)
 
     name <=> category.name
   end
 
+  # @rbs () -> String
   def to_s; name end
 end

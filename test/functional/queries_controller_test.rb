@@ -20,16 +20,19 @@
 require_relative '../test_helper'
 
 class QueriesControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_index
     get :index
     # HTML response not implemented
     assert_response :not_acceptable
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_project_query
     @request.session[:user_id] = 2
     get(:new, :params => {:project_id => 1})
@@ -43,6 +46,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_global_query
     @request.session[:user_id] = 2
     get :new
@@ -52,12 +56,14 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=query_is_for_all][type=checkbox][checked]:not([disabled])'
   end
 
+  # @rbs () -> bool
   def test_new_on_invalid_project
     @request.session[:user_id] = 2
     get(:new, :params => {:project_id => 'invalid'})
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_not_render_show_inline_columns_option_for_query_without_available_inline_columns
     @request.session[:user_id] = 1
     get(:new, :params => {:type => 'ProjectQuery'})
@@ -65,6 +71,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'p[class=?]', 'block_columns', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_not_render_show_totals_option_for_query_without_totable_columns
     @request.session[:user_id] = 1
     get(:new, :params => {:type => 'ProjectQuery'})
@@ -72,6 +79,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'p[class=?]', 'totables_columns', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_time_entry_query
     @request.session[:user_id] = 2
     get(:new, :params => {:project_id => 1, :type => 'TimeEntryQuery'})
@@ -81,6 +89,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'p[class=?]', 'block_columns', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_project_query_for_projects
     @request.session[:user_id] = 1
     get(:new, :params => {:type => 'ProjectQuery'})
@@ -88,6 +97,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=type][value=?]', 'ProjectQuery'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_project_query_should_not_render_roles_visibility_options
     @request.session[:user_id] = 1
     get(:new, :params => {:type => 'ProjectQuery'})
@@ -97,6 +107,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[id=?]', 'query_visibility_1', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_project_query_should_not_render_for_all_projects_option
     @request.session[:user_id] = 1
     get(:new, :params => {:type => 'ProjectQuery'})
@@ -104,6 +115,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'for_all_projects', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_time_entry_query_should_select_spent_time_from_main_menu
     @request.session[:user_id] = 2
     get(
@@ -117,6 +129,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select '#main-menu a.time-entries.selected'
   end
 
+  # @rbs () -> bool
   def test_new_time_entry_query_with_issue_tracking_module_disabled_should_be_allowed
     Project.find(1).disable_module! :issue_tracking
     @request.session[:user_id] = 2
@@ -130,6 +143,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_gantt_params
     @request.session[:user_id] = 2
     get :new, :params => {:gantt => 1}
@@ -142,6 +156,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'fieldset#columns'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_calendar_params
     @request.session[:user_id] = 2
     get :new, :params => {:calendar => 1}
@@ -154,6 +169,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'fieldset#columns', :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_without_gantt_and_calendar_params
     @request.session[:user_id] = 2
     get :new
@@ -165,6 +181,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'fieldset#columns'
   end
 
+  # @rbs () -> bool
   def test_create_project_public_query
     @request.session[:user_id] = 2
     post(
@@ -191,6 +208,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert q.valid?
   end
 
+  # @rbs () -> bool
   def test_create_project_private_query
     @request.session[:user_id] = 3
     post(
@@ -217,6 +235,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert q.valid?
   end
 
+  # @rbs () -> bool
   def test_create_project_roles_query
     @request.session[:user_id] = 2
     post(
@@ -244,6 +263,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal [1, 2], q.roles.ids.sort
   end
 
+  # @rbs () -> bool
   def test_create_global_private_query_with_custom_columns
     @request.session[:user_id] = 3
     post(
@@ -270,6 +290,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert q.valid?
   end
 
+  # @rbs () -> bool
   def test_create_global_query_with_custom_filters
     @request.session[:user_id] = 3
     post(
@@ -295,6 +316,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert q.valid?
   end
 
+  # @rbs () -> bool
   def test_create_with_sort
     @request.session[:user_id] = 1
     post(
@@ -321,6 +343,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal [['due_date', 'desc'], ['tracker', 'asc']], query.sort_criteria
   end
 
+  # @rbs () -> bool
   def test_create_with_description
     @request.session[:user_id] = 2
     assert_difference '::Query.count', 1 do
@@ -340,6 +363,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal 'Description for test_new_with_description', q.description
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     @request.session[:user_id] = 2
     assert_no_difference '::Query.count' do
@@ -358,6 +382,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'query[name]'
   end
 
+  # @rbs () -> bool
   def test_create_query_without_permission_should_fail
     Role.all.each {|r| r.remove_permission! :save_queries, :manage_public_queries}
 
@@ -374,6 +399,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_create_global_query_without_permission_should_fail
     Role.all.each {|r| r.remove_permission! :save_queries, :manage_public_queries}
 
@@ -384,6 +410,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_create_global_query_from_gantt
     @request.session[:user_id] = 1
     assert_difference 'IssueQuery.count' do
@@ -414,6 +441,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal true, query.draw_selected_columns
   end
 
+  # @rbs () -> bool
   def test_create_project_query_from_gantt
     @request.session[:user_id] = 1
     assert_difference 'IssueQuery.count' do
@@ -445,6 +473,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal false, query.draw_selected_columns
   end
 
+  # @rbs () -> bool
   def test_create_project_public_query_should_force_private_without_manage_public_queries_permission
     @request.session[:user_id] = 3
     query = new_record(Query) do
@@ -463,6 +492,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal Query::VISIBILITY_PRIVATE, query.visibility
   end
 
+  # @rbs () -> bool
   def test_create_global_public_query_should_force_private_without_manage_public_queries_permission
     @request.session[:user_id] = 3
     query = new_record(Query) do
@@ -482,6 +512,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal Query::VISIBILITY_PRIVATE, query.visibility
   end
 
+  # @rbs () -> bool
   def test_create_project_public_query_with_manage_public_queries_permission
     @request.session[:user_id] = 2
     query = new_record(Query) do
@@ -500,6 +531,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal Query::VISIBILITY_PUBLIC, query.visibility
   end
 
+  # @rbs () -> bool
   def test_create_global_public_query_should_force_private_with_manage_public_queries_permission
     @request.session[:user_id] = 2
     query = new_record(Query) do
@@ -519,6 +551,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal Query::VISIBILITY_PRIVATE, query.visibility
   end
 
+  # @rbs () -> bool
   def test_create_global_public_query_by_admin
     @request.session[:user_id] = 1
     query = new_record(Query) do
@@ -538,6 +571,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal Query::VISIBILITY_PUBLIC, query.visibility
   end
 
+  # @rbs () -> bool
   def test_create_project_public_time_entry_query
     @request.session[:user_id] = 2
 
@@ -568,6 +602,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert q.valid?
   end
 
+  # @rbs () -> bool
   def test_create_public_project_query
     @request.session[:user_id] = 1
 
@@ -597,6 +632,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert q.valid?
   end
 
+  # @rbs () -> bool
   def test_create_admin_projects_query_should_redirect_to_admin_projects
     @request.session[:user_id] = 1
 
@@ -623,6 +659,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_redirected_to :controller => 'admin', :action => 'projects', :query_id => q.id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_global_public_query
     @request.session[:user_id] = 1
     get(:edit, :params => {:id => 4})
@@ -632,6 +669,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=query_is_for_all][type=checkbox][checked=checked]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_global_private_query
     @request.session[:user_id] = 3
     get(:edit, :params => {:id => 3})
@@ -641,6 +679,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=query_is_for_all][type=checkbox][checked=checked]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_project_private_query
     @request.session[:user_id] = 3
     get(:edit, :params => {:id => 2})
@@ -650,6 +689,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=query_is_for_all][type=checkbox]:not([checked])'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_project_public_query
     @request.session[:user_id] = 2
     get(:edit, :params => {:id => 1})
@@ -659,6 +699,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=query_is_for_all][type=checkbox]:not([checked])'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_sort_criteria
     @request.session[:user_id] = 1
     get(:edit, :params => {:id => 5})
@@ -670,6 +711,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_description
     @request.session[:user_id] = 1
     get(:edit, :params => {:id => 5})
@@ -678,12 +720,14 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name="query[description]"][value=?]', 'Description for Open issues by priority and tracker'
   end
 
+  # @rbs () -> bool
   def test_edit_invalid_query
     @request.session[:user_id] = 2
     get(:edit, :params => {:id => 99})
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_update_global_private_query
     @request.session[:user_id] = 3
     put(
@@ -710,6 +754,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert q.valid?
   end
 
+  # @rbs () -> bool
   def test_update_global_public_query
     @request.session[:user_id] = 1
     put(
@@ -736,6 +781,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert q.valid?
   end
 
+  # @rbs () -> bool
   def test_update_admin_projects_query
     q = ProjectAdminQuery.create(:name => 'project_query')
     @request.session[:user_id] = 1
@@ -762,6 +808,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert Query.find_by_name('test_project_query_updated')
   end
 
+  # @rbs () -> bool
   def test_update_description
     @request.session[:user_id] = 1
     q = Query.find(5)
@@ -779,6 +826,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal 'query description updated',  Query.find(5).description
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     @request.session[:user_id] = 1
     put(
@@ -794,6 +842,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 2
     delete(:destroy, :params => {:id => 1})
@@ -801,6 +850,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_nil Query.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_backslash_should_be_escaped_in_filters
     @request.session[:user_id] = 2
     get(:new, :params => {:subject => 'foo/bar'})
@@ -808,6 +858,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include 'addFilter("subject", "=", ["foo\/bar"]);', response.body
   end
 
+  # @rbs () -> bool
   def test_filter_with_project_id_should_return_filter_values
     @request.session[:user_id] = 2
     get(
@@ -823,6 +874,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include ["eCookbook - 2.0", "3", "open"], json
   end
 
+  # @rbs () -> bool
   def test_version_filter_time_entries_with_project_id_should_return_filter_values
     @request.session[:user_id] = 2
     get(
@@ -839,6 +891,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include ["eCookbook - 2.0", "3", "open"], json
   end
 
+  # @rbs () -> bool
   def test_version_filter_without_project_id_should_return_all_visible_fixed_versions
     # Remove "jsmith" user from "Private child of eCookbook" project
     Project.find(5).memberships.find_by(:user_id => 2).destroy
@@ -862,6 +915,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_not_include ["Private child of eCookbook - Private Version of public subproject", "6", "open"], json
   end
 
+  # @rbs () -> bool
   def test_subproject_filter_time_entries_with_project_id_should_return_filter_values
     @request.session[:user_id] = 2
     get(
@@ -879,6 +933,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include ["Private child of eCookbook", "5"], json
   end
 
+  # @rbs () -> bool
   def test_assignee_filter_should_return_active_and_locked_users_grouped_by_status
     @request.session[:user_id] = 1
     get(
@@ -900,6 +955,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include ["Dave2 Lopper2", "5", "locked"], json
   end
 
+  # @rbs () -> bool
   def test_author_filter_should_return_active_and_locked_users_grouped_by_status
     @request.session[:user_id] = 1
     get(
@@ -922,6 +978,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include ["Anonymous", User.anonymous.id.to_s], json
   end
 
+  # @rbs () -> bool
   def test_user_filter_should_return_active_and_locked_users_grouped_by_status
     @request.session[:user_id] = 1
     get(
@@ -943,6 +1000,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include ["Dave2 Lopper2", "5", "locked"], json
   end
 
+  # @rbs () -> bool
   def test_watcher_filter_without_permission_should_show_only_me
     # This user does not have view_issue_watchers permission
     @request.session[:user_id] = 7
@@ -962,6 +1020,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_equal [["<< me >>", "me"]], json
   end
 
+  # @rbs () -> bool
   def test_watcher_filter_with_permission_should_show_members_and_groups
     # This user has view_issue_watchers permission
     @request.session[:user_id] = 1
@@ -985,6 +1044,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include ["A Team", "10", "active"], json
   end
 
+  # @rbs () -> bool
   def test_watcher_filter_with_permission_should_show_members_and_groups_globally
     # This user has view_issue_watchers permission
     @request.session[:user_id] = 1
@@ -1007,6 +1067,7 @@ class QueriesControllerTest < Redmine::ControllerTest
     assert_include ['A Team', '10', 'active'], json
   end
 
+  # @rbs () -> bool
   def test_activity_filter_should_return_active_and_system_activity_ids
     TimeEntryActivity.create!(:name => 'Design', :parent_id => 9, :project_id => 1)
     TimeEntryActivity.create!(:name => 'QA', :active => false, :parent_id => 11, :project_id => 1)

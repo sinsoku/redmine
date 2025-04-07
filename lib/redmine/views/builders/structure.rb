@@ -21,12 +21,14 @@ module Redmine
   module Views
     module Builders
       class Structure < BasicObject
+        # @rbs (ActionDispatch::Request | ActionDispatch::TestRequest | ActionController::TestRequest, ActionDispatch::Response | ActionDispatch::TestResponse) -> void
         def initialize(request, response)
           @struct = [{}]
           @request = request
           @response = response
         end
 
+        # @rbs (Symbol, ?Hash[untyped, untyped]) -> Hash[untyped, untyped]
         def array(tag, options={}, &)
           @struct << []
           yield(self)
@@ -35,6 +37,7 @@ module Redmine
           @struct.last.merge!(options) if options
         end
 
+        # @rbs ((Integer | String | ActiveSupport::TimeWithZone | Date | bool | Float)?) -> (Integer | String | Date | bool | Float)?
         def encode_value(value)
           if value.is_a?(::Time)
             # Rails uses a global setting to format JSON times
@@ -45,6 +48,7 @@ module Redmine
           end
         end
 
+        # @rbs (Symbol, *Integer | String | nil | Hash[untyped, untyped] | ActiveSupport::TimeWithZone | Date | bool | Float | String | Hash[untyped, untyped]) -> (Array[untyped] | Hash[untyped, untyped])?
         def method_missing(sym, *args, &block)
           if args.count > 0
             if args.first.is_a?(::Hash)

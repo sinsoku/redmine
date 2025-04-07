@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class DocumentsControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     # Sets a default category
     e = Enumeration.find_by_name('Technical documentation')
@@ -41,6 +43,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_grouped_by_category
     get(
       :index,
@@ -58,6 +61,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_grouped_by_date
     get(
       :index,
@@ -75,6 +79,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_grouped_by_title
     get(
       :index,
@@ -92,6 +97,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_grouped_by_author
     get(
       :index,
@@ -109,6 +115,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_long_description
     # adds a long description to the first document
     doc = documents(:documents_001)
@@ -124,17 +131,20 @@ class DocumentsControllerTest < Redmine::ControllerTest
     assert_select '.wiki p', :text => Regexp.new(Regexp.escape("EndOfLineHere..."))
   end
 
+  # @rbs () -> bool
   def test_show
     get(:show, :params => {:id => 1})
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_new
     @request.session[:user_id] = 2
     get(:new, :params => {:project_id => 1})
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_create_with_one_attachment
     ActionMailer::Base.deliveries.clear
     @request.session[:user_id] = 2
@@ -168,6 +178,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     @request.session[:user_id] = 2
     assert_no_difference 'Document.count' do
@@ -185,6 +196,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     assert_select_error /title cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_create_non_default_category
     @request.session[:user_id] = 2
     category2 = Enumeration.find_by_name('User documentation')
@@ -208,6 +220,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     assert_equal category1, doc.category
   end
 
+  # @rbs () -> bool
   def test_edit
     @request.session[:user_id] = 2
     get(
@@ -219,6 +232,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_update
     @request.session[:user_id] = 2
     put(
@@ -235,6 +249,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     assert_equal 'test_update', document.title
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     @request.session[:user_id] = 2
     put(
@@ -250,6 +265,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     assert_select_error /title cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_destroy
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -266,6 +282,7 @@ class DocumentsControllerTest < Redmine::ControllerTest
     assert_nil Document.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_add_attachment
     set_tmp_attachments_directory
     @request.session[:user_id] = 2

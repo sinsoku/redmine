@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class ChangesetTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_ref_keywords_any
     ActionMailer::Base.deliveries.clear
     Setting.commit_ref_keywords = '*'
@@ -41,6 +43,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_ref_keywords
     Setting.commit_ref_keywords = 'refs'
     Setting.commit_update_keywords = ''
@@ -52,6 +55,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal [1], c.issue_ids.sort
   end
 
+  # @rbs () -> bool
   def test_ref_keywords_any_only
     Setting.commit_ref_keywords = '*'
     Setting.commit_update_keywords = ''
@@ -63,6 +67,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal [1, 2], c.issue_ids.sort
   end
 
+  # @rbs () -> bool
   def test_project_specific_activity
     project = Project.find 1
     activity = TimeEntryActivity.find 9
@@ -91,6 +96,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal project_specific_activity, time.activity
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_ref_keywords_any_with_timelog
     Setting.commit_ref_keywords = '*'
     Setting.commit_logtime_enabled = '1'
@@ -138,6 +144,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_ref_keywords_closing_with_timelog
     Setting.commit_ref_keywords = '*'
     Setting.commit_update_keywords = [{'keywords' => 'fixes , closes',
@@ -160,6 +167,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal [1, 2], times.collect(&:issue_id).sort
   end
 
+  # @rbs () -> bool
   def test_ref_keywords_any_line_start
     Setting.commit_ref_keywords = '*'
     c = Changeset.new(:repository   => Project.find(1).repository,
@@ -170,6 +178,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal [1], c.issue_ids.sort
   end
 
+  # @rbs () -> bool
   def test_ref_keywords_allow_brackets_around_a_issue_number
     Setting.commit_ref_keywords = '*'
     c = Changeset.new(:repository   => Project.find(1).repository,
@@ -180,6 +189,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal [1], c.issue_ids.sort
   end
 
+  # @rbs () -> bool
   def test_ref_keywords_allow_brackets_around_multiple_issue_numbers
     Setting.commit_ref_keywords = '*'
     c = Changeset.new(:repository   => Project.find(1).repository,
@@ -190,6 +200,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal [1, 2, 3], c.issue_ids.sort
   end
 
+  # @rbs () -> bool
   def test_ref_keywords_with_large_number_should_not_error
     Setting.commit_ref_keywords = '*'
     c = Changeset.new(:repository   => Project.find(1).repository,
@@ -202,6 +213,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal [], c.issue_ids.sort
   end
 
+  # @rbs () -> bool
   def test_update_keywords_with_changes_should_create_journal
     issue = Issue.generate!(:project_id => 1, :status_id => 1)
 
@@ -219,6 +231,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_update_keywords_without_change_should_not_create_journal
     issue = Issue.generate!(:project_id => 1, :status_id => 3)
     with_settings :commit_update_keywords => [{'keywords' => 'fixes', 'status_id' => '3'}] do
@@ -233,6 +246,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_update_keywords_with_multiple_rules
     with_settings :commit_update_keywords => [
       {'keywords' => 'fixes, closes', 'status_id' => '5'},
@@ -246,6 +260,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_update_keywords_with_multiple_rules_for_the_same_keyword_should_match_tracker
     with_settings :commit_update_keywords => [
       {'keywords' => 'fixes', 'status_id' => '5', 'if_tracker_id' => '2'},
@@ -259,6 +274,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_update_keywords_with_multiple_rules_for_the_same_tracker_should_match_keyword
     with_settings :commit_update_keywords => [
       {'keywords' => 'Fixes, Closes', 'status_id' => '5', 'done_ratio' => '100', 'if_tracker_id' => '2'},
@@ -276,6 +292,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_update_keywords_with_multiple_rules_and_no_match
     with_settings :commit_update_keywords => [
       {'keywords' => 'fixes', 'status_id' => '5', 'if_tracker_id' => '2'},
@@ -289,6 +306,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_commit_referencing_a_subproject_issue
     c = Changeset.new(:repository   => Project.find(1).repository,
                       :committed_on => Time.now,
@@ -299,6 +317,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert c.issues.first.project != c.project
   end
 
+  # @rbs () -> bool
   def test_commit_closing_a_subproject_issue
     with_settings :commit_update_keywords => [{'keywords' => 'closes', 'status_id' => '5'}],
                   :default_language => 'en' do
@@ -318,6 +337,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_commit_referencing_a_parent_project_issue
     # repository of child project
     r = Repository::Subversion.
@@ -334,6 +354,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert c.issues.first.project != c.project
   end
 
+  # @rbs () -> bool
   def test_commit_referencing_a_project_with_commit_cross_project_ref_disabled
     r = Repository::Subversion.
           create!(
@@ -350,6 +371,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_commit_referencing_a_project_with_commit_cross_project_ref_enabled
     r = Repository::Subversion.
           create!(
@@ -366,6 +388,7 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_old_commits_should_not_update_issues_nor_log_time
     Setting.commit_ref_keywords = '*'
     Setting.commit_update_keywords = {'fixes , closes' => {'status_id' => '5', 'done_ratio' => '90'}}
@@ -388,6 +411,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal 0, issue.done_ratio
   end
 
+  # @rbs () -> Changeset
   def test_2_repositories_with_same_backend_should_not_link_issue_multiple_times
     Setting.commit_ref_keywords = '*'
     r1 = Repository::Subversion.create!(:project_id => 1, :identifier => 'svn1', :url => 'file:///svn1')
@@ -399,21 +423,25 @@ class ChangesetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_text_tag_revision
     c = Changeset.new(:revision => '520')
     assert_equal 'r520', c.text_tag
   end
 
+  # @rbs () -> bool
   def test_text_tag_revision_with_same_project
     c = Changeset.new(:revision => '520', :repository => Project.find(1).repository)
     assert_equal 'r520', c.text_tag(Project.find(1))
   end
 
+  # @rbs () -> bool
   def test_text_tag_revision_with_different_project
     c = Changeset.new(:revision => '520', :repository => Project.find(1).repository)
     assert_equal 'ecookbook:r520', c.text_tag(Project.find(2))
   end
 
+  # @rbs () -> bool
   def test_text_tag_revision_with_repository_identifier
     r = Repository::Subversion.
          create!(
@@ -426,6 +454,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal 'ecookbook:documents|r520', c.text_tag(Project.find(2))
   end
 
+  # @rbs () -> bool
   def test_text_tag_hash
     c = Changeset.
           new(
@@ -435,21 +464,25 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal 'commit:7234cb2750b63f47bff735edc50a1c0a433c2518', c.text_tag
   end
 
+  # @rbs () -> bool
   def test_text_tag_hash_with_same_project
     c = Changeset.new(:revision => '7234cb27', :scmid => '7234cb27', :repository => Project.find(1).repository)
     assert_equal 'commit:7234cb27', c.text_tag(Project.find(1))
   end
 
+  # @rbs () -> bool
   def test_text_tag_hash_with_different_project
     c = Changeset.new(:revision => '7234cb27', :scmid => '7234cb27', :repository => Project.find(1).repository)
     assert_equal 'ecookbook:commit:7234cb27', c.text_tag(Project.find(2))
   end
 
+  # @rbs () -> bool
   def test_text_tag_hash_all_number
     c = Changeset.new(:scmid => '0123456789', :revision => '0123456789')
     assert_equal 'commit:0123456789', c.text_tag
   end
 
+  # @rbs () -> bool
   def test_text_tag_hash_with_repository_identifier
     r =
       Repository::Subversion.
@@ -463,26 +496,31 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal 'ecookbook:commit:documents|7234cb27', c.text_tag(Project.find(2))
   end
 
+  # @rbs () -> bool
   def test_previous
     changeset = Changeset.find_by_revision('3')
     assert_equal Changeset.find_by_revision('2'), changeset.previous
   end
 
+  # @rbs () -> bool
   def test_previous_nil
     changeset = Changeset.find_by_revision('1')
     assert_nil changeset.previous
   end
 
+  # @rbs () -> bool
   def test_next
     changeset = Changeset.find_by_revision('2')
     assert_equal Changeset.find_by_revision('3'), changeset.next
   end
 
+  # @rbs () -> bool
   def test_next_nil
     changeset = Changeset.find_by_revision('10')
     assert_nil changeset.next
   end
 
+  # @rbs () -> bool
   def test_comments_should_be_converted_to_utf8
     proj = Project.find(3)
     str = "Texte encod\xe9 en ISO-8859-1.".b
@@ -502,6 +540,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal 'Texte encodé en ISO-8859-1.', c.comments
   end
 
+  # @rbs () -> bool
   def test_invalid_utf8_sequences_in_comments_should_be_replaced_latin1
     proj = Project.find(3)
     str2 = "\xe9a\xe9b\xe9c\xe9d\xe9e test".b
@@ -523,6 +562,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal "?a?b?c?d?e test", c.committer
   end
 
+  # @rbs () -> bool
   def test_invalid_utf8_sequences_in_comments_should_be_replaced_ja_jis
     proj = Project.find(3)
     str = "test\xb5\xfetest\xb5\xfe".b
@@ -542,6 +582,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal "test??test??", c.comments
   end
 
+  # @rbs () -> bool
   def test_comments_should_be_converted_all_latin1_to_utf8
     s1 = +"\xC2\x80"
     s2 = +"\xc3\x82\xc2\x80"
@@ -569,6 +610,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal s4, c.comments
   end
 
+  # @rbs () -> bool
   def test_invalid_utf8_sequences_in_paths_should_be_replaced
     proj = Project.find(3)
     str2 = "\xe9a\xe9b\xe9c\xe9d\xe9e test".b
@@ -601,6 +643,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal "?a?b?c?d?e test", ch.from_path
   end
 
+  # @rbs () -> bool
   def test_comments_nil
     proj = Project.find(3)
     r = Repository::Bazaar.
@@ -622,6 +665,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal "UTF-8", c.comments.encoding.to_s
   end
 
+  # @rbs () -> bool
   def test_comments_empty
     proj = Project.find(3)
     r = Repository::Bazaar.
@@ -644,6 +688,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal "UTF-8", c.committer.encoding.to_s
   end
 
+  # @rbs () -> bool
   def test_comments_should_accept_more_than_64k
     c = Changeset.new(:repository   => Repository.first,
                       :committed_on => Time.now,
@@ -655,6 +700,7 @@ class ChangesetTest < ActiveSupport::TestCase
     assert_equal 500.kilobytes, c.comments.size
   end
 
+  # @rbs () -> bool
   def test_identifier
     c = Changeset.find_by_revision('1')
     assert_equal c.revision, c.identifier

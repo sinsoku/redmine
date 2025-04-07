@@ -22,18 +22,21 @@ require_relative '../test_helper'
 class WikiHelperTest < Redmine::HelperTest
   include WikiHelper
 
+  # @rbs () -> bool
   def test_wiki_page_edit_cancel_path_for_new_page_without_parent_should_be_wiki_index
     wiki = Wiki.find(1)
     page = WikiPage.new(:wiki => wiki)
     assert_equal '/projects/ecookbook/wiki/index', wiki_page_edit_cancel_path(page)
   end
 
+  # @rbs () -> bool
   def test_wiki_page_edit_cancel_path_for_new_page_with_parent_should_be_parent
     wiki = Wiki.find(1)
     page = WikiPage.new(:wiki => wiki, :parent => wiki.find_page('Another_page'))
     assert_equal '/projects/ecookbook/wiki/Another_page', wiki_page_edit_cancel_path(page)
   end
 
+  # @rbs () -> bool
   def test_wiki_page_edit_cancel_path_for_existing_page_should_be_the_page
     wiki = Wiki.find(1)
     page = wiki.find_page('Child_1')

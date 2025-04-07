@@ -37,14 +37,17 @@ class TwofaController < ApplicationController
 
   before_action :activate_setup, only: [:activate_init, :activate_confirm, :activate]
 
+  # @rbs () -> String
   def activate_init
     init_twofa_pairing_and_send_code_for(@twofa)
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def activate_confirm
     @twofa_view = @twofa.init_pairing_view_variables
   end
 
+  # @rbs () -> String
   def activate
     if @twofa.confirm_pairing!(params[:twofa_code].to_s)
       # The session token was destroyed by the twofa pairing, generate a new one
@@ -96,6 +99,7 @@ class TwofaController < ApplicationController
 
   private
 
+  # @rbs () -> Redmine::Twofa::Totp
   def activate_setup
     twofa_scheme = Redmine::Twofa.for_twofa_scheme(params[:scheme].to_s)
 

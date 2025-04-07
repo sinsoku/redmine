@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class ActivitiesControllerTest < Redmine::ControllerTest
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_project_index
     get(
       :index,
@@ -34,6 +35,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_select 'dl dt.issue-edit a', :text => /(#{IssueStatus.find(2).name})/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_subproject_checkbox_should_check_descendants_visibility
     @request.session[:user_id] = 2
     get(
@@ -61,11 +63,13 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_select '#sidebar input#with_subprojects', :count => 0
   end
 
+  # @rbs () -> bool
   def test_project_index_with_invalid_project_id_should_respond_404
     get(:index, :params => {:id => 299})
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_previous_project_index
     @request.session[:user_id] = 1
     get(
@@ -81,6 +85,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_select 'dl dt.issue a', :text => /Cannot print recipes/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_global_index
     @request.session[:user_id] = 1
     get :index
@@ -93,6 +98,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_select 'dl dt.issue a', :text => /Subproject issue/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_user_index
     @request.session[:user_id] = 1
     get(
@@ -113,6 +119,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_select 'dl dt.issue a', :text => /Cannot print recipes/
   end
 
+  # @rbs () -> bool
   def test_user_index_with_invalid_user_id_should_respond_404
     get(
       :index,
@@ -123,6 +130,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_user_index_with_non_visible_user_id_should_respond_404
     Role.anonymous.update! :users_visibility => 'members_of_visible_projects'
     user = User.generate!
@@ -135,6 +143,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom_feed
     get(
       :index,
@@ -154,6 +163,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom_feed_should_respect_feeds_limit_setting
     with_settings :feeds_limit => '20' do
       get(
@@ -170,6 +180,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom_feed_with_explicit_selection
     get(
       :index,
@@ -197,6 +208,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom_feed_with_one_item_type
     with_settings :default_language => 'en' do
       get(
@@ -211,6 +223,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom_feed_with_user
     get(
       :index,
@@ -223,6 +236,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_select 'title', :text => "Redmine: #{User.find(2).name}"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_atom_feed_with_subprojects
     get(
       :index,
@@ -243,6 +257,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_show_private_notes_with_permission_only
     journal = Journal.create!(:journalized => Issue.find(2), :notes => 'Private notes', :private_notes => true)
     @request.session[:user_id] = 2
@@ -257,6 +272,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_select 'dl', :text => /Private notes/, :count => 0
   end
 
+  # @rbs () -> bool
   def test_index_with_submitted_scope_should_save_as_preference
     @request.session[:user_id] = 2
     get(
@@ -271,6 +287,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_equal %w(issues messages), User.find(2).pref.activity_scope.sort
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_scope_should_default_to_user_preference
     pref = User.find(2).pref
     pref.activity_scope = %w(issues news)
@@ -287,6 +304,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_not_show_next_page_link
     @request.session[:user_id] = 2
 
@@ -296,6 +314,7 @@ class ActivitiesControllerTest < Redmine::ControllerTest
     assert_select '.pagination a', :text => /Next/, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_up_to_yesterday_should_show_next_page_link
     @request.session[:user_id] = 2
     get(

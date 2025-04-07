@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class WatchersControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_watch_a_single_object_as_html
     @request.session[:user_id] = 3
     assert_difference('Watcher.count') do
@@ -34,6 +36,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Issue.find(1).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_watch_a_single_object
     @request.session[:user_id] = 3
     assert_difference('Watcher.count') do
@@ -44,6 +47,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Issue.find(1).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_watch_a_collection_with_a_single_object
     @request.session[:user_id] = 3
     assert_difference('Watcher.count') do
@@ -54,6 +58,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Issue.find(1).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_watch_a_collection_with_multiple_objects
     @request.session[:user_id] = 3
     assert_difference('Watcher.count', 2) do
@@ -65,6 +70,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Issue.find(3).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_watch_a_news_module_should_add_watcher
     @request.session[:user_id] = 7
     assert_not_nil m = Project.find(1).enabled_module('news')
@@ -76,6 +82,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert m.reload.watched_by?(User.find(7))
   end
 
+  # @rbs () -> bool
   def test_watch_a_private_news_module_without_permission_should_fail
     @request.session[:user_id] = 7
     assert_not_nil m = Project.find(2).enabled_module('news')
@@ -86,6 +93,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_watch_should_be_denied_without_permission
     Role.find(2).remove_permission! :view_issues
     @request.session[:user_id] = 3
@@ -95,6 +103,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_watch_invalid_class_should_respond_with_404
     @request.session[:user_id] = 3
     assert_no_difference('Watcher.count') do
@@ -103,6 +112,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_watch_invalid_object_should_respond_with_404
     @request.session[:user_id] = 3
     assert_no_difference('Watcher.count') do
@@ -111,6 +121,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_unwatch_as_html
     @request.session[:user_id] = 3
     assert_difference('Watcher.count', -1) do
@@ -121,6 +132,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !Issue.find(1).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_unwatch
     @request.session[:user_id] = 3
     assert_difference('Watcher.count', -1) do
@@ -131,6 +143,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !Issue.find(1).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_unwatch_a_collection_with_multiple_objects
     @request.session[:user_id] = 3
     Watcher.create!(:user_id => 3, :watchable => Issue.find(1))
@@ -145,6 +158,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !Issue.find(3).watched_by?(User.find(3))
   end
 
+  # @rbs () -> MatchData
   def test_new
     @request.session[:user_id] = 2
     get :new, :params => {:object_type => 'issue', :object_id => '2'}, :xhr => true
@@ -152,12 +166,14 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_match /ajax-modal/, response.body
   end
 
+  # @rbs () -> bool
   def test_new_as_html_should_respond_with_404
     @request.session[:user_id] = 2
     get :new, :params => {:object_type => 'issue', :object_id => '2'}
     assert_response :not_found
   end
 
+  # @rbs () -> MatchData
   def test_new_for_message
     @request.session[:user_id] = 2
     get :new, :params => {:object_type => 'message', :object_id => '1'}, :xhr => true
@@ -165,6 +181,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_match /ajax-modal/, response.body
   end
 
+  # @rbs () -> MatchData
   def test_new_for_wiki_page
     @request.session[:user_id] = 2
     get :new, :params => {:object_type => 'wiki_page', :object_id => '1'}, :xhr => true
@@ -172,6 +189,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_match /ajax-modal/, response.body
   end
 
+  # @rbs () -> MatchData
   def test_new_with_multiple_objects
     @request.session[:user_id] = 2
     get :new, :params => {:object_type => 'issue', :object_id => ['1', '2']}, :xhr => true
@@ -179,6 +197,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_match /ajax-modal/, response.body
   end
 
+  # @rbs () -> MatchData
   def test_new_for_new_record_with_project_id
     @request.session[:user_id] = 2
     get :new, :params => {:project_id => 1}, :xhr => true
@@ -186,6 +205,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_match /ajax-modal/, response.body
   end
 
+  # @rbs () -> MatchData
   def test_new_for_new_record_with_project_identifier
     @request.session[:user_id] = 2
     get :new, :params => {:project_id => 'ecookbook'}, :xhr => true
@@ -193,6 +213,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_match /ajax-modal/, response.body
   end
 
+  # @rbs () -> MatchData
   def test_new_with_multiple_objects_from_different_projects
     @request.session[:user_id] = 2
     get :new, :params => {
@@ -207,6 +228,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> MatchData
   def test_new_without_view_watchers_permission
     @request.session[:user_id] = 2
     Role.find(1).remove_permission! :view_issue_watchers
@@ -217,6 +239,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_match %r{name=\\"watcher\[user_ids\]\[\]\\" value=\\"3\\"}, response.body
   end
 
+  # @rbs () -> bool
   def test_new_dont_show_self_when_watching_without_view_watchers_permission
     @request.session[:user_id] = 2
     Role.find(1).remove_permission! :view_issue_watchers
@@ -226,6 +249,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_no_match %r{name=\\"watcher\[user_ids\]\[\]\\" value=\\"2\\"}, response.body
   end
 
+  # @rbs () -> bool
   def test_create_as_html
     @request.session[:user_id] = 2
     assert_difference('Watcher.count') do
@@ -239,6 +263,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Issue.find(2).watched_by?(User.find(4))
   end
 
+  # @rbs () -> bool
   def test_create_group_as_html
     @request.session[:user_id] = 2
     assert_difference('Watcher.count') do
@@ -252,6 +277,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Issue.find(2).watched_by?(Group.find(10))
   end
 
+  # @rbs () -> bool
   def test_create
     @request.session[:user_id] = 2
     assert_difference('Watcher.count') do
@@ -266,6 +292,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Issue.find(2).watched_by?(User.find(4))
   end
 
+  # @rbs () -> bool
   def test_create_for_message
     @request.session[:user_id] = 2
     assert_difference('Watcher.count') do
@@ -280,6 +307,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Message.find(1).watched_by?(User.find(4))
   end
 
+  # @rbs () -> bool
   def test_create_for_wiki_page
     @request.session[:user_id] = 2
     assert_difference('Watcher.count') do
@@ -294,6 +322,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert WikiPage.find(1).watched_by?(User.find(4))
   end
 
+  # @rbs () -> bool
   def test_create_with_mutiple_users
     @request.session[:user_id] = 2
     assert_difference('Watcher.count', 3) do
@@ -311,6 +340,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert issue.watched_by?(Group.find(10))
   end
 
+  # @rbs () -> bool
   def test_create_for_message_with_mutiple_users
     @request.session[:user_id] = 2
     assert_difference('Watcher.count', 3) do
@@ -328,6 +358,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert message.watched_by?(Group.find(10))
   end
 
+  # @rbs () -> bool
   def test_create_for_wiki_page_with_mutiple_users
     @request.session[:user_id] = 2
     assert_difference('Watcher.count', 3) do
@@ -345,6 +376,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert wiki_page.watched_by?(Group.find(10))
   end
 
+  # @rbs () -> bool
   def test_create_with_mutiple_objects
     @request.session[:user_id] = 2
     assert_difference('Watcher.count', 6) do
@@ -369,6 +401,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert issue2.watched_by?(group10)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_autocomplete_on_watchable_creation
     @request.session[:user_id] = 2
     group = Group.generate!(:name => 'Group Minimum')
@@ -382,6 +415,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_select %(input[name=?][value="#{group.id}"]), 'watcher[user_ids][]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_non_member_on_create
     @request.session[:user_id] = 2
     project = Project.find_by_name("ecookbook")
@@ -393,6 +427,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_select 'input', :count => 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_autocomplete_on_watchable_update
     @request.session[:user_id] = 2
     get :autocomplete_for_user, :params => {
@@ -406,6 +441,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value="9"]', 'watcher[user_ids][]'
   end
 
+  # @rbs () -> bool
   def test_search_and_add_non_member_on_update
     @request.session[:user_id] = 2
     project = Project.find_by_name("ecookbook")
@@ -432,6 +468,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert Issue.find(2).watched_by?(user)
   end
 
+  # @rbs () -> bool
   def test_autocomplete_for_user_should_return_visible_users
     Role.update_all :users_visibility => 'members_of_visible_projects'
 
@@ -447,6 +484,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_not_include hidden.name, response.body
   end
 
+  # @rbs () -> bool
   def test_autocomplete_for_user_should_not_return_users_without_object_visibility
     @request.session[:user_id] = 1
     get :autocomplete_for_user, :params => {
@@ -461,6 +499,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert response.body.blank?
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_autocomplete_with_multiple_objects_from_different_projects
     @request.session[:user_id] = 2
 
@@ -482,6 +521,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value="10"]', 'watcher[user_ids][]'
   end
 
+  # @rbs () -> bool
   def test_append
     @request.session[:user_id] = 2
     assert_no_difference 'Watcher.count' do
@@ -494,6 +534,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_append_without_user_should_render_nothing
     @request.session[:user_id] = 2
     post :append, :params => {:project_id => 'ecookbook'}, :xhr => true
@@ -501,6 +542,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert response.body.blank?
   end
 
+  # @rbs () -> bool
   def test_destroy_as_html
     @request.session[:user_id] = 2
     assert_difference('Watcher.count', -1) do
@@ -513,6 +555,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !Issue.find(2).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_destroy_group_as_html
     @request.session[:user_id] = 2
     issue = Issue.find(2)
@@ -530,6 +573,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !issue.watched_by?(group)
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 2
     assert_difference('Watcher.count', -1) do
@@ -542,6 +586,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !Issue.find(2).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_destroy_for_meessage
     @request.session[:user_id] = 2
     message = Message.find(1)
@@ -558,6 +603,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !message.watched_by?(user)
   end
 
+  # @rbs () -> bool
   def test_destroy_for_wiki_page
     @request.session[:user_id] = 2
     wiki_page = WikiPage.find(1)
@@ -574,6 +620,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !wiki_page.watched_by?(user)
   end
 
+  # @rbs () -> bool
   def test_destroy_without_permission
     @request.session[:user_id] = 2
     wiki_page = WikiPage.find(1)
@@ -591,6 +638,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert wiki_page.watched_by?(user)
   end
 
+  # @rbs () -> bool
   def test_create_without_permission
     @request.session[:user_id] = 2
     wiki_page = WikiPage.find(1)
@@ -609,6 +657,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert_not wiki_page.watched_by?(user)
   end
 
+  # @rbs () -> bool
   def test_destroy_locked_user
     user = User.find(3)
     user.lock!
@@ -625,6 +674,7 @@ class WatchersControllerTest < Redmine::ControllerTest
     assert !Issue.find(2).watched_by?(User.find(3))
   end
 
+  # @rbs () -> bool
   def test_destroy_invalid_user_should_respond_with_404
     @request.session[:user_id] = 2
     assert_no_difference('Watcher.count') do

@@ -39,6 +39,7 @@ module Redmine
           float
         ].freeze
 
+        # @rbs () -> Hash[untyped, untyped]
         def allowlist
           @allowlist ||= customize_allowlist(super.deep_dup)
         end
@@ -47,6 +48,7 @@ module Redmine
 
         # customizes the allowlist defined in
         # https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/sanitization_filter.rb
+        # @rbs (Hash[untyped, untyped]) -> Hash[untyped, untyped]
         def customize_allowlist(allowlist)
           # Disallow `name` attribute globally, allow on `a`
           allowlist[:attributes][:all].delete("name")

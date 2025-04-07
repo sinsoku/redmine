@@ -18,14 +18,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TimeEntryCustomField < CustomField
+  # @rbs () -> Symbol
   def type_name
     :label_spent_time
   end
 
+  # @rbs (Project?, ?User | AnonymousUser) -> bool
   def visible_by?(project, user=User.current)
     super || roles.intersect?(user.roles_for_project(project))
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_custom_field
     super
     errors.add(:base, l(:label_role_plural) + ' ' + l('activerecord.errors.messages.blank')) unless visible? || roles.present?

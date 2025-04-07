@@ -22,10 +22,12 @@ class WelcomeController < ApplicationController
 
   skip_before_action :check_if_login_required, only: [:robots]
 
+  # @rbs () -> Array[untyped]
   def index
     @news = News.latest User.current
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def robots
     @projects = Project.visible(User.anonymous) unless Setting.login_required?
     render :layout => false, :content_type => 'text/plain'

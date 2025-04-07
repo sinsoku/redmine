@@ -27,22 +27,27 @@ module Redmine
         CVS_BIN = Redmine::Configuration['scm_cvs_command'] || "cvs"
 
         class << self
+          # @rbs () -> String
           def client_command
             @@bin    ||= CVS_BIN
           end
 
+          # @rbs () -> String
           def sq_bin
             @@sq_bin ||= shell_quote_command
           end
 
+          # @rbs () -> Array[untyped]
           def client_version
             @@client_version ||= (scm_command_version || [])
           end
 
+          # @rbs () -> nil
           def client_available
             client_version_above?([1, 12])
           end
 
+          # @rbs () -> nil
           def scm_command_version
             scm_version = scm_version_from_command_line.b
             if m = scm_version.match(%r{\A(.*?)((\d+\.)+\d+)}m)
@@ -50,6 +55,7 @@ module Redmine
             end
           end
 
+          # @rbs () -> String
           def scm_version_from_command_line
             shellout("#{sq_bin} --version") {|io| io.read}.to_s
           end

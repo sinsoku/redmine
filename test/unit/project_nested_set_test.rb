@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class ProjectNestedSetTest < ActiveSupport::TestCase
+  # @rbs () -> bool
   def setup
     User.current = nil
     Project.delete_all
@@ -45,10 +46,12 @@ class ProjectNestedSetTest < ActiveSupport::TestCase
     @b11.set_parent!(@b1)
   end
 
+  # @rbs () -> Array[untyped]
   def test_valid_tree
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_rebuild_should_build_valid_tree
     Project.update_all "lft = NULL, rgt = NULL"
 
@@ -56,6 +59,7 @@ class ProjectNestedSetTest < ActiveSupport::TestCase
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_rebuild_tree_should_build_valid_tree_even_with_valid_lft_rgt_values
     Project.where({:id => @a.id}).update_all("name = 'YY'")
     # lft and rgt values are still valid (Project.rebuild! would not update anything)
@@ -65,11 +69,13 @@ class ProjectNestedSetTest < ActiveSupport::TestCase
     assert_valid_nested_set
   end
 
+  # @rbs () -> bool
   def test_rebuild_without_projects_should_not_fail
     Project.delete_all
     assert Project.rebuild_tree!
   end
 
+  # @rbs () -> Array[untyped]
   def test_moving_a_child_to_a_different_parent_should_keep_valid_tree
     assert_no_difference 'Project.count' do
       Project.find_by_name('B1').set_parent!(Project.find_by_name('A2'))
@@ -77,57 +83,67 @@ class ProjectNestedSetTest < ActiveSupport::TestCase
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_renaming_a_root_to_first_position_should_update_nested_set_order
     @c.name = '1'
     @c.save!
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_renaming_a_root_to_middle_position_should_update_nested_set_order
     @a.name = 'BA'
     @a.save!
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_renaming_a_root_to_last_position_should_update_nested_set_order
     @a.name = 'D'
     @a.save!
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_renaming_a_root_to_same_position_should_update_nested_set_order
     @c.name = 'D'
     @c.save!
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_renaming_a_child_should_update_nested_set_order
     @a1.name = 'A3'
     @a1.save!
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_renaming_a_child_with_child_should_update_nested_set_order
     @b1.name = 'B3'
     @b1.save!
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_adding_a_root_to_first_position_should_update_nested_set_order
     project = Project.create!(:name => '1', :identifier => 'projectba')
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_adding_a_root_to_middle_position_should_update_nested_set_order
     project = Project.create!(:name => 'BA', :identifier => 'projectba')
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_adding_a_root_to_last_position_should_update_nested_set_order
     project = Project.create!(:name => 'Z', :identifier => 'projectba')
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_destroying_a_root_with_children_should_keep_valid_tree
     assert_difference 'Project.count', -4 do
       Project.find_by_name('B').destroy
@@ -135,6 +151,7 @@ class ProjectNestedSetTest < ActiveSupport::TestCase
     assert_valid_nested_set
   end
 
+  # @rbs () -> Array[untyped]
   def test_destroying_a_child_with_children_should_keep_valid_tree
     assert_difference 'Project.count', -2 do
       Project.find_by_name('B1').destroy
@@ -152,6 +169,7 @@ class ProjectNestedSetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def assert_valid_nested_set
     projects = Project.all
     lft_rgt = projects.map {|p| [p.lft, p.rgt]}.flatten

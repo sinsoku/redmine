@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingProjectEnumerationsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_project_enumerations
     should_route 'PUT /projects/foo/enumerations' => 'project_enumerations#update', :project_id => 'foo'
     should_route 'DELETE /projects/foo/enumerations' => 'project_enumerations#destroy', :project_id => 'foo'

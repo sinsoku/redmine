@@ -23,6 +23,7 @@ class QueryColumn
 
   include Redmine::I18n
 
+  # @rbs (Symbol | String, ?Hash[untyped, untyped]) -> void
   def initialize(name, options={})
     self.name = name
     self.sortable = options[:sortable]
@@ -34,6 +35,7 @@ class QueryColumn
     @frozen = options[:frozen]
   end
 
+  # @rbs () -> String
   def caption
     case @caption_key
     when Symbol
@@ -45,54 +47,66 @@ class QueryColumn
     end
   end
 
+  # @rbs () -> bool
   def groupable?
     @groupable
   end
 
   # Returns true if the column is sortable, otherwise false
+  # @rbs () -> bool
   def sortable?
     @sortable.present?
   end
 
+  # @rbs () -> (String | Arel::Nodes::SqlLiteral | Array[untyped] | bool)?
   def sortable
     @sortable.is_a?(Proc) ? @sortable.call : @sortable
   end
 
+  # @rbs () -> bool
   def inline?
     @inline
   end
 
+  # @rbs () -> bool?
   def frozen?
     @frozen
   end
 
+  # @rbs (Issue | TimeEntry) -> (Version | Issue | IssueCategory | Date | User | Tracker)?
   def value(object)
     object.send name
   end
 
+  # @rbs (Issue | TimeEntry | Project | User) -> (Integer | Tracker | IssueStatus | IssuePriority | String | ActiveSupport::TimeWithZone | User | Rational | Date | Project | bool | TimeEntryActivity | Issue | Float | Version | Attachment::ActiveRecord_Associations_CollectionProxy | IssueRelation::Relations | IssueCategory | Principal::ActiveRecord_Associations_CollectionProxy)?
   def value_object(object)
     object.send name
   end
 
   # Returns the group that object belongs to when grouping query results
+  # @rbs (Issue | TimeEntry) -> (Version | Issue | bool | IssueCategory | String | Date | CustomFieldEnumeration | User | Tracker)?
   def group_value(object)
     value(object)
   end
 
+  # @rbs () -> Symbol
   def css_classes
     name
   end
 
+  # @rbs () -> String
   def group_by_statement
     name.to_s
   end
 end
 
 class TimestampQueryColumn < QueryColumn
+  # @rbs () -> bool
   def groupable?
     group_by_statement.present?
   end
 
+  # @rbs () -> nil
   def group_by_statement
     Redmine::Database.timestamp_to_date(sortable, User.current.time_zone)
   end
@@ -105,6 +119,7 @@ class TimestampQueryColumn < QueryColumn
 end
 
 class WatcherQueryColumn < QueryColumn
+  # @rbs (Issue) -> Principal::ActiveRecord_Associations_CollectionProxy?
   def value_object(object)
     return nil unless User.current.allowed_to?(:"view_#{object.class.name.underscore}_watchers", object.try(:project))
 
@@ -113,6 +128,7 @@ class WatcherQueryColumn < QueryColumn
 end
 
 class QueryAssociationColumn < QueryColumn
+  # @rbs (Symbol, Symbol, ?Hash[untyped, untyped]) -> void
   def initialize(association, attribute, options={})
     @association = association
     @attribute = attribute
@@ -120,6 +136,7 @@ class QueryAssociationColumn < QueryColumn
     super(name_with_assoc, options)
   end
 
+  # @rbs (User | TimeEntry | Issue) -> (String | Tracker | IssueCategory | IssueStatus | Version | Issue)?
   def value_object(object)
     assoc = object.send(@association)
     if assoc && assoc.visible?
@@ -127,12 +144,14 @@ class QueryAssociationColumn < QueryColumn
     end
   end
 
+  # @rbs () -> String
   def css_classes
     @css_classes ||= "#{@association}-#{@attribute}"
   end
 end
 
 class QueryCustomFieldColumn < QueryColumn
+  # @rbs (IssueCustomField | ProjectCustomField | TimeEntryCustomField | UserCustomField, ?Hash[untyped, untyped]) -> void
   def initialize(custom_field, options={})
     name = :"cf_#{custom_field.id}"
     super(
@@ -144,22 +163,27 @@ class QueryCustomFieldColumn < QueryColumn
     @cf = custom_field
   end
 
+  # @rbs () -> bool
   def groupable?
     group_by_statement.present?
   end
 
+  # @rbs () -> Arel::Nodes::SqlLiteral?
   def group_by_statement
     @cf.group_statement
   end
 
+  # @rbs () -> String
   def caption
     @cf.name
   end
 
+  # @rbs () -> (IssueCustomField | ProjectCustomField | TimeEntryCustomField | UserCustomField)
   def custom_field
     @cf
   end
 
+  # @rbs (Issue | User | TimeEntry | Project) -> (CustomValue | Array[untyped])?
   def value_object(object)
     project = object.project if object.respond_to?(:project)
     if custom_field.visible_by?(project, User.current)
@@ -170,6 +194,7 @@ class QueryCustomFieldColumn < QueryColumn
     end
   end
 
+  # @rbs (Issue) -> (bool | String | CustomFieldEnumeration | User)?
   def value(object)
     raw = value_object(object)
     if raw.is_a?(Array)
@@ -181,12 +206,14 @@ class QueryCustomFieldColumn < QueryColumn
     end
   end
 
+  # @rbs () -> String
   def css_classes
     @css_classes ||= "#{name} #{@cf.field_format}"
   end
 end
 
 class QueryAssociationCustomFieldColumn < QueryCustomFieldColumn
+  # @rbs (Symbol, IssueCustomField | ProjectCustomField, ?Hash[untyped, untyped]) -> void
   def initialize(association, custom_field, options={})
     super(custom_field, options)
     self.name = :"#{association}.cf_#{custom_field.id}"
@@ -196,6 +223,7 @@ class QueryAssociationCustomFieldColumn < QueryCustomFieldColumn
     @association = association
   end
 
+  # @rbs (TimeEntry) -> CustomValue?
   def value_object(object)
     assoc = object.send(@association)
     if assoc && assoc.visible?
@@ -203,11 +231,13 @@ class QueryAssociationCustomFieldColumn < QueryCustomFieldColumn
     end
   end
 
+  # @rbs () -> String
   def css_classes
     @css_classes ||= "#{@association}_cf_#{@cf.id} #{@cf.field_format}"
   end
 
   # TODO: support grouping by association custom field
+  # @rbs () -> bool
   def groupable?
     false
   end
@@ -216,6 +246,7 @@ end
 class QueryFilter
   include Redmine::I18n
 
+  # @rbs (String, Hash[untyped, untyped]) -> void
   def initialize(field, options)
     @field = field.to_s
     @options = options
@@ -224,6 +255,7 @@ class QueryFilter
     @remote = options.key?(:remote) ? options[:remote] : options[:values].is_a?(Proc)
   end
 
+  # @rbs (Symbol) -> (Symbol | String | Array[untyped] | IssueCustomField | VersionCustomField | ProjectCustomField | UserCustomField)
   def [](arg)
     if arg == :values
       values
@@ -232,6 +264,7 @@ class QueryFilter
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def values
     @values ||= begin
       values = @options[:values]
@@ -242,6 +275,7 @@ class QueryFilter
     end
   end
 
+  # @rbs () -> bool
   def remote
     @remote
   end
@@ -409,6 +443,7 @@ class Query < ApplicationRecord
   end
 
   # Returns true if the query is visible to +user+ or the current user.
+  # @rbs (?AnonymousUser | User) -> bool
   def visible?(user=User.current)
     return true if user.admin?
 
@@ -428,24 +463,29 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs () -> bool
   def is_private?
     visibility == VISIBILITY_PRIVATE
   end
 
+  # @rbs () -> bool
   def is_public?
     !is_private?
   end
 
   # Returns true if the query is available for all projects
+  # @rbs () -> bool
   def is_global?
     new_record? ? project_id.nil? : project_id_in_database.nil?
   end
 
+  # @rbs () -> String
   def queried_table_name
     @queried_table_name ||= self.class.queried_class.table_name
   end
 
   # Builds the query from the given params
+  # @rbs (ActionController::Parameters | Hash[untyped, untyped], ?Hash[untyped, untyped]?) -> (IssueQuery | ProjectQuery | ProjectAdminQuery | TimeEntryQuery | UserQuery)
   def build_from_params(params, defaults={})
     if params[:fields] || params[:f]
       self.filters = {}
@@ -466,10 +506,12 @@ class Query < ApplicationRecord
   end
 
   # Builds a new query from the given params and attributes
+  # @rbs (ActionController::Parameters | Hash[untyped, untyped], ?Hash[untyped, untyped]?) -> (IssueQuery | ProjectQuery | ProjectAdminQuery | TimeEntryQuery | UserQuery)
   def self.build_from_params(params, attributes={})
     new(attributes).build_from_params(params)
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def as_params
     if new_record?
       params = {}
@@ -492,6 +534,7 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]?
   def validate_query_filters
     filters.each_key do |field|
       if values_for(field)
@@ -530,11 +573,13 @@ class Query < ApplicationRecord
     end if filters
   end
 
+  # @rbs (String, Symbol) -> ActiveModel::Error
   def add_filter_error(field, message)
     m = label_for(field) + " " + l(message, :scope => 'activerecord.errors.messages')
     errors.add(:base, m)
   end
 
+  # @rbs (User | AnonymousUser) -> bool
   def editable_by?(user)
     return false unless user
 
@@ -545,16 +590,19 @@ class Query < ApplicationRecord
     is_public? && !is_global? && user.allowed_to?(:manage_public_queries, project)
   end
 
+  # @rbs () -> Tracker::ActiveRecord_Relation
   def trackers
     @trackers ||= (project.nil? ? Tracker.all : project.rolled_up_trackers).visible.sorted
   end
 
   # Returns a hash of localized labels for all filter operators
+  # @rbs () -> Hash[untyped, untyped]
   def self.operators_labels
     operators.inject({}) {|h, operator| h[operator.first] = l(*operator.last); h}
   end
 
   # Returns a representation of the available filters for JSON serialization
+  # @rbs () -> Hash[untyped, untyped]
   def available_filters_as_json
     json = {}
     available_filters.each do |field, filter|
@@ -575,10 +623,12 @@ class Query < ApplicationRecord
     json
   end
 
+  # @rbs () -> Array[untyped]
   def all_projects
     @all_projects ||= Project.visible.to_a
   end
 
+  # @rbs () -> Array[untyped]
   def all_projects_values
     return @all_projects_values if @all_projects_values
 
@@ -590,6 +640,7 @@ class Query < ApplicationRecord
     @all_projects_values = values
   end
 
+  # @rbs () -> Array[untyped]
   def project_values
     project_values = []
     if User.current.logged?
@@ -600,10 +651,12 @@ class Query < ApplicationRecord
     project_values
   end
 
+  # @rbs () -> Array[untyped]
   def subproject_values
     project.descendants.visible.pluck(:name, :id).map {|name, id| [name, id.to_s]}
   end
 
+  # @rbs () -> Array[untyped]
   def principals
     @principal ||= begin
       principals = []
@@ -622,10 +675,12 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def users
     principals.select {|p| p.is_a?(User)}
   end
 
+  # @rbs () -> Array[untyped]
   def author_values
     author_values = []
     author_values << ["<< #{l(:label_me)} >>", "me"] if User.current.logged?
@@ -636,6 +691,7 @@ class Query < ApplicationRecord
     author_values
   end
 
+  # @rbs () -> Array[untyped]
   def assigned_to_values
     assigned_to_values = []
     assigned_to_values << ["<< #{l(:label_me)} >>", "me"] if User.current.logged?
@@ -645,6 +701,7 @@ class Query < ApplicationRecord
     assigned_to_values
   end
 
+  # @rbs () -> Array[untyped]
   def fixed_version_values
     versions = []
     if project
@@ -657,6 +714,7 @@ class Query < ApplicationRecord
   end
 
   # Returns a scope of issue statuses that are available as columns for filters
+  # @rbs () -> Array[untyped]
   def issue_statuses_values
     if project
       statuses = project.rolled_up_statuses
@@ -666,6 +724,7 @@ class Query < ApplicationRecord
     statuses.pluck(:name, :id).map {|name, id| [name, id.to_s]}
   end
 
+  # @rbs () -> Array[untyped]
   def watcher_values
     watcher_values = [["<< #{l(:label_me)} >>", "me"]]
     if User.current.allowed_to?(:view_issue_watchers, self.project, global: true)
@@ -677,6 +736,7 @@ class Query < ApplicationRecord
   end
 
   # Returns a scope of issue custom fields that are available as columns or filters
+  # @rbs () -> IssueCustomField::ActiveRecord_Relation
   def issue_custom_fields
     if project
       project.rolled_up_custom_fields
@@ -686,16 +746,19 @@ class Query < ApplicationRecord
   end
 
   # Returns a scope of project custom fields that are available as columns or filters
+  # @rbs () -> ProjectCustomField::ActiveRecord_Relation
   def project_custom_fields
     ProjectCustomField.sorted
   end
 
   # Returns a scope of time entry custom fields that are available as columns or filters
+  # @rbs () -> TimeEntryCustomField::ActiveRecord_Relation
   def time_entry_custom_fields
     TimeEntryCustomField.sorted
   end
 
   # Returns a scope of project statuses that are available as columns or filters
+  # @rbs () -> Array[untyped]
   def project_statuses_values
     [
       [l(:project_status_active), "#{Project::STATUS_ACTIVE}"],
@@ -710,6 +773,7 @@ class Query < ApplicationRecord
   protected :initialize_available_filters
 
   # Adds an available filter
+  # @rbs (String, Hash[untyped, untyped]) -> ActiveSupport::OrderedHash
   def add_available_filter(field, options)
     @available_filters ||= ActiveSupport::OrderedHash.new
     @available_filters[field] = QueryFilter.new(field, options)
@@ -717,6 +781,7 @@ class Query < ApplicationRecord
   end
 
   # Removes an available filter
+  # @rbs (String) -> QueryFilter
   def delete_available_filter(field)
     if @available_filters
       @available_filters.delete(field)
@@ -724,6 +789,7 @@ class Query < ApplicationRecord
   end
 
   # Return a hash of available filters
+  # @rbs () -> ActiveSupport::OrderedHash
   def available_filters
     unless @available_filters
       initialize_available_filters
@@ -732,6 +798,7 @@ class Query < ApplicationRecord
     @available_filters
   end
 
+  # @rbs (String, String, ?Array[untyped]?) -> Hash[untyped, untyped]?
   def add_filter(field, operator, values=nil)
     # values must be an array
     return unless values.nil? || values.is_a?(Array)
@@ -742,6 +809,7 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs (String, String) -> (Hash[untyped, untyped] | String)
   def add_short_filter(field, expression)
     return unless expression && available_filters.has_key?(field)
 
@@ -755,6 +823,7 @@ class Query < ApplicationRecord
   end
 
   # Add multiple filters using +add_filter+
+  # @rbs (Array[untyped], (ActionController::Parameters | Hash[untyped, untyped])?, (ActionController::Parameters | Hash[untyped, untyped])?) -> Array[untyped]?
   def add_filters(fields, operators, values)
     if fields.present? && operators.present?
       fields.each do |field|
@@ -763,26 +832,32 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs (String | Symbol) -> Hash[untyped, untyped]?
   def has_filter?(field)
     filters and filters[field]
   end
 
+  # @rbs (String | Symbol) -> Symbol?
   def type_for(field)
     available_filters[field][:type] if available_filters.has_key?(field)
   end
 
+  # @rbs (String) -> String
   def operator_for(field)
     has_filter?(field) ? filters[field][:operator] : nil
   end
 
+  # @rbs (String) -> (Array[untyped] | String)?
   def values_for(field)
     has_filter?(field) ? filters[field][:values] : nil
   end
 
+  # @rbs (String, ?Integer) -> String?
   def value_for(field, index=0)
     (values_for(field) || [])[index]
   end
 
+  # @rbs (String) -> String
   def label_for(field)
     label = available_filters[field][:name] if available_filters.has_key?(field)
     label ||= queried_class.human_attribute_name(field, :default => field)
@@ -793,11 +868,13 @@ class Query < ApplicationRecord
   end
 
   # Returns an array of columns that can be used to group the results
+  # @rbs () -> Array[untyped]
   def groupable_columns
     available_columns.select(&:groupable?)
   end
 
   # Returns a Hash of columns and the key for sorting
+  # @rbs () -> Hash[untyped, untyped]
   def sortable_columns
     available_columns.inject({}) do |h, column|
       h[column.name.to_s] = column.sortable
@@ -805,6 +882,7 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def columns
     return [] if available_columns.empty?
 
@@ -815,22 +893,27 @@ class Query < ApplicationRecord
     available_columns.select(&:frozen?) | cols
   end
 
+  # @rbs () -> Array[untyped]
   def inline_columns
     columns.select(&:inline?)
   end
 
+  # @rbs () -> Array[untyped]
   def block_columns
     columns.reject(&:inline?)
   end
 
+  # @rbs () -> Array[untyped]
   def available_inline_columns
     available_columns.select(&:inline?)
   end
 
+  # @rbs () -> Array[untyped]
   def available_block_columns
     available_columns.reject(&:inline?)
   end
 
+  # @rbs () -> Array[untyped]
   def available_totalable_columns
     available_columns.select(&:totalable)
   end
@@ -839,14 +922,17 @@ class Query < ApplicationRecord
     []
   end
 
+  # @rbs () -> Array[untyped]
   def default_totalable_names
     []
   end
 
+  # @rbs () -> String
   def default_display_type
     self.available_display_types.first
   end
 
+  # @rbs (Array[untyped]?) -> Array[untyped]?
   def column_names=(names)
     if names
       names = names.select {|n| n.is_a?(Symbol) || n.present?}
@@ -862,24 +948,29 @@ class Query < ApplicationRecord
     write_attribute(:column_names, names)
   end
 
+  # @rbs (QueryColumn | Symbol | QueryAssociationCustomFieldColumn | QueryCustomFieldColumn) -> (QueryColumn | QueryAssociationCustomFieldColumn | QueryCustomFieldColumn | WatcherQueryColumn)?
   def has_column?(column)
     name = column.is_a?(QueryColumn) ? column.name : column
     columns.detect {|c| c.name == name}
   end
 
+  # @rbs () -> bool
   def has_custom_field_column?
     columns.any?(QueryCustomFieldColumn)
   end
 
+  # @rbs () -> bool
   def has_default_columns?
     column_names.nil? || column_names.empty?
   end
 
+  # @rbs () -> Array[untyped]
   def totalable_columns
     names = totalable_names
     available_totalable_columns.select {|column| names.include?(column.name)}
   end
 
+  # @rbs (Array[untyped]?) -> Array[untyped]?
   def totalable_names=(names)
     if names
       names = names.select(&:present?).map {|n| n.is_a?(Symbol) ? n : n.to_sym}
@@ -887,6 +978,7 @@ class Query < ApplicationRecord
     options[:totalable_names] = names
   end
 
+  # @rbs () -> Array[untyped]
   def totalable_names
     options[:totalable_names] || default_totalable_names || []
   end
@@ -895,12 +987,14 @@ class Query < ApplicationRecord
     []
   end
 
+  # @rbs ((Redmine::SortCriteria | String | Array[untyped] | ActionController::Parameters | Hash[untyped, untyped])?) -> Redmine::SortCriteria
   def sort_criteria=(arg)
     c = Redmine::SortCriteria.new(arg)
     write_attribute(:sort_criteria, c.to_a)
     c
   end
 
+  # @rbs () -> Redmine::SortCriteria
   def sort_criteria
     c = read_attribute(:sort_criteria)
     if c.blank?
@@ -909,14 +1003,17 @@ class Query < ApplicationRecord
     Redmine::SortCriteria.new(c)
   end
 
+  # @rbs (Integer) -> String?
   def sort_criteria_key(index)
     sort_criteria[index].try(:first)
   end
 
+  # @rbs (Integer) -> String?
   def sort_criteria_order(index)
     sort_criteria[index].try(:last)
   end
 
+  # @rbs () -> Array[untyped]?
   def sort_clause
     if clause = sort_criteria.sort_clause(sortable_columns)
       clause.map {|c| Arel.sql c}
@@ -924,6 +1021,7 @@ class Query < ApplicationRecord
   end
 
   # Returns the SQL sort order that should be prepended for grouping
+  # @rbs () -> Array[untyped]?
   def group_by_sort_order
     if column = group_by_column
       order = (sort_criteria.order_for(column.name) || column.default_order || 'asc').try(:upcase)
@@ -937,18 +1035,22 @@ class Query < ApplicationRecord
   end
 
   # Returns true if the query is a grouped query
+  # @rbs () -> bool
   def grouped?
     !group_by_column.nil?
   end
 
+  # @rbs () -> (QueryColumn | QueryCustomFieldColumn)?
   def group_by_column
     groupable_columns.detect {|c| c.groupable? && c.name.to_s == group_by}
   end
 
+  # @rbs () -> (String | Arel::Nodes::SqlLiteral)?
   def group_by_statement
     group_by_column.try(:group_by_statement)
   end
 
+  # @rbs () -> String?
   def project_statement
     project_clauses = []
     subprojects_ids = []
@@ -983,6 +1085,7 @@ class Query < ApplicationRecord
     project_clauses.any? ? project_clauses.join(' AND ') : nil
   end
 
+  # @rbs () -> String?
   def statement
     # filters clauses
     filters_clauses = []
@@ -1043,6 +1146,7 @@ class Query < ApplicationRecord
   end
 
   # Returns the result count by group or nil if query is not grouped
+  # @rbs () -> Hash[untyped, untyped]?
   def result_count_by_group
     grouped_query do |scope|
       scope.count
@@ -1050,30 +1154,35 @@ class Query < ApplicationRecord
   end
 
   # Returns the sum of values for the given column
+  # @rbs (QueryColumn | Symbol | String | QueryCustomFieldColumn) -> (Float | Integer)
   def total_for(column)
     total_with_scope(column, base_scope)
   end
 
   # Returns a hash of the sum of the given column for each group,
   # or nil if the query is not grouped
+  # @rbs (QueryColumn | Symbol | String | QueryCustomFieldColumn) -> Hash[untyped, untyped]?
   def total_by_group_for(column)
     grouped_query do |scope|
       total_with_scope(column, scope)
     end
   end
 
+  # @rbs () -> Array[untyped]
   def totals
     totals = totalable_columns.map {|column| [column, total_for(column)]}
     yield totals if block_given?
     totals
   end
 
+  # @rbs () -> Array[untyped]
   def totals_by_group
     totals = totalable_columns.map {|column| [column, total_by_group_for(column)]}
     yield totals if block_given?
     totals
   end
 
+  # @rbs () -> String?
   def css_classes
     s = sort_criteria.first
     if s.present?
@@ -1082,10 +1191,12 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs () -> String
   def display_type
     options[:display_type] || self.default_display_type
   end
 
+  # @rbs (String) -> void
   def display_type=(type)
     unless type && self.available_display_types.include?(type)
       type = self.available_display_types.first
@@ -1093,12 +1204,14 @@ class Query < ApplicationRecord
     options[:display_type] = type
   end
 
+  # @rbs () -> Array[untyped]
   def available_display_types
     ['list']
   end
 
   private
 
+  # @rbs () -> Hash[untyped, untyped]?
   def grouped_query(&)
     r = nil
     if grouped?
@@ -1113,6 +1226,7 @@ class Query < ApplicationRecord
     raise StatementInvalid.new(e.message)
   end
 
+  # @rbs (QueryColumn | Symbol | String | QueryCustomFieldColumn, TimeEntry::ActiveRecord_Relation | Issue::ActiveRecord_Relation | Project::ActiveRecord_Relation) -> (Float | Hash[untyped, untyped] | Integer)
   def total_with_scope(column, scope)
     unless column.is_a?(QueryColumn)
       column = column.to_sym
@@ -1132,18 +1246,21 @@ class Query < ApplicationRecord
     raise "unimplemented"
   end
 
+  # @rbs () -> (Issue::ActiveRecord_Relation | TimeEntry::ActiveRecord_Relation)
   def base_group_scope
     base_scope.
       joins(joins_for_order_statement(group_by_statement)).
       group(group_by_statement)
   end
 
+  # @rbs (IssueCustomField | TimeEntryCustomField | ProjectCustomField, Issue::ActiveRecord_Relation | TimeEntry::ActiveRecord_Relation | Project::ActiveRecord_Relation) -> (Hash[untyped, untyped] | Float | Integer)
   def total_for_custom_field(custom_field, scope, &)
     total = custom_field.format.total_for_scope(custom_field, scope)
     total = map_total(total) {|t| custom_field.format.cast_total_value(custom_field, t)}
     total
   end
 
+  # @rbs (Float | Hash[untyped, untyped] | Integer) -> (Float | Hash[untyped, untyped] | Integer)
   def map_total(total, &)
     if total.is_a?(Hash)
       total.each_key {|k| total[k] = yield total[k]}
@@ -1153,6 +1270,7 @@ class Query < ApplicationRecord
     total
   end
 
+  # @rbs (String, String, Array[untyped], String) -> String?
   def sql_for_custom_field(field, operator, value, custom_field_id)
     db_table = CustomValue.table_name
     db_field = 'value'
@@ -1191,6 +1309,7 @@ class Query < ApplicationRecord
       "  (#{where}) AND (#{filter[:field].visibility_by_project_condition}))"
   end
 
+  # @rbs (String, String, Array[untyped], String, String) -> String
   def sql_for_chained_custom_field(field, operator, value, custom_field_id, chained_custom_field_id)
     not_in = nil
     if operator == '!'
@@ -1211,6 +1330,7 @@ class Query < ApplicationRecord
       "  AND #{sql_for_field(field, operator, value, CustomValue.table_name, 'value', true)}))"
   end
 
+  # @rbs (String, String, Array[untyped], String, String) -> String
   def sql_for_custom_field_attribute(field, operator, value, custom_field_id, attribute)
     attribute = 'effective_date' if attribute == 'due_date'
     not_in = nil
@@ -1231,6 +1351,7 @@ class Query < ApplicationRecord
   end
 
   # Helper method to generate the WHERE sql for a +field+, +operator+ and a +value+
+  # @rbs (String | Symbol, String, Array[untyped], String, String, ?bool) -> String?
   def sql_for_field(field, operator, value, db_table, db_field, is_custom_filter=false)
     sql = ''
     case operator
@@ -1494,6 +1615,7 @@ class Query < ApplicationRecord
   # * :ends_with - use LIKE '%value' if true
   # * :all_words - use OR instead of AND if false
   #   (ignored if :starts_with or :ends_with is true)
+  # @rbs (String, String, ?Hash[untyped, untyped]) -> String
   def sql_contains(db_field, value, options={})
     options = {} unless options.is_a?(Hash)
     options.symbolize_keys!
@@ -1503,6 +1625,7 @@ class Query < ApplicationRecord
   end
 
   # rubocop:disable Lint/IneffectiveAccessModifier
+  # @rbs (String, String, **nil | bool) -> Array[untyped]
   def self.tokenized_like_conditions(db_field, value, **options)
     tokens = Redmine::Search::Tokenizer.new(value).tokens
     tokens = [value] unless tokens.present?
@@ -1526,6 +1649,7 @@ class Query < ApplicationRecord
   # rubocop:enable Lint/IneffectiveAccessModifier
 
   # Adds a filter for the given custom field
+  # @rbs (IssueCustomField | ProjectCustomField | UserCustomField | VersionCustomField, ?Symbol?) -> ActiveSupport::OrderedHash
   def add_custom_field_filter(field, assoc=nil)
     options = field.query_filter_options(self)
 
@@ -1549,6 +1673,7 @@ class Query < ApplicationRecord
   # Adds filters for custom fields associated to the custom field target class
   # Eg. having a version custom field "Milestone" for issues and a date custom field "Release date"
   # for versions, it will add an issue filter on Milestone'e Release date.
+  # @rbs (IssueCustomField | ProjectCustomField) -> void
   def add_chained_custom_field_filters(field)
     klass = field.format.target_class
     if klass
@@ -1574,6 +1699,7 @@ class Query < ApplicationRecord
   end
 
   # Adds filters for the given custom fields scope
+  # @rbs (IssueCustomField::ActiveRecord_Relation | ProjectCustomField::ActiveRecord_Relation | TimeEntryCustomField::ActiveRecord_Relation | UserCustomField::ActiveRecord_Relation, ?Symbol?) -> Array[untyped]
   def add_custom_fields_filters(scope, assoc=nil)
     scope.visible.where(:is_filter => true).sorted.each do |field|
       add_custom_field_filter(field, assoc)
@@ -1601,6 +1727,7 @@ class Query < ApplicationRecord
   end
 
   # Adds filters for the given associations custom fields
+  # @rbs (*Symbol) -> Array[untyped]
   def add_associations_custom_fields_filters(*associations)
     fields_by_class = CustomField.visible.where(:is_filter => true).group_by(&:class)
     associations.each do |assoc|
@@ -1615,6 +1742,7 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs (Time | ActiveSupport::TimeWithZone, bool) -> String
   def quoted_time(time, is_custom_filter)
     if is_custom_filter
       # Custom field values are stored as strings in the DB
@@ -1625,6 +1753,7 @@ class Query < ApplicationRecord
     end
   end
 
+  # @rbs (Integer, Integer, Integer) -> (Time | ActiveSupport::TimeWithZone)
   def date_for_user_time_zone(y, m, d)
     if tz = User.current.time_zone
       tz.local y, m, d
@@ -1634,6 +1763,7 @@ class Query < ApplicationRecord
   end
 
   # Returns a SQL clause for a date or datetime field.
+  # @rbs (String, String, (Date | Time)?, (Date | Time)?, bool) -> String
   def date_clause(table, field, from, to, is_custom_filter)
     s = []
     if from
@@ -1660,6 +1790,7 @@ class Query < ApplicationRecord
   end
 
   # Returns a SQL clause for a date or datetime field using relative dates.
+  # @rbs (String, String, Integer?, Integer?, bool) -> String
   def relative_date_clause(table, field, days_from, days_to, is_custom_filter)
     date_clause(
       table, field, (days_from ? User.current.today + days_from : nil),
@@ -1668,6 +1799,7 @@ class Query < ApplicationRecord
   end
 
   # Returns a Date or Time from the given filter value
+  # @rbs (String) -> (Date | Time)?
   def parse_date(arg)
     if /\A\d{4}-\d{2}-\d{2}T/.match?(arg.to_s)
       Time.parse(arg) rescue nil
@@ -1677,6 +1809,7 @@ class Query < ApplicationRecord
   end
 
   # Additional joins required for the given sort options
+  # @rbs (String | Arel::Nodes::SqlLiteral) -> String?
   def joins_for_order_statement(order_options)
     joins = []
 

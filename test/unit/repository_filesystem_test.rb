@@ -24,6 +24,7 @@ class RepositoryFilesystemTest < ActiveSupport::TestCase
 
   REPOSITORY_PATH = Rails.root.join('tmp/test/filesystem_repository').to_s
 
+  # @rbs () -> bool
   def setup
     User.current = nil
     @project = Project.find(3)
@@ -34,6 +35,7 @@ class RepositoryFilesystemTest < ActiveSupport::TestCase
     assert @repository
   end
 
+  # @rbs () -> bool
   def test_blank_root_directory_error_message
     set_language_if_valid 'en'
     repo =
@@ -44,6 +46,7 @@ class RepositoryFilesystemTest < ActiveSupport::TestCase
                    repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_root_directory_error_message_fr
     set_language_if_valid 'fr'
     repo =
@@ -82,6 +85,7 @@ class RepositoryFilesystemTest < ActiveSupport::TestCase
     end
   else
     puts "Filesystem test repository NOT FOUND. Skipping unit tests !!! See doc/RUNNING_TESTS."
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

@@ -25,6 +25,7 @@ class RepositoryMercurialTest < ActiveSupport::TestCase
   REPOSITORY_PATH = Rails.root.join('tmp/test/mercurial_repository').to_s
   NUM_REV = 43
 
+  # @rbs () -> bool
   def setup
     User.current = nil
     @project    = Project.find(3)
@@ -37,6 +38,7 @@ class RepositoryMercurialTest < ActiveSupport::TestCase
     assert @repository
   end
 
+  # @rbs () -> bool
   def test_blank_path_to_repository_error_message
     set_language_if_valid 'en'
     repo =
@@ -49,6 +51,7 @@ class RepositoryMercurialTest < ActiveSupport::TestCase
                    repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_path_to_repository_error_message_fr
     set_language_if_valid 'fr'
     repo =
@@ -643,6 +646,7 @@ class RepositoryMercurialTest < ActiveSupport::TestCase
     end
   else
     puts "Mercurial test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

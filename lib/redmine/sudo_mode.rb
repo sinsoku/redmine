@@ -31,10 +31,12 @@ module Redmine
       attr_accessor :password, :original_fields
       validate :check_password
 
+      # @rbs (?String?) -> void
       def initialize(password = nil)
         self.password = password
       end
 
+      # @rbs () -> ActiveModel::Error?
       def check_password
         unless password.present? && User.current.check_password?(password)
           errors.add(:password, :invalid)
@@ -46,6 +48,7 @@ module Redmine
       # Represents params data from hash as hidden fields
       #
       # taken from https://github.com/brianhempel/hash_to_hidden_fields
+      # @rbs (ActionController::Parameters) -> ActiveSupport::SafeBuffer
       def hash_to_hidden_fields(hash)
         cleaned_hash = hash.to_unsafe_h.compact
         pairs = cleaned_hash.to_query.split(Rack::Utils::DEFAULT_SEP)
@@ -71,6 +74,7 @@ module Redmine
       #
       # After the request refreshes the timestamp if sudo mode was used during
       # this request.
+      # @rbs () -> Integer?
       def sudo_mode
         if sudo_timestamp_valid?
           SudoMode.active!
@@ -101,6 +105,7 @@ module Redmine
       #   require_sudo_mode :user or return
       # end
       #
+      # @rbs (*nil) -> bool
       def require_sudo_mode(*param_names)
         return true if SudoMode.active?
 
@@ -119,6 +124,7 @@ module Redmine
       end
 
       # display the sudo password form
+      # @rbs (Array[untyped]) -> void
       def render_sudo_form(param_names)
         @sudo_form ||= SudoMode::Form.new
         @sudo_form.original_fields = params.slice(*param_names)
@@ -131,6 +137,7 @@ module Redmine
       end
 
       # handle sudo password form submit
+      # @rbs () -> void
       def process_sudo_form
         if params[:sudo_password]
           @sudo_form = SudoMode::Form.new(params[:sudo_password])
@@ -142,16 +149,19 @@ module Redmine
         end
       end
 
+      # @rbs () -> bool
       def sudo_timestamp_valid?
         session[:sudo_timestamp].to_i > SudoMode.timeout.ago.to_i
       end
 
+      # @rbs (?Integer) -> Integer
       def update_sudo_timestamp!(new_value = Time.now.to_i)
         session[:sudo_timestamp] = new_value
       end
 
       # Before Filter which is used by the require_sudo_mode class method.
       class SudoRequestFilter < Struct.new(:parameters, :request_methods)
+        # @rbs (SettingsController | GroupsController | AuthSourcesController | MyController | MembersController | UsersController | EmailAddressesController | RolesController | ProjectsController | TwofaController | TwofaBackupCodesController) -> bool
         def before(controller)
           method_matches = request_methods.blank? || request_methods.include?(controller.request.request_method_symbol)
           if controller.api_request?
@@ -178,6 +188,7 @@ module Redmine
         # require_sudo_mode :update, :create, parameters: %w(role)
         # require_sudo_mode :destroy
         #
+        # @rbs (*Symbol | Symbol | Hash[untyped, untyped]) -> void
         def require_sudo_mode(*args)
           actions = args.dup
           options = actions.extract_options!
@@ -192,6 +203,7 @@ module Redmine
     end
 
     # true if the sudo mode state was queried during this request
+    # @rbs () -> bool
     def self.was_used?
       !!CurrentSudoMode.was_used
     end
@@ -204,16 +216,19 @@ module Redmine
     #
     # If you do it wrong, timeout of the sudo mode will happen too late or not at
     # all.
+    # @rbs () -> bool?
     def self.active?
       if !!CurrentSudoMode.active
         CurrentSudoMode.was_used = true
       end
     end
 
+    # @rbs () -> bool
     def self.active!
       CurrentSudoMode.active = true
     end
 
+    # @rbs () -> bool?
     def self.possible?
       enabled? && User.current.logged?
     end
@@ -228,11 +243,13 @@ module Redmine
       CurrentSudoMode.disabled = nil
     end
 
+    # @rbs () -> nil
     def self.enabled?
       Redmine::Configuration['sudo_mode'] && !CurrentSudoMode.disabled
     end
 
     # Timespan after which sudo mode expires when unused.
+    # @rbs () -> ActiveSupport::Duration
     def self.timeout
       m = Redmine::Configuration['sudo_mode_timeout'].to_i
       (m > 0 ? m : 15).minutes

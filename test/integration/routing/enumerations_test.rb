@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingEnumerationsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_enumerations
     should_route 'GET /enumerations' => 'enumerations#index'
     should_route 'GET /enumerations/new' => 'enumerations#new'

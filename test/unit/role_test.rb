@@ -20,23 +20,28 @@
 require_relative '../test_helper'
 
 class RoleTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_sorted_scope
     assert_equal Role.all.sort, Role.sorted.to_a
   end
 
+  # @rbs () -> bool
   def test_givable_scope
     assert_equal Role.all.reject(&:builtin?).sort, Role.givable.to_a
   end
 
+  # @rbs () -> bool
   def test_builtin_scope
     assert_equal Role.all.select(&:builtin?).sort, Role.builtin(true).to_a.sort
     assert_equal Role.all.reject(&:builtin?).sort, Role.builtin(false).to_a.sort
   end
 
+  # @rbs () -> bool
   def test_copy_from
     role = Role.find(1)
     copy = Role.new.copy_from(role)
@@ -49,6 +54,7 @@ class RoleTest < ActiveSupport::TestCase
     assert copy.save
   end
 
+  # @rbs () -> bool
   def test_copy_from_should_copy_managed_roles
     orig = Role.generate!(:all_roles_managed => false, :managed_role_ids => [2, 3])
     role = Role.new
@@ -56,6 +62,7 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal [2, 3], role.managed_role_ids.sort
   end
 
+  # @rbs () -> bool
   def test_copy_workflows
     source = Role.find(1)
     rule_count = source.workflow_rules.count
@@ -68,12 +75,14 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal rule_count, target.workflow_rules.size
   end
 
+  # @rbs () -> bool
   def test_permissions_should_be_unserialized_with_its_coder
     Role::PermissionsAttributeCoder.stubs(:load).returns([:foo, :bar])
     role = Role.find(1)
     assert_equal [:foo, :bar], role.permissions
   end
 
+  # @rbs () -> bool
   def test_add_permission
     role = Role.find(1)
     size = role.permissions.size
@@ -83,6 +92,7 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal size + 2, role.permissions.size
   end
 
+  # @rbs () -> bool
   def test_remove_permission
     role = Role.find(1)
     size = role.permissions.size
@@ -93,12 +103,14 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal size - 2, role.permissions.size
   end
 
+  # @rbs () -> bool
   def test_has_permission
     role = Role.create!(:name => 'Test', :permissions => [:view_issues, :edit_issues])
     assert_equal true, role.has_permission?(:view_issues)
     assert_equal false, role.has_permission?(:delete_issues)
   end
 
+  # @rbs () -> bool
   def test_permissions_all_trackers?
     role = Role.create!(:name => 'Test', :permissions => [:view_issues])
     assert_equal true, role.permissions_all_trackers?(:view_issues)
@@ -115,6 +127,7 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal false, role.permissions_all_trackers?(:edit_issues)
   end
 
+  # @rbs () -> bool
   def test_permissions_all_trackers_considers_base_permission
     role = Role.create!(:name => 'Test', :permissions => [:view_issues])
     assert_equal true, role.permissions_all_trackers?(:view_issues)
@@ -123,6 +136,7 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal false, role.permissions_all_trackers?(:view_issues)
   end
 
+  # @rbs () -> bool
   def test_permissions_tracker_ids?
     role = Role.create!(:name => 'Test', :permissions => [:view_issues])
     assert_equal false, role.permissions_tracker_ids?(:view_issues, 1)
@@ -135,6 +149,7 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal false, role.permissions_tracker_ids?(:edit_issues, 1)
   end
 
+  # @rbs () -> bool
   def test_permissions_tracker_ids_considers_base_permission
     role = Role.create!(:name => 'Test', :permissions => [:view_issues])
     role.set_permission_trackers :view_issues, [1, 2, 3]
@@ -144,6 +159,7 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal false, role.permissions_tracker_ids?(:view_issues, 1)
   end
 
+  # @rbs () -> bool
   def test_permissions_tracker?
     tracker = Tracker.find(1)
     role = Role.create!(:name => 'Test', :permissions => [:view_issues])
@@ -166,6 +182,7 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal false, role.permissions_tracker?(:edit_issues, tracker)
   end
 
+  # @rbs () -> bool
   def test_permissions_tracker_considers_base_permission
     role = Role.create!(:name => 'Test', :permissions => [:edit_isues])
     role.set_permission_trackers :view_issues, [1, 2, 3]
@@ -175,11 +192,13 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal false, role.permissions_tracker_ids?(:view_issues, 1)
   end
 
+  # @rbs () -> bool
   def test_has_permission_without_permissions
     role = Role.create!(:name => 'Test')
     assert_equal false, role.has_permission?(:delete_issues)
   end
 
+  # @rbs () -> bool
   def test_name
     I18n.locale = 'fr'
     assert_equal 'Manager', Role.find(1).name
@@ -187,10 +206,12 @@ class RoleTest < ActiveSupport::TestCase
     assert_equal 'Non membre', Role.non_member.name
   end
 
+  # @rbs () -> bool
   def test_find_all_givable
     assert_equal Role.all.reject(&:builtin?).sort, Role.find_all_givable
   end
 
+  # @rbs () -> bool
   def test_anonymous_should_return_the_anonymous_role
     assert_no_difference('Role.count') do
       role = Role.anonymous
@@ -199,6 +220,7 @@ class RoleTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_anonymous_with_a_missing_anonymous_role_should_return_the_anonymous_role
     Role.where(:builtin => Role::BUILTIN_ANONYMOUS).delete_all
 
@@ -209,6 +231,7 @@ class RoleTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_non_member_should_return_the_non_member_role
     assert_no_difference('Role.count') do
       role = Role.non_member
@@ -217,6 +240,7 @@ class RoleTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_non_member_with_a_missing_non_member_role_should_return_the_non_member_role
     Role.where(:builtin => Role::BUILTIN_NON_MEMBER).delete_all
 
@@ -227,6 +251,7 @@ class RoleTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_destroy
     role = Role.generate!
 

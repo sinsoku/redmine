@@ -53,6 +53,7 @@
 #
 
 module SortHelper
+  # @rbs () -> String
   def sort_name
     controller_name + '_' + action_name + '_sort'
   end
@@ -65,6 +66,7 @@ module SortHelper
   #   sort_init ['name', ['id', 'desc']]
   #   sort_init [['name', 'desc'], ['id', 'desc']]
   #
+  # @rbs (*String) -> void
   def sort_init(*args)
     case args.size
     when 1
@@ -80,6 +82,7 @@ module SortHelper
   # sort_clause.
   # - criteria can be either an array or a hash of allowed keys
   #
+  # @rbs (Hash[untyped, untyped] | Array[untyped], ?nil) -> void
   def sort_update(criteria, sort_name=nil)
     sort_name ||= self.sort_name
     @sort_criteria = Redmine::SortCriteria.new(params[:sort] || session[sort_name] || @sort_default)
@@ -96,6 +99,7 @@ module SortHelper
   # Returns an SQL sort clause corresponding to the current sort state.
   # Use this to sort the controller's table items collection.
   #
+  # @rbs () -> Array[untyped]?
   def sort_clause
     @sort_criteria.sort_clause(@sortable_columns)
   end
@@ -110,6 +114,7 @@ module SortHelper
   # - the optional caption explicitly specifies the displayed link text.
   # - 2 CSS classes reflect the state of the link: sort and asc or desc
   #
+  # @rbs (String, String, String) -> ActiveSupport::SafeBuffer
   def sort_link(column, caption, default_order)
     css, order = nil, default_order
 
@@ -143,6 +148,7 @@ module SortHelper
   #
   #   <%= sort_header_tag('id', :title => 'Sort by contact ID', :width => 40) %>
   #
+  # @rbs (String, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def sort_header_tag(column, options = {})
     caption = options.delete(:caption) || column.to_s.humanize
     default_order = options.delete(:default_order) || 'asc'
@@ -156,6 +162,7 @@ module SortHelper
   #
   #   sort_css_classes
   #   # => "sort-by-created-on sort-desc"
+  # @rbs () -> String
   def sort_css_classes
     if @sort_criteria.first_key
       "sort-by-#{@sort_criteria.first_key.to_s.dasherize} sort-#{@sort_criteria.first_asc? ? 'asc' : 'desc'}"

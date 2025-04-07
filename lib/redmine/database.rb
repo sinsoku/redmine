@@ -22,11 +22,13 @@ module Redmine
   module Database
     class << self
       # Returns true if the database is SQLite
+      # @rbs () -> Integer
       def sqlite?
         ActiveRecord::Base.connection.adapter_name =~ /sqlite/i
       end
 
       # Returns true if the database is PostgreSQL
+      # @rbs () -> bool
       def postgresql?
         /postgresql/i.match?(ActiveRecord::Base.connection.adapter_name)
       end
@@ -57,6 +59,7 @@ module Redmine
       end
 
       # Returns true if the database is MySQL
+      # @rbs () -> bool
       def mysql?
         /mysql/i.match?(ActiveRecord::Base.connection.adapter_name)
       end
@@ -66,6 +69,7 @@ module Redmine
       end
 
       # Returns a SQL statement for case/accent (if possible) insensitive match
+      # @rbs (String, String, ?Hash[untyped, untyped]) -> String
       def like(left, right, options={})
         neg = (options[:match] == false ? 'NOT ' : '')
 
@@ -84,6 +88,7 @@ module Redmine
 
       # Returns a SQL statement to cast a timestamp column to a date given a time zone
       # Returns nil if not implemented for the current database
+      # @rbs (String, ActiveSupport::TimeZone?) -> nil
       def timestamp_to_date(column, time_zone)
         if postgresql?
           if time_zone
@@ -104,6 +109,7 @@ module Redmine
       end
 
       # Resets database information
+      # @rbs () -> nil
       def reset
         @postgresql_unaccent = nil
       end

@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingQueriesTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_queries
     should_route 'GET /queries/new' => 'queries#new'
     should_route 'POST /queries' => 'queries#create'
@@ -30,6 +31,7 @@ class RoutingQueriesTest < Redmine::RoutingTest
     should_route 'DELETE /queries/1' => 'queries#destroy', :id => '1'
   end
 
+  # @rbs () -> bool
   def test_queries_scoped_under_project
     should_route 'GET /projects/foo/queries/new' => 'queries#new', :project_id => 'foo'
     should_route 'POST /projects/foo/queries' => 'queries#create', :project_id => 'foo'

@@ -21,16 +21,19 @@ module Redmine
   class PluginPath
     attr_reader :assets_dir, :initializer
 
+    # @rbs (String) -> void
     def initialize(dir)
       @dir = dir
       @assets_dir = File.join dir, 'assets'
       @initializer = File.join dir, 'init.rb'
     end
 
+    # @rbs () -> bool?
     def run_initializer
       load initializer if has_initializer?
     end
 
+    # @rbs () -> String
     def to_s
       @dir
     end
@@ -39,6 +42,7 @@ module Redmine
       File.directory?(@assets_dir)
     end
 
+    # @rbs () -> bool
     def has_initializer?
       File.file?(@initializer)
     end
@@ -53,6 +57,7 @@ module Redmine
     cattr_accessor :public_directory
     self.public_directory = Rails.public_path.join('plugin_assets')
 
+    # @rbs () -> void
     def self.load
       setup
       add_autoload_paths
@@ -64,6 +69,7 @@ module Redmine
       end
     end
 
+    # @rbs () -> Array[untyped]
     def self.setup
       @plugin_directories = []
 
@@ -74,6 +80,7 @@ module Redmine
       end
     end
 
+    # @rbs () -> void
     def self.add_autoload_paths
       directories.each do |directory|
         # Add the plugin directories to rails autoload paths
@@ -86,6 +93,7 @@ module Redmine
       end
     end
 
+    # @rbs () -> Array[untyped]
     def self.directories
       @plugin_directories
     end

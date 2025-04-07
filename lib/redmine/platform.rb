@@ -20,6 +20,7 @@
 module Redmine
   module Platform
     class << self
+      # @rbs () -> bool
       def mswin?
         (/(:?mswin|mingw)/.match?(RUBY_PLATFORM)) ||
            (RUBY_PLATFORM == 'java' && /windows/i.match?(ENV['OS'] || ENV['os']))

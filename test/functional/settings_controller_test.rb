@@ -20,16 +20,19 @@
 require_relative '../test_helper'
 
 class SettingsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 1 # admin
   end
 
+  # @rbs () -> bool
   def teardown
     Setting.delete_all
     Setting.clear_cache
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
@@ -37,6 +40,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'settings[app_title]', Setting.app_title
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit
     get :edit
     assert_response :success
@@ -44,6 +48,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=""]', 'settings[enabled_scm][]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit_should_preselect_default_issue_list_columns
     with_settings :issue_list_default_columns => %w(tracker subject status updated_on) do
       get :edit
@@ -64,6 +69,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_get_edit_without_trackers_should_succeed
     Tracker.delete_all
 
@@ -71,6 +77,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_post_edit_notifications
     post :edit, :params => {
       :settings => {
@@ -85,6 +92,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_equal 'Test footer', Setting.emails_footer
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_commit_update_keywords
     with_settings :commit_update_keywords => [
       {"keywords" => "fixes, resolves", "status_id" => "3"},
@@ -114,6 +122,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_without_commit_update_keywords_should_show_blank_line
     with_settings :commit_update_keywords => [] do
       get :edit
@@ -124,6 +133,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_edit_commit_update_keywords
     post :edit, :params => {
       :settings => {
@@ -146,6 +156,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> bool
   def test_post_edit_with_invalid_setting_should_not_error
     post :edit, :params => {
       :settings => {
@@ -155,6 +166,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_redirected_to '/settings'
   end
 
+  # @rbs () -> Array[untyped]
   def test_post_edit_should_send_security_notification_for_notified_settings
     ActionMailer::Base.deliveries.clear
     post :edit, :params => {
@@ -174,6 +186,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_edit_should_not_send_security_notification_for_non_notified_settings
     ActionMailer::Base.deliveries.clear
     post :edit, :params => {
@@ -184,6 +197,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_nil (mail = ActionMailer::Base.deliveries.last)
   end
 
+  # @rbs () -> bool
   def test_post_edit_should_not_send_security_notification_for_unchanged_settings
     ActionMailer::Base.deliveries.clear
     post :edit, :params => {
@@ -194,6 +208,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_nil (mail = ActionMailer::Base.deliveries.last)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_plugin_settings
     ActionController::Base.append_view_path(File.join(Rails.root, "test/fixtures/plugins"))
     Redmine::Plugin.register :foo do
@@ -214,11 +229,13 @@ class SettingsControllerTest < Redmine::ControllerTest
     Redmine::Plugin.unregister(:foo)
   end
 
+  # @rbs () -> bool
   def test_get_invalid_plugin_settings
     get :plugin, :params => {:id => 'none'}
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_get_non_configurable_plugin_settings
     Redmine::Plugin.register(:foo) do
       directory 'test/fixtures/plugins/foo_plugin'
@@ -231,6 +248,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     Redmine::Plugin.unregister(:foo)
   end
 
+  # @rbs () -> bool
   def test_post_plugin_settings
     Redmine::Plugin.register(:foo) do
       settings :partial => 'not blank', # so that configurable? is true
@@ -247,6 +265,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_equal({'sample_setting' => 'Value'}, Setting.plugin_foo)
   end
 
+  # @rbs () -> bool
   def test_post_empty_plugin_settings
     Redmine::Plugin.register(:foo) do
       settings :partial => 'not blank', # so that configurable? is true
@@ -262,6 +281,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_equal({}, Setting.plugin_foo)
   end
 
+  # @rbs () -> bool
   def test_post_non_configurable_plugin_settings
     Redmine::Plugin.register(:foo) do
       directory 'test/fixtures/plugins/foo_plugin'
@@ -277,6 +297,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     Redmine::Plugin.unregister(:foo)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_mail_handler_delimiters_should_not_save_invalid_regex_delimiters
     post :edit, :params => {
       :settings => {
@@ -293,6 +314,7 @@ class SettingsControllerTest < Redmine::ControllerTest
     assert_select 'textarea[name=?]', 'settings[mail_handler_body_delimiters]', :text => 'Abc['
   end
 
+  # @rbs () -> bool
   def test_post_mail_handler_delimiters_should_save_valid_regex_delimiters
     post :edit, :params => {
       :settings => {

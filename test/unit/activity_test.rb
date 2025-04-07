@@ -20,11 +20,13 @@
 require_relative '../test_helper'
 
 class ActivityTest < ActiveSupport::TestCase
+  # @rbs () -> Project
   def setup
     User.current = nil
     @project = Project.find(1)
   end
 
+  # @rbs () -> bool
   def test_activity_without_subprojects
     events = find_events(User.anonymous, :project => @project)
     assert_not_nil events
@@ -35,6 +37,7 @@ class ActivityTest < ActiveSupport::TestCase
     assert !events.include?(Issue.find(5))
   end
 
+  # @rbs () -> bool
   def test_activity_with_subprojects
     events = find_events(User.anonymous, :project => @project, :with_subprojects => 1)
     assert_not_nil events
@@ -44,6 +47,7 @@ class ActivityTest < ActiveSupport::TestCase
     assert events.include?(Issue.find(5))
   end
 
+  # @rbs () -> bool
   def test_global_activity_anonymous
     events = find_events(User.anonymous)
     assert_not_nil events
@@ -57,6 +61,7 @@ class ActivityTest < ActiveSupport::TestCase
     assert !events.include?(Journal.find(5))
   end
 
+  # @rbs () -> bool
   def test_global_activity_logged_user
     events = find_events(User.find(2)) # manager
     assert_not_nil events
@@ -66,6 +71,7 @@ class ActivityTest < ActiveSupport::TestCase
     assert events.include?(Issue.find(4))
   end
 
+  # @rbs () -> bool
   def test_user_activity
     user = User.find(2)
     events = Redmine::Activity::Fetcher.new(User.anonymous, :author => user).events(nil, nil, :limit => 10)
@@ -75,6 +81,7 @@ class ActivityTest < ActiveSupport::TestCase
     assert_nil(events.detect {|e| e.event_author != user})
   end
 
+  # @rbs () -> bool
   def test_journal_with_notes_and_changes_should_be_returned_once
     f = Redmine::Activity::Fetcher.new(User.anonymous, :project => Project.find(1))
     f.scope = ['issues']
@@ -83,6 +90,7 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal events, events.uniq
   end
 
+  # @rbs () -> bool
   def test_files_activity
     f = Redmine::Activity::Fetcher.new(User.anonymous, :project => Project.find(1))
     f.scope = ['files']
@@ -95,27 +103,32 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal %w(Project Version), events.collect(&:container_type).uniq.sort
   end
 
+  # @rbs () -> bool
   def test_event_group_for_issue
     issue = Issue.find(1)
     assert_equal issue, issue.event_group
   end
 
+  # @rbs () -> bool
   def test_event_group_for_journal
     issue = Issue.find(1)
     journal = issue.journals.first
     assert_equal issue, journal.event_group
   end
 
+  # @rbs () -> bool
   def test_event_group_for_issue_time_entry
     time = TimeEntry.where(:issue_id => 1).first
     assert_equal time.issue, time.event_group
   end
 
+  # @rbs () -> bool
   def test_event_group_for_project_time_entry
     time = TimeEntry.where(:issue_id => nil).first
     assert_equal time, time.event_group
   end
 
+  # @rbs () -> bool
   def test_event_group_for_message
     message = Message.find(1)
     reply = message.children.first
@@ -123,39 +136,46 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal message, reply.event_group
   end
 
+  # @rbs () -> bool
   def test_event_group_for_wiki_content_version
     content = WikiContentVersion.find(1)
     assert_equal content.page, content.event_group
   end
 
   class TestActivityProviderWithPermission
+    # @rbs () -> Hash[untyped, untyped]
     def self.activity_provider_options
       {'test' => {:permission => :custom_permission}}
     end
   end
 
   class TestActivityProviderWithNilPermission
+    # @rbs () -> Hash[untyped, untyped]
     def self.activity_provider_options
       {'test' => {:permission => nil}}
     end
   end
 
   class TestActivityProviderWithoutPermission
+    # @rbs () -> Hash[untyped, untyped]
     def self.activity_provider_options
       {'test' => {}}
     end
   end
 
   class MockUser
+    # @rbs (*Symbol | nil) -> void
     def initialize(*permissions)
       @permissions = permissions
     end
 
+    # @rbs (Symbol, *Project) -> bool
     def allowed_to?(permission, *args)
       @permissions.include?(permission)
     end
   end
 
+  # @rbs () -> bool
   def test_event_types_should_consider_activity_provider_permission
     Redmine::Activity.register 'test', :class_name => 'ActivityTest::TestActivityProviderWithPermission'
     user = MockUser.new(:custom_permission)
@@ -165,6 +185,7 @@ class ActivityTest < ActiveSupport::TestCase
     Redmine::Activity.delete 'test'
   end
 
+  # @rbs () -> bool
   def test_event_types_should_include_activity_provider_with_nil_permission
     Redmine::Activity.register 'test', :class_name => 'ActivityTest::TestActivityProviderWithNilPermission'
     user = MockUser.new
@@ -174,6 +195,7 @@ class ActivityTest < ActiveSupport::TestCase
     Redmine::Activity.delete 'test'
   end
 
+  # @rbs () -> bool
   def test_event_types_should_use_default_permission_for_activity_provider_without_permission
     Redmine::Activity.register 'test', :class_name => 'ActivityTest::TestActivityProviderWithoutPermission'
 
@@ -190,6 +212,7 @@ class ActivityTest < ActiveSupport::TestCase
 
   private
 
+  # @rbs (AnonymousUser | User, ?Hash[untyped, untyped]) -> Array[untyped]
   def find_events(user, options={})
     Redmine::Activity::Fetcher.new(user, options).events(Date.today - 30, Date.today + 1)
   end

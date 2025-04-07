@@ -38,6 +38,7 @@ module Redmine
 
       private
 
+      # @rbs () -> Integer
       def target_lft
         siblings_rgt =
           self.class.where(:parent_id => parent_id).where(name: ...name).maximum(:rgt)
@@ -55,6 +56,7 @@ module Redmine
         end
       end
 
+      # @rbs (?bool) -> Integer
       def add_to_nested_set(lock=true)
         lock_nested_set if lock
         self.lft = target_lft
@@ -68,6 +70,7 @@ module Redmine
         )
       end
 
+      # @rbs () -> Array[untyped]?
       def move_in_nested_set
         lock_nested_set
         reload_nested_set_values
@@ -113,6 +116,7 @@ module Redmine
         end
       end
 
+      # @rbs () -> Integer?
       def destroy_children
         unless @without_nested_set_update
           lock_nested_set
@@ -130,23 +134,28 @@ module Redmine
         end
       end
 
+      # @rbs () -> Project
       def destroy_without_nested_set_update
         @without_nested_set_update = true
         destroy
       end
 
+      # @rbs () -> Array[untyped]
       def reload_nested_set_values
         self.lft, self.rgt = Project.where(:id => id).pick(:lft, :rgt)
       end
 
+      # @rbs () -> Integer
       def save_nested_set_values
         self.class.where(:id => id).update_all(:lft => lft, :rgt => rgt)
       end
 
+      # @rbs (Project) -> bool
       def move_possible?(project)
         new_record? || !is_or_is_ancestor_of?(project)
       end
 
+      # @rbs () -> Array[untyped]
       def lock_nested_set
         lock = true
         if /sqlserver/i.match?(self.class.connection.adapter_name)
@@ -155,15 +164,18 @@ module Redmine
         self.class.order(:id).lock(lock).ids
       end
 
+      # @rbs () -> Project::ActiveRecord_Relation
       def nested_set_scope
         self.class.order(:lft)
       end
 
+      # @rbs (Project) -> bool
       def same_nested_set_scope?(project)
         true
       end
 
       module ClassMethods
+        # @rbs () -> Array[untyped]
         def rebuild_tree!
           transaction do
             reorder(:id).lock.ids
@@ -174,6 +186,7 @@ module Redmine
 
         private
 
+        # @rbs (?Integer?) -> Array[untyped]
         def rebuild_nodes(parent_id = nil)
           nodes = Project.where(:parent_id => parent_id).where(:rgt => nil, :lft => nil).reorder(:name)
 

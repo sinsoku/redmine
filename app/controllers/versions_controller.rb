@@ -31,6 +31,7 @@ class VersionsController < ApplicationController
   helper :custom_fields
   helper :projects
 
+  # @rbs () -> Array[untyped]
   def index
     respond_to do |format|
       format.html do
@@ -64,6 +65,7 @@ class VersionsController < ApplicationController
     end
   end
 
+  # @rbs () -> (Array[untyped] | String)?
   def show
     respond_to do |format|
       format.html do
@@ -80,6 +82,7 @@ class VersionsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def new
     @version = @project.versions.build
     @version.safe_attributes = params[:version]
@@ -90,6 +93,7 @@ class VersionsController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | bool | ActiveSupport::SafeBuffer)?
   def create
     @version = @project.versions.build
     if params[:version]
@@ -120,9 +124,11 @@ class VersionsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (bool | ActiveSupport::SafeBuffer)
   def update
     if params[:version]
       attributes = params[:version].dup
@@ -145,6 +151,7 @@ class VersionsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def close_completed
     if request.put?
       @project.close_completed_versions
@@ -152,6 +159,7 @@ class VersionsController < ApplicationController
     redirect_to settings_project_path(@project, :tab => 'versions')
   end
 
+  # @rbs () -> (bool | String)
   def destroy
     if @version.deletable?
       @version.destroy
@@ -170,6 +178,7 @@ class VersionsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def status_by
     respond_to do |format|
       format.html {render :action => 'show'}
@@ -179,6 +188,7 @@ class VersionsController < ApplicationController
 
   private
 
+  # @rbs (Array[untyped], ?Array[untyped]) -> void
   def retrieve_selected_tracker_ids(selectable_trackers, default_trackers=nil)
     if ids = params[:tracker_ids]
       @selected_tracker_ids =

@@ -27,6 +27,7 @@ module Redmine
           Redmine::WikiFormatting::CommonMark::ExternalLinksFilter,
         ], {})
 
+      # @rbs (String | ActiveSupport::SafeBuffer) -> String
       def self.call(html)
         result = Pipeline.call html
         result[:output].to_s

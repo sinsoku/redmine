@@ -29,10 +29,12 @@ class MemberRole < ApplicationRecord
   validates_presence_of :role
   validate :validate_role_member
 
+  # @rbs () -> ActiveModel::Error?
   def validate_role_member
     errors.add :role_id, :invalid unless role&.member?
   end
 
+  # @rbs () -> bool
   def inherited?
     !inherited_from.nil?
   end
@@ -44,6 +46,7 @@ class MemberRole < ApplicationRecord
 
   # Destroys the MemberRole without destroying its Member if it doesn't have
   # any other roles
+  # @rbs () -> MemberRole
   def destroy_without_member_removal
     @member_removal = false
     destroy
@@ -51,12 +54,14 @@ class MemberRole < ApplicationRecord
 
   private
 
+  # @rbs () -> Member?
   def remove_member_if_empty
     if @member_removal != false && member.roles.reload.empty?
       member.destroy
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def add_role_to_group_users
     return if inherited? || !member.principal.is_a?(Group)
 
@@ -67,6 +72,7 @@ class MemberRole < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def add_role_to_subprojects
     return if member.project.leaf?
 
@@ -77,6 +83,7 @@ class MemberRole < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def remove_inherited_roles
     MemberRole.where(:inherited_from => id).destroy_all
   end

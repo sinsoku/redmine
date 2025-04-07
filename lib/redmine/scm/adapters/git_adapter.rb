@@ -34,22 +34,27 @@ module Redmine
         end
 
         class << self
+          # @rbs () -> String
           def client_command
             @@bin    ||= GIT_BIN
           end
 
+          # @rbs () -> String
           def sq_bin
             @@sq_bin ||= shell_quote_command
           end
 
+          # @rbs () -> Array[untyped]
           def client_version
             @@client_version ||= (scm_command_version || [])
           end
 
+          # @rbs () -> bool
           def client_available
             !client_version.empty?
           end
 
+          # @rbs () -> Array[untyped]
           def scm_command_version
             scm_version = scm_version_from_command_line.b
             if m = scm_version.match(%r{\A(.*?)((\d+\.)+\d+)})
@@ -57,6 +62,7 @@ module Redmine
             end
           end
 
+          # @rbs () -> String
           def scm_version_from_command_line
             shellout("#{sq_bin} --version") {|io| io.read}.to_s
           end
@@ -66,12 +72,14 @@ module Redmine
           @path_encoding
         end
 
+        # @rbs () -> Redmine::Scm::Adapters::Info
         def info
           Info.new(:root_url => url, :lastrev => lastrev('', nil))
         rescue
           nil
         end
 
+        # @rbs () -> nil
         def branches
           return @branches if @branches
 
@@ -177,6 +185,7 @@ module Redmine
           nil
         end
 
+        # @rbs (String, nil) -> nil
         def lastrev(path, rev)
           return nil if path.nil?
 
@@ -440,6 +449,7 @@ module Redmine
 
         private
 
+        # @rbs (Array[untyped], ?Hash[untyped, untyped]) -> void
         def git_cmd(args, options = {}, &)
           repo_path = root_url || url
           full_args = ['--git-dir', repo_path]

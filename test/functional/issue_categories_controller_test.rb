@@ -20,11 +20,13 @@
 require_relative '../test_helper'
 
 class IssueCategoriesControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 2
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     @request.session[:user_id] = 2 # manager
     get(:new, :params => {:project_id => '1'})
@@ -32,6 +34,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'issue_category[name]'
   end
 
+  # @rbs () -> bool
   def test_new_from_issue_form
     @request.session[:user_id] = 2 # manager
     get(
@@ -45,6 +48,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> bool
   def test_create
     @request.session[:user_id] = 2 # manager
     assert_difference 'IssueCategory.count' do
@@ -64,6 +68,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_equal 1, category.project_id
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_failure
     @request.session[:user_id] = 2
     post(
@@ -79,6 +84,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_create_from_issue_form
     @request.session[:user_id] = 2 # manager
     assert_difference 'IssueCategory.count' do
@@ -100,6 +106,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> bool
   def test_create_from_issue_form_with_failure
     @request.session[:user_id] = 2 # manager
     assert_no_difference 'IssueCategory.count' do
@@ -120,6 +127,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_include 'Name cannot be blank', response.body
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     @request.session[:user_id] = 2
     get(:edit, :params => {:id => 2})
@@ -127,6 +135,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'issue_category[name]', 'Recipes'
   end
 
+  # @rbs () -> bool
   def test_update
     assert_no_difference 'IssueCategory.count' do
       put(
@@ -143,6 +152,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_equal 'Testing', IssueCategory.find(2).name
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_failure
     put(
       :update,
@@ -157,6 +167,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_update_not_found
     put(
       :update,
@@ -170,12 +181,14 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_destroy_category_not_in_use
     delete(:destroy, :params => {:id => 2})
     assert_redirected_to '/projects/ecookbook/settings/categories'
     assert_nil IssueCategory.find_by_id(2)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_destroy_category_in_use
     delete(:destroy, :params => {:id => 1})
     assert_response :success
@@ -183,6 +196,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'reassign_to_id'
   end
 
+  # @rbs () -> bool
   def test_destroy_category_in_use_with_reassignment
     issue = Issue.where(:category_id => 1).first
     delete(
@@ -199,6 +213,7 @@ class IssueCategoriesControllerTest < Redmine::ControllerTest
     assert_equal 2, issue.reload.category_id
   end
 
+  # @rbs () -> bool
   def test_destroy_category_in_use_without_reassignment
     issue = Issue.where(:category_id => 1).first
     delete(

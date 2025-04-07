@@ -25,6 +25,7 @@ module Redmine
       end
 
       module ClassMethods
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_event(options = {})
           return if self.included_modules.include?(Redmine::Acts::Event::InstanceMethods)
           default_options = { :datetime => :created_on,
@@ -41,6 +42,7 @@ module Redmine
       end
 
       module InstanceMethods
+        # @rbs (Class) -> Class
         def self.included(base)
           base.extend ClassMethods
         end
@@ -65,11 +67,13 @@ module Redmine
           event_datetime.to_date
         end
 
+        # @rbs () -> (TimeEntry | Issue | WikiPage | Message | Changeset)
         def event_group
           group = event_options[:group] ? send(event_options[:group]) : self
           group || self
         end
 
+        # @rbs (?Hash[untyped, untyped]) -> Hash[untyped, untyped]
         def event_url(options = {})
           option = event_options[:url]
           if option.is_a?(Proc)

@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingSysTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_sys
     should_route 'GET /sys/projects' => 'sys#projects'
     should_route 'POST /sys/projects/foo/repository' => 'sys#create_project_repository', :id => 'foo'

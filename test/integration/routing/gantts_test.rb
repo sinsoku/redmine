@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingGanttsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_gantts
     should_route 'GET /issues/gantt' => 'gantts#show'
     should_route 'GET /issues/gantt.pdf' => 'gantts#show', :format => 'pdf'

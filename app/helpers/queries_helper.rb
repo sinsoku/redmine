@@ -22,6 +22,7 @@ require 'redmine/export/csv'
 module QueriesHelper
   include ApplicationHelper
 
+  # @rbs (IssueQuery | ProjectQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery) -> ActiveSupport::SafeBuffer
   def filters_options_for_select(query)
     ungrouped = []
     grouped = {label_string: [], label_date: [], label_time_tracking: [], label_attachment: []}
@@ -78,6 +79,7 @@ module QueriesHelper
     tags
   end
 
+  # @rbs (IssueQuery) -> ActiveSupport::SafeBuffer
   def query_columns_hidden_tags(query)
     tags = ''.html_safe
     query.columns.each do |column|
@@ -90,11 +92,13 @@ module QueriesHelper
     query_filters_hidden_tags(query) + query_columns_hidden_tags(query)
   end
 
+  # @rbs (ProjectQuery | IssueQuery | TimeEntryQuery | ProjectAdminQuery) -> ActiveSupport::SafeBuffer
   def group_by_column_select_tag(query)
     options = [[]] + query.groupable_columns.collect {|c| [c.caption, c.name.to_s]}
     select_tag('group_by', options_for_select(options, @query.group_by))
   end
 
+  # @rbs (IssueQuery | TimeEntryQuery) -> ActiveSupport::SafeBuffer
   def available_block_columns_tags(query)
     tags = ''.html_safe
     query.available_block_columns.each do |column|
@@ -110,6 +114,7 @@ module QueriesHelper
     tags
   end
 
+  # @rbs (IssueQuery | TimeEntryQuery | UserQuery | ProjectQuery, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def available_totalable_columns_tags(query, options={})
     tag_name = (options[:name] || 't') + '[]'
     tags = ''.html_safe
@@ -127,21 +132,25 @@ module QueriesHelper
     tags
   end
 
+  # @rbs (IssueQuery | ProjectQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery) -> Array[untyped]
   def query_available_inline_columns_options(query)
     (query.available_inline_columns - query.columns).
       reject(&:frozen?).collect {|column| [column.caption, column.name]}
   end
 
+  # @rbs (IssueQuery | ProjectQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery) -> Array[untyped]
   def query_selected_inline_columns_options(query)
     (query.inline_columns & query.available_inline_columns).
       reject(&:frozen?).collect {|column| [column.caption, column.name]}
   end
 
+  # @rbs (IssueQuery | ProjectQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def render_query_columns_selection(query, options={})
     tag_name = (options[:name] || 'c') + '[]'
     render :partial => 'queries/columns', :locals => {:query => query, :tag_name => tag_name}
   end
 
+  # @rbs (ProjectQuery) -> ActiveSupport::SafeBuffer
   def available_display_types_tags(query)
     tags = ''.html_safe
     query.available_display_types.each do |t|
@@ -151,6 +160,7 @@ module QueriesHelper
     tags
   end
 
+  # @rbs (Array[untyped], IssueQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery | ProjectQuery) -> Array[untyped]
   def grouped_query_results(items, query, &)
     result_count_by_group = query.result_count_by_group
     previous_group, first = false, true
@@ -178,6 +188,7 @@ module QueriesHelper
     end
   end
 
+  # @rbs (IssueQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery | ProjectQuery) -> ActiveSupport::SafeBuffer?
   def render_query_totals(query)
     return unless query.totalable_columns.present?
 
@@ -187,6 +198,7 @@ module QueriesHelper
     content_tag('p', totals.join(" ").html_safe, :class => "query-totals")
   end
 
+  # @rbs (QueryColumn | QueryCustomFieldColumn, Float | Integer) -> ActiveSupport::SafeBuffer
   def total_tag(column, value)
     label = content_tag('span', "#{column.caption}:")
     value =
@@ -199,6 +211,7 @@ module QueriesHelper
     content_tag('span', label + " " + value, :class => "total-for-#{column.name.to_s.dasherize}")
   end
 
+  # @rbs (IssueQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery | ProjectQuery, QueryColumn | TimestampQueryColumn | QueryAssociationCustomFieldColumn | QueryAssociationColumn | QueryCustomFieldColumn | WatcherQueryColumn, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def column_header(query, column, options={})
     if column.sortable?
       css, order = nil, column.default_order
@@ -235,6 +248,7 @@ module QueriesHelper
     content_tag('th', content, :class => column.css_classes)
   end
 
+  # @rbs (QueryColumn | TimestampQueryColumn | QueryAssociationCustomFieldColumn | QueryAssociationColumn | QueryCustomFieldColumn | WatcherQueryColumn, Issue | TimeEntry | Project | User) -> (ActiveSupport::SafeBuffer | String)?
   def column_content(column, item)
     value = column.value_object(item)
     content =
@@ -251,6 +265,7 @@ module QueriesHelper
     content
   end
 
+  # @rbs (QueryColumn | TimestampQueryColumn | QueryAssociationCustomFieldColumn | QueryAssociationColumn | QueryCustomFieldColumn | WatcherQueryColumn, Issue | TimeEntry | Project | User, (Integer | Tracker | IssueStatus | IssuePriority | String | ActiveSupport::TimeWithZone | User | Rational | CustomValue | Date | Project | bool | TimeEntryActivity | Issue | IssueCategory | Version | Float | Attachment::ActiveRecord_Associations_CollectionProxy | IssueRelation | Principal::ActiveRecord_Associations_CollectionProxy)?) -> (ActiveSupport::SafeBuffer | String)
   def column_value(column, item, value)
     content =
       case column.name
@@ -291,6 +306,7 @@ module QueriesHelper
     content
   end
 
+  # @rbs (QueryColumn | QueryCustomFieldColumn | QueryAssociationCustomFieldColumn | QueryAssociationColumn | WatcherQueryColumn | TimestampQueryColumn, Issue | TimeEntry | User | Project) -> (ActiveSupport::SafeBuffer | String)?
   def csv_content(column, item)
     value = column.value_object(item)
     if value.is_a?(Array)
@@ -300,6 +316,7 @@ module QueriesHelper
     end
   end
 
+  # @rbs (QueryColumn | QueryCustomFieldColumn | QueryAssociationCustomFieldColumn | QueryAssociationColumn | WatcherQueryColumn | TimestampQueryColumn, Issue | TimeEntry | User | Project, (Integer | CustomValue | Rational | String | ActiveSupport::TimeWithZone | bool | Project | Date | User | TimeEntryActivity | Issue | Attachment::ActiveRecord_Associations_CollectionProxy | Tracker | IssueStatus | IssuePriority | Float | IssueRelation | Version | IssueCategory | Principal::ActiveRecord_Associations_CollectionProxy)?) -> (ActiveSupport::SafeBuffer | String)?
   def csv_value(column, object, value)
     case column.name
     when :attachments
@@ -326,6 +343,7 @@ module QueriesHelper
     end
   end
 
+  # @rbs (Array[untyped], IssueQuery | TimeEntryQuery | UserQuery | ProjectQuery, ?(Hash[untyped, untyped] | ActionController::Parameters)?) -> String
   def query_to_csv(items, query, options={})
     columns = query.columns
 
@@ -339,6 +357,7 @@ module QueriesHelper
     end
   end
 
+  # @rbs (TimeEntryQuery | UserQuery | IssueQuery, String) -> String
   def filename_for_export(query, default_name)
     query_name = params[:query_name].presence || query.name
     query_name = default_name if query_name == '_' || query_name.blank?
@@ -348,6 +367,7 @@ module QueriesHelper
   end
 
   # Retrieve query from session or build a new query
+  # @rbs (?Class, ?bool, ?Hash[untyped, untyped]) -> (ProjectQuery | IssueQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery)?
   def retrieve_query(klass=IssueQuery, use_session=true, options={})
     session_key = klass.name.underscore.to_sym
 
@@ -400,6 +420,7 @@ module QueriesHelper
     @query
   end
 
+  # @rbs (?Class) -> void
   def retrieve_query_from_session(klass=IssueQuery)
     session_key = klass.name.underscore.to_sym
     session_data = session[session_key]
@@ -431,6 +452,7 @@ module QueriesHelper
   end
 
   # Returns the query definition as hidden field tags
+  # @rbs (IssueQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery | ProjectQuery) -> ActiveSupport::SafeBuffer
   def query_as_hidden_field_tags(query)
     tags = hidden_field_tag("set_filter", "1", :id => nil)
 
@@ -463,16 +485,19 @@ module QueriesHelper
     tags
   end
 
+  # @rbs (ProjectQuery | IssueQuery | TimeEntryQuery | ProjectAdminQuery | UserQuery) -> ActiveSupport::SafeBuffer
   def query_hidden_sort_tag(query)
     hidden_field_tag("sort", query.sort_criteria.to_param, :id => nil)
   end
 
   # Returns the queries that are rendered in the sidebar
+  # @rbs (Class, Project?) -> Array[untyped]
   def sidebar_queries(klass, project)
     klass.visible.global_or_on_project(@project).sorted.to_a
   end
 
   # Renders a group of queries
+  # @rbs (String, Array[untyped]) -> (String | ActiveSupport::SafeBuffer)
   def query_links(title, queries)
     return '' if queries.empty?
 
@@ -515,6 +540,7 @@ module QueriesHelper
       ) + "\n"
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def link_to_clear_query(params = {:set_filter => 1, :sort => '', :project_id => @project})
     link_to(
       sprite_icon('clear-query', l(:button_clear)),
@@ -525,6 +551,7 @@ module QueriesHelper
   end
 
   # Renders the list of queries for the sidebar
+  # @rbs (Class, Project?) -> ActiveSupport::SafeBuffer
   def render_sidebar_queries(klass, project)
     queries = sidebar_queries(klass, project)
 

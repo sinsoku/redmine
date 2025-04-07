@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingWikiTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_wiki
     should_route 'GET /projects/foo/wiki' => 'wiki#show', :project_id => 'foo'
     should_route 'GET /projects/foo/wiki/index' => 'wiki#index', :project_id => 'foo'
@@ -28,6 +29,7 @@ class RoutingWikiTest < Redmine::RoutingTest
     should_route 'GET /projects/foo/wiki/export.pdf' => 'wiki#export', :project_id => 'foo', :format => 'pdf'
   end
 
+  # @rbs () -> Minitest::Assertion
   def test_wiki_pages
     should_route 'GET /projects/foo/wiki/page' => 'wiki#show', :project_id => 'foo', :id => 'page'
     should_route 'GET /projects/foo/wiki/page.pdf' => 'wiki#show', :project_id => 'foo', :id => 'page', :format => 'pdf'
@@ -55,6 +57,7 @@ class RoutingWikiTest < Redmine::RoutingTest
     end
   end
 
+  # @rbs () -> bool
   def test_wiki_page_versions
     should_route 'GET /projects/foo/wiki/page/2' => 'wiki#show', :project_id => 'foo', :id => 'page', :version => '2'
     should_route 'GET /projects/foo/wiki/page/2/diff' => 'wiki#diff', :project_id => 'foo', :id => 'page', :version => '2'

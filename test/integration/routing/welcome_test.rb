@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingWelcomeTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_welcome
     should_route 'GET /' => 'welcome#index'
     should_route 'GET /robots.txt' => 'welcome#robots', :format => 'txt'

@@ -73,15 +73,18 @@ class Message < ApplicationRecord
         user.allowed_to?(:edit_messages, message.project)
       end
   )
+  # @rbs (?User | AnonymousUser) -> bool
   def visible?(user=User.current)
     !user.nil? && user.allowed_to?(:view_messages, project)
   end
 
+  # @rbs () -> ActiveModel::Error?
   def cannot_reply_to_locked_topic
     # Can not reply to a locked topic
     errors.add :base, 'Topic is locked' if root.locked? && self != root
   end
 
+  # @rbs () -> Integer?
   def update_messages_board
     if saved_change_to_board_id?
       Message.where(["id = ? OR parent_id = ?", root.id, root.id]).update_all({:board_id => board_id})
@@ -90,6 +93,7 @@ class Message < ApplicationRecord
     end
   end
 
+  # @rbs () -> Integer
   def reset_counters!
     if parent && parent.id
       Message.where({:id => parent.id}).update_all({:last_reply_id => parent.children.maximum(:id)})
@@ -97,36 +101,44 @@ class Message < ApplicationRecord
     board.reset_counters!
   end
 
+  # @rbs ((String | bool)?) -> Integer
   def sticky=(arg)
     write_attribute :sticky, (arg == true || arg.to_s == '1' ? 1 : 0)
   end
 
+  # @rbs () -> bool
   def sticky?
     sticky == 1
   end
 
+  # @rbs () -> Project
   def project
     board.project
   end
 
+  # @rbs (User | AnonymousUser) -> bool
   def editable_by?(usr)
     usr && usr.logged? && (usr.allowed_to?(:edit_messages, project) || (self.author == usr && usr.allowed_to?(:edit_own_messages, project)))
   end
 
+  # @rbs (User | AnonymousUser) -> bool
   def destroyable_by?(usr)
     usr && usr.logged? && (usr.allowed_to?(:delete_messages, project) || (self.author == usr && usr.allowed_to?(:delete_own_messages, project)))
   end
 
+  # @rbs () -> Array[untyped]
   def notified_users
     project.notified_users.reject {|user| !visible?(user)}
   end
 
   private
 
+  # @rbs () -> Watcher
   def add_author_as_watcher
     Watcher.create(:watchable => self.root, :user => author)
   end
 
+  # @rbs () -> Array[untyped]?
   def send_notification
     if Setting.notified_events.include?('message_posted')
       Mailer.deliver_message_posted(self)

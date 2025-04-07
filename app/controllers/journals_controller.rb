@@ -33,6 +33,7 @@ class JournalsController < ApplicationController
   include QueriesHelper
   include Redmine::QuoteReply::Builder
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | bool)
   def index
     retrieve_query
     if @query.valid?
@@ -45,6 +46,7 @@ class JournalsController < ApplicationController
     render_404
   end
 
+  # @rbs () -> Redmine::Helpers::Diff?
   def diff
     @issue = @journal.issue
     if params[:detail_id].present?
@@ -64,6 +66,7 @@ class JournalsController < ApplicationController
     @diff = Redmine::Helpers::Diff.new(@detail.value, @detail.old_value)
   end
 
+  # @rbs () -> (String | bool)
   def new
     @journal = Journal.visible.find(params[:journal_id]) if params[:journal_id]
     @content = if @journal
@@ -75,6 +78,7 @@ class JournalsController < ApplicationController
     render_404
   end
 
+  # @rbs () -> nil
   def edit
     (render_403; return false) unless @journal.editable_by?(User.current)
     respond_to do |format|
@@ -83,6 +87,7 @@ class JournalsController < ApplicationController
     end
   end
 
+  # @rbs () -> bool?
   def update
     (render_403; return false) unless @journal.editable_by?(User.current)
     journal_attributes = params[:journal]
@@ -100,6 +105,7 @@ class JournalsController < ApplicationController
 
   private
 
+  # @rbs () -> (Project | bool)
   def find_journal
     @journal = Journal.visible.find(params[:id])
     @project = @journal.journalized.project

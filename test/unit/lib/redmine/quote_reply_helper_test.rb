@@ -23,6 +23,7 @@ class QuoteReplyHelperTest < ActionView::TestCase
   include ERB::Util
   include Redmine::QuoteReply::Helper
 
+  # @rbs () -> bool
   def test_quote_reply
     with_locale 'en' do
       url = quoted_issue_path(issues(:issues_001))

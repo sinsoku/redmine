@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class MessagesControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show
     get(:show, :params => {:board_id => 1, :id => 1})
     assert_response :success
@@ -31,6 +33,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_select 'h2', :text => 'First post'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_contain_reply_field_tags_for_quoting
     @request.session[:user_id] = 2
     get(:show, :params => {:board_id => 1, :id => 1})
@@ -42,6 +45,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_select 'div#reply'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_pagination
     message = Message.find(1)
     assert_difference 'Message.count', 30 do
@@ -68,6 +72,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', "/boards/1/topics/1?r=#{reply_ids.first}#message-#{reply_ids.first}", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_reply_permission
     @request.session[:user_id] = 2
     get(:show, :params => {:board_id => 1, :id => 1})
@@ -76,16 +81,19 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_select 'div#reply textarea#message_content'
   end
 
+  # @rbs () -> bool
   def test_show_message_not_found
     get(:show, :params => {:board_id => 1, :id => 99999})
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_show_message_from_invalid_board_should_respond_with_404
     get(:show, :params => {:board_id => 999, :id => 1})
     assert_response :not_found
   end
 
+  # @rbs () -> Array[untyped]
   def test_show_should_display_watchers
     @request.session[:user_id] = 2
     message = Message.find(1)
@@ -112,6 +120,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_not_display_watchers_without_permission
     @request.session[:user_id] = 2
     Role.find(1).remove_permission! :view_message_watchers
@@ -123,6 +132,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_select 'h3', {text: /Watchers \(\d*\)/, count: 0}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new
     @request.session[:user_id] = 2
     get(:new, :params => {:board_id => 1})
@@ -131,12 +141,14 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'message[subject]'
   end
 
+  # @rbs () -> bool
   def test_get_new_with_invalid_board
     @request.session[:user_id] = 2
     get(:new, :params => {:board_id => 99})
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_post_new
     @request.session[:user_id] = 2
     ActionMailer::Base.deliveries.clear
@@ -175,6 +187,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_includes email_addresses, ['dlopper@somenet.foo']
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit
     @request.session[:user_id] = 2
     get(:edit, :params => {:board_id => 1, :id => 1})
@@ -183,6 +196,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'message[subject]', 'First post'
   end
 
+  # @rbs () -> bool
   def test_post_edit
     @request.session[:user_id] = 2
     post(
@@ -203,6 +217,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_equal 'New body', message.content
   end
 
+  # @rbs () -> bool
   def test_post_edit_sticky_and_locked
     @request.session[:user_id] = 2
     post(
@@ -225,6 +240,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_equal true, message.locked?
   end
 
+  # @rbs () -> bool
   def test_post_edit_should_allow_to_change_board
     @request.session[:user_id] = 2
     post(
@@ -244,6 +260,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_equal Board.find(2), message.board
   end
 
+  # @rbs () -> bool
   def test_reply
     @request.session[:user_id] = 2
     post(
@@ -263,6 +280,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert Message.find_by_subject('Test reply')
   end
 
+  # @rbs () -> bool
   def test_destroy_topic
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -274,6 +292,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_nil Message.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_destroy_reply
     @request.session[:user_id] = 2
     assert_difference 'Message.count', -1 do
@@ -284,6 +303,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_nil Message.find_by_id(2)
   end
 
+  # @rbs () -> bool
   def test_quote_if_message_is_root
     @request.session[:user_id] = 2
     post(
@@ -302,6 +322,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_include '> This is the very first post\n> in the forum', response.body
   end
 
+  # @rbs () -> bool
   def test_quote_if_message_is_not_root
     @request.session[:user_id] = 2
     post(
@@ -320,6 +341,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_include '> An other reply', response.body
   end
 
+  # @rbs () -> bool
   def test_quote_with_partial_quote_if_message_is_root
     @request.session[:user_id] = 2
 
@@ -335,6 +357,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_include '> the very first post\n> in the forum', response.body
   end
 
+  # @rbs () -> bool
   def test_quote_with_partial_quote_if_message_is_not_root
     @request.session[:user_id] = 2
 
@@ -349,6 +372,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_include '> other reply', response.body
   end
 
+  # @rbs () -> bool
   def test_quote_as_html_should_respond_with_404
     @request.session[:user_id] = 2
     post(
@@ -362,6 +386,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_preview_new
     @request.session[:user_id] = 2
     post(
@@ -378,6 +403,7 @@ class MessagesControllerTest < Redmine::ControllerTest
     assert_include 'Previewed text', response.body
   end
 
+  # @rbs () -> bool
   def test_preview_edit
     @request.session[:user_id] = 2
     post(

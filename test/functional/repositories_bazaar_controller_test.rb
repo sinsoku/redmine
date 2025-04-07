@@ -26,6 +26,7 @@ class RepositoriesBazaarControllerTest < Redmine::RepositoryControllerTest
   REPOSITORY_PATH_TRUNK = File.join(REPOSITORY_PATH, "trunk")
   PRJ_ID = 3
 
+  # @rbs () -> bool
   def setup
     super
     User.current = nil
@@ -320,6 +321,7 @@ class RepositoriesBazaarControllerTest < Redmine::RepositoryControllerTest
     end
   else
     puts "Bazaar test repository NOT FOUND. Skipping functional tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

@@ -24,11 +24,13 @@ class Change < ApplicationRecord
   before_validation :replace_invalid_utf8_of_path
   before_save :init_path
 
+  # @rbs () -> String?
   def replace_invalid_utf8_of_path
     self.path      = Redmine::CodesetUtil.replace_invalid_utf8(self.path)
     self.from_path = Redmine::CodesetUtil.replace_invalid_utf8(self.from_path)
   end
 
+  # @rbs () -> String
   def init_path
     self.path ||= ""
   end

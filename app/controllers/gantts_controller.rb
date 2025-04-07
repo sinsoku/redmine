@@ -30,6 +30,7 @@ class GanttsController < ApplicationController
   include QueriesHelper
   include Redmine::Export::PDF
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def show
     @gantt = Redmine::Helpers::Gantt.new(params)
     @gantt.project = @project

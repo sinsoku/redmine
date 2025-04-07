@@ -20,11 +20,13 @@
 require_relative '../../../../test_helper'
 
 class DiffTest < ActiveSupport::TestCase
+  # @rbs () -> bool
   def test_diff
     diff = Redmine::Helpers::Diff.new("foo", "bar")
     assert_not_nil diff
   end
 
+  # @rbs () -> bool
   def test_dont_double_escape
     # 3 cases to test in the before: first word, last word, everything inbetween
     before = "<stuff> with html & special chars</danger>"

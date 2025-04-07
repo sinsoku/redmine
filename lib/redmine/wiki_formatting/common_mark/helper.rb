@@ -21,6 +21,7 @@ module Redmine
   module WikiFormatting
     module CommonMark
       module Helper
+        # @rbs (String, ?String) -> ActiveSupport::SafeBuffer
         def wikitoolbar_for(field_id, preview_url = preview_text_path)
           heads_for_wiki_formatter
 
@@ -32,10 +33,12 @@ module Redmine
           )
         end
 
+        # @rbs (WikiPage) -> String
         def initial_page_content(page)
           "# #{page.pretty_title}"
         end
 
+        # @rbs () -> bool?
         def heads_for_wiki_formatter
           unless @heads_for_wiki_formatter_included
             toolbar_language_options = User.current && User.current.pref.toolbar_language_options

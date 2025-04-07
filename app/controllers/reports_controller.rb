@@ -22,6 +22,7 @@ class ReportsController < ApplicationController
   before_action :find_project, :authorize, :find_issue_statuses
 
   include ReportsHelper
+  # @rbs () -> ActiveSupport::SafeBuffer
   def issue_report
     with_subprojects = Setting.display_subprojects_issues?
     @trackers = @project.rolled_up_trackers(with_subprojects).visible
@@ -42,6 +43,7 @@ class ReportsController < ApplicationController
     render :template => "reports/issue_report"
   end
 
+  # @rbs () -> String?
   def issue_report_details
     with_subprojects = Setting.display_subprojects_issues?
     case params[:detail]
@@ -95,6 +97,7 @@ class ReportsController < ApplicationController
 
   private
 
+  # @rbs () -> Array[untyped]
   def find_issue_statuses
     @statuses = @project.rolled_up_statuses.sorted.to_a
   end

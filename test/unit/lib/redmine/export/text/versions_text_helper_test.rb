@@ -23,6 +23,7 @@ class VersionsTextHelperTest < ActiveSupport::TestCase
   include Redmine::I18n
   include Redmine::Export::Text::VersionsTextHelper
 
+  # @rbs () -> bool
   def test_version_to_text
     expected = <<~EXPECTED
       # 0.1

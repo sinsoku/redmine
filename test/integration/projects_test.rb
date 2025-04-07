@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class ProjectsTest < Redmine::IntegrationTest
+  # @rbs () -> bool
   def test_archive_project
     subproject = Project.find(1).children.first
     log_user("admin", "admin")
@@ -42,6 +43,7 @@ class ProjectsTest < Redmine::IntegrationTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_modules_should_not_allow_get
     log_user("admin", "admin")
 
@@ -51,6 +53,7 @@ class ProjectsTest < Redmine::IntegrationTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_list_layout_when_show_projects_scheduled_for_deletion
     project = Project.find(1)
     project.update_attribute :status, Project::STATUS_SCHEDULED_FOR_DELETION

@@ -58,6 +58,7 @@ class SubversionAdapterTest < ActiveSupport::TestCase
     end
   else
     puts "Subversion test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

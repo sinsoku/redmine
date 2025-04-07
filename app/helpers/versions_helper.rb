@@ -20,6 +20,7 @@
 module VersionsHelper
   include Redmine::Export::Text::VersionsTextHelper
 
+  # @rbs (Version) -> String
   def version_anchor(version)
     if @project == version.project
       anchor version.name
@@ -28,6 +29,7 @@ module VersionsHelper
     end
   end
 
+  # @rbs (Version, ?Hash[untyped, untyped]) -> String
   def version_filtered_issues_path(version, options = {})
     options = {:fixed_version_id => version, :set_filter => 1}.merge(options)
     project =
@@ -52,6 +54,7 @@ module VersionsHelper
 
   STATUS_BY_CRITERIAS = %w(tracker status priority author assigned_to category)
 
+  # @rbs (Version, String?) -> ActiveSupport::SafeBuffer
   def render_issue_status_by(version, criteria)
     criteria = 'tracker' unless STATUS_BY_CRITERIAS.include?(criteria)
     h = Hash.new {|k, v| k[v] = [0, 0]}
@@ -80,10 +83,12 @@ module VersionsHelper
     render :partial => 'issue_counts', :locals => {:version => version, :criteria => criteria, :counts => counts, :max => max}
   end
 
+  # @rbs (String) -> ActiveSupport::SafeBuffer
   def status_by_options_for_select(value)
     options_for_select(STATUS_BY_CRITERIAS.collect {|criteria| [l(:"field_#{criteria}"), criteria]}, value)
   end
 
+  # @rbs (Version, Project) -> ActiveSupport::SafeBuffer?
   def link_to_new_issue(version, project)
     if version.open? && User.current.allowed_to?(:add_issues, project)
       trackers = Issue.allowed_target_trackers(project)

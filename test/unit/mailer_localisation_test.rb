@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class MailerLocalisationTest < ActiveSupport::TestCase
   include Redmine::I18n
   include Rails::Dom::Testing::Assertions
+  # @rbs () -> nil
   def setup
     ActionMailer::Base.deliveries.clear
     Setting.plain_text_mail = '0'
@@ -30,6 +31,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
   end
 
   # test mailer methods for each language
+  # @rbs () -> Array[untyped]
   def test_issue_add
     issue = Issue.find(1)
     with_each_user_language do |user|
@@ -37,6 +39,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_edit
     journal = Journal.find(1)
     with_each_user_language do |user|
@@ -44,6 +47,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_document_added
     document = Document.find(1)
     author = User.find(2)
@@ -52,6 +56,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_attachments_added
     attachements = [ Attachment.find_by_container_type('Document') ]
     with_each_user_language do |user|
@@ -59,6 +64,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_news_added
     news = News.first
     with_each_user_language do |user|
@@ -66,6 +72,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_news_comment_added
     comment = Comment.find(2)
     with_each_user_language do |user|
@@ -73,6 +80,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_message_posted
     message = Message.first
     with_each_user_language do |user|
@@ -80,6 +88,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_wiki_content_added
     content = WikiContent.find(1)
     with_each_user_language do |user|
@@ -87,6 +96,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_wiki_content_updated
     content = WikiContent.find(1)
     with_each_user_language do |user|
@@ -94,12 +104,14 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_account_information
     with_each_user_language do |user|
       assert Mailer.account_information(user, 'pAsswORd').deliver_now
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_lost_password
     token = Token.find(2)
     with_each_user_language do |user|
@@ -107,6 +119,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_register
     token = Token.find(1)
     with_each_user_language do |user|
@@ -114,6 +127,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_test_email
     with_each_user_language do |user|
       assert Mailer.test_email(user).deliver_now
@@ -122,6 +136,7 @@ class MailerLocalisationTest < ActiveSupport::TestCase
 
   private
 
+  # @rbs () -> Array[untyped]
   def with_each_user_language(&)
     user = User.find(2)
     valid_languages.each do |lang|

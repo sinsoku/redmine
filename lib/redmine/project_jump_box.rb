@@ -19,15 +19,18 @@
 
 module Redmine
   class ProjectJumpBox
+    # @rbs (AnonymousUser | User) -> void
     def initialize(user)
       @user = user
       @pref_project_ids = {}
     end
 
+    # @rbs () -> Integer
     def recent_projects_count
       @user.pref.recently_used_projects
     end
 
+    # @rbs () -> Array[untyped]
     def recently_used_projects
       project_ids = recently_used_project_ids
       Project.where(id: project_ids).
@@ -37,10 +40,12 @@ module Redmine
         compact
     end
 
+    # @rbs () -> Array[untyped]
     def bookmarked_projects
       Project.where(id: bookmarked_project_ids).visible.to_a
     end
 
+    # @rbs (Project) -> Array[untyped]
     def project_used(project)
       return if project.blank? || project.id.blank?
 
@@ -51,45 +56,54 @@ module Redmine
       self.recently_used_project_ids = id_array[0, recent_projects_count]
     end
 
+    # @rbs (Project) -> Array[untyped]
     def bookmark_project(project)
       self.recently_used_project_ids = recently_used_project_ids.reject{|id| id == project.id}
       self.bookmarked_project_ids = (bookmarked_project_ids << project.id)
     end
 
+    # @rbs (Project) -> Array[untyped]
     def delete_project_bookmark(project)
       self.bookmarked_project_ids = bookmarked_project_ids.reject do |id|
         id == project.id
       end
     end
 
+    # @rbs (Project) -> bool
     def bookmark?(project)
       project && project.id && bookmarked_project_ids.include?(project.id)
     end
 
     private
 
+    # @rbs () -> Array[untyped]
     def bookmarked_project_ids
       pref_project_ids :bookmarked_project_ids
     end
 
+    # @rbs (Array[untyped]) -> nil
     def bookmarked_project_ids=(new_ids)
       set_pref_project_ids :bookmarked_project_ids, new_ids
     end
 
+    # @rbs () -> Array[untyped]
     def recently_used_project_ids
       pref_project_ids(:recently_used_project_ids)[0, recent_projects_count]
     end
 
+    # @rbs (Array[untyped]) -> nil
     def recently_used_project_ids=(new_ids)
       set_pref_project_ids :recently_used_project_ids, new_ids
     end
 
+    # @rbs (Symbol) -> Array[untyped]
     def pref_project_ids(key)
       return [] unless @user.logged?
 
       @pref_project_ids[key] ||= (@user.pref[key] || '').split(',').map(&:to_i)
     end
 
+    # @rbs (Symbol, Array[untyped]) -> nil
     def set_pref_project_ids(key, new_values)
       return nil unless @user.logged?
 

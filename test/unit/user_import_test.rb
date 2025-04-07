@@ -22,17 +22,20 @@ require_relative '../test_helper'
 class UserImportTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     set_language_if_valid 'en'
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_authorized
     assert  UserImport.authorized?(User.find(1)) # admins
     assert !UserImport.authorized?(User.find(2)) # dose not admin
     assert !UserImport.authorized?(User.find(6)) # dows not admin
   end
 
+  # @rbs () -> bool
   def test_maps_login
     import = generate_import_with_mapping
     first, second, third = new_records(User, 3) {import.run}
@@ -41,6 +44,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert_equal 'user3', third.login
   end
 
+  # @rbs () -> bool
   def test_maps_firstname
     import = generate_import_with_mapping
     first, second, third = new_records(User, 3) {import.run}
@@ -49,6 +53,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert_equal 'Three', third.firstname
   end
 
+  # @rbs () -> bool
   def test_maps_lastname
     import = generate_import_with_mapping
     first, second, third = new_records(User, 3) {import.run}
@@ -57,6 +62,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert_equal 'User', third.lastname
   end
 
+  # @rbs () -> bool
   def test_maps_mail
     import = generate_import_with_mapping
     first, second, third = new_records(User, 3) {import.run}
@@ -65,6 +71,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert_equal 'user3@somenet.foo', third.mail
   end
 
+  # @rbs () -> bool
   def test_maps_language
     default_language = 'fr'
     with_settings :default_language => default_language do
@@ -76,6 +83,7 @@ class UserImportTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_maps_admin
     import = generate_import_with_mapping
     first, second, third = new_records(User, 3) {import.run}
@@ -84,6 +92,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert_not third.admin?
   end
 
+  # @rbs () -> bool
   def test_maps_auth_information
     import = generate_import_with_mapping
     first, second, third = new_records(User, 3) {import.run}
@@ -99,6 +108,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert User.try_to_login(third.login, 'ldapassword', false)
   end
 
+  # @rbs () -> bool
   def test_map_must_change_password
     import = generate_import_with_mapping
     first, second, third = new_records(User, 3) {import.run}
@@ -107,6 +117,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert_not third.must_change_password?
   end
 
+  # @rbs () -> bool
   def test_maps_status
     import = generate_import_with_mapping
     first, second, third = new_records(User, 3) {import.run}
@@ -115,6 +126,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert third.registered?
   end
 
+  # @rbs () -> bool
   def test_maps_custom_fields
     phone_number_cf = UserCustomField.find(4)
 
@@ -128,6 +140,7 @@ class UserImportTest < ActiveSupport::TestCase
     assert_equal '666-7777-8888', third.custom_field_value(phone_number_cf)
   end
 
+  # @rbs () -> bool
   def test_deliver_account_information
     import = generate_import_with_mapping
     import.settings['notifications'] = '1'
@@ -148,6 +161,7 @@ class UserImportTest < ActiveSupport::TestCase
 
   protected
 
+  # @rbs (?String) -> UserImport
   def generate_import(fixture_name='import_users.csv')
     import = UserImport.new
     import.user_id = 1
@@ -156,6 +170,7 @@ class UserImportTest < ActiveSupport::TestCase
     import
   end
 
+  # @rbs (?String) -> UserImport
   def generate_import_with_mapping(fixture_name='import_users.csv')
     import = generate_import(fixture_name)
 

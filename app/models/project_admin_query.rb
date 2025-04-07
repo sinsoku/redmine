@@ -20,10 +20,12 @@
 class ProjectAdminQuery < ProjectQuery
   self.layout = 'admin'
 
+  # @rbs (?project: nil, ?user: nil | User | AnonymousUser) -> nil
   def self.default(project: nil, user: User.current)
     nil
   end
 
+  # @rbs (*nil) -> ProjectAdminQuery::ActiveRecord_Relation
   def self.visible(*args)
     user = args.shift || User.current
     if user.admin?
@@ -37,18 +39,22 @@ class ProjectAdminQuery < ProjectQuery
     user&.admin?
   end
 
+  # @rbs (User) -> bool
   def editable_by?(user)
     user&.admin?
   end
 
+  # @rbs () -> Array[untyped]
   def available_display_types
     ['list']
   end
 
+  # @rbs () -> String
   def display_type
     'list'
   end
 
+  # @rbs () -> Array[untyped]
   def project_statuses_values
     values = super
 
@@ -57,6 +63,7 @@ class ProjectAdminQuery < ProjectQuery
     values
   end
 
+  # @rbs () -> Project::ActiveRecord_Relation
   def base_scope
     Project.where(statement)
   end

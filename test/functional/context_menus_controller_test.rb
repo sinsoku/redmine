@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class ContextMenusControllerTest < Redmine::ControllerTest
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_one_issue_should_link_to_issue_path
     @request.session[:user_id] = 2
     get(
@@ -47,6 +48,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?][data-method="patch"]', '/issues/1?ids%5B%5D=1&issue%5Bassigned_to_id%5D=3', :text => 'Dave Lopper'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_multiple_issues_should_link_to_bulk_update_issues_path
     @request.session[:user_id] = 2
     get :issues, :params => {
@@ -70,6 +72,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?][data-method="patch"]', '/issues/bulk_update?ids%5B%5D=1&ids%5B%5D=2&issue%5Bassigned_to_id%5D=3', :text => 'Dave Lopper'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_one_issue_by_anonymous
     with_settings :default_language => 'en' do
       get(
@@ -84,6 +87,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_multiple_issues_of_same_project
     @request.session[:user_id] = 2
     get(
@@ -107,6 +111,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', "/issues/bulk_update?#{ids}&issue%5Bassigned_to_id%5D=3", :text => 'Dave Lopper'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_multiple_issues_of_different_projects
     @request.session[:user_id] = 2
     get(
@@ -129,6 +134,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', "/issues/bulk_update?#{ids}&issue%5Bassigned_to_id%5D=2", :text => 'John Smith'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_should_include_list_custom_fields
     field = IssueCustomField.create!(:name => 'List', :field_format => 'list',
       :possible_values => ['Foo', 'Bar'], :is_for_all => true, :tracker_ids => [1, 2, 3])
@@ -149,6 +155,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_multiple_issues_should_include_list_custom_fields
     field = IssueCustomField.create!(:name => 'List', :field_format => 'list',
       :possible_values => ['Foo', 'Bar'], :is_for_all => true, :tracker_ids => [1, 2, 3])
@@ -169,6 +176,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_should_not_include_null_value_for_required_custom_fields
     field = IssueCustomField.create!(:name => 'List', :is_required => true, :field_format => 'list',
       :possible_values => ['Foo', 'Bar'], :is_for_all => true, :tracker_ids => [1, 2, 3])
@@ -188,6 +196,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_on_single_issue_should_select_current_custom_field_value
     field = IssueCustomField.create!(:name => 'List', :field_format => 'list',
       :possible_values => ['Foo', 'Bar'], :is_for_all => true, :tracker_ids => [1, 2, 3])
@@ -210,6 +219,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_should_include_bool_custom_fields
     field = IssueCustomField.create!(:name => 'Bool', :field_format => 'bool',
       :is_for_all => true, :tracker_ids => [1, 2, 3])
@@ -231,6 +241,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_should_include_user_custom_fields
     field = IssueCustomField.create!(:name => 'User', :field_format => 'user',
       :is_for_all => true, :tracker_ids => [1, 2, 3])
@@ -251,6 +262,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_should_include_version_custom_fields
     field = IssueCustomField.create!(:name => 'Version', :field_format => 'version', :is_for_all => true, :tracker_ids => [1, 2, 3])
     @request.session[:user_id] = 2
@@ -270,6 +282,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_should_show_enabled_custom_fields_for_the_role_only
     enabled_cf =
       IssueCustomField.generate!(
@@ -294,6 +307,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select "li.cf_#{disabled_cf.id}", 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_by_assignable_user_should_include_assigned_to_me_link
     @request.session[:user_id] = 2
     get(
@@ -307,6 +321,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a[href=?]', '/issues/bulk_update?ids%5B%5D=1&ids%5B%5D=2&issue%5Bassigned_to_id%5D=2', :text => / me /
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_should_propose_shared_versions_for_issues_from_different_projects
     @request.session[:user_id] = 2
     version = Version.create!(:name => 'Shared', :sharing => 'system', :project_id => 1)
@@ -322,6 +337,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => 'eCookbook - Shared'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_should_include_add_subtask_link
     @request.session[:user_id] = 2
     get(
@@ -335,6 +351,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a.icon-add[href=?]', '/projects/ecookbook/issues/new?issue%5Bparent_issue_id%5D=1&issue%5Btracker_id%5D=1', :text => 'Add subtask'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_with_closed_issue_should_not_include_add_subtask_link
     @request.session[:user_id] = 2
     get(
@@ -348,6 +365,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a.icon-add', :text => 'Add subtask', :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_multiple_issues_should_not_include_add_subtask_link
     @request.session[:user_id] = 2
     get(
@@ -361,6 +379,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a.icon-add', :text => 'Add subtask', :count => 0
   end
 
+  # @rbs () -> bool
   def test_context_menu_with_issue_that_is_not_visible_should_fail
     get(
       :issues,
@@ -371,11 +390,13 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_response :found
   end
 
+  # @rbs () -> bool
   def test_should_respond_with_404_without_ids
     get :issues
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_time_entries_context_menu
     @request.session[:user_id] = 2
     get(
@@ -389,6 +410,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a:not(.disabled)', :text => 'Bulk edit'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_context_menu_for_one_time_entry
     @request.session[:user_id] = 2
     get(
@@ -402,6 +424,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a:not(.disabled)', :text => 'Edit'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_time_entries_context_menu_should_include_custom_fields
     field = TimeEntryCustomField.generate!(:name => "Field", :field_format => "list", :possible_values => ["foo", "bar"])
 
@@ -425,6 +448,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_time_entries_context_menu_with_edit_own_time_entries_permission
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :edit_time_entries
@@ -441,6 +465,7 @@ class ContextMenusControllerTest < Redmine::ControllerTest
     assert_select 'a:not(.disabled)', :text => 'Bulk edit'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_time_entries_context_menu_without_edit_permission
     @request.session[:user_id] = 2
     Role.find_by_name('Manager').remove_permission! :edit_time_entries

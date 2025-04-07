@@ -25,6 +25,7 @@ class ActivitiesHelperTest < Redmine::HelperTest
   class MockEvent
     attr_reader :event_datetime, :event_group, :name
 
+    # @rbs (?ActivitiesHelperTest::MockEvent?) -> void
     def initialize(group=nil)
       @@count ||= 0
       @name = "e#{@@count}"
@@ -33,16 +34,19 @@ class ActivitiesHelperTest < Redmine::HelperTest
       @@count += 1
     end
 
+    # @rbs () -> Integer
     def self.clear
       @@count = 0
     end
   end
 
+  # @rbs () -> Integer
   def setup
     super
     MockEvent.clear
   end
 
+  # @rbs () -> bool
   def test_sort_activity_events_should_sort_by_datetime
     events = []
     events << MockEvent.new
@@ -58,6 +62,7 @@ class ActivitiesHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_sort_activity_events_should_group_events
     events = []
     events << MockEvent.new
@@ -73,6 +78,7 @@ class ActivitiesHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_sort_activity_events_with_group_not_in_set_should_group_events
     e = MockEvent.new
     events = []
@@ -87,6 +93,7 @@ class ActivitiesHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_sort_activity_events_should_sort_by_datetime_and_group
     events = []
     events << MockEvent.new
@@ -110,6 +117,7 @@ class ActivitiesHelperTest < Redmine::HelperTest
     )
   end
 
+  # @rbs () -> bool
   def test_activity_authors_options_for_select_if_current_user_is_admin
     User.current = User.find(1)
     project = Project.find(1)
@@ -120,6 +128,7 @@ class ActivitiesHelperTest < Redmine::HelperTest
       activity_authors_options_for_select(project, nil))
   end
 
+  # @rbs () -> bool
   def test_activity_authors_options_for_select_if_current_user_is_anonymous
     User.current = nil
     project = Project.find(1)

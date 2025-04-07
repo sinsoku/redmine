@@ -20,11 +20,13 @@
 require_relative '../test_helper'
 
 class RolesControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 1 # admin
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
@@ -35,6 +37,7 @@ class RolesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_show_warning_when_no_workflow_is_defined
     Role.find_by_name('Developer').workflow_rules.destroy_all
     Role.find_by_name('Anonymous').workflow_rules.destroy_all
@@ -53,6 +56,7 @@ class RolesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     get :new
     assert_response :success
@@ -60,6 +64,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'role[permissions][]'
   end
 
+  # @rbs () -> bool
   def test_new_should_prefill_permissions_with_non_member_permissions
     role = Role.non_member
     role.permissions = [:view_issues, :view_documents]
@@ -73,6 +78,7 @@ class RolesControllerTest < Redmine::ControllerTest
     )
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_copy
     copy_from = Role.find(2)
 
@@ -95,6 +101,7 @@ class RolesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_validaton_failure
     post(
       :create,
@@ -110,6 +117,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_select_error /Name cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_create_without_workflow_copy
     post(
       :create,
@@ -128,6 +136,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert !role.assignable?
   end
 
+  # @rbs () -> bool
   def test_create_with_workflow_copy
     post(
       :create,
@@ -146,6 +155,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_equal Role.find(1).workflow_rules.size, role.workflow_rules.size
   end
 
+  # @rbs () -> bool
   def test_create_with_managed_roles
     role = new_record(Role) do
       post(
@@ -164,6 +174,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_equal [2, 3], role.managed_role_ids.sort
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     get :edit, :params => {:id => 1}
     assert_response :success
@@ -173,6 +184,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_select '#role-permissions-trackers table .delete_issues_shown'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_anonymous
     get :edit, :params => {:id => Role.anonymous.id}
     assert_response :success
@@ -182,11 +194,13 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_select '#role-permissions-trackers table .delete_issues_shown', 0
   end
 
+  # @rbs () -> bool
   def test_edit_invalid_should_respond_with_404
     get :edit, :params => {:id => 999}
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_update
     put(
       :update,
@@ -204,6 +218,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_equal [:edit_project], role.permissions
   end
 
+  # @rbs () -> bool
   def test_update_trackers_permissions
     put(
       :update,
@@ -225,12 +240,14 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_equal [1, 3], role.permissions_tracker_ids(:add_issues).sort
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     put :update, :params => {:id => 1, :role => {:name => ''}}
     assert_response :success
     assert_select_error /Name cannot be blank/
   end
 
+  # @rbs () -> bool
   def test_destroy
     r = Role.create!(:name => 'ToBeDestroyed', :permissions => [:view_wiki_pages])
 
@@ -239,6 +256,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_nil Role.find_by_id(r.id)
   end
 
+  # @rbs () -> bool
   def test_destroy_role_in_use
     delete :destroy, :params => {:id => 1}
     assert_redirected_to '/roles'
@@ -246,6 +264,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_not_nil Role.find_by_id(1)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_permissions
     get :permissions
     assert_response :success
@@ -254,6 +273,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][type=checkbox][value=delete_issues]:not([checked])', 'permissions[3][]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_permissions_with_filter
     get(
       :permissions,
@@ -268,6 +288,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][type=checkbox][value=delete_issues]:not([checked])', 'permissions[3][]'
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_permissions_csv_export
     get(
       :permissions,
@@ -298,6 +319,7 @@ class RolesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_update_permissions
     post(
       :update_permissions,
@@ -314,6 +336,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_equal [:add_issues, :delete_issues], Role.find(3).permissions
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_update_permissions_should_not_update_other_roles
     assert_no_changes lambda {Role.find(2).permissions} do
       assert_changes lambda {Role.find(1).permissions} do
@@ -329,12 +352,14 @@ class RolesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_move_highest
     put :update, :params => {:id => 3, :role => {:position => 1}}
     assert_redirected_to '/roles'
     assert_equal 1, Role.find(3).position
   end
 
+  # @rbs () -> bool
   def test_move_higher
     position = Role.find(3).position
     put :update, :params => {:id => 3, :role => {:position => position - 1}}
@@ -342,6 +367,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_equal position - 1, Role.find(3).position
   end
 
+  # @rbs () -> bool
   def test_move_lower
     position = Role.find(2).position
     put :update, :params => {:id => 2, :role => {:position => position + 1}}
@@ -349,6 +375,7 @@ class RolesControllerTest < Redmine::ControllerTest
     assert_equal position + 1, Role.find(2).position
   end
 
+  # @rbs () -> bool
   def test_move_lowest
     put :update, :params => {:id => 2, :role => {:position => Role.givable.count}}
     assert_redirected_to '/roles'

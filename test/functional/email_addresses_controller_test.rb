@@ -20,16 +20,19 @@
 require_relative '../test_helper'
 
 class EmailAddressesControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_index_with_no_additional_emails
     @request.session[:user_id] = 2
     get(:index, :params => {:user_id => 2})
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_additional_emails
     @request.session[:user_id] = 2
     EmailAddress.create!(:user_id => 2, :address => 'another@somenet.foo')
@@ -39,6 +42,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     assert_select '.email', :text => 'another@somenet.foo'
   end
 
+  # @rbs () -> bool
   def test_index_with_additional_emails_as_js
     @request.session[:user_id] = 2
     EmailAddress.create!(:user_id => 2, :address => 'another@somenet.foo')
@@ -48,18 +52,21 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     assert_include 'another@somenet.foo', response.body
   end
 
+  # @rbs () -> bool
   def test_index_by_admin_should_be_allowed
     @request.session[:user_id] = 1
     get(:index, :params => {:user_id => 2})
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_index_by_another_user_should_be_denied
     @request.session[:user_id] = 3
     get(:index, :params => {:user_id => 2})
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_create
     @request.session[:user_id] = 2
     assert_difference 'EmailAddress.count' do
@@ -80,6 +87,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     assert_equal 'another@somenet.foo', email.address
   end
 
+  # @rbs () -> bool
   def test_create_as_js
     @request.session[:user_id] = 2
     assert_difference 'EmailAddress.count' do
@@ -97,6 +105,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     @request.session[:user_id] = 2
     assert_no_difference 'EmailAddress.count' do
@@ -114,6 +123,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_disallowed_domain_should_fail
     @request.session[:user_id] = 2
 
@@ -150,6 +160,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_send_security_notification
     @request.session[:user_id] = 2
     ActionMailer::Base.deliveries.clear
@@ -174,6 +185,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     assert mail.to.include?('something@example.fr')
   end
 
+  # @rbs () -> bool
   def test_update
     @request.session[:user_id] = 2
     email = EmailAddress.create!(:user_id => 2, :address => 'another@somenet.foo')
@@ -191,6 +203,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     assert_equal false, email.reload.notify
   end
 
+  # @rbs () -> bool
   def test_update_as_js
     @request.session[:user_id] = 2
     email = EmailAddress.create!(:user_id => 2, :address => 'another@somenet.foo')
@@ -209,6 +222,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     assert_equal false, email.reload.notify
   end
 
+  # @rbs () -> bool
   def test_update_should_send_security_notification
     @request.session[:user_id] = 2
     email = EmailAddress.create!(:user_id => 2, :address => 'another@somenet.foo')
@@ -231,6 +245,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     assert mail.to.include?('another@somenet.foo')
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 2
     email = EmailAddress.create!(:user_id => 2, :address => 'another@somenet.foo')
@@ -248,6 +263,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_as_js
     @request.session[:user_id] = 2
     email = EmailAddress.create!(:user_id => 2, :address => 'another@somenet.foo')
@@ -265,6 +281,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_should_not_destroy_default
     @request.session[:user_id] = 2
 
@@ -280,6 +297,7 @@ class EmailAddressesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_should_send_security_notification
     @request.session[:user_id] = 2
     email = EmailAddress.create!(:user_id => 2, :address => 'another@somenet.foo')

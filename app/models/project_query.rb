@@ -29,6 +29,7 @@ class ProjectQuery < Query
   # Inheriting ProjectAdminQuery from ProjectQuery introduces the problem that
   # ProjectQuery.visible also yields ProjectAdminQueries, as
   # well. We fix that by adding a condition on the actual class name.
+  # @rbs (*untyped) -> ProjectQuery::ActiveRecord_Relation
   def self.visible(*)
     super.where type: name
   end
@@ -46,6 +47,7 @@ class ProjectQuery < Query
     QueryColumn.new(:last_activity_date)
   ]
 
+  # @rbs (?project: nil, ?user: AnonymousUser | User | nil) -> ProjectQuery?
   def self.default(project: nil, user: User.current)
     if user&.logged? && (query_id = user.pref.default_project_query).present?
       query = find_by(id: query_id)
@@ -58,11 +60,13 @@ class ProjectQuery < Query
     nil
   end
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super(attributes)
     self.filters ||= {'status' => {:operator => "=", :values => ['1']}}
   end
 
+  # @rbs () -> void
   def initialize_available_filters
     add_available_filter(
       "status",
@@ -88,6 +92,7 @@ class ProjectQuery < Query
     add_custom_fields_filters(project_custom_fields)
   end
 
+  # @rbs () -> Array[untyped]
   def available_columns
     return @available_columns if @available_columns
 
@@ -97,33 +102,40 @@ class ProjectQuery < Query
     @available_columns
   end
 
+  # @rbs () -> Array[untyped]
   def available_display_types
     ['board', 'list']
   end
 
+  # @rbs () -> Array[untyped]
   def default_columns_names
     @default_columns_names = Setting.project_list_defaults.symbolize_keys[:column_names].map(&:to_sym)
   end
 
+  # @rbs () -> String
   def default_display_type
     Setting.project_list_display_type
   end
 
+  # @rbs () -> Array[untyped]
   def default_sort_criteria
     [[]]
   end
 
+  # @rbs () -> Project::ActiveRecord_Relation
   def base_scope
     Project.visible.where(statement)
   end
 
   # Returns the project count
+  # @rbs () -> Integer
   def result_count
     base_scope.count
   rescue ::ActiveRecord::StatementInvalid => e
     raise StatementInvalid, e.message
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> Project::ActiveRecord_Relation
   def results_scope(options={})
     order_option = [group_by_sort_order, (options[:order] || sort_clause)].flatten.reject(&:blank?)
 

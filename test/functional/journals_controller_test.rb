@@ -20,16 +20,19 @@
 require_relative '../test_helper'
 
 class JournalsControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_index
     get(:index, :params => {:project_id => 1})
     assert_response :success
     assert_equal 'application/atom+xml', @response.media_type
   end
 
+  # @rbs () -> bool
   def test_index_with_invalid_query_id
     get(
       :index,
@@ -41,6 +44,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_should_return_privates_notes_with_permission_only
     journal = Journal.create!(:journalized => Issue.find(2), :notes => 'Privates notes', :private_notes => true, :user_id => 1)
     @request.session[:user_id] = 2
@@ -55,6 +59,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_select 'entry>id', :text => "http://test.host/issues/2?journal_id=#{journal.id}", :count => 0
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_index_should_show_visible_custom_fields_only
     set_tmp_attachments_directory
     Issue.destroy_all
@@ -110,6 +115,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_diff_for_description_change
     get(:diff, :params => {:id => 3, :detail_id => 4})
     assert_response :success
@@ -118,6 +124,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_select 'span.diff_in', :text => /added/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_diff_for_custom_field
     field = IssueCustomField.create!(:name => "Long field", :field_format => 'text')
     journal = Journal.create!(:journalized => Issue.find(2), :notes => 'Notes', :user_id => 1)
@@ -137,6 +144,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_select 'span.diff_in', :text => /Bar/
   end
 
+  # @rbs () -> bool
   def test_diff_for_custom_field_should_be_denied_if_custom_field_is_not_visible
     field = IssueCustomField.create!(:name => "Long field", :field_format => 'text', :visible => false, :role_ids => [1])
     journal = Journal.create!(:journalized => Issue.find(2), :notes => 'Notes', :user_id => 1)
@@ -153,6 +161,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_response :found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_diff_should_default_to_description_diff
     get(:diff, :params => {:id => 3})
     assert_response :success
@@ -161,6 +170,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_select 'span.diff_in', :text => /added/
   end
 
+  # @rbs () -> bool
   def test_reply_to_issue
     @request.session[:user_id] = 2
     post(:new, :params => {:id => 6}, :xhr => true)
@@ -170,12 +180,14 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_include '> This is an issue', response.body
   end
 
+  # @rbs () -> bool
   def test_reply_to_issue_without_permission
     @request.session[:user_id] = 7
     post(:new, :params => {:id => 6}, :xhr => true)
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_reply_to_note
     @request.session[:user_id] = 2
     post(
@@ -193,6 +205,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_include '> A comment with a private version', response.body
   end
 
+  # @rbs () -> bool
   def test_reply_to_private_note_should_fail_without_permission
     journal = Journal.create!(:journalized => Issue.find(2), :notes => 'Privates notes', :private_notes => true)
     @request.session[:user_id] = 2
@@ -221,6 +234,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_reply_to_issue_with_partial_quote
     @request.session[:user_id] = 2
 
@@ -233,6 +247,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_include '> a private subproject of cookbook', response.body
   end
 
+  # @rbs () -> bool
   def test_reply_to_note_with_partial_quote
     @request.session[:user_id] = 2
 
@@ -245,6 +260,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_include '> a private version', response.body
   end
 
+  # @rbs () -> bool
   def test_edit_xhr
     @request.session[:user_id] = 1
     get(:edit, :params => {:id => 2}, :xhr => true)
@@ -253,6 +269,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_include 'textarea', response.body
   end
 
+  # @rbs () -> bool
   def test_edit_private_note_should_fail_without_permission
     journal = Journal.create!(:journalized => Issue.find(2), :notes => 'Privates notes', :private_notes => true)
     @request.session[:user_id] = 2
@@ -268,6 +285,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_update_xhr
     @request.session[:user_id] = 1
     post(
@@ -288,6 +306,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_include 'journal_indice=2', response.body
   end
 
+  # @rbs () -> bool
   def test_update_xhr_with_private_notes_checked
     @request.session[:user_id] = 1
     post(
@@ -307,6 +326,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_include 'journal-2-private_notes', response.body
   end
 
+  # @rbs () -> bool
   def test_update_xhr_with_private_notes_unchecked
     Journal.find(2).update(:private_notes => true)
     @request.session[:user_id] = 1
@@ -327,6 +347,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_include 'journal-2-private_notes', response.body
   end
 
+  # @rbs () -> bool
   def test_update_xhr_without_set_private_notes_permission_should_ignore_private_notes
     @request.session[:user_id] = 2
     Role.find(1).add_permission! :edit_issue_notes
@@ -347,6 +368,7 @@ class JournalsControllerTest < Redmine::ControllerTest
     assert_equal false, Journal.find(2).private_notes
   end
 
+  # @rbs () -> bool
   def test_update_xhr_with_empty_notes_should_delete_the_journal
     @request.session[:user_id] = 1
     assert_difference 'Journal.count', -1 do

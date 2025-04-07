@@ -22,10 +22,12 @@ require_relative '../test_helper'
 class TimeEntryTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_visibility_with_permission_to_view_all_time_entries
     user = User.generate!
     role = Role.generate!(:permissions => [:view_time_entries], :time_entries_visibility => 'all')
@@ -42,6 +44,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert other.visible?(user)
   end
 
+  # @rbs () -> bool
   def test_visibility_with_permission_to_view_own_time_entries
     user = User.generate!
     role = Role.generate!(:permissions => [:view_time_entries], :time_entries_visibility => 'own')
@@ -58,6 +61,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert_equal false, other.visible?(user)
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_hours_format
     assertions = {
       "2"      => 2.0,
@@ -87,6 +91,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_hours_sum_precision
     # The sum of 10, 10, and 40 minutes should be 1 hour, but in older
     # versions of Redmine, the result was 1.01 hours. This was because
@@ -98,16 +103,19 @@ class TimeEntryTest < ActiveSupport::TestCase
     hours.map {|h| assert h.is_a?(Rational)}
   end
 
+  # @rbs () -> bool
   def test_hours_should_default_to_nil
     assert_nil TimeEntry.new.hours
   end
 
+  # @rbs () -> bool
   def test_should_accept_0_hours
     entry = TimeEntry.generate
     entry.hours = 0
     assert entry.save
   end
 
+  # @rbs () -> bool
   def test_should_not_accept_0_hours_if_disabled
     with_settings :timelog_accept_0_hours => '0' do
       entry = TimeEntry.generate
@@ -117,6 +125,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_should_not_accept_more_than_maximum_hours_per_day_and_user
     with_settings :timelog_max_hours_per_day => '8' do
       entry = TimeEntry.generate(:spent_on => '2017-07-16', :hours => 6.0, :user_id => 2)
@@ -130,6 +139,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_activity_id_should_default_activity_id
     project = Project.find(1)
     default_activity = TimeEntryActivity.find(10)
@@ -143,6 +153,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert_equal entry.activity_id, project_specific_default_activity.id
   end
 
+  # @rbs () -> bool
   def test_activity_id_should_be_set_automatically_if_there_is_only_one_activity_available
     project = Project.find(1)
     TimeEntry.destroy_all
@@ -158,6 +169,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert_equal entry.activity_id, only_one_activity.id
   end
 
+  # @rbs () -> bool
   def test_should_accept_future_dates
     entry = TimeEntry.generate
     entry.spent_on = User.current.today + 1
@@ -165,6 +177,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert entry.save
   end
 
+  # @rbs () -> bool
   def test_should_not_accept_future_dates_if_disabled
     with_settings :timelog_accept_future_dates => '0' do
       entry = TimeEntry.generate
@@ -175,6 +188,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_should_require_spent_on
     with_settings :timelog_accept_future_dates => '0' do
       entry = TimeEntry.find(1)
@@ -185,42 +199,49 @@ class TimeEntryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_spent_on_with_blank
     c = TimeEntry.new
     c.spent_on = ''
     assert_nil c.spent_on
   end
 
+  # @rbs () -> bool
   def test_spent_on_with_nil
     c = TimeEntry.new
     c.spent_on = nil
     assert_nil c.spent_on
   end
 
+  # @rbs () -> bool
   def test_spent_on_with_string
     c = TimeEntry.new
     c.spent_on = "2011-01-14"
     assert_equal Date.parse("2011-01-14"), c.spent_on
   end
 
+  # @rbs () -> bool
   def test_spent_on_with_invalid_string
     c = TimeEntry.new
     c.spent_on = "foo"
     assert_nil c.spent_on
   end
 
+  # @rbs () -> bool
   def test_spent_on_with_date
     c = TimeEntry.new
     c.spent_on = Date.today
     assert_equal Date.today, c.spent_on
   end
 
+  # @rbs () -> bool
   def test_spent_on_with_time
     c = TimeEntry.new
     c.spent_on = Time.now
     assert_kind_of Date, c.spent_on
   end
 
+  # @rbs () -> bool
   def test_validate_time_entry
     anon     = User.anonymous
     project  = Project.find(1)
@@ -239,6 +260,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert_equal 1, te.errors.count
   end
 
+  # @rbs () -> bool
   def test_acitivity_should_belong_to_project_activities
     activity = TimeEntryActivity.create!(:name => 'Other project activity', :project_id => 2, :active => true)
 
@@ -247,6 +269,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert_include I18n.translate('activerecord.errors.messages.inclusion'), entry.errors[:activity_id]
   end
 
+  # @rbs () -> bool
   def test_spent_on_with_2_digits_year_should_not_be_valid
     entry = TimeEntry.new(:project => Project.find(1), :user => User.find(1), :activity => TimeEntryActivity.first, :hours => 1)
     entry.spent_on = "09-02-04"
@@ -254,6 +277,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert_include I18n.translate('activerecord.errors.messages.not_a_date'), entry.errors[:spent_on]
   end
 
+  # @rbs () -> bool
   def test_set_project_if_nil
     anon     = User.anonymous
     project  = Project.find(1)
@@ -270,6 +294,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert_equal project.id, te.project.id
   end
 
+  # @rbs () -> bool
   def test_create_with_required_issue_id_and_comment_should_be_validated
     set_language_if_valid 'en'
     with_settings :timelog_required_fields => ['issue_id', 'comments'] do
@@ -284,6 +309,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_validate_user_id
     set_language_if_valid 'en'
     entry = TimeEntry.new(:spent_on => '2010-01-01',
@@ -295,6 +321,7 @@ class TimeEntryTest < ActiveSupport::TestCase
     assert_equal ["User is invalid"], entry.errors.full_messages.sort
   end
 
+  # @rbs () -> bool
   def test_assignable_users_should_include_active_project_members_with_log_time_permission
     Role.find(2).remove_permission! :log_time
     time_entry = TimeEntry.find(1)

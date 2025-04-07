@@ -21,12 +21,14 @@ class CustomFieldValue
   attr_accessor :custom_field, :customized, :value_was
   attr_reader   :value
 
+  # @rbs (?Hash[untyped, untyped]) -> void
   def initialize(attributes={})
     attributes.each do |name, v|
       send :"#{name}=", v
     end
   end
 
+  # @rbs () -> Integer
   def custom_field_id
     custom_field.id
   end
@@ -35,10 +37,12 @@ class CustomFieldValue
     self.value == '1'
   end
 
+  # @rbs () -> bool
   def editable?
     custom_field.editable?
   end
 
+  # @rbs () -> bool
   def visible?
     custom_field.visible?
   end
@@ -47,14 +51,17 @@ class CustomFieldValue
     custom_field.is_required?
   end
 
+  # @rbs () -> String
   def to_s
     value.to_s
   end
 
+  # @rbs ((String | Integer | Array[untyped] | Hash[untyped, untyped] | Date | ActiveSupport::HashWithIndifferentAccess | Float)?) -> (String | Array[untyped])
   def value=(v)
     @value = custom_field.set_custom_field_value(self, v)
   end
 
+  # @rbs () -> bool
   def value_present?
     if value.is_a?(Array)
       value.any?(&:present?)
@@ -63,6 +70,7 @@ class CustomFieldValue
     end
   end
 
+  # @rbs () -> Array[untyped]
   def validate_value
     custom_field.validate_custom_value(self).each do |message|
       customized.errors.add(custom_field.name, message)

@@ -27,10 +27,12 @@ class TimeEntryImport < Import
     'comments' => 'field_comments'
   }
 
+  # @rbs () -> Symbol
   def self.menu_item
     :time_entries
   end
 
+  # @rbs (User | AnonymousUser) -> bool
   def self.authorized?(user)
     user.allowed_to?(:import_time_entries, nil, :global => true) && user.allowed_to?(:log_time, nil, :global => true)
   end
@@ -40,18 +42,22 @@ class TimeEntryImport < Import
     TimeEntry.where(:id => saved_items.pluck(:obj_id)).order(:id).preload(:activity, :project, :issue => [:tracker, :priority, :status])
   end
 
+  # @rbs () -> TimeEntryCustomField::ActiveRecord_Relation
   def mappable_custom_fields
     TimeEntryCustomField.all
   end
 
+  # @rbs () -> Project::ActiveRecord_Relation
   def allowed_target_projects
     Project.allowed_to(user, :log_time).order(:lft)
   end
 
+  # @rbs () -> TimeEntryActivity::ActiveRecord_Relation
   def allowed_target_activities
     project.activities
   end
 
+  # @rbs () -> Array[untyped]
   def allowed_target_users
     users = []
     if project
@@ -62,11 +68,13 @@ class TimeEntryImport < Import
     users
   end
 
+  # @rbs () -> Project
   def project
     project_id = mapping['project_id'].to_i
     allowed_target_projects.find_by_id(project_id) || allowed_target_projects.first
   end
 
+  # @rbs () -> TimeEntryActivity?
   def activity
     if mapping['activity'].to_s =~ /\Avalue:(\d+)\z/
       activity_id = $1.to_i
@@ -74,6 +82,7 @@ class TimeEntryImport < Import
     end
   end
 
+  # @rbs () -> Integer?
   def user_value
     if mapping['user'].to_s =~ /\Avalue:(\d+)\z/
       $1.to_i
@@ -82,6 +91,7 @@ class TimeEntryImport < Import
 
   private
 
+  # @rbs (Array[untyped], ImportItem) -> TimeEntry
   def build_object(row, item)
     object = TimeEntry.new
     object.author = user
@@ -140,6 +150,7 @@ class TimeEntryImport < Import
     object
   end
 
+  # @rbs (String) -> Project
   def issue_project(issue_id)
     if issue_project_id = Issue.where(id: issue_id).limit(1).pick(:project_id)
       (@projects_cache ||= {})[issue_project_id] ||= allowed_target_projects.find_by_id(issue_project_id)

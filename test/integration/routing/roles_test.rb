@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingRolesTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_roles
     should_route 'GET /roles' => 'roles#index'
     should_route 'GET /roles/new' => 'roles#new'

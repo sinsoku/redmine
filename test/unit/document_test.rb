@@ -20,15 +20,18 @@
 require_relative '../test_helper'
 
 class DocumentTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_create
     doc = Document.new(:project => Project.find(1), :title => 'New document', :category => Enumeration.find_by_name('User documentation'))
     assert doc.save
   end
 
+  # @rbs () -> bool
   def test_create_with_long_title
     title = 'x'*255
     doc = Document.new(:project => Project.find(1), :title => title, :category => DocumentCategory.first)
@@ -36,6 +39,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal title, doc.reload.title
   end
 
+  # @rbs () -> bool
   def test_create_should_send_email_notification
     ActionMailer::Base.deliveries.clear
     with_settings :notified_events => %w(document_added) do
@@ -45,6 +49,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_create_with_default_category
     # Sets a default category
     e = Enumeration.find_by_name('Technical documentation')
@@ -55,12 +60,14 @@ class DocumentTest < ActiveSupport::TestCase
     assert doc.save
   end
 
+  # @rbs () -> bool
   def test_updated_on_with_attachments
     d = Document.find(1)
     assert d.attachments.any?
     assert_equal d.attachments.map(&:created_on).max, d.updated_on
   end
 
+  # @rbs () -> bool
   def test_updated_on_without_attachments
     d = Document.find(2)
     assert d.attachments.empty?

@@ -77,6 +77,7 @@ class WikiPage < ApplicationRecord
   safe_attributes 'deleted_attachment_ids',
                   :if => lambda {|page, user| page.attachments_deletable?(user)}
 
+  # @rbs (?Hash[untyped, untyped], *nil) -> void
   def initialize(attributes=nil, *args)
     super
     if new_record? && DEFAULT_PROTECTED_PAGES.include?(title.to_s.downcase)
@@ -84,15 +85,18 @@ class WikiPage < ApplicationRecord
     end
   end
 
+  # @rbs (?User | AnonymousUser) -> bool
   def visible?(user=User.current)
     !user.nil? && user.allowed_to?(:view_wiki_pages, project)
   end
 
+  # @rbs (String?) -> String?
   def title=(value)
     value = Wiki.titleize(value)
     write_attribute(:title, value)
   end
 
+  # @rbs (ActionController::Parameters?, ?User) -> void
   def safe_attributes=(attrs, user=User.current)
     if attrs.respond_to?(:to_unsafe_hash)
       attrs = attrs.to_unsafe_hash
@@ -112,6 +116,7 @@ class WikiPage < ApplicationRecord
   end
 
   # Manages redirects if page is renamed or moved
+  # @rbs () -> nil
   def handle_rename_or_move
     if !new_record? && (title_changed? || wiki_id_changed?)
       # Update redirects that point to the old title
@@ -139,6 +144,7 @@ class WikiPage < ApplicationRecord
   private :handle_rename_or_move
 
   # Moves child pages if page was moved
+  # @rbs () -> Array[untyped]?
   def handle_children_move
     if !new_record? && saved_change_to_wiki_id?
       children.each do |child|
@@ -153,18 +159,22 @@ class WikiPage < ApplicationRecord
   private :handle_children_move
 
   # Deletes redirects to this page
+  # @rbs () -> Integer
   def delete_redirects
     WikiRedirect.where(:redirects_to_wiki_id => wiki_id, :redirects_to => title).delete_all
   end
 
+  # @rbs () -> String
   def pretty_title
     WikiPage.pretty_title(title)
   end
 
+  # @rbs (?String?) -> (WikiContentVersion | WikiContent)?
   def content_for_version(version=nil)
     (content && version) ? content.versions.find_by_version(version.to_i) : content
   end
 
+  # @rbs (?String | Integer, ?String?) -> WikiDiff?
   def diff(version_to=nil, version_from=nil)
     version_to = version_to ? version_to.to_i : self.content.version
     content_to = content.versions.find_by_version(version_to)
@@ -178,51 +188,62 @@ class WikiPage < ApplicationRecord
     (content_to && content_from) ? WikiDiff.new(content_to, content_from) : nil
   end
 
+  # @rbs (?String) -> WikiAnnotate?
   def annotate(version=nil)
     version = version ? version.to_i : self.content.version
     c = content.versions.find_by_version(version)
     c ? WikiAnnotate.new(c) : nil
   end
 
+  # @rbs () -> String
   def self.pretty_title(str)
     (str && str.is_a?(String)) ? str.tr('_', ' ') : str
   end
 
+  # @rbs () -> Project
   def project
     wiki.try(:project)
   end
 
+  # @rbs () -> String
   def text
     content.text if content
   end
 
+  # @rbs () -> ActiveSupport::TimeWithZone
   def updated_on
     content_attribute(:updated_on)
   end
 
+  # @rbs () -> Integer
   def version
     content_attribute(:version)
   end
 
   # Returns true if usr is allowed to edit the page, otherwise false
+  # @rbs (User | AnonymousUser) -> bool
   def editable_by?(usr)
     !protected? || usr.allowed_to?(:protect_wiki_pages, wiki.project)
   end
 
+  # @rbs (?User | AnonymousUser) -> bool
   def attachments_deletable?(usr=User.current)
     editable_by?(usr) && super
   end
 
+  # @rbs () -> String?
   def parent_title
     @parent_title || (self.parent && self.parent.pretty_title)
   end
 
+  # @rbs (String) -> WikiPage
   def parent_title=(t)
     @parent_title = t
     parent_page = t.blank? ? nil : self.wiki.find_page(t)
     self.parent = parent_page
   end
 
+  # @rbs () -> bool
   def is_start_page
     if @is_start_page.nil?
       @is_start_page = wiki.try(:start_page) == title_was
@@ -230,10 +251,12 @@ class WikiPage < ApplicationRecord
     @is_start_page
   end
 
+  # @rbs (String) -> bool
   def is_start_page=(arg)
     @is_start_page = arg == '1' || arg == true
   end
 
+  # @rbs () -> bool?
   def update_wiki_start_page
     if is_start_page
       wiki.update_attribute :start_page, title
@@ -243,6 +266,7 @@ class WikiPage < ApplicationRecord
 
   # Saves the page and its content if text was changed
   # Return true if the page was saved
+  # @rbs (WikiContent) -> bool?
   def save_with_content(content)
     ret = nil
     transaction do
@@ -259,10 +283,12 @@ class WikiPage < ApplicationRecord
     ret
   end
 
+  # @rbs () -> Array[untyped]
   def deleted_attachment_ids
     Array(@deleted_attachment_ids).map(&:to_i)
   end
 
+  # @rbs () -> Array[untyped]?
   def delete_selected_attachments
     if deleted_attachment_ids.present?
       objects = attachments.where(:id => deleted_attachment_ids.map(&:to_i))
@@ -272,6 +298,7 @@ class WikiPage < ApplicationRecord
 
   protected
 
+  # @rbs () -> nil
   def validate_parent_title
     errors.add(:parent_title, :invalid) if @parent_title.present? && parent.nil?
     errors.add(:parent_title, :circular_dependency) if parent && (parent == self || parent.ancestors.include?(self))
@@ -282,6 +309,7 @@ class WikiPage < ApplicationRecord
 
   private
 
+  # @rbs (Symbol) -> (ActiveSupport::TimeWithZone | Integer)
   def content_attribute(name)
     (association(:content).loaded? ? content : content_without_text).try(name)
   end

@@ -20,29 +20,34 @@
 require_relative '../test_helper'
 
 class TrackersControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 1 # admin
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
     assert_select 'table.trackers'
   end
 
+  # @rbs () -> bool
   def test_index_by_anonymous_should_redirect_to_login_form
     @request.session[:user_id] = nil
     get :index
     assert_redirected_to '/login?back_url=http%3A%2F%2Ftest.host%2Ftrackers'
   end
 
+  # @rbs () -> bool
   def test_index_by_user_should_respond_with_406
     @request.session[:user_id] = 2
     get :index
     assert_response :not_acceptable
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     get :new
     assert_response :success
@@ -52,6 +57,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_set_archived_class_for_archived_projects
     project = Project.find(2)
     project.update_attribute(:status, Project::STATUS_ARCHIVED)
@@ -66,6 +72,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_with_copy
     core_fields = ['assigned_to_id', 'category_id', 'fixed_version_id', 'parent_issue_id', 'start_date', 'due_date']
     custom_field_ids = custom_field_ids = [1, 2, 6]
@@ -115,6 +122,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'Tracker.count' do
       post :create, :params => {
@@ -135,6 +143,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_equal 0, tracker.workflow_rules.count
   end
 
+  # @rbs () -> bool
   def test_create_with_disabled_core_fields
     assert_difference 'Tracker.count' do
       post :create, :params => {
@@ -151,6 +160,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_equal %w(assigned_to_id fixed_version_id), tracker.core_fields
   end
 
+  # @rbs () -> bool
   def test_create_new_with_workflow_copy
     assert_difference 'Tracker.count' do
       post :create, :params => {
@@ -167,6 +177,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_equal Tracker.find(1).workflow_rules.count, tracker.workflow_rules.count
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     assert_no_difference 'Tracker.count' do
       post :create, :params => {
@@ -181,6 +192,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     Tracker.find(1).project_ids = [1, 3]
 
@@ -193,6 +205,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=""][type=hidden]', 'tracker[project_ids][]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_should_check_core_fields
     tracker = Tracker.find(1)
     tracker.core_fields = %w(assigned_to_id fixed_version_id)
@@ -213,6 +226,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=""][type=hidden]', 'tracker[core_fields][]'
   end
 
+  # @rbs () -> bool
   def test_update
     put :update, :params => {
       :id => 1,
@@ -225,6 +239,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_equal [1, 2], Tracker.find(1).project_ids.sort
   end
 
+  # @rbs () -> bool
   def test_update_without_projects
     put :update, :params => {
       :id => 1,
@@ -237,6 +252,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert Tracker.find(1).project_ids.empty?
   end
 
+  # @rbs () -> bool
   def test_update_without_core_fields
     put :update, :params => {
       :id => 1,
@@ -249,6 +265,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert Tracker.find(1).core_fields.empty?
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     put :update, :params => {:id => 1, :tracker => {:name => ''}}
     assert_response :success
@@ -256,12 +273,14 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_select_error /name cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_move_lower
     tracker = Tracker.find_by_position(1)
     put :update, :params => {:id => 1, :tracker => {:position => '2'}}
     assert_equal 2, tracker.reload.position
   end
 
+  # @rbs () -> bool
   def test_destroy
     tracker = Tracker.generate!(:name => 'Destroyable')
     assert_difference 'Tracker.count', -1 do
@@ -271,6 +290,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     assert_nil flash[:error]
   end
 
+  # @rbs () -> Array[untyped]
   def test_destroy_tracker_in_use
     tracker = Tracker.generate!(name: 'In use')
     projects = Array.new(2) do
@@ -289,6 +309,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_fields
     get :fields
     assert_response :success
@@ -302,6 +323,7 @@ class TrackersControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_fields
     post :fields, :params => {
       :trackers => {

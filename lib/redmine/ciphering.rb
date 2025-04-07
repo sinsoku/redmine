@@ -24,6 +24,7 @@ module Redmine
     end
 
     class << self
+      # @rbs (String) -> String
       def encrypt_text(text)
         if cipher_key.blank? || text.blank?
           text
@@ -39,6 +40,7 @@ module Redmine
         end
       end
 
+      # @rbs (String) -> String
       def decrypt_text(text)
         if text && match = text.match(/\Aaes-256-cbc:(.+)\Z/)
           if cipher_key.blank?
@@ -58,17 +60,20 @@ module Redmine
         end
       end
 
+      # @rbs () -> String?
       def cipher_key
         key = Redmine::Configuration['database_cipher_key'].to_s
         key.blank? ? nil : Digest::SHA256.hexdigest(key)[0..31]
       end
 
+      # @rbs () -> ActiveSupport::BroadcastLogger
       def logger
         Rails.logger
       end
     end
 
     module ClassMethods
+      # @rbs (Symbol) -> bool
       def encrypt_all(attribute)
         transaction do
           all.each do |object|
@@ -79,6 +84,7 @@ module Redmine
         end ? true : false
       end
 
+      # @rbs (Symbol) -> bool
       def decrypt_all(attribute)
         transaction do
           all.each do |object|
@@ -93,11 +99,13 @@ module Redmine
     private
 
     # Returns the value of the given ciphered attribute
+    # @rbs (Symbol) -> String
     def read_ciphered_attribute(attribute)
       Redmine::Ciphering.decrypt_text(read_attribute(attribute))
     end
 
     # Sets the value of the given ciphered attribute
+    # @rbs (Symbol, String) -> String
     def write_ciphered_attribute(attribute, value)
       write_attribute(attribute, Redmine::Ciphering.encrypt_text(value))
     end

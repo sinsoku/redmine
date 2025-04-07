@@ -45,6 +45,7 @@ class IssueStatus < ApplicationRecord
     'default_done_ratio')
 
   # Update all the +Issues+ setting their done_ratio to the value of their +IssueStatus+
+  # @rbs () -> bool
   def self.update_issue_done_ratios
     if Issue.use_status_for_done_ratio?
       IssueStatus.where("default_done_ratio >= 0").each do |status|
@@ -56,11 +57,13 @@ class IssueStatus < ApplicationRecord
   end
 
   # Returns an array of all statuses the given role can switch to
+  # @rbs (Array[untyped], Tracker, ?bool, ?bool) -> Array[untyped]
   def new_statuses_allowed_to(roles, tracker, author=false, assignee=false)
     self.class.new_statuses_allowed(self, roles, tracker, author, assignee)
   end
   alias :find_new_statuses_allowed_to :new_statuses_allowed_to
 
+  # @rbs (IssueStatus?, Array[untyped], Tracker?, ?bool, ?bool) -> Array[untyped]
   def self.new_statuses_allowed(status, roles, tracker, author=false, assignee=false)
     if roles.present? && tracker
       status_id = status.try(:id) || 0
@@ -83,17 +86,20 @@ class IssueStatus < ApplicationRecord
     end
   end
 
+  # @rbs (IssueStatus) -> Integer
   def <=>(status)
     return nil unless status.is_a?(IssueStatus)
 
     position <=> status.position
   end
 
+  # @rbs () -> String
   def to_s; name end
 
   private
 
   # Updates issues closed_on attribute when an existing status is set as closed.
+  # @rbs () -> Integer?
   def handle_is_closed_change
     if saved_change_to_is_closed? && is_closed == true
       # First we update issues that have a journal for when the current status was set,
@@ -112,6 +118,7 @@ class IssueStatus < ApplicationRecord
     end
   end
 
+  # @rbs () -> nil
   def check_integrity
     if Issue.where(:status_id => id).any?
       raise "This status is used by some issues"
@@ -121,6 +128,7 @@ class IssueStatus < ApplicationRecord
   end
 
   # Deletes associated workflows
+  # @rbs () -> Integer
   def delete_workflow_rules
     WorkflowRule.where(:old_status_id => id).delete_all
     WorkflowRule.where(:new_status_id => id).delete_all

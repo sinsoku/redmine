@@ -25,17 +25,20 @@ class TimelogHelperTest < Redmine::HelperTest
   include ActionView::Helpers::DateHelper
   include ERB::Util
 
+  # @rbs () -> bool
   def test_activities_collection_for_select_options_should_return_array_of_activity_names_and_ids
     activities = activity_collection_for_select_options
     assert activities.include?(["Design", 9])
     assert activities.include?(["Development", 10])
   end
 
+  # @rbs () -> bool
   def test_activities_collection_for_select_options_should_not_include_inactive_activities
     activities = activity_collection_for_select_options
     assert !activities.include?(["Inactive Activity", 14])
   end
 
+  # @rbs () -> bool
   def test_activities_collection_for_select_options_should_use_the_projects_override
     project = Project.find(1)
     override_activity = TimeEntryActivity.create!({:name => "Design override", :parent => TimeEntryActivity.find_by_name("Design"), :project => project})

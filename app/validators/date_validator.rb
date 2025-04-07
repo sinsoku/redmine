@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class DateValidator < ActiveModel::EachValidator
+  # @rbs (Version | Issue | TimeEntry, Symbol, Date?) -> ActiveModel::Error?
   def validate_each(record, attribute, value)
     before_type_cast = record.attributes_before_type_cast[attribute.to_s]
     if before_type_cast.is_a?(String) && before_type_cast.present?

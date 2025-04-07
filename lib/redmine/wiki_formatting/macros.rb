@@ -22,10 +22,12 @@ module Redmine
     module Macros
       module Definitions
         # Returns true if +name+ is the name of an existing macro
+        # @rbs (String) -> bool
         def macro_exists?(name)
           Redmine::WikiFormatting::Macros.available_macros.key?(name.to_sym)
         end
 
+        # @rbs (String, (WikiContent | Issue | Journal)?, String, String?, ?Hash[untyped, untyped]) -> (ActiveSupport::SafeBuffer | String)?
         def exec_macro(name, obj, args, text, options={})
           macro_options = Redmine::WikiFormatting::Macros.available_macros[name.to_sym]
           return unless macro_options
@@ -57,6 +59,7 @@ module Redmine
           end
         end
 
+        # @rbs (Array[untyped], *Symbol) -> Array[untyped]
         def extract_macro_options(args, *keys)
           options = {}
           while args.last.to_s.strip =~ %r{^(.+?)\=(.+)$} && keys.include?($1.downcase.to_sym)
@@ -86,6 +89,7 @@ module Redmine
         #       "My macro output"
         #     end
         #   end
+        # @rbs () -> void
         def register(&block)
           class_eval(&block) if block
         end
@@ -152,6 +156,7 @@ module Redmine
         #   }}
         #
         # If a block of text is given, the closing tag }} must be at the start of a new line.
+        # @rbs (Symbol, ?Hash[untyped, untyped]) -> Symbol
         def macro(name, options={}, &block)
           options.assert_valid_keys(:desc, :parse_args)
           unless /\A\w+\z/.match?(name.to_s)

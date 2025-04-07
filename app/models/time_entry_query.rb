@@ -39,11 +39,13 @@ class TimeEntryQuery < Query
     QueryColumn.new(:hours, :sortable => "#{TimeEntry.table_name}.hours", :totalable => true),
   ]
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super(attributes)
     self.filters ||= {'spent_on' => {:operator => "*", :values => []}}
   end
 
+  # @rbs () -> void
   def initialize_available_filters
     add_available_filter "spent_on", :type => :date_past
     add_available_filter(
@@ -128,6 +130,7 @@ class TimeEntryQuery < Query
     add_associations_custom_fields_filters :user
   end
 
+  # @rbs () -> Array[untyped]
   def available_columns
     return @available_columns if @available_columns
 
@@ -141,6 +144,7 @@ class TimeEntryQuery < Query
     @available_columns
   end
 
+  # @rbs () -> Array[untyped]
   def default_columns_names
     @default_columns_names ||= begin
       default_columns = Setting.time_entry_list_defaults.symbolize_keys[:column_names].map(&:to_sym)
@@ -148,21 +152,25 @@ class TimeEntryQuery < Query
     end
   end
 
+  # @rbs () -> Array[untyped]
   def default_totalable_names
     Setting.time_entry_list_defaults.symbolize_keys[:totalable_names].map(&:to_sym)
   end
 
+  # @rbs () -> Array[untyped]
   def default_sort_criteria
     [['spent_on', 'desc']]
   end
 
   # If a filter against a single issue is set, returns its id, otherwise nil.
+  # @rbs () -> String?
   def filtered_issue_id
     if value_for('issue_id').to_s =~ /\A(\d+)\z/
       $1
     end
   end
 
+  # @rbs () -> TimeEntry::ActiveRecord_Relation
   def base_scope
     TimeEntry.visible.
       joins(:project, :user).
@@ -172,6 +180,7 @@ class TimeEntryQuery < Query
       where(statement)
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> TimeEntry::ActiveRecord_Relation
   def results_scope(options={})
     order_option = [group_by_sort_order, (options[:order] || sort_clause)].flatten.reject(&:blank?)
 
@@ -182,10 +191,12 @@ class TimeEntryQuery < Query
   end
 
   # Returns sum of all the spent hours
+  # @rbs (TimeEntry::ActiveRecord_Relation) -> (Float | Hash[untyped, untyped])
   def total_for_hours(scope)
     map_total(scope.sum(:hours)) {|t| t.to_f.round(2)}
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_issue_id_field(field, operator, value)
     case operator
     when "="
@@ -204,6 +215,7 @@ class TimeEntryQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_issue_fixed_version_id_field(field, operator, value)
     issue_ids = Issue.where(:fixed_version_id => value.map(&:to_i)).pluck(:id)
     case operator
@@ -222,6 +234,7 @@ class TimeEntryQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_issue_parent_id_field(field, operator, value)
     case operator
     when "="
@@ -246,6 +259,7 @@ class TimeEntryQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_activity_id_field(field, operator, value)
     ids = value.map(&:to_i).join(',')
     table_name = Enumeration.table_name
@@ -256,14 +270,17 @@ class TimeEntryQuery < Query
     end
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_issue_tracker_id_field(field, operator, value)
     sql_for_field("tracker_id", operator, value, Issue.table_name, "tracker_id")
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_issue_status_id_field(field, operator, value)
     sql_for_field("status_id", operator, value, Issue.table_name, "status_id")
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_issue_category_id_field(field, operator, value)
     sql_for_field("category_id", operator, value, Issue.table_name, "category_id")
   end
@@ -272,10 +289,12 @@ class TimeEntryQuery < Query
     sql_for_field("subject", operator, value, Issue.table_name, "subject")
   end
 
+  # @rbs (String, String, Array[untyped], ?Hash[untyped, untyped]) -> String
   def sql_for_project_status_field(field, operator, value, options={})
     sql_for_field(field, operator, value, Project.table_name, "status")
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_user_group_field(field, operator, value)
     if operator == '*' # Any group
       groups = Group.givable
@@ -295,6 +314,7 @@ class TimeEntryQuery < Query
     '(' + sql_for_field('user_id', operator, members_of_groups, TimeEntry.table_name, "user_id", false) + ')'
   end
 
+  # @rbs (String, String, Array[untyped]) -> String
   def sql_for_user_role_field(field, operator, value)
     case operator
     when "*", "!*"
@@ -324,6 +344,7 @@ class TimeEntryQuery < Query
   end
 
   # Accepts :from/:to params as shortcut filters
+  # @rbs (ActionController::Parameters, ?Hash[untyped, untyped]?) -> TimeEntryQuery
   def build_from_params(params, defaults={})
     super
     if params[:from].present? && params[:to].present?
@@ -336,6 +357,7 @@ class TimeEntryQuery < Query
     self
   end
 
+  # @rbs (String) -> String?
   def joins_for_order_statement(order_options)
     joins = [super]
 

@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingIssuesTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_issues
     should_route 'GET /issues' => 'issues#index'
     should_route 'GET /issues.pdf' => 'issues#index', :format => 'pdf'
@@ -39,6 +40,7 @@ class RoutingIssuesTest < Redmine::RoutingTest
     should_route "GET /issues/3/tab/time_entries" => 'issues#issue_tab', :id => '3', :name => 'time_entries'
   end
 
+  # @rbs () -> bool
   def test_issues_bulk_edit
     should_route 'GET /issues/bulk_edit' => 'issues#bulk_edit'
     should_route 'POST /issues/bulk_edit' => 'issues#bulk_edit' # For updating the bulk edit form
@@ -46,6 +48,7 @@ class RoutingIssuesTest < Redmine::RoutingTest
     should_route 'PATCH /issues/bulk_update' => 'issues#bulk_update'
   end
 
+  # @rbs () -> bool
   def test_issues_scoped_under_project
     should_route 'GET /projects/23/issues' => 'issues#index', :project_id => '23'
     should_route 'GET /projects/23/issues.pdf' => 'issues#index', :project_id => '23', :format => 'pdf'
@@ -57,6 +60,7 @@ class RoutingIssuesTest < Redmine::RoutingTest
     should_route 'GET /projects/23/issues/64/copy' => 'issues#new', :project_id => '23', :copy_from => '64'
   end
 
+  # @rbs () -> bool
   def test_issues_form_update
     should_route 'POST /issues/new' => 'issues#new'
     should_route 'POST /projects/23/issues/new' => 'issues#new', :project_id => '23'

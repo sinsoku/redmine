@@ -37,22 +37,27 @@ module Redmine
         class HgCommandArgumentError < CommandFailed; end
 
         class << self
+          # @rbs () -> String
           def client_command
             @@bin    ||= HG_BIN
           end
 
+          # @rbs () -> String
           def sq_bin
             @@sq_bin ||= shell_quote_command
           end
 
+          # @rbs () -> Array[untyped]
           def client_version
             @@client_version ||= (hgversion || [])
           end
 
+          # @rbs () -> nil
           def client_available
             client_version_above?([1, 2])
           end
 
+          # @rbs () -> nil
           def hgversion
             # The hg version is expressed either as a
             # release number (eg 0.9.5 or 1.0) or as a revision
@@ -63,6 +68,7 @@ module Redmine
             end
           end
 
+          # @rbs () -> String
           def hgversion_from_command_line
             shellout("#{sq_bin} --version") {|io| io.read}.to_s
           end

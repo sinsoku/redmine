@@ -23,14 +23,17 @@ class SessionsControllerTest < Redmine::ControllerTest
   include Redmine::I18n
   tests WelcomeController
 
+  # @rbs () -> bool
   def setup
     Rails.application.config.redmine_verify_sessions = true
   end
 
+  # @rbs () -> bool
   def teardown
     Rails.application.config.redmine_verify_sessions = false
   end
 
+  # @rbs () -> bool
   def test_session_token_should_be_updated
     token = Token.create!(:user_id => 2, :action => 'session', :created_on => 10.hours.ago, :updated_on => 10.hours.ago)
     created = token.reload.created_on
@@ -43,6 +46,7 @@ class SessionsControllerTest < Redmine::ControllerTest
     assert token.updated_on > created
   end
 
+  # @rbs () -> bool
   def test_session_token_should_be_updated_only_once_per_minute
     token = Token.create!(:user_id => 2, :action => 'session', :created_on => 1.second.ago, :updated_on => 1.second.ago)
     updated = token.reload.updated_on
@@ -56,6 +60,7 @@ class SessionsControllerTest < Redmine::ControllerTest
     assert_equal updated.to_i, token.updated_on.to_i
   end
 
+  # @rbs () -> bool
   def test_user_session_should_not_be_reset_if_lifetime_and_timeout_disabled
     created = 2.years.ago
     token = Token.create!(:user_id => 2, :action => 'session', :created_on => created, :updated_on => created)
@@ -66,11 +71,13 @@ class SessionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_user_session_without_token_should_be_reset
     get(:index, :session => {:user_id => 2})
     assert_redirected_to 'http://test.host/login?back_url=http%3A%2F%2Ftest.host%2F'
   end
 
+  # @rbs () -> bool
   def test_expired_user_session_should_be_reset_if_lifetime_enabled
     created = 2.days.ago
     token = Token.create!(:user_id => 2, :action => 'session', :created_on => created, :updated_on => created)
@@ -87,6 +94,7 @@ class SessionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_valid_user_session_should_not_be_reset_if_lifetime_enabled
     created = 3.hours.ago
     token = Token.create!(:user_id => 2, :action => 'session', :created_on => created, :updated_on => created)
@@ -103,6 +111,7 @@ class SessionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_expired_user_session_should_be_reset_if_timeout_enabled
     created = 4.hours.ago
     token = Token.create!(:user_id => 2, :action => 'session', :created_on => created, :updated_on => created)
@@ -119,6 +128,7 @@ class SessionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_valid_user_session_should_not_be_reset_if_timeout_enabled
     created = 10.minutes.ago
     token = Token.create!(:user_id => 2, :action => 'session', :created_on => created, :updated_on => created)
@@ -135,6 +145,7 @@ class SessionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_expired_user_session_should_be_restarted_if_autologin
     created = 2.hours.ago
     token = Token.create!(:user_id => 2, :action => 'session', :created_on => created, :updated_on => created)
@@ -156,6 +167,7 @@ class SessionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_expired_user_session_should_set_locale
     set_language_if_valid 'it'
     user = User.find(2)
@@ -178,6 +190,7 @@ class SessionsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_anonymous_session_should_not_be_reset
     with_settings :session_lifetime => '720', :session_timeout => '60' do
       get :index

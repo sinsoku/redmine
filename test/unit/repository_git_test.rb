@@ -31,6 +31,7 @@ class RepositoryGitTest < ActiveSupport::TestCase
   NUM_REV = 29
   NUM_HEAD = 8
 
+  # @rbs () -> bool
   def setup
     User.current = nil
     @project = Project.find(3)
@@ -43,6 +44,7 @@ class RepositoryGitTest < ActiveSupport::TestCase
     assert @repository
   end
 
+  # @rbs () -> Repository::Git
   def test_nondefault_repo_with_blank_identifier_destruction
     Repository.delete_all
 
@@ -76,6 +78,7 @@ class RepositoryGitTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_blank_path_to_repository_error_message
     set_language_if_valid 'en'
     repo =
@@ -88,6 +91,7 @@ class RepositoryGitTest < ActiveSupport::TestCase
                    repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_path_to_repository_error_message_fr
     set_language_if_valid 'fr'
     repo =
@@ -598,6 +602,7 @@ class RepositoryGitTest < ActiveSupport::TestCase
     end
   else
     puts "Git test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 
@@ -622,11 +627,13 @@ class RepositoryGitTest < ActiveSupport::TestCase
     end
   elsif !File.directory?(REPOSITORY_UTF8_PATH)
     puts "Git UTF-8 test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   else
     puts "Git UTF-8 test repository contains Emoji."
     puts "Tests connot run on NOT utf8mb4 MySQL."
     puts "Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

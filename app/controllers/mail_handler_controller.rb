@@ -26,10 +26,12 @@ class MailHandlerController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   # Displays the email submission form
+  # @rbs () -> nil
   def new
   end
 
   # Submits an incoming email to MailHandler
+  # @rbs () -> bool
   def index
     # MailHandlerController#index should permit all options set by
     # RedmineMailHandler#submit in rdm-mailhandler.rb.
@@ -67,6 +69,7 @@ class MailHandlerController < ActionController::Base
 
   private
 
+  # @rbs () -> String?
   def check_credential
     User.current = nil
     unless Setting.mail_handler_api_enabled? && secure_compare(params[:key].to_s, Setting.mail_handler_api_key.to_s)

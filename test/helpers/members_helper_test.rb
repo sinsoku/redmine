@@ -24,6 +24,7 @@ class MembersHelperTest < Redmine::HelperTest
   include MembersHelper
   include AvatarsHelper
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_render_principals_for_new_members
     project = Project.generate!
 
@@ -31,6 +32,7 @@ class MembersHelperTest < Redmine::HelperTest
     assert_select_in result, 'input[name=?][value="2"]', 'membership[user_ids][]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_render_principals_for_new_members_with_limited_results_should_paginate
     project = Project.generate!
 

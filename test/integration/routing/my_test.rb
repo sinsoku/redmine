@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingMyTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_my
     should_route 'GET /my/account' => 'my#account'
     should_route 'PUT /my/account' => 'my#account'

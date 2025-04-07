@@ -20,17 +20,20 @@
 require_relative '../test_helper'
 
 class JournalTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     @journal = Journal.find 1
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_journalized_is_an_issue
     issue = @journal.issue
     assert_kind_of Issue, issue
     assert_equal 1, issue.id
   end
 
+  # @rbs () -> bool
   def test_new_status
     status = @journal.new_status
     assert_not_nil status
@@ -38,6 +41,7 @@ class JournalTest < ActiveSupport::TestCase
     assert_equal 2, status.id
   end
 
+  # @rbs () -> bool
   def test_create_should_send_email_notification
     ActionMailer::Base.deliveries.clear
     issue = Issue.first
@@ -48,6 +52,7 @@ class JournalTest < ActiveSupport::TestCase
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_should_not_save_journal_with_blank_notes_and_no_details
     journal = Journal.new(:journalized => Issue.first, :user => User.first)
 
@@ -56,6 +61,7 @@ class JournalTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Journal
   def test_create_should_not_split_non_private_notes
     assert_difference 'Journal.count' do
       assert_no_difference 'JournalDetail.count' do
@@ -76,6 +82,7 @@ class JournalTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_split_private_notes
     assert_difference 'Journal.count' do
       assert_no_difference 'JournalDetail.count' do
@@ -113,6 +120,7 @@ class JournalTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_add_wacher
     user = User.first
     user.pref.auto_watch_on=['issue_contributed_to']
@@ -124,6 +132,7 @@ class JournalTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_not_add_watcher
     user = User.first
     user.pref.auto_watch_on=[]
@@ -135,6 +144,7 @@ class JournalTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_create_should_not_add_anonymous_as_watcher
     Role.anonymous.add_permission!(:add_issue_watchers)
 
@@ -150,6 +160,7 @@ class JournalTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_visible_scope_for_anonymous
     # Anonymous user should see issues of public projects only
     journals = Journal.visible(User.anonymous).to_a
@@ -161,6 +172,7 @@ class JournalTest < ActiveSupport::TestCase
     assert journals.empty?
   end
 
+  # @rbs () -> bool
   def test_visible_scope_for_user
     user = User.find(9)
     assert user.projects.empty?
@@ -181,6 +193,7 @@ class JournalTest < ActiveSupport::TestCase
     assert_nil journals.detect {|journal| journal.issue.project_id != 1}
   end
 
+  # @rbs () -> bool
   def test_visible_scope_for_admin
     user = User.find(1)
     user.members.each(&:destroy)
@@ -191,6 +204,7 @@ class JournalTest < ActiveSupport::TestCase
     assert journals.detect {|journal| !journal.issue.project.is_public?}
   end
 
+  # @rbs () -> Array[untyped]
   def test_preload_journals_details_custom_fields_should_set_custom_field_instance_variable
     d = JournalDetail.new(:property => 'cf', :prop_key => '2')
     journals = [Journal.new(:details => [d])]
@@ -199,12 +213,14 @@ class JournalTest < ActiveSupport::TestCase
     Journal.preload_journals_details_custom_fields(journals)
   end
 
+  # @rbs () -> Array[untyped]
   def test_preload_journals_details_custom_fields_with_empty_set
     assert_nothing_raised do
       Journal.preload_journals_details_custom_fields([])
     end
   end
 
+  # @rbs () -> bool
   def test_details_should_normalize_dates
     j = JournalDetail.create!(:old_value => Date.parse('2012-11-03'), :value => Date.parse('2013-01-02'))
     j.reload
@@ -212,6 +228,7 @@ class JournalTest < ActiveSupport::TestCase
     assert_equal '2013-01-02', j.value
   end
 
+  # @rbs () -> bool
   def test_details_should_normalize_true_values
     j = JournalDetail.create!(:old_value => true, :value => true)
     j.reload
@@ -219,6 +236,7 @@ class JournalTest < ActiveSupport::TestCase
     assert_equal '1', j.value
   end
 
+  # @rbs () -> bool
   def test_details_should_normalize_false_values
     j = JournalDetail.create!(:old_value => false, :value => false)
     j.reload
@@ -226,16 +244,19 @@ class JournalTest < ActiveSupport::TestCase
     assert_equal '0', j.value
   end
 
+  # @rbs () -> bool
   def test_custom_field_should_return_custom_field_for_cf_detail
     d = JournalDetail.new(:property => 'cf', :prop_key => '2')
     assert_equal CustomField.find(2), d.custom_field
   end
 
+  # @rbs () -> bool
   def test_custom_field_should_return_nil_for_non_cf_detail
     d = JournalDetail.new(:property => 'subject')
     assert_nil d.custom_field
   end
 
+  # @rbs () -> bool
   def test_visible_details_should_include_relations_to_visible_issues_only
     issue = Issue.generate!
     visible_issue = Issue.generate!
@@ -253,6 +274,7 @@ class JournalTest < ActiveSupport::TestCase
     assert_equal 2, visible_details.size
   end
 
+  # @rbs () -> Array[untyped]
   def test_attachments
     journal = Journal.new
     [0, 1].map{ |i| Attachment.generate!(:file => mock_file_with_options(:original_filename => "image#{i}.png")) }.each do |attachment|
@@ -267,6 +289,7 @@ class JournalTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_notified_mentions_should_not_include_users_who_cannot_view_private_notes
     journal = Journal.generate!(journalized: Issue.find(2), user: User.find(1), private_notes: true, notes: 'Hello @dlopper, @jsmith and @admin.')
 

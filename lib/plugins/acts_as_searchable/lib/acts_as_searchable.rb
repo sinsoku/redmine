@@ -36,6 +36,7 @@ module Redmine
         # * :permission - permission required to search the model
         # * :scope - scope used to search results
         # * :preload - associations to preload when loading results for display
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_searchable(options = {})
           return if self.included_modules.include?(Redmine::Acts::Searchable::InstanceMethods)
           options.assert_valid_keys(:columns, :project_key, :date_column, :permission, :scope, :preload)
@@ -62,6 +63,7 @@ module Redmine
       end
 
       module InstanceMethods
+        # @rbs (Class) -> Class
         def self.included(base)
           base.extend ClassMethods
         end
@@ -81,6 +83,7 @@ module Redmine
           # Example:
           #   Issue.search_result_ranks_and_ids("foo")
           #   # => [[1419595329, 69], [1419595622, 123]]
+          # @rbs (Array[untyped] | String, ?User | AnonymousUser, ?(Project::ActiveRecord_Relation | Project | Project::ActiveRecord_Associations_CollectionProxy | Array[untyped])?, ?Hash[untyped, untyped]) -> Array[untyped]
           def search_result_ranks_and_ids(tokens, user=User.current, projects=nil, options={})
             tokens = [] << tokens unless tokens.is_a?(Array)
             projects = [] << projects if projects.is_a?(Project)
@@ -152,6 +155,7 @@ module Redmine
             r
           end
 
+          # @rbs (Array[untyped], Array[untyped], bool?) -> Array[untyped]
           def search_tokens_condition(columns, tokens, all_words)
             token_clauses = columns.map {|column| "(#{search_token_match_statement(column)})"}
             sql = (['(' + token_clauses.join(' OR ') + ')'] * tokens.size).join(all_words ? ' AND ' : ' OR ')
@@ -159,11 +163,13 @@ module Redmine
           end
           private :search_tokens_condition
 
+          # @rbs (String, ?String) -> String
           def search_token_match_statement(column, value='?')
             Redmine::Database.like(column, value)
           end
           private :search_token_match_statement
 
+          # @rbs (Issue::ActiveRecord_Relation | News::ActiveRecord_Relation | Document::ActiveRecord_Relation | Changeset::ActiveRecord_Relation | WikiPage::ActiveRecord_Relation | Message::ActiveRecord_Relation | Project::ActiveRecord_Relation, nil) -> Array[untyped]
           def fetch_ranks_and_ids(scope, limit)
             scope.
               reorder(searchable_options[:date_column] => :desc, :id => :desc).
@@ -176,6 +182,7 @@ module Redmine
           private :fetch_ranks_and_ids
 
           # Returns the search scope for user and projects
+          # @rbs (User | AnonymousUser, (Project::ActiveRecord_Relation | Array[untyped] | Project::ActiveRecord_Associations_CollectionProxy)?, ?Hash[untyped, untyped]) -> (Issue::ActiveRecord_Relation | News::ActiveRecord_Relation | Document::ActiveRecord_Relation | Changeset::ActiveRecord_Relation | WikiPage::ActiveRecord_Relation | Message::ActiveRecord_Relation | Project::ActiveRecord_Relation)
           def search_scope(user, projects, options={})
             if projects.is_a?(Array) && projects.empty?
               # no results
@@ -202,11 +209,13 @@ module Redmine
           private :search_scope
 
           # Returns search results of given ids
+          # @rbs (Array[untyped]) -> Array[untyped]
           def search_results_from_ids(ids)
             where(:id => ids).preload(searchable_options[:preload]).to_a
           end
 
           # Returns search results with same arguments as search_result_ranks_and_ids
+          # @rbs (*String) -> Array[untyped]
           def search_results(*args)
             ranks_and_ids = search_result_ranks_and_ids(*args)
             search_results_from_ids(ranks_and_ids.map(&:last))

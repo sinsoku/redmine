@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingCommentsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_comments
     should_route 'POST /news/567/comments' => 'comments#create', :id => '567'
     should_route 'DELETE /news/567/comments/15' => 'comments#destroy', :id => '567', :comment_id => '15'

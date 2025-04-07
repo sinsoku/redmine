@@ -21,6 +21,7 @@ module Redmine
   module WikiFormatting
     module Textile
       module Helper
+        # @rbs (String, ?String) -> ActiveSupport::SafeBuffer
         def wikitoolbar_for(field_id, preview_url = preview_text_path)
           heads_for_wiki_formatter
 
@@ -35,6 +36,7 @@ module Redmine
           "h1. #{page.pretty_title}"
         end
 
+        # @rbs () -> void
         def heads_for_wiki_formatter
           unless @heads_for_wiki_formatter_included
             toolbar_language_options = User.current && User.current.pref.toolbar_language_options

@@ -20,22 +20,26 @@
 require_relative '../test_helper'
 
 class NewsControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
     assert_select 'h3 a', :text => 'eCookbook first release !'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_project
     get(:index, :params => {:project_id => 1})
     assert_response :success
     assert_select 'h3 a', :text => 'eCookbook first release !'
   end
 
+  # @rbs () -> bool
   def test_index_with_invalid_project_should_respond_with_404_for_logged_users
     @request.session[:user_id] = 2
 
@@ -43,6 +47,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_index_with_invalid_project_should_respond_with_302_for_anonymous
     Role.anonymous.remove_permission! :view_news
     with_settings :login_required => '0' do
@@ -51,6 +56,7 @@ class NewsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_index_without_permission_should_fail
     Role.all.each {|r| r.remove_permission! :view_news}
     @request.session[:user_id] = 2
@@ -59,6 +65,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_response :forbidden
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_without_manage_news_permission_should_not_display_add_news_link
     user = User.find(2)
     @request.session[:user_id] = user.id
@@ -71,6 +78,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select '.add-news-link', count: 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show
     get(:show, :params => {:id => 1})
     assert_response :success
@@ -78,6 +86,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select 'h2', :text => 'eCookbook first release !'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_show_attachments
     attachment = Attachment.first
     attachment.container = News.find(1)
@@ -88,6 +97,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => attachment.filename
   end
 
+  # @rbs () -> bool
   def test_show_with_comments_in_reverse_order
     user = User.find(1)
     user.pref[:comments_sorting] = 'desc'
@@ -101,11 +111,13 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_equal ["This is an other comment", "my first comment"], comments
   end
 
+  # @rbs () -> bool
   def test_show_not_found
     get(:show, :params => {:id => 999})
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_with_project_id
     @request.session[:user_id] = 2
     get(:new, :params => {:project_id => 1})
@@ -114,6 +126,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'news[title]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_without_project_id
     @request.session[:user_id] = 2
     get(:new)
@@ -122,6 +135,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'news[title]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_new_if_user_does_not_have_permission
     @request.session[:user_id] = 2
     User.find(2).roles.each{|u| u.remove_permission! :manage_news }
@@ -132,6 +146,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?]', 'news[title]', count: 0
   end
 
+  # @rbs () -> bool
   def test_post_create
     ActionMailer::Base.deliveries.clear
     @request.session[:user_id] = 2
@@ -159,6 +174,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> bool
   def test_post_create_with_cross_project_param
     ActionMailer::Base.deliveries.clear
     @request.session[:user_id] = 2
@@ -187,6 +203,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_equal 2, ActionMailer::Base.deliveries.size
   end
 
+  # @rbs () -> Array[untyped]
   def test_post_create_with_attachment
     set_tmp_attachments_directory
     ActionMailer::Base.deliveries.clear
@@ -225,6 +242,7 @@ class NewsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_create_with_validation_failure
     @request.session[:user_id] = 2
     post(
@@ -242,6 +260,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select_error /title cannot be blank/i
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_edit
     @request.session[:user_id] = 2
     get(:edit, :params => {:id => 1})
@@ -249,6 +268,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?]', 'news[title]', 'eCookbook first release !'
   end
 
+  # @rbs () -> bool
   def test_put_update
     @request.session[:user_id] = 2
     put(
@@ -265,6 +285,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_equal 'Description changed by test_post_edit', news.description
   end
 
+  # @rbs () -> bool
   def test_put_update_with_attachment
     set_tmp_attachments_directory
     @request.session[:user_id] = 2
@@ -290,6 +311,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_equal News.find(1), attachment.container
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     @request.session[:user_id] = 2
     put(
@@ -305,6 +327,7 @@ class NewsControllerTest < Redmine::ControllerTest
     assert_select_error /description cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_destroy
     @request.session[:user_id] = 2
     delete(:destroy, :params => {:id => 1})

@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingMessagesTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_messages
     # TODO: refactor routes
     should_route 'GET /boards/22/topics/new' => 'messages#new', :board_id => '22'

@@ -26,6 +26,7 @@ module Redmine
     class << self
       # Adds a listener class.
       # Automatically called when a class inherits from Redmine::Hook::Listener.
+      # @rbs (Class) -> void
       def add_listener(klass)
         unless klass.included_modules.include?(Singleton)
           raise "Hooks must include Singleton module."
@@ -36,22 +37,26 @@ module Redmine
       end
 
       # Returns all the listener instances.
+      # @rbs () -> Array[untyped]
       def listeners
         @@listeners ||= @@listener_classes.collect {|listener| listener.instance}
       end
 
       # Returns the listener instances for the given hook.
+      # @rbs (Symbol) -> Array[untyped]
       def hook_listeners(hook)
         @@hook_listeners[hook] ||= listeners.select {|listener| listener.respond_to?(hook)}
       end
 
       # Clears all the listeners.
+      # @rbs () -> Hash[untyped, untyped]
       def clear_listeners
         @@listener_classes = []
         clear_listeners_instances
       end
 
       # Clears all the listeners instances.
+      # @rbs () -> Hash[untyped, untyped]
       def clear_listeners_instances
         @@listeners = nil
         @@hook_listeners = {}
@@ -59,6 +64,7 @@ module Redmine
 
       # Calls a hook.
       # Returns the listeners response.
+      # @rbs (Symbol, ?Hash[untyped, untyped]) -> Array[untyped]
       def call_hook(hook, context={})
         [].tap do |response|
           hls = hook_listeners(hook)
@@ -90,6 +96,7 @@ module Redmine
     # * hook_caller => object that called the hook
     #
     module Helper
+      # @rbs (Symbol, ?Hash[untyped, untyped]) -> (ActiveSupport::SafeBuffer | Array[untyped])
       def call_hook(hook, context={})
         if is_a?(ActionController::Base)
           default_context = {:controller => self, :project => @project, :request => request, :hook_caller => self}

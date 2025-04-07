@@ -22,10 +22,12 @@ require_relative '../test_helper'
 class IssueRelationTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_create
     from = Issue.find(1)
     to = Issue.find(2)
@@ -39,12 +41,14 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_equal to, relation.issue_to
   end
 
+  # @rbs () -> bool
   def test_create_minimum
     relation = IssueRelation.new :issue_from => Issue.find(1), :issue_to => Issue.find(2)
     assert relation.save
     assert_equal IssueRelation::TYPE_RELATES, relation.relation_type
   end
 
+  # @rbs () -> bool
   def test_follows_relation_should_be_reversed
     from = Issue.find(1)
     to = Issue.find(2)
@@ -58,6 +62,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_equal from, relation.issue_to
   end
 
+  # @rbs () -> bool
   def test_cannot_create_inverse_relates_relations
     from = Issue.find(1)
     to = Issue.find(2)
@@ -72,6 +77,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_not_equal [], relation2.errors[:base]
   end
 
+  # @rbs () -> bool
   def test_follows_relation_should_not_be_reversed_if_validation_fails
     from = Issue.find(1)
     to = Issue.find(2)
@@ -85,6 +91,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_equal to, relation.issue_to
   end
 
+  # @rbs () -> bool
   def test_relation_type_for
     from = Issue.find(1)
     to = Issue.find(2)
@@ -95,6 +102,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_equal IssueRelation::TYPE_FOLLOWS, relation.relation_type_for(to)
   end
 
+  # @rbs () -> bool
   def test_set_issue_to_dates_without_issue_to
     r = IssueRelation.new(:issue_from => Issue.new(:start_date => Date.today),
                           :relation_type => IssueRelation::TYPE_PRECEDES,
@@ -102,11 +110,13 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_nil r.set_issue_to_dates
   end
 
+  # @rbs () -> bool
   def test_set_issue_to_dates_without_issues
     r = IssueRelation.new(:relation_type => IssueRelation::TYPE_PRECEDES, :delay => 1)
     assert_nil r.set_issue_to_dates
   end
 
+  # @rbs () -> bool
   def test_validates_circular_dependency
     IssueRelation.delete_all
     assert(
@@ -130,6 +140,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_not_equal [], r.errors[:base]
   end
 
+  # @rbs () -> bool
   def test_validates_circular_dependency_of_subtask
     set_language_if_valid 'en'
     issue1 = Issue.generate!
@@ -150,6 +161,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_include 'This relation would create a circular dependency', r.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_subtasks_should_allow_precedes_relation
     parent = Issue.generate!
     child1 = Issue.generate!(:parent_issue_id => parent.id)
@@ -163,6 +175,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert r.save
   end
 
+  # @rbs () -> bool
   def test_validates_circular_dependency_on_reverse_relations
     IssueRelation.delete_all
     assert(
@@ -186,6 +199,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_not_equal [], r.errors[:base]
   end
 
+  # @rbs () -> bool
   def test_create_with_initialized_journals_should_create_journals
     from = Issue.find(1)
     to   = Issue.find(2)
@@ -212,6 +226,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_with_initialized_journals_should_create_journals
     relation = IssueRelation.find(1)
     from = relation.issue_from
@@ -234,6 +249,7 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_nil   to.journals.last.details.last.value
   end
 
+  # @rbs () -> bool
   def test_to_s_should_return_the_relation_string
     set_language_if_valid 'en'
     relation = IssueRelation.find(1)
@@ -241,12 +257,14 @@ class IssueRelationTest < ActiveSupport::TestCase
     assert_equal "Blocked by #10", relation.to_s(relation.issue_to)
   end
 
+  # @rbs () -> bool
   def test_to_s_without_argument_should_return_the_relation_string_for_issue_from
     set_language_if_valid 'en'
     relation = IssueRelation.find(1)
     assert_equal "Blocks #9", relation.to_s
   end
 
+  # @rbs () -> bool
   def test_to_s_should_accept_a_block_as_custom_issue_formatting
     set_language_if_valid 'en'
     relation = IssueRelation.find(1)

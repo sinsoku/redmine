@@ -21,6 +21,7 @@ require_relative '../test_helper'
 
 class TimelogCustomFieldsVisibilityTest < Redmine::ControllerTest
   tests TimelogController
+  # @rbs () -> Hash[untyped, untyped]
   def test_index_should_show_visible_custom_fields_only
     prepare_test_data
 
@@ -41,6 +42,7 @@ class TimelogCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_index_as_csv_should_show_visible_custom_fields_only
     prepare_test_data
 
@@ -62,6 +64,7 @@ class TimelogCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index_with_partial_custom_field_visibility_should_show_visible_custom_fields_only
     prepare_test_data
 
@@ -95,6 +98,7 @@ class TimelogCustomFieldsVisibilityTest < Redmine::ControllerTest
     assert_select 'td', :text => "ValueB", :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_should_not_show_custom_fields_not_visible_for_user
     time_entry_cf = TimeEntryCustomField.find(10)
     time_entry_cf.visible = false
@@ -114,6 +118,7 @@ class TimelogCustomFieldsVisibilityTest < Redmine::ControllerTest
 
   private
 
+  # @rbs () -> void
   def prepare_test_data
     field_attributes = {:field_format => 'string', :is_for_all => true, :is_filter => true, :trackers => Tracker.all}
     @fields = []

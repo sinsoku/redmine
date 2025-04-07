@@ -241,6 +241,7 @@ module ObjectHelpers
     document
   end
 
+  # @rbs (?String) -> IssueImport
   def generate_import(fixture_name='import_issues.csv')
     import = IssueImport.new
     import.user_id = 2
@@ -249,6 +250,7 @@ module ObjectHelpers
     import
   end
 
+  # @rbs (?String) -> IssueImport
   def generate_import_with_mapping(fixture_name='import_issues.csv')
     import = generate_import(fixture_name)
 
@@ -260,6 +262,7 @@ module ObjectHelpers
     import
   end
 
+  # @rbs (?String) -> TimeEntryImport
   def generate_time_entry_import(fixture_name='import_time_entries.csv')
     import = TimeEntryImport.new
     import.user_id = 2
@@ -270,6 +273,7 @@ module ObjectHelpers
 end
 
 module TrackerObjectHelpers
+  # @rbs (Hash[untyped, untyped]) -> void
   def generate_transitions!(arg)
     if arg.delete(:clear)
       WorkflowTransition.where(:tracker_id => id).delete_all
@@ -291,11 +295,13 @@ end
 Tracker.include TrackerObjectHelpers
 
 module IssueObjectHelpers
+  # @rbs () -> bool
   def close!
     self.status = IssueStatus.where(:is_closed => true).first
     save!
   end
 
+  # @rbs (?Hash[untyped, untyped]) -> Issue
   def generate_child!(attributes={})
     Issue.generate!(attributes.merge(:parent_issue_id => self.id))
   end

@@ -20,45 +20,53 @@
 require_relative '../test_helper'
 
 class SearchControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_without_q_should_display_search_form
     get :index
     assert_response :success
     assert_select '#content input[name=q]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_for_projects
     get :index, :params => {:q => "cook"}
     assert_response :success
     assert_select '#search-results dt.project a', :text => /eCookbook/
   end
 
+  # @rbs () -> bool
   def test_search_on_archived_project_should_return_403
     Project.find(3).archive
     get :index, :params => {:id => 3}
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_search_on_invisible_project_by_user_should_be_denied
     @request.session[:user_id] = 7
     get :index, :params => {:id => 2}
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_search_on_invisible_project_by_anonymous_user_should_redirect
     get :index, :params => {:id => 2}
     assert_response :found
   end
 
+  # @rbs () -> bool
   def test_search_on_private_project_by_member_should_succeed
     @request.session[:user_id] = 2
     get :index, :params => {:id => 2}
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_all_projects
     with_settings :default_language => 'en' do
       get :index, :params => {:q => 'recipe subproject commit', :all_words => ''}
@@ -79,6 +87,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_issues
     get :index, :params => {:q => 'issue', :issues => 1}
     assert_response :success
@@ -93,6 +102,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_issues_should_search_notes
     Journal.create!(:journalized => Issue.find(2), :notes => 'Issue notes with searchkeyword')
 
@@ -104,6 +114,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_issues_with_multiple_matches_in_journals_should_return_issue_once
     Journal.create!(:journalized => Issue.find(2), :notes => 'Issue notes with searchkeyword')
     Journal.create!(:journalized => Issue.find(2), :notes => 'Issue notes with searchkeyword')
@@ -117,6 +128,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_issues_should_search_private_notes_with_permission_only
     Journal.create!(:journalized => Issue.find(2), :notes => 'Private notes with searchkeyword', :private_notes => true)
     @request.session[:user_id] = 2
@@ -136,6 +148,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_all_projects_with_scope_param
     get :index, :params => {:q => 'issue', :scope => 'all'}
     assert_response :success
@@ -143,6 +156,7 @@ class SearchControllerTest < Redmine::ControllerTest
     assert_select '#search-results dt'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_my_projects
     @request.session[:user_id] = 2
     get :index, :params => {:id => 1, :q => 'recipe subproject', :scope => 'my_projects', :all_words => ''}
@@ -154,6 +168,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_my_projects_without_memberships
     # anonymous user has no memberships
     get :index, :params => {:id => 1, :q => 'recipe subproject', :scope => 'my_projects', :all_words => ''}
@@ -164,6 +179,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_my_bookmarks
     @request.session[:user_id] = 1
     get :index, :params => {:q => 'project', :scope => 'bookmarks', :all_words => ''}
@@ -177,6 +193,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_project_and_subprojects
     get :index, :params => {:id => 1, :q => 'recipe subproject', :scope => 'subprojects', :all_words => ''}
     assert_response :success
@@ -187,6 +204,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_search_without_searchable_custom_fields
     CustomField.update_all :searchable => false
 
@@ -197,6 +215,7 @@ class SearchControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_with_searchable_custom_fields
     get :index, :params => {:id => 1, :q => "stringforcustomfield"}
     assert_response :success
@@ -207,6 +226,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_without_attachments
     issue = Issue.generate! :subject => 'search_attachments'
     attachment = Attachment.generate! :container => Issue.find(1), :filename => 'search_attachments.patch'
@@ -220,6 +240,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_attachments_only
     issue = Issue.generate! :subject => 'search_attachments'
     attachment = Attachment.generate! :container => Issue.find(1), :filename => 'search_attachments.patch'
@@ -233,6 +254,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_with_attachments
     issue = Issue.generate! :subject => 'search_attachments'
     Attachment.generate! :container => Issue.find(1), :filename => 'search_attachments.patch'
@@ -247,6 +269,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_open_issues
     Issue.generate! :subject => 'search_open'
     Issue.generate! :subject => 'search_open', :status_id => 5
@@ -259,6 +282,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_all_words
     # 'all words' is on by default
     get :index, :params => {:id => 1, :q => 'recipe updating saving', :all_words => '1'}
@@ -271,6 +295,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_one_of_the_words
     get :index, :params => {:id => 1, :q => 'recipe updating saving', :all_words => ''}
     assert_response :success
@@ -282,6 +307,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_titles_only_without_result
     get :index, :params => {:id => 1, :q => 'recipe updating saving', :titles_only => '1'}
     assert_response :success
@@ -292,6 +318,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_titles_only
     get :index, :params => {:id => 1, :q => 'recipe', :titles_only => '1'}
     assert_response :success
@@ -302,6 +329,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_content
     Issue.where(:id => 1).update_all("description = 'This is a searchkeywordinthecontent'")
 
@@ -315,6 +343,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_with_pagination
     issues = (0..24).map {Issue.generate! :subject => 'search_with_limited_results'}.reverse
 
@@ -341,11 +370,13 @@ class SearchControllerTest < Redmine::ControllerTest
     assert_select '#search-results dt', 0
   end
 
+  # @rbs () -> bool
   def test_search_with_invalid_project_id
     get :index, :params => {:id => 195, :q => 'recipe'}
     assert_response :not_found
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_should_include_closed_projects
     @request.session[:user_id] = 1
 
@@ -386,6 +417,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_quick_jump_to_issue
     # issue of a public project
     get :index, :params => {:q => "3"}
@@ -396,11 +428,13 @@ class SearchControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_large_integer
     get :index, :params => {:q => '4615713488'}
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_tokens_with_quotes
     issue1 = Issue.generate! :subject => 'say hello'
     issue2 = Issue.generate! :subject => 'say good bye'
@@ -415,6 +449,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_results_should_be_escaped_once
     assert Issue.find(1).update(:subject => '<subject> escaped_once', :description => '<description> escaped_once')
     get :index, :params => {:q => 'escaped_once'}
@@ -425,6 +460,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_keywords_should_be_highlighted
     assert Issue.find(1).update(:subject => 'subject highlighted', :description => 'description highlighted')
     get :index, :params => {:q => 'highlighted'}
@@ -435,6 +471,7 @@ class SearchControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_should_exclude_empty_modules_params
     @request.session[:user_id] = 1
 
@@ -450,6 +487,7 @@ class SearchControllerTest < Redmine::ControllerTest
     assert_select '#search-results dt.project', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_search_should_not_show_apply_issues_filter_button_if_no_issues_found
     get :index, :params => {:q => 'commits'}
     assert_response :success

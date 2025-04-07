@@ -20,11 +20,16 @@
 module Redmine
   module Info
     class << self
+      # @rbs () -> String
       def app_name; 'Redmine' end
+      # @rbs () -> String
       def url; 'https://www.redmine.org/' end
+      # @rbs () -> String
       def help_url; 'https://www.redmine.org/guide' end
+      # @rbs () -> String
       def versioned_name; "#{app_name} #{Redmine::VERSION}" end
 
+      # @rbs () -> String
       def environment
         s = +"Environment:\n"
         s << [

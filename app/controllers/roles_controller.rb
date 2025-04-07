@@ -30,6 +30,7 @@ class RolesController < ApplicationController
 
   require_sudo_mode :create, :update, :destroy
 
+  # @rbs () -> Array[untyped]?
   def index
     respond_to do |format|
       format.html do
@@ -42,12 +43,14 @@ class RolesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def show
     respond_to do |format|
       format.api
     end
   end
 
+  # @rbs () -> Array[untyped]
   def new
     # Prefills the form with 'Non member' role permissions by default
     @role = Role.new
@@ -58,6 +61,7 @@ class RolesController < ApplicationController
     @roles = Role.sorted.to_a
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def create
     @role = Role.new
     @role.safe_attributes = params[:role]
@@ -74,9 +78,11 @@ class RolesController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def update
     @role.safe_attributes = params[:role]
     if @role.save
@@ -95,6 +101,7 @@ class RolesController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def destroy
     begin
       @role.destroy
@@ -104,6 +111,7 @@ class RolesController < ApplicationController
     redirect_to roles_path
   end
 
+  # @rbs () -> String?
   def permissions
     scope = Role.sorted
     if params[:ids].present?
@@ -119,6 +127,7 @@ class RolesController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def update_permissions
     @roles = Role.where(:id => params[:permissions].keys)
     @roles.each do |role|
@@ -131,6 +140,7 @@ class RolesController < ApplicationController
 
   private
 
+  # @rbs () -> (Role | bool)
   def find_role
     @role = Role.find(params[:id])
   rescue ActiveRecord::RecordNotFound

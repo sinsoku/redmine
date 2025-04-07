@@ -57,6 +57,7 @@ class WikiContentVersion < ApplicationRecord
   )
   after_destroy :page_update_after_destroy
 
+  # @rbs (String) -> String
   def text=(plain)
     case Setting.wiki_compression
     when 'gzip'
@@ -74,6 +75,7 @@ class WikiContentVersion < ApplicationRecord
     plain
   end
 
+  # @rbs () -> String
   def text
     @text ||= begin
       str = case compression
@@ -87,20 +89,24 @@ class WikiContentVersion < ApplicationRecord
     end
   end
 
+  # @rbs () -> Project
   def project
     page.project
   end
 
+  # @rbs () -> Attachment::ActiveRecord_Associations_CollectionProxy
   def attachments
     page.nil? ? [] : page.attachments
   end
 
   # Return true if the content is the current page content
+  # @rbs () -> bool
   def current_version?
     page.content.version == self.version
   end
 
   # Returns the previous version or nil
+  # @rbs () -> WikiContentVersion?
   def previous
     @previous ||= WikiContentVersion.
       reorder(version: :desc).
@@ -109,6 +115,7 @@ class WikiContentVersion < ApplicationRecord
   end
 
   # Returns the next version or nil
+  # @rbs () -> WikiContentVersion?
   def next
     @next ||= WikiContentVersion.
       reorder(version: :asc).
@@ -120,6 +127,7 @@ class WikiContentVersion < ApplicationRecord
 
   # Updates page's content if the latest version is removed
   # or destroys the page if it was the only version
+  # @rbs () -> nil
   def page_update_after_destroy
     latest = page.content.versions.reorder(version: :desc).first
     if latest && page.content.version != latest.version

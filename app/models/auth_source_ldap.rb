@@ -47,11 +47,13 @@ class AuthSourceLdap < AuthSource
     :ldaps_verify_peer
   ]
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super
     self.port = 389 if self.port == 0
   end
 
+  # @rbs (String, String) -> nil
   def authenticate(login, password)
     return nil if login.blank? || password.blank?
 
@@ -67,6 +69,7 @@ class AuthSourceLdap < AuthSource
   end
 
   # Test the connection to the LDAP
+  # @rbs () -> void
   def test_connection
     with_timeout do
       ldap_con = initialize_ldap_con(self.account, self.account_password)
@@ -80,11 +83,13 @@ class AuthSourceLdap < AuthSource
     raise AuthSourceException.new("#{auth_method_name}: #{e.message}")
   end
 
+  # @rbs () -> String
   def auth_method_name
     "LDAP"
   end
 
   # Returns true if this source can be searched for users
+  # @rbs () -> bool
   def searchable?
     !account.to_s.include?("$login") && %w(login firstname lastname mail).all? {|a| send(:"attr_#{a}?")}
   end
@@ -110,6 +115,7 @@ class AuthSourceLdap < AuthSource
     raise AuthSourceException.new("#{auth_method_name}: #{e.message}")
   end
 
+  # @rbs () -> Symbol
   def ldap_mode
     case
     when tls && verify_peer
@@ -121,6 +127,7 @@ class AuthSourceLdap < AuthSource
     end
   end
 
+  # @rbs (String) -> void
   def ldap_mode=(ldap_mode)
     case ldap_mode.try(:to_sym)
     when :ldaps_verify_peer
@@ -137,6 +144,7 @@ class AuthSourceLdap < AuthSource
 
   private
 
+  # @rbs () -> nil
   def with_timeout(&)
     timeout = self.timeout
     timeout = 20 unless timeout && timeout > 0
@@ -147,6 +155,7 @@ class AuthSourceLdap < AuthSource
     raise AuthSourceTimeoutException.new("#{auth_method_name}: #{e.message}")
   end
 
+  # @rbs () -> Net::LDAP::Filter?
   def ldap_filter
     if filter.present?
       Net::LDAP::Filter.construct(filter)
@@ -155,6 +164,7 @@ class AuthSourceLdap < AuthSource
     nil
   end
 
+  # @rbs () -> Net::LDAP::Filter
   def base_filter
     filter = Net::LDAP::Filter.eq("objectClass", "*")
     if f = ldap_filter
@@ -163,18 +173,21 @@ class AuthSourceLdap < AuthSource
     filter
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_filter
     if filter.present? && ldap_filter.nil?
       errors.add(:filter, :invalid)
     end
   end
 
+  # @rbs () -> Array[untyped]
   def strip_ldap_attributes
     [:attr_login, :attr_firstname, :attr_lastname, :attr_mail].each do |attr|
       write_attribute(attr, read_attribute(attr).strip) unless read_attribute(attr).nil?
     end
   end
 
+  # @rbs (nil, String) -> Net::LDAP
   def initialize_ldap_con(ldap_user, ldap_password)
     options = {:host => self.host, :port => self.port}
     if tls
@@ -204,6 +217,7 @@ class AuthSourceLdap < AuthSource
 
   # Return the attributes needed for the LDAP search.  It will only
   # include the user attributes if on-the-fly registration is enabled
+  # @rbs () -> Array[untyped]
   def search_attributes
     if onthefly_register?
       ['dn', self.attr_firstname, self.attr_lastname, self.attr_mail]
@@ -220,6 +234,7 @@ class AuthSourceLdap < AuthSource
   end
 
   # Get the user's dn and any attributes for them, given their login
+  # @rbs (String, String) -> nil
   def get_user_dn(login, password)
     ldap_con = nil
     if self.account && self.account.include?("$login")

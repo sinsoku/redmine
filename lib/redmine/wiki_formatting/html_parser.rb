@@ -28,6 +28,7 @@ module Redmine
         'style' => ''
       }
 
+      # @rbs (String) -> String
       def self.to_text(html)
         html = html.gsub(/[\n\r]/, ' ')
 
@@ -39,11 +40,13 @@ module Redmine
       end
 
       class WikiTags < ::Loofah::Scrubber
+        # @rbs (Hash[untyped, untyped]) -> void
         def initialize(tags_to_text)
           super(:direction => :bottom_up)
           @tags_to_text = tags_to_text || {}
         end
 
+        # @rbs (Nokogiri::XML::Text | Nokogiri::XML::Element | Nokogiri::XML::CDATA) -> Nokogiri::XML::Element
         def scrub(node)
           formatting = @tags_to_text[node.name]
           case formatting

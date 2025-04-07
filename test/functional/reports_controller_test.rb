@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class ReportsControllerTest < Redmine::ControllerTest
+  # @rbs () -> bool
   def test_get_issue_report
     get(
       :issue_report,
@@ -30,6 +31,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_issue_report_with_subprojects_issues
     project = Project.find(1)
     tracker = project.trackers.find_by(:name => 'Support request')
@@ -54,6 +56,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_issue_report_without_subprojects_issues
     project = Project.find(1)
     tracker = project.trackers.find_by(:name => 'Support request')
@@ -78,6 +81,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_get_issue_report_details
     %w(tracker version priority category assigned_to author subproject).each do |detail|
       get(
@@ -91,6 +95,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_issue_report_details_by_tracker_should_show_only_statuses_used_by_the_project
     WorkflowTransition.delete_all
     WorkflowTransition.create(:role_id => 1, :tracker_id => 1, :old_status_id => 1, :new_status_id => 5)
@@ -116,6 +121,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_issue_report_details_by_tracker_with_subprojects_issues
     project = Project.find(1)
     tracker = project.trackers.find_by(:name => 'Support request')
@@ -147,6 +153,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_issue_report_details_by_tracker_without_subprojects_issues
     project = Project.find(1)
     tracker = project.trackers.find_by(:name => 'Support request')
@@ -176,6 +183,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_issue_report_details_by_tracker_should_show_issue_count
     Issue.delete_all
     Issue.generate!(:tracker_id => 1)
@@ -211,6 +219,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_issue_report_details_by_assignee_should_show_non_assigned_issue_count
     Issue.delete_all
     Issue.generate!
@@ -235,6 +244,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_get_issue_report_details_with_an_invalid_detail
     get(
       :issue_report_details,
@@ -246,6 +256,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_report_details_should_csv_export
     %w(tracker version priority category assigned_to author subproject).each do |detail|
       get(
@@ -261,6 +272,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_report_details_with_tracker_detail_should_csv_export
     project = Project.find(1)
     tracker = project.trackers.find_by(:name => 'Support request')
@@ -296,6 +308,7 @@ class ReportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_issue_report_details_with_assigned_to_detail_should_csv_export
     Issue.delete_all
     Issue.generate!

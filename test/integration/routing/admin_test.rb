@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingAdminTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_administration_panel
     should_route 'GET /admin' => 'admin#index'
     should_route 'GET /admin/projects' => 'admin#projects'

@@ -22,6 +22,7 @@ module Redmine
     class Paginator
       attr_reader :item_count, :per_page, :page, :page_param
 
+      # @rbs (*Integer? | Integer | Integer | Symbol | Integer | String) -> void
       def initialize(*args)
         if args.first.is_a?(ActionController::Base)
           args.shift
@@ -39,47 +40,56 @@ module Redmine
         @page_param = page_param || :page
       end
 
+      # @rbs () -> Integer
       def offset
         (page - 1) * per_page
       end
 
+      # @rbs () -> Integer?
       def first_page
         if item_count > 0
           1
         end
       end
 
+      # @rbs () -> Integer?
       def previous_page
         if page > 1
           page - 1
         end
       end
 
+      # @rbs () -> Integer?
       def next_page
         if last_item < item_count
           page + 1
         end
       end
 
+      # @rbs () -> Integer?
       def last_page
         if item_count > 0
           (item_count - 1) / per_page + 1
         end
       end
 
+      # @rbs () -> bool
       def multiple_pages?
         per_page < item_count
       end
 
+      # @rbs () -> Integer
       def first_item
         item_count == 0 ? 0 : (offset + 1)
       end
 
+      # @rbs () -> Integer
       def last_item
         l = first_item + per_page - 1
         [l, item_count].min
       end
 
+      # @rbs () -> Array[untyped]
       def linked_pages
         pages = []
         if item_count > 0
@@ -114,6 +124,7 @@ module Redmine
     # Examples:
     #   @user_pages, @users = paginate User.where(:status => 1)
     #
+    # @rbs (Class, ?Hash[untyped, untyped]) -> Array[untyped]
     def paginate(scope, options={})
       options = options.dup
 
@@ -123,6 +134,7 @@ module Redmine
       return paginator, collection
     end
 
+    # @rbs (Integer, ?Hash[untyped, untyped]) -> Redmine::Pagination::Paginator
     def paginator(item_count, options={})
       options.assert_valid_keys :parameter, :per_page
 
@@ -140,6 +152,7 @@ module Redmine
       # Options:
       #   :per_page_links    if set to false, the "Per page" links are not rendered
       #
+      # @rbs (*Redmine::Pagination::Paginator | Integer | Redmine::Pagination::Paginator | Integer | Hash[untyped, untyped] | Redmine::Pagination::Paginator) -> ActiveSupport::SafeBuffer
       def pagination_links_full(*args)
         pagination_links_each(*args) do |text, parameters, options|
           if block_given?
@@ -152,6 +165,7 @@ module Redmine
 
       # Yields the given block with the text and parameters
       # for each pagination link and returns a string that represents the links
+      # @rbs (Redmine::Pagination::Paginator, ?Integer?, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def pagination_links_each(paginator, count=nil, options={}, &)
         options.assert_valid_keys :per_page_links
 
@@ -214,6 +228,7 @@ module Redmine
       end
 
       # Renders the "Per page" links.
+      # @rbs (Redmine::Pagination::Paginator) -> nil
       def per_page_links(paginator, &)
         values = per_page_options(paginator.per_page, paginator.item_count)
         if values.any?
@@ -228,6 +243,7 @@ module Redmine
         end
       end
 
+      # @rbs (?Integer, ?Integer) -> Array[untyped]
       def per_page_options(selected=nil, item_count=nil)
         options = Setting.per_page_options_array
         if item_count && options.any?

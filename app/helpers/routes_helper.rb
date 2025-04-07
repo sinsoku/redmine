@@ -20,6 +20,7 @@
 module RoutesHelper
   # Returns the path to project issues or to the cross-project
   # issue list if project is nil
+  # @rbs (Project?, *nil | Hash[untyped, untyped]) -> String
   def _project_issues_path(project, *args)
     if project
       project_issues_path(project, *args)
@@ -28,6 +29,7 @@ module RoutesHelper
     end
   end
 
+  # @rbs (Project?, *nil | Hash[untyped, untyped]) -> String
   def _project_issues_url(project, *args)
     if project
       project_issues_url(project, *args)
@@ -36,6 +38,7 @@ module RoutesHelper
     end
   end
 
+  # @rbs (Project?, *Hash[untyped, untyped]) -> String
   def _project_news_path(project, *args)
     if project
       project_news_index_path(project, *args)
@@ -44,6 +47,7 @@ module RoutesHelper
     end
   end
 
+  # @rbs (Project?, *nil) -> String
   def _new_project_issue_path(project, *args)
     if project
       new_project_issue_path(project, *args)
@@ -60,6 +64,7 @@ module RoutesHelper
     project ? project_gantt_path(project, *args) : issues_gantt_path(*args)
   end
 
+  # @rbs (Project?, nil, *Hash[untyped, untyped] | nil) -> String
   def _time_entries_path(project, issue, *args)
     if project
       project_time_entries_path(project, *args)
@@ -68,6 +73,7 @@ module RoutesHelper
     end
   end
 
+  # @rbs (Project?, nil, *Hash[untyped, untyped] | nil) -> String
   def _report_time_entries_path(project, issue, *args)
     if project
       report_project_time_entries_path(project, *args)
@@ -76,6 +82,7 @@ module RoutesHelper
     end
   end
 
+  # @rbs (Project?, (String | Issue)?, *nil) -> String
   def _new_time_entry_path(project, issue, *args)
     if issue
       new_issue_time_entry_path(issue, *args)
@@ -88,6 +95,7 @@ module RoutesHelper
 
   # Returns the path to bulk update issues or to issue path
   # if only one issue is selected for bulk update
+  # @rbs (Issue?, *Hash[untyped, untyped]) -> String
   def _bulk_update_issues_path(issue, *args)
     if issue
       issue_path(issue, *args)
@@ -96,6 +104,7 @@ module RoutesHelper
     end
   end
 
+  # @rbs (Board, *nil) -> String
   def board_path(board, *args)
     project_board_path(board.project, board, *args)
   end

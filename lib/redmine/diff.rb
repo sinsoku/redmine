@@ -28,6 +28,7 @@ module Redmine
     attr_accessor :type_diff_left
     attr_accessor :offsets
 
+    # @rbs () -> void
     def initialize
       self.nb_line_left = ''
       self.nb_line_right = ''
@@ -37,22 +38,27 @@ module Redmine
       self.type_diff_left = ''
     end
 
+    # @rbs () -> String
     def type_diff
       type_diff_right == 'diff_in' ? type_diff_right : type_diff_left
     end
 
+    # @rbs () -> String
     def line
       type_diff_right == 'diff_in' ? line_right : line_left
     end
 
+    # @rbs () -> String
     def html_line_left
       line_to_html(line_left, offsets)
     end
 
+    # @rbs () -> String
     def html_line_right
       line_to_html(line_right, offsets)
     end
 
+    # @rbs () -> String
     def html_line
       line_to_html(line, offsets)
     end
@@ -67,12 +73,14 @@ module Redmine
 
     private
 
+    # @rbs (String, Array[untyped]?) -> String
     def line_to_html(line, offsets)
       html = line_to_html_raw(line, offsets)
       html.force_encoding('UTF-8')
       html
     end
 
+    # @rbs (String, Array[untyped]?) -> String
     def line_to_html_raw(line, offsets)
       if offsets
         s = +''

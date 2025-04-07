@@ -21,6 +21,7 @@ class SearchController < ApplicationController
   before_action :find_optional_project_by_id, :authorize_global
   accept_api_auth :index
 
+  # @rbs () -> String?
   def index
     @question = params[:q]&.strip || ""
     @all_words = params[:all_words] ? params[:all_words].present? : true

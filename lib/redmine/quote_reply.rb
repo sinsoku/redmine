@@ -20,10 +20,12 @@
 module Redmine
   module QuoteReply
     module Helper
+      # @rbs () -> ActiveSupport::SafeBuffer
       def javascripts_for_quote_reply_include_tag
         javascript_include_tag 'turndown-7.2.0.min', 'quote_reply'
       end
 
+      # @rbs (String, String, ?icon_only: bool) -> ActiveSupport::SafeBuffer
       def quote_reply(url, selector_for_content, icon_only: false)
         quote_reply_function = "quoteReply('#{j url}', '#{j selector_for_content}', '#{j Setting.text_formatting}')"
 
@@ -39,6 +41,7 @@ module Redmine
     end
 
     module Builder
+      # @rbs (Issue, ?partial_quote: String | nil) -> String
       def quote_issue(issue, partial_quote: nil)
         user = issue.author
 
@@ -49,6 +52,7 @@ module Redmine
         )
       end
 
+      # @rbs (Journal, indice: String | nil, ?partial_quote: nil | String) -> String
       def quote_issue_journal(journal, indice:, partial_quote: nil)
         user = journal.user
 
@@ -59,6 +63,7 @@ module Redmine
         )
       end
 
+      # @rbs (Message, ?partial_quote: nil | String) -> String
       def quote_root_message(message, partial_quote: nil)
         build_quote(
           "#{ll(Setting.default_language, :text_user_wrote, message.author)}\n> ",
@@ -67,6 +72,7 @@ module Redmine
         )
       end
 
+      # @rbs (Message, ?partial_quote: nil | String) -> String
       def quote_message(message, partial_quote: nil)
         build_quote(
           "#{ll(Setting.default_language, :text_user_wrote_in, {value: message.author, link: "message##{message.id}"})}\n> ",
@@ -77,6 +83,7 @@ module Redmine
 
       private
 
+      # @rbs (String, String, ?String?) -> String
       def build_quote(quote_header, text, partial_quote = nil)
         quote_text = partial_quote.presence || text.to_s.strip.gsub(%r{<pre>(.*?)</pre>}m, '[...]')
 

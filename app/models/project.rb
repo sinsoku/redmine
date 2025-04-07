@@ -118,6 +118,7 @@ class Project < ApplicationRecord
     where("#{Project.table_name}.id IN (SELECT DISTINCT project_id FROM #{table_name_prefix}projects_trackers#{table_name_suffix})")
   end)
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super
 
@@ -143,10 +144,12 @@ class Project < ApplicationRecord
     # rubocop:enable Style/NegatedIf
   end
 
+  # @rbs (String?) -> String?
   def identifier=(identifier)
     super unless identifier_frozen?
   end
 
+  # @rbs () -> bool
   def identifier_frozen?
     errors[:identifier].blank? && !(new_record? || identifier.blank?)
   end
@@ -161,6 +164,7 @@ class Project < ApplicationRecord
   end
 
   # Returns true if the project is visible to +user+ or to the current user.
+  # @rbs (?AnonymousUser | User) -> bool
   def visible?(user=User.current)
     user.allowed_to?(:view_project, self)
   end
@@ -171,6 +175,7 @@ class Project < ApplicationRecord
   #   Project.visible_condition(admin)        => "projects.status = 1"
   #   Project.visible_condition(normal_user)  => "((projects.status = 1) AND (projects.is_public = 1 OR projects.id IN (1,3,4)))"
   #   Project.visible_condition(anonymous)    => "((projects.status = 1) AND (projects.is_public = 1))"
+  # @rbs (AnonymousUser | User, ?Hash[untyped, untyped]) -> String
   def self.visible_condition(user, options={})
     allowed_to_condition(user, :view_project, options)
   end
@@ -182,6 +187,7 @@ class Project < ApplicationRecord
   # * :project => project               limit the condition to project
   # * :with_subprojects => true         limit the condition to project and its subprojects
   # * :member => true                   limit the condition to the user projects
+  # @rbs (AnonymousUser | User, Symbol, ?Hash[untyped, untyped]) -> String
   def self.allowed_to_condition(user, permission, options={})
     perm = Redmine::AccessControl.permission(permission)
     base_statement =
@@ -241,6 +247,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs (Role) -> Array[untyped]
   def override_roles(role)
     @override_members ||= memberships.
       joins(:principal).
@@ -251,17 +258,20 @@ class Project < ApplicationRecord
     member ? member.roles.to_a : [role]
   end
 
+  # @rbs () -> Principal::ActiveRecord_Relation
   def principals
     @principals ||=
       Principal.active.joins(:members).where("#{Member.table_name}.project_id = ?", id).distinct
   end
 
+  # @rbs () -> User::ActiveRecord_Relation
   def users
     @users ||=
       User.active.joins(:members).where("#{Member.table_name}.project_id = ?", id).distinct
   end
 
   # Returns the Systemwide and project specific activities
+  # @rbs (?bool) -> TimeEntryActivity::ActiveRecord_Relation
   def activities(include_inactive=false)
     t = TimeEntryActivity.table_name
     scope = TimeEntryActivity.where("#{t}.project_id IS NULL OR #{t}.project_id = ?", id)
@@ -277,6 +287,7 @@ class Project < ApplicationRecord
   end
 
   # Creates or updates project time entry activities
+  # @rbs (Hash[untyped, untyped] | ActionController::Parameters) -> (Hash[untyped, untyped] | ActionController::Parameters)?
   def update_or_create_time_entry_activities(activities)
     transaction do
       activities.each do |id, activity|
@@ -289,6 +300,7 @@ class Project < ApplicationRecord
   #
   # This will raise a ActiveRecord::Rollback if the TimeEntryActivity
   # does not successfully save.
+  # @rbs (String, Hash[untyped, untyped] | ActionController::Parameters) -> (Integer | bool)?
   def update_or_create_time_entry_activity(id, activity_hash)
     if activity_hash.respond_to?(:has_key?) && activity_hash.has_key?('parent_id')
       self.create_time_entry_activity_if_needed(activity_hash)
@@ -302,6 +314,7 @@ class Project < ApplicationRecord
   #
   # This will raise a ActiveRecord::Rollback if the TimeEntryActivity
   # does not successfully save.
+  # @rbs (Hash[untyped, untyped] | ActionController::Parameters) -> Integer?
   def create_time_entry_activity_if_needed(activity)
     if activity['parent_id']
       parent_activity = TimeEntryActivity.find(activity['parent_id'])
@@ -321,6 +334,7 @@ class Project < ApplicationRecord
   end
 
   # returns the time log activity to be used when logging time via a changeset
+  # @rbs () -> TimeEntryActivity
   def commit_logtime_activity
     activity_id = Setting.commit_logtime_activity_id.to_i
     if activity_id > 0
@@ -334,6 +348,7 @@ class Project < ApplicationRecord
   # Examples:
   #   project.project_condition(true)  => "(projects.lft >= 1 AND projects.rgt <= 10)"
   #   project.project_condition(false) => "projects.id = 1"
+  # @rbs ((bool | Integer)?) -> String
   def project_condition(with_subprojects)
     if with_subprojects
       "(" \
@@ -345,6 +360,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs (*String | Integer | Array[untyped]) -> (Project | Array[untyped])?
   def self.find(*args)
     if args.first && args.first.is_a?(String) && !/^\d*$/.match?(args.first)
       project = find_by_identifier(*args)
@@ -358,11 +374,13 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs (*String) -> Project
   def self.find_by_param(*args)
     self.find(*args)
   end
 
   alias :base_reload :reload
+  # @rbs (*nil) -> Project
   def reload(*args)
     @principals = nil
     @users = nil
@@ -385,6 +403,7 @@ class Project < ApplicationRecord
     base_reload(*args)
   end
 
+  # @rbs () -> String?
   def to_param
     if new_record?
       nil
@@ -394,23 +413,28 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> bool
   def active?
     self.status == STATUS_ACTIVE
   end
 
+  # @rbs () -> bool
   def closed?
     self.status == STATUS_CLOSED
   end
 
+  # @rbs () -> bool
   def archived?
     self.status == STATUS_ARCHIVED
   end
 
+  # @rbs () -> bool
   def scheduled_for_deletion?
     self.status == STATUS_SCHEDULED_FOR_DELETION
   end
 
   # Archives the project and its descendants
+  # @rbs () -> bool
   def archive
     # Check that there is no issue of a non descendant project that is assigned
     # to one of the project or descendant versions
@@ -432,22 +456,26 @@ class Project < ApplicationRecord
   end
 
   # Unarchives the project and its archived ancestors
+  # @rbs () -> Project
   def unarchive
     new_status = ancestors.any?(&:closed?) ? STATUS_CLOSED : STATUS_ACTIVE
     self_and_ancestors.status(STATUS_ARCHIVED).update_all :status => new_status
     reload
   end
 
+  # @rbs () -> Integer
   def close
     self_and_descendants.status(STATUS_ACTIVE).update_all :status => STATUS_CLOSED
   end
 
+  # @rbs () -> Integer
   def reopen
     self_and_descendants.status(STATUS_CLOSED).update_all :status => STATUS_ACTIVE
   end
 
   # Returns an array of projects the project can be moved to
   # by the current user
+  # @rbs (?User) -> Array[untyped]
   def allowed_parents(user=User.current)
     return @allowed_parents if @allowed_parents
 
@@ -464,6 +492,7 @@ class Project < ApplicationRecord
 
   # Sets the parent of the project and saves the project
   # Argument can be either a Project, a String, a Fixnum or nil
+  # @rbs (Project?) -> bool
   def set_parent!(p)
     if p.is_a?(Project)
       self.parent = p
@@ -474,6 +503,7 @@ class Project < ApplicationRecord
   end
 
   # Returns a scope of the trackers used by the project and its active sub projects
+  # @rbs (?bool) -> Tracker::ActiveRecord_Relation
   def rolled_up_trackers(include_subprojects=true)
     if include_subprojects
       @rolled_up_trackers ||= rolled_up_trackers_base_scope.
@@ -484,6 +514,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> Tracker::ActiveRecord_Relation
   def rolled_up_trackers_base_scope
     Tracker.
       joins(projects: :enabled_modules).
@@ -493,6 +524,7 @@ class Project < ApplicationRecord
       sorted
   end
 
+  # @rbs () -> IssueStatus::ActiveRecord_Relation
   def rolled_up_statuses
     issue_status_ids = WorkflowTransition.
       where(:tracker_id => rolled_up_trackers.map(&:id)).
@@ -506,6 +538,7 @@ class Project < ApplicationRecord
   end
 
   # Closes open and locked project versions that are completed
+  # @rbs () -> Array[untyped]
   def close_completed_versions
     Version.transaction do
       versions.where(:status => %w(open locked)).each do |version|
@@ -517,6 +550,7 @@ class Project < ApplicationRecord
   end
 
   # Returns a scope of the Versions on subprojects
+  # @rbs () -> Version::ActiveRecord_Relation
   def rolled_up_versions
     @rolled_up_versions ||=
       Version.
@@ -528,6 +562,7 @@ class Project < ApplicationRecord
   end
 
   # Returns a scope of the Versions used by the project
+  # @rbs () -> Version::ActiveRecord_Relation
   def shared_versions
     if new_record?
       Version.
@@ -561,6 +596,7 @@ class Project < ApplicationRecord
   end
 
   # Returns a hash of project users/groups grouped by role
+  # @rbs () -> Hash[untyped, untyped]
   def principals_by_role
     memberships.active.includes(:principal, :roles).inject({}) do |h, m|
       m.roles.each do |r|
@@ -573,6 +609,7 @@ class Project < ApplicationRecord
 
   # Adds user as a project member with the default role
   # Used for when a non-admin user creates a project
+  # @rbs (User) -> Member
   def add_default_member(user)
     role = self.class.default_member_role
     member = Member.new(:project => self, :principal => user, :roles => [role])
@@ -582,11 +619,13 @@ class Project < ApplicationRecord
 
   # Default role that is given to non-admin users that
   # create a project
+  # @rbs () -> Role
   def self.default_member_role
     Role.givable.find_by_id(Setting.new_project_user_role_id.to_i) || Role.givable.first
   end
 
   # Deletes all project's members
+  # @rbs () -> Integer
   def delete_all_members
     me, mr = Member.table_name, MemberRole.table_name
     self.class.connection.delete(
@@ -597,6 +636,7 @@ class Project < ApplicationRecord
   end
 
   # Return a Principal scope of users/groups issues can be assigned to
+  # @rbs (?Tracker?) -> Principal::ActiveRecord_Relation
   def assignable_users(tracker=nil)
     return @assignable_users[tracker] if @assignable_users && @assignable_users[tracker]
 
@@ -624,17 +664,20 @@ class Project < ApplicationRecord
   end
 
   # Returns the mail addresses of users that should be always notified on project events
+  # @rbs () -> Array[untyped]
   def recipients
     notified_users.collect {|user| user.mail}
   end
 
   # Returns the users that should be notified on project events
+  # @rbs () -> User::ActiveRecord_Relation
   def notified_users
     users.where('members.mail_notification = ? OR users.mail_notification = ?', true, 'all')
   end
 
   # Returns a scope of all custom fields enabled for project issues
   # (explicitly associated custom fields and custom fields enabled for all projects)
+  # @rbs () -> IssueCustomField::ActiveRecord_Relation
   def all_issue_custom_fields
     if new_record?
       @all_issue_custom_fields ||= IssueCustomField.
@@ -651,6 +694,7 @@ class Project < ApplicationRecord
 
   # Returns a scope of all custom fields enabled for issues of the project
   # and its subprojects
+  # @rbs () -> IssueCustomField::ActiveRecord_Relation
   def rolled_up_custom_fields
     if leaf?
       all_issue_custom_fields
@@ -665,6 +709,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> Project
   def project
     self
   end
@@ -675,15 +720,18 @@ class Project < ApplicationRecord
     name.casecmp(project.name)
   end
 
+  # @rbs () -> String
   def to_s
     name
   end
 
   # Returns a short description of the projects (first lines)
+  # @rbs (?Integer) -> String
   def short_description(length = 255)
     description.gsub(/^(.{#{length}}[^\n\r]*).*$/m, '\1...').strip if description
   end
 
+  # @rbs () -> String
   def css_classes
     s = +'project'
     s << ' root' if root?
@@ -701,6 +749,7 @@ class Project < ApplicationRecord
   end
 
   # The earliest start date of a project, based on it's issues and versions
+  # @rbs () -> Date?
   def start_date
     @start_date ||=
       [
@@ -711,6 +760,7 @@ class Project < ApplicationRecord
   end
 
   # The latest due date of an issue or version
+  # @rbs () -> Date?
   def due_date
     @due_date ||=
       [
@@ -720,12 +770,14 @@ class Project < ApplicationRecord
       ].compact.max
   end
 
+  # @rbs () -> bool
   def overdue?
     active? && !due_date.nil? && (due_date < User.current.today)
   end
 
   # Returns the percent completed for this project, based on the
   # progress on it's versions.
+  # @rbs (?Hash[untyped, untyped]) -> (Integer | Float)
   def completed_percent(options={:include_subprojects => false})
     if options.delete(:include_subprojects)
       total = self_and_descendants.sum(&:completed_percent)
@@ -746,6 +798,7 @@ class Project < ApplicationRecord
   # action can be:
   # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
   # * a permission Symbol (eg. :edit_project)
+  # @rbs (Hash[untyped, untyped] | Symbol) -> bool
   def allows_to?(action)
     if archived?
       # No action allowed on archived projects
@@ -764,6 +817,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs (?AnonymousUser | User) -> bool
   def deletable?(user = User.current)
     if user.admin?
       return true
@@ -774,16 +828,19 @@ class Project < ApplicationRecord
 
   # Return the enabled module with the given name
   # or nil if the module is not enabled for the project
+  # @rbs (Symbol | String) -> EnabledModule?
   def enabled_module(name)
     name = name.to_s
     enabled_modules.detect {|m| m.name == name}
   end
 
   # Return true if the module with the given name is enabled
+  # @rbs (Symbol | String) -> bool
   def module_enabled?(name)
     enabled_module(name).present?
   end
 
+  # @rbs (Array[untyped]?) -> (Array[untyped] | EnabledModule::ActiveRecord_Associations_CollectionProxy)
   def enabled_module_names=(module_names)
     if module_names && module_names.is_a?(Array)
       module_names = module_names.collect(&:to_s).reject(&:blank?)
@@ -798,6 +855,7 @@ class Project < ApplicationRecord
   end
 
   # Returns an array of the enabled modules names
+  # @rbs () -> Array[untyped]
   def enabled_module_names
     enabled_modules.collect(&:name)
   end
@@ -807,6 +865,7 @@ class Project < ApplicationRecord
   # Examples:
   #   project.enable_module!(:issue_tracking)
   #   project.enable_module!("issue_tracking")
+  # @rbs (Symbol | String) -> void
   def enable_module!(name)
     enabled_modules << EnabledModule.new(:name => name.to_s) unless module_enabled?(name)
   end
@@ -817,6 +876,7 @@ class Project < ApplicationRecord
   #   project.disable_module!(:issue_tracking)
   #   project.disable_module!("issue_tracking")
   #   project.disable_module!(project.enabled_modules.first)
+  # @rbs (Symbol | String | EnabledModule) -> EnabledModule
   def disable_module!(target)
     target = enabled_modules.detect{|mod| target.to_s == mod.name} unless enabled_modules.include?(target)
     target.destroy unless target.blank?
@@ -872,6 +932,7 @@ class Project < ApplicationRecord
     'inherit_members',
     :if => lambda {|project, user| project.parent.nil? || project.parent.visible?(user)})
 
+  # @rbs ((Hash[untyped, untyped] | ActionController::Parameters)?, ?User) -> (Hash[untyped, untyped] | ActiveSupport::HashWithIndifferentAccess)?
   def safe_attributes=(attrs, user=User.current)
     if attrs.respond_to?(:to_unsafe_hash)
       attrs = attrs.to_unsafe_hash
@@ -908,6 +969,7 @@ class Project < ApplicationRecord
   end
 
   # Returns an auto-generated project identifier based on the last identifier used
+  # @rbs () -> String?
   def self.next_identifier
     p = Project.order('id DESC').first
     p.nil? ? nil : p.identifier.to_s.succ
@@ -928,6 +990,7 @@ class Project < ApplicationRecord
   #   project.copy(1)                                    # => copies everything
   #   project.copy(1, :only => 'members')                # => copies members only
   #   project.copy(1, :only => ['members', 'versions'])  # => copies members and versions
+  # @rbs (Project, ?Hash[untyped, untyped]) -> bool
   def copy(project, options={})
     project = Project.find(project) unless project.is_a?(Project)
 
@@ -956,6 +1019,7 @@ class Project < ApplicationRecord
   end
 
   # Returns a new unsaved Project instance with attributes copied from +project+
+  # @rbs (Project | Integer) -> Project
   def self.copy_from(project)
     project = Project.find(project) unless project.is_a?(Project)
     # clear unique attributes
@@ -971,6 +1035,7 @@ class Project < ApplicationRecord
   end
 
   # Yields the given block for each project with its level in the tree
+  # @rbs (Array[untyped] | Project::ActiveRecord_Relation, ?Hash[untyped, untyped]) -> Array[untyped]?
   def self.project_tree(projects, options={}, &block)
     ancestors = []
     if options[:init_level] && projects.first
@@ -990,6 +1055,7 @@ class Project < ApplicationRecord
   # so that custom values that are not editable are not validated (eg. a custom field that
   # is marked as required should not trigger a validation error if the user is not allowed
   # to edit this field).
+  # @rbs () -> Array[untyped]?
   def validate_custom_field_values
     user = User.current
     if new_record? || custom_field_values_changed?
@@ -998,10 +1064,12 @@ class Project < ApplicationRecord
   end
 
   # Returns the custom_field_values that can be edited by the given user
+  # @rbs (?AnonymousUser | User) -> Array[untyped]
   def editable_custom_field_values(user=nil)
     visible_custom_field_values(user)
   end
 
+  # @rbs (?(AnonymousUser | User)?) -> Array[untyped]
   def visible_custom_field_values(user = nil)
     user ||= User.current
     custom_field_values.select do |value|
@@ -1009,11 +1077,13 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> ActiveSupport::TimeWithZone?
   def last_activity_date
     @last_activity_date || fetch_last_activity_date
   end
 
   # Preloads last activity date for a collection of projects
+  # @rbs (Project::ActiveRecord_Relation, ?AnonymousUser) -> Array[untyped]
   def self.load_last_activity_date(projects, user=User.current)
     if projects.any?
       last_activities = Redmine::Activity::Fetcher.new(User.current).events(nil, nil, :last_by_project => true).to_h
@@ -1025,6 +1095,7 @@ class Project < ApplicationRecord
 
   private
 
+  # @rbs () -> (Member::ActiveRecord_Associations_CollectionProxy | Array[untyped])?
   def update_inherited_members
     if parent
       if inherit_members? && !inherit_members_before_last_save
@@ -1036,6 +1107,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def remove_inherited_member_roles
     member_roles = MemberRole.where(:member_id => membership_ids).to_a
     member_role_ids = member_roles.map(&:id)
@@ -1046,6 +1118,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> Member::ActiveRecord_Associations_CollectionProxy?
   def add_inherited_member_roles
     if inherit_members? && parent
       parent.memberships.each do |parent_member|
@@ -1061,10 +1134,12 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def update_versions_from_hierarchy_change
     Issue.update_versions_from_hierarchy_change(self)
   end
 
+  # @rbs () -> ActiveModel::Error?
   def validate_parent
     if @unallowed_parent_id
       errors.add(:parent_id, :invalid)
@@ -1076,6 +1151,7 @@ class Project < ApplicationRecord
   end
 
   # Copies wiki from +project+
+  # @rbs (Project) -> Array[untyped]
   def copy_wiki(project)
     # Check that the source project has a wiki first
     unless project.wiki.nil?
@@ -1110,6 +1186,7 @@ class Project < ApplicationRecord
   end
 
   # Copies versions from +project+
+  # @rbs (Project) -> Array[untyped]
   def copy_versions(project)
     project.versions.each do |version|
       new_version = Version.new
@@ -1125,6 +1202,7 @@ class Project < ApplicationRecord
   end
 
   # Copies issue categories from +project+
+  # @rbs (Project) -> Array[untyped]
   def copy_issue_categories(project)
     project.issue_categories.each do |issue_category|
       new_issue_category = IssueCategory.new
@@ -1134,6 +1212,7 @@ class Project < ApplicationRecord
   end
 
   # Copies issues from +project+
+  # @rbs (Project) -> Array[untyped]
   def copy_issues(project)
     # Stores the source issue id as a key and the copied issues as the
     # value.  Used to map the two together for issue relations.
@@ -1240,6 +1319,7 @@ class Project < ApplicationRecord
   end
 
   # Copies members from +project+
+  # @rbs (Project) -> Array[untyped]
   def copy_members(project)
     # Copy users first, then groups to handle members with inherited and given roles
     members_to_copy = []
@@ -1261,6 +1341,7 @@ class Project < ApplicationRecord
   end
 
   # Copies queries from +project+
+  # @rbs (Project) -> Array[untyped]
   def copy_queries(project)
     project.queries.each do |query|
       new_query = query.class.new
@@ -1279,6 +1360,7 @@ class Project < ApplicationRecord
   end
 
   # Copies boards from +project+
+  # @rbs (Project) -> Array[untyped]
   def copy_boards(project)
     project.boards.each do |board|
       new_board = Board.new
@@ -1291,6 +1373,7 @@ class Project < ApplicationRecord
   end
 
   # Copies documents from +project+
+  # @rbs (Project) -> Array[untyped]
   def copy_documents(project)
     project.documents.each do |document|
       new_document = Document.new
@@ -1305,6 +1388,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def allowed_permissions
     @allowed_permissions ||= begin
       module_names =
@@ -1317,6 +1401,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # @rbs () -> Array[untyped]
   def allowed_actions
     @actions_allowed ||= allowed_permissions.inject([]) do |actions, permission|
       actions += Redmine::AccessControl.allowed_actions(permission)
@@ -1324,6 +1409,7 @@ class Project < ApplicationRecord
   end
 
   # Archives subprojects recursively
+  # @rbs () -> bool
   def archive!
     children.each do |subproject|
       subproject.send :archive!
@@ -1331,6 +1417,7 @@ class Project < ApplicationRecord
     update_attribute :status, STATUS_ARCHIVED
   end
 
+  # @rbs () -> ActiveSupport::TimeWithZone?
   def fetch_last_activity_date
     latest_activities = Redmine::Activity::Fetcher.new(User.current, :project => self).events(nil, nil, :last_by_project => true)
     latest_activities.empty? ? nil : latest_activities.to_h[self.id]

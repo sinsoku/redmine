@@ -45,11 +45,13 @@ class Member < ApplicationRecord
   end)
 
   alias :base_reload :reload
+  # @rbs (*nil) -> Member
   def reload(*args)
     @managed_roles = nil
     base_reload(*args)
   end
 
+  # @rbs () -> nil
   def role
   end
 
@@ -61,6 +63,7 @@ class Member < ApplicationRecord
   end
 
   alias :base_role_ids= :role_ids=
+  # @rbs (Array[untyped]) -> Array[untyped]
   def role_ids=(arg)
     ids = (arg || []).collect(&:to_i) - [0]
     # Keep inherited roles
@@ -80,6 +83,7 @@ class Member < ApplicationRecord
     super(ids)
   end
 
+  # @rbs (Member) -> Integer
   def <=>(member)
     return nil unless member.is_a?(Member)
 
@@ -99,6 +103,7 @@ class Member < ApplicationRecord
 
   # Set member role ids ignoring any change to roles that
   # user is not allowed to manage
+  # @rbs (Array[untyped]?, ?User) -> Array[untyped]
   def set_editable_role_ids(ids, user=User.current)
     ids = (ids || []).collect(&:to_i) - [0]
     editable_role_ids = user.managed_roles(project).map(&:id)
@@ -108,17 +113,20 @@ class Member < ApplicationRecord
   end
 
   # Returns true if one of the member roles is inherited
+  # @rbs () -> bool
   def any_inherited_role?
     member_roles.any? {|mr| mr.inherited_from}
   end
 
   # Returns true if the member has the role and if it's inherited
+  # @rbs (Role) -> bool
   def has_inherited_role?(role)
     member_roles.any? {|mr| mr.role_id == role.id && mr.inherited_from.present?}
   end
 
   # Returns an Array of Project and/or Group from which the given role
   # was inherited, or an empty Array if the role was not inherited
+  # @rbs (Role) -> Array[untyped]
   def role_inheritance(role)
     member_roles.
       select {|mr| mr.role_id == role.id && mr.inherited_from.present?}.
@@ -127,6 +135,7 @@ class Member < ApplicationRecord
   end
 
   # Returns true if the member's role is editable by user
+  # @rbs (Role, ?User) -> bool
   def role_editable?(role, user=User.current)
     if has_inherited_role?(role)
       false
@@ -136,6 +145,7 @@ class Member < ApplicationRecord
   end
 
   # Returns true if the member is deletable by user
+  # @rbs (?User) -> bool
   def deletable?(user=User.current)
     if any_inherited_role?
       false
@@ -145,6 +155,7 @@ class Member < ApplicationRecord
   end
 
   # Destroys the member
+  # @rbs () -> Member
   def destroy
     member_roles.reload.each(&:destroy_without_member_removal)
     super
@@ -152,6 +163,7 @@ class Member < ApplicationRecord
 
   # Returns true if the member is user or is a group
   # that includes user
+  # @rbs (User) -> bool
   def include?(user)
     if principal.is_a?(Group)
       !user.nil? && user.groups.include?(principal)
@@ -160,6 +172,7 @@ class Member < ApplicationRecord
     end
   end
 
+  # @rbs () -> Integer
   def set_issue_category_nil
     if user_id && project_id
       # remove category based auto assignments for this member
@@ -168,6 +181,7 @@ class Member < ApplicationRecord
     end
   end
 
+  # @rbs () -> nil
   def remove_from_project_default_assigned_to
     if user_id && project && project.default_assigned_to_id == user_id
       # remove project based auto assignments for this member
@@ -177,6 +191,7 @@ class Member < ApplicationRecord
 
   # Returns the roles that the member is allowed to manage
   # in the project the member belongs to
+  # @rbs () -> (Role::ActiveRecord_Associations_CollectionProxy | Array[untyped])
   def managed_roles
     @managed_roles ||= begin
       if principal.try(:admin?)
@@ -203,6 +218,7 @@ class Member < ApplicationRecord
   #
   # Example:
   #   Member.create_principal_memberships(user, :project_ids => [2, 5], :role_ids => [1, 3]
+  # @rbs (User | Group, Hash[untyped, untyped] | ActionController::Parameters) -> Array[untyped]
   def self.create_principal_memberships(principal, attributes)
     members = []
     if attributes
@@ -220,6 +236,7 @@ class Member < ApplicationRecord
 
   protected
 
+  # @rbs () -> ActiveModel::Error?
   def validate_role
     errors.add(:role, :empty) if member_roles.empty? && roles.empty?
   end

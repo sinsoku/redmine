@@ -43,6 +43,7 @@ module Redmine
         TotalWidth = 280
         LeftPaneWidth = 100
 
+        # @rbs () -> Integer
         def self.right_pane_width
           TotalWidth - LeftPaneWidth
         end
@@ -53,6 +54,7 @@ module Redmine
       attr_accessor :project
       attr_accessor :view
 
+      # @rbs (?Hash[untyped, untyped] | ActionController::Parameters) -> void
       def initialize(options={})
         options = options.dup
         if options[:year] && options[:year].to_i >0
@@ -91,21 +93,25 @@ module Redmine
         end
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def common_params
         {:controller => 'gantts', :action => 'show', :project_id => @project}
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def params
         common_params.merge({:zoom => zoom, :year => year_from,
                              :month => month_from, :months => months})
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def params_previous
         common_params.merge({:year => (date_from << months).year,
                              :month => (date_from << months).month,
                              :zoom => zoom, :months => months})
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def params_next
         common_params.merge({:year => (date_from >> months).year,
                              :month => (date_from >> months).month,
@@ -113,6 +119,7 @@ module Redmine
       end
 
       # Returns the number of rows that will be rendered on the Gantt chart
+      # @rbs () -> Integer
       def number_of_rows
         return @number_of_rows if @number_of_rows
 
@@ -122,6 +129,7 @@ module Redmine
 
       # Returns the number of rows that will be used to list a project on
       # the Gantt chart.  This will recurse for each subproject.
+      # @rbs (Project) -> Integer
       def number_of_rows_on_project(project)
         return 0 unless projects.include?(project)
 
@@ -132,24 +140,28 @@ module Redmine
       end
 
       # Renders the subjects of the Gantt chart, the left side.
+      # @rbs (?Hash[untyped, untyped]) -> String
       def subjects(options={})
         render(options.merge(:only => :subjects)) unless @subjects_rendered
         @subjects
       end
 
       # Renders the lines of the Gantt chart, the right side
+      # @rbs (?Hash[untyped, untyped]) -> String
       def lines(options={})
         render(options.merge(:only => :lines)) unless @lines_rendered
         @lines
       end
 
       # Renders the selected column of the Gantt chart, the right side of subjects.
+      # @rbs (?Hash[untyped, untyped]) -> String
       def selected_column_content(options={})
         render(options.merge(:only => :selected_columns)) unless @columns.has_key?(options[:column].name)
         @columns[options[:column].name]
       end
 
       # Returns issues that will be rendered
+      # @rbs () -> Array[untyped]
       def issues
         @issues ||= @query.issues(
           :order => ["#{Project.table_name}.lft ASC", "#{Issue.table_name}.id ASC"],
@@ -159,6 +171,7 @@ module Redmine
 
       # Returns a hash of the relations between the issues that are present on the gantt
       # and that should be displayed, grouped by issue ids.
+      # @rbs () -> Hash[untyped, untyped]
       def relations
         return @relations if @relations
 
@@ -173,6 +186,7 @@ module Redmine
       end
 
       # Return all the project nodes that will be displayed
+      # @rbs () -> Array[untyped]
       def projects
         return @projects if @projects
 
@@ -191,21 +205,25 @@ module Redmine
       end
 
       # Returns the issues that belong to +project+
+      # @rbs (Project) -> Array[untyped]
       def project_issues(project)
         @issues_by_project ||= issues.group_by(&:project)
         @issues_by_project[project] || []
       end
 
       # Returns the distinct versions of the issues that belong to +project+
+      # @rbs (Project) -> Array[untyped]
       def project_versions(project)
         project_issues(project).filter_map(&:fixed_version).uniq
       end
 
       # Returns the issues that belong to +project+ and are assigned to +version+
+      # @rbs (Project, Version) -> Array[untyped]
       def version_issues(project, version)
         project_issues(project).select {|issue| issue.fixed_version == version}
       end
 
+      # @rbs (?Hash[untyped, untyped]) -> Integer?
       def render(options={})
         options = {:top => 0, :top_increment => 20,
                    :indent_increment => 20, :render => :subject,
@@ -228,6 +246,7 @@ module Redmine
         render_end(options)
       end
 
+      # @rbs (Project, ?Hash[untyped, untyped]) -> nil
       def render_project(project, options={})
         render_object_row(project, options)
         increment_indent(options) do
@@ -243,6 +262,7 @@ module Redmine
         end
       end
 
+      # @rbs (Project, Version, ?Hash[untyped, untyped]) -> nil
       def render_version(project, version, options={})
         render_object_row(version, options)
         increment_indent(options) do
@@ -251,6 +271,7 @@ module Redmine
         end
       end
 
+      # @rbs (Array[untyped], ?Hash[untyped, untyped]) -> nil
       def render_issues(issues, options={})
         self.class.sort_issues!(issues)
         ancestors = []
@@ -268,6 +289,7 @@ module Redmine
         decrement_indent(options, ancestors.size)
       end
 
+      # @rbs (Project | Version | Issue, Hash[untyped, untyped]) -> void
       def render_object_row(object, options)
         class_name = object.class.name.downcase
         send(:"subject_for_#{class_name}", object, options) unless options[:only] == :lines || options[:only] == :selected_columns
@@ -280,6 +302,7 @@ module Redmine
         end
       end
 
+      # @rbs (?Hash[untyped, untyped]) -> Integer?
       def render_end(options={})
         case options[:format]
         when :pdf
@@ -287,6 +310,7 @@ module Redmine
         end
       end
 
+      # @rbs (Hash[untyped, untyped], ?Integer) -> nil
       def increment_indent(options, factor=1)
         options[:indent] += options[:indent_increment] * factor
         if block_given?
@@ -295,14 +319,17 @@ module Redmine
         end
       end
 
+      # @rbs (Hash[untyped, untyped], ?Integer) -> nil
       def decrement_indent(options, factor=1)
         increment_indent(options, -factor)
       end
 
+      # @rbs (Project, Hash[untyped, untyped]) -> (ActiveSupport::SafeBuffer | Integer | MiniMagick::Tool)
       def subject_for_project(project, options)
         subject(project.name, options, project)
       end
 
+      # @rbs (Project, Hash[untyped, untyped]) -> (String | Float | MiniMagick::Tool)?
       def line_for_project(project, options)
         # Skip projects that don't have a start_date or due date
         if project.is_a?(Project) && project.start_date && project.due_date
@@ -311,10 +338,12 @@ module Redmine
         end
       end
 
+      # @rbs (Version, Hash[untyped, untyped]) -> (ActiveSupport::SafeBuffer | Integer | MiniMagick::Tool)
       def subject_for_version(version, options)
         subject(version.to_s_with_project, options, version)
       end
 
+      # @rbs (Version, Hash[untyped, untyped]) -> (String | Float | MiniMagick::Tool)?
       def line_for_version(version, options)
         # Skip versions that don't have a start_date
         if version.is_a?(Version) && version.due_date && version.start_date
@@ -326,10 +355,12 @@ module Redmine
         end
       end
 
+      # @rbs (Issue, Hash[untyped, untyped]) -> (ActiveSupport::SafeBuffer | Integer | MiniMagick::Tool)
       def subject_for_issue(issue, options)
         subject(issue.subject, options, issue)
       end
 
+      # @rbs (Issue, Hash[untyped, untyped]) -> (String | Float | MiniMagick::Tool)?
       def line_for_issue(issue, options)
         # Skip issues that don't have a due_before (due_date or version's due_date)
         if issue.is_a?(Issue) && issue.due_before
@@ -342,6 +373,7 @@ module Redmine
         end
       end
 
+      # @rbs (Issue, Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
       def column_content_for_issue(issue, options)
         if options[:format] == :html
           data_options = {}
@@ -360,10 +392,12 @@ module Redmine
         end
       end
 
+      # @rbs (String, Hash[untyped, untyped], ?(Project | Version | Issue)?) -> (ActiveSupport::SafeBuffer | Integer | MiniMagick::Tool)
       def subject(label, options, object=nil)
         send :"#{options[:format]}_subject", options, label, object
       end
 
+      # @rbs (Date, Date, (Integer | Float)?, bool, String | ActiveSupport::SafeBuffer, Hash[untyped, untyped], ?(Version | Project | Issue)?) -> (String | Float | MiniMagick::Tool)
       def line(start_date, end_date, done_ratio, markers, label, options, object=nil)
         options[:zoom] ||= 1
         options[:g_width] ||= (self.date_to - self.date_from + 1) * options[:zoom]
@@ -373,6 +407,7 @@ module Redmine
 
       # Generates a gantt image
       # Only defined if MiniMagick is avalaible
+      # @rbs (?String) -> String
       def to_image(format='PNG')
         date_to = (@date_from >> @months) - 1
         show_weeks = @zoom > 1
@@ -508,6 +543,7 @@ module Redmine
         img.destroy! if img
       end if Object.const_defined?(:MiniMagick)
 
+      # @rbs () -> String
       def to_pdf
         pdf = ::Redmine::Export::PDF::ITCPDF.new(current_language)
         pdf.SetTitle("#{l(:label_gantt)} #{project}")
@@ -631,6 +667,7 @@ module Redmine
 
       private
 
+      # @rbs (Date, Date, (Integer | Float)?, ?Integer | Rational) -> Hash[untyped, untyped]
       def coordinates(start_date, end_date, progress, zoom=nil)
         zoom ||= @zoom
         coords = {}
@@ -675,16 +712,19 @@ module Redmine
         coords
       end
 
+      # @rbs (Date, Date, Integer | Float) -> Date
       def calc_progress_date(start_date, end_date, progress)
         start_date + (end_date - start_date + 1) * (progress / 100.0)
       end
 
       # Singleton class method is public
       class << self
+        # @rbs (Array[untyped]) -> void
         def sort_issues!(issues)
           issues.sort_by! {|issue| sort_issue_logic(issue)}
         end
 
+        # @rbs (Issue) -> Array[untyped]
         def sort_issue_logic(issue)
           julian_date = Date.new
           ancesters_start_date = []
@@ -696,11 +736,13 @@ module Redmine
           ancesters_start_date
         end
 
+        # @rbs (Array[untyped]) -> Array[untyped]
         def sort_versions!(versions)
           versions.sort!
         end
       end
 
+      # @rbs (Hash[untyped, untyped]) -> void
       def pdf_new_page?(options)
         if options[:top] > 180
           options[:pdf].Line(15, options[:top], PDF::TotalWidth, options[:top])
@@ -710,6 +752,7 @@ module Redmine
         end
       end
 
+      # @rbs ((Project | Version | Issue)?) -> ActiveSupport::SafeBuffer?
       def html_subject_content(object)
         case object
         when Issue
@@ -762,6 +805,7 @@ module Redmine
         end
       end
 
+      # @rbs (Hash[untyped, untyped], String, (Project | Version | Issue)?) -> ActiveSupport::SafeBuffer
       def html_subject(params, subject, object)
         content = html_subject_content(object) || subject
         tag_options = {}
@@ -808,6 +852,7 @@ module Redmine
         output
       end
 
+      # @rbs (Hash[untyped, untyped], String, ?Project | Issue | Version) -> Integer
       def pdf_subject(params, subject, options={})
         pdf_new_page?(params)
         params[:pdf].SetY(params[:top])
@@ -822,6 +867,7 @@ module Redmine
         params[:pdf].RDMCell(params[:g_width], 5, "", "LR")
       end
 
+      # @rbs (Hash[untyped, untyped], String, ?Project | Issue | Version) -> MiniMagick::Tool
       def image_subject(params, subject, options={})
         params[:image].fill('black')
         params[:image].stroke('transparent')
@@ -831,6 +877,7 @@ module Redmine
         ])
       end
 
+      # @rbs (Issue) -> Hash[untyped, untyped]
       def issue_relations(issue)
         rels = {}
         if relations[issue.id]
@@ -841,6 +888,7 @@ module Redmine
         rels
       end
 
+      # @rbs (Hash[untyped, untyped], Hash[untyped, untyped], bool, String | ActiveSupport::SafeBuffer, (Version | Project | Issue)?) -> String
       def html_task(params, coords, markers, label, object)
         output = +''
         data_options = {}
@@ -963,6 +1011,7 @@ module Redmine
         output
       end
 
+      # @rbs (Hash[untyped, untyped], Hash[untyped, untyped], bool, String | ActiveSupport::SafeBuffer, Project | Issue | Version) -> Float
       def pdf_task(params, coords, markers, label, object)
         cell_height_ratio = params[:pdf].get_cell_height_ratio
         params[:pdf].set_cell_height_ratio(0.1)
@@ -1015,6 +1064,7 @@ module Redmine
         params[:pdf].set_cell_height_ratio(cell_height_ratio)
       end
 
+      # @rbs (Hash[untyped, untyped], Hash[untyped, untyped], bool, String, Project | Issue | Version) -> MiniMagick::Tool
       def image_task(params, coords, markers, label, object)
         height = 6
         height /= 2 if markers
@@ -1084,6 +1134,7 @@ module Redmine
 
       # Escape the passed string as a text argument in a draw rule for
       # mini_magick. Note that the returned string is not shell-safe on its own.
+      # @rbs (String) -> String
       def magick_text(str)
         "'#{str.to_s.gsub(/['\\]/, '\\\\\0')}'"
       end

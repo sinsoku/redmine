@@ -20,6 +20,7 @@
 class AutoCompletesController < ApplicationController
   before_action :find_project
 
+  # @rbs () -> String
   def issues
     issues = []
     q = (params[:q] || params[:term]).to_s.strip
@@ -42,6 +43,7 @@ class AutoCompletesController < ApplicationController
     render :json => format_issues_json(issues)
   end
 
+  # @rbs () -> String?
   def wiki_pages
     q = params[:q].to_s.strip
     wiki = Wiki.find_by(project: @project)
@@ -62,6 +64,7 @@ class AutoCompletesController < ApplicationController
 
   private
 
+  # @rbs () -> Project?
   def find_project
     if params[:project_id].present?
       @project = Project.find(params[:project_id])
@@ -70,6 +73,7 @@ class AutoCompletesController < ApplicationController
     render_404
   end
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def format_issues_json(issues)
     issues.map do |issue|
       {
@@ -80,6 +84,7 @@ class AutoCompletesController < ApplicationController
     end
   end
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def format_wiki_pages_json(wiki_pages)
     wiki_pages.map do |wiki_page|
       {

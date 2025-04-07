@@ -18,14 +18,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module AttachmentsHelper
+  # @rbs (Message | WikiPage | Issue) -> String
   def container_attachments_edit_path(container)
     object_attachments_edit_path container.class.name.underscore.pluralize, container.id
   end
 
+  # @rbs (Issue) -> String
   def container_attachments_path(container)
     object_attachments_path container.class.name.underscore.pluralize, container.id
   end
 
+  # @rbs (WikiPage | Document | Issue) -> String
   def container_attachments_download_path(container)
     object_attachments_download_path container.class.name.underscore.pluralize, container.id
   end
@@ -34,6 +37,7 @@ module AttachmentsHelper
   # Options:
   #   :author -- author names are not displayed if set to false
   #   :thumbails -- display thumbnails if enabled in settings
+  # @rbs (Message | WikiPage | News | Document | Issue, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer?
   def link_to_attachments(container, options = {})
     options.assert_valid_keys(:author, :thumbnails)
     attachments =
@@ -58,6 +62,7 @@ module AttachmentsHelper
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def render_pagination
     pagination_links_each @paginator do |text, parameters, options|
       if att = @attachments[parameters[:page] - 1]
@@ -66,6 +71,7 @@ module AttachmentsHelper
     end if @paginator
   end
 
+  # @rbs (Attachment, Redmine::Views::Builders::Xml, ?Hash[untyped, untyped]) -> String
   def render_api_attachment(attachment, api, options={})
     api.attachment do
       render_api_attachment_attributes(attachment, api)
@@ -73,6 +79,7 @@ module AttachmentsHelper
     end
   end
 
+  # @rbs (Attachment, Redmine::Views::Builders::Xml) -> String
   def render_api_attachment_attributes(attachment, api)
     api.id attachment.id
     api.filename attachment.filename
@@ -89,6 +96,7 @@ module AttachmentsHelper
     api.created_on attachment.created_on
   end
 
+  # @rbs (Attachment, String) -> ActiveSupport::SafeBuffer
   def render_file_content(attachment, content)
     if attachment.is_markdown?
       render :partial => 'common/markup', :locals => {:markup_text_formatting => 'common_mark', :markup_text => content}

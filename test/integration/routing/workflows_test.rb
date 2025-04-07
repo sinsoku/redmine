@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingWorkflowsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_workflows
     should_route 'GET /workflows' => 'workflows#index'
     should_route 'GET /workflows/edit' => 'workflows#edit'

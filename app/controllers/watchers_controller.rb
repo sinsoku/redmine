@@ -20,10 +20,12 @@
 class WatchersController < ApplicationController
   before_action :require_login, :find_watchables, :only => [:watch, :unwatch]
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def watch
     set_watcher(@watchables, User.current, true)
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def unwatch
     set_watcher(@watchables, User.current, false)
   end
@@ -31,6 +33,7 @@ class WatchersController < ApplicationController
   before_action :find_project, :authorize, :only => [:new, :create, :append, :destroy, :autocomplete_for_user, :autocomplete_for_mention]
   accept_api_auth :create, :destroy
 
+  # @rbs () -> (Array[untyped] | bool)
   def new
     respond_to do |format|
       format.html { render_404 }
@@ -40,6 +43,7 @@ class WatchersController < ApplicationController
     end
   end
 
+  # @rbs () -> (Array[untyped] | ActiveSupport::SafeBuffer | bool)?
   def create
     return unless authorize_for_watchable_type(:add)
 
@@ -69,6 +73,7 @@ class WatchersController < ApplicationController
     end
   end
 
+  # @rbs () -> bool?
   def append
     if params[:watcher]
       user_ids = params[:watcher][:user_ids] || [params[:watcher][:user_id]]
@@ -79,6 +84,7 @@ class WatchersController < ApplicationController
     end
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | bool)?
   def destroy
     return unless authorize_for_watchable_type(:delete)
 
@@ -99,6 +105,7 @@ class WatchersController < ApplicationController
     render_404
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def autocomplete_for_user
     @users = users_for_new_watcher
     render :layout => false
@@ -111,6 +118,7 @@ class WatchersController < ApplicationController
 
   private
 
+  # @rbs () -> Project?
   def find_project
     if params[:object_type] && params[:object_id]
       @watchables = find_objects_from_params
@@ -123,6 +131,7 @@ class WatchersController < ApplicationController
     end
   end
 
+  # @rbs () -> bool?
   def find_watchables
     @watchables = find_objects_from_params
     unless @watchables.present?
@@ -130,6 +139,7 @@ class WatchersController < ApplicationController
     end
   end
 
+  # @rbs (Array[untyped], User, bool) -> ActiveSupport::SafeBuffer
   def set_watcher(watchables, user, watching)
     watchables.each do |watchable|
       watchable.set_watcher(user, watching)
@@ -148,6 +158,7 @@ class WatchersController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]
   def users_for_new_watcher
     scope = nil
     if params[:q].blank?
@@ -206,6 +217,7 @@ class WatchersController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]?
   def find_objects_from_params
     klass =
       begin
@@ -235,6 +247,7 @@ class WatchersController < ApplicationController
   end
 
   # Check permission for the watchable type for each watchable involved
+  # @rbs (Symbol) -> bool
   def authorize_for_watchable_type(action)
     if @watchables.any?{|watchable| !User.current.allowed_to?(:"#{action}_#{watchable.class.name.underscore}_watchers", watchable.project)}
       render_403

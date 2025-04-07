@@ -26,6 +26,7 @@ class BoardsController < ApplicationController
   include SortHelper
   helper :watchers
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def index
     @boards = @project.boards.preload(:last_message => :author).to_a
     # show the board if there is only one
@@ -35,6 +36,7 @@ class BoardsController < ApplicationController
     end
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def show
     respond_to do |format|
       format.html do
@@ -66,11 +68,13 @@ class BoardsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def new
     @board = @project.boards.build
     @board.safe_attributes = params[:board]
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def create
     @board = @project.boards.build
     @board.safe_attributes = params[:board]
@@ -82,9 +86,11 @@ class BoardsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def update
     @board.safe_attributes = params[:board]
     if @board.save
@@ -103,6 +109,7 @@ class BoardsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def destroy
     if @board.destroy
       flash[:notice] = l(:notice_successful_delete)
@@ -112,10 +119,12 @@ class BoardsController < ApplicationController
 
   private
 
+  # @rbs () -> String
   def redirect_to_settings_in_projects
     redirect_to settings_project_path(@project, :tab => 'boards')
   end
 
+  # @rbs () -> (Board | bool)?
   def find_board_if_available
     @board = @project.boards.find(params[:id]) if params[:id]
   rescue ActiveRecord::RecordNotFound

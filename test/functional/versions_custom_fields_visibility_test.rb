@@ -21,6 +21,7 @@ require_relative '../test_helper'
 
 class VersionsCustomFieldsVisibilityTest < Redmine::ControllerTest
   tests VersionsController
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_display_only_custom_fields_visible_to_user
     cf1 = VersionCustomField.create!(:name => 'cf1', :field_format => 'string')
     cf2 = VersionCustomField.create!(:name => 'cf2', :field_format => 'string', :visible => false, :role_ids => [1])
@@ -41,6 +42,7 @@ class VersionsCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_should_display_only_custom_fields_visible_to_user
     cf1 = VersionCustomField.create!(:name => 'cf1', :field_format => 'string')
     cf2 = VersionCustomField.create!(:name => 'cf2', :field_format => 'string', :visible => false, :role_ids => [1])

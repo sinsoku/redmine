@@ -20,17 +20,20 @@
 require_relative '../test_helper'
 
 class IssueCategoryTest < ActiveSupport::TestCase
+  # @rbs () -> IssueCategory
   def setup
     User.current = nil
     @category = IssueCategory.find(1)
   end
 
+  # @rbs () -> bool
   def test_create
     assert IssueCategory.new(:project_id => 2, :name => 'New category').save
     category = IssueCategory.order('id DESC').first
     assert_equal 'New category', category.name
   end
 
+  # @rbs () -> bool
   def test_create_with_group_assignment
     assert IssueCategory.new(:project_id => 2, :name => 'Group assignment', :assigned_to_id => 11).save
     category = IssueCategory.order('id DESC').first
@@ -38,6 +41,7 @@ class IssueCategoryTest < ActiveSupport::TestCase
     assert_equal Group.find(11), category.assigned_to
   end
 
+  # @rbs () -> bool
   def test_destroy
     issue = @category.issues.first
     @category.destroy
@@ -45,6 +49,7 @@ class IssueCategoryTest < ActiveSupport::TestCase
     assert_nil issue.reload.category
   end
 
+  # @rbs () -> bool
   def test_destroy_with_reassign
     issue = @category.issues.first
     reassign_to = IssueCategory.find(2)

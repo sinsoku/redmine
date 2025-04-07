@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class AdminTest < Redmine::IntegrationTest
+  # @rbs () -> bool
   def test_add_user
     log_user("admin", "admin")
     get "/users/new"

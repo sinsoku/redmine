@@ -23,12 +23,14 @@ class SortHelperTest < Redmine::HelperTest
   include SortHelper
   include ERB::Util
 
+  # @rbs () -> nil
   def setup
     super
     @session = nil
     @sort_param = nil
   end
 
+  # @rbs () -> bool
   def test_default_sort_clause_with_array
     sort_init 'attr1', 'desc'
     sort_update(['attr1', 'attr2'])
@@ -36,6 +38,7 @@ class SortHelperTest < Redmine::HelperTest
     assert_equal ['attr1 DESC'], sort_clause
   end
 
+  # @rbs () -> bool
   def test_default_sort_clause_with_hash
     sort_init 'attr1', 'desc'
     sort_update({'attr1' => 'table1.attr1', 'attr2' => 'table2.attr2'})
@@ -43,6 +46,7 @@ class SortHelperTest < Redmine::HelperTest
     assert_equal ['table1.attr1 DESC'], sort_clause
   end
 
+  # @rbs () -> bool
   def test_default_sort_clause_with_multiple_columns
     sort_init 'attr1', 'desc'
     sort_update({'attr1' => ['table1.attr1', 'table1.attr2'], 'attr2' => 'table2.attr2'})
@@ -50,6 +54,7 @@ class SortHelperTest < Redmine::HelperTest
     assert_equal ['table1.attr1 DESC', 'table1.attr2 DESC'], sort_clause
   end
 
+  # @rbs () -> bool
   def test_params_sort
     @sort_param = 'attr1,attr2:desc'
 
@@ -60,6 +65,7 @@ class SortHelperTest < Redmine::HelperTest
     assert_equal 'attr1,attr2:desc', @session['foo_bar_sort']
   end
 
+  # @rbs () -> bool
   def test_invalid_params_sort
     @sort_param = 'invalid_key'
 
@@ -70,6 +76,7 @@ class SortHelperTest < Redmine::HelperTest
     assert_equal 'invalid_key', @session['foo_bar_sort']
   end
 
+  # @rbs () -> bool
   def test_invalid_order_params_sort
     @sort_param = 'attr1:foo:bar,attr2'
 
@@ -80,6 +87,7 @@ class SortHelperTest < Redmine::HelperTest
     assert_equal 'attr1,attr2', @session['foo_bar_sort']
   end
 
+  # @rbs () -> bool
   def test_sort_css_without_params_should_use_default_sort
     sort_init 'attr1', 'desc'
     sort_update(['attr1', 'attr2'])
@@ -87,6 +95,7 @@ class SortHelperTest < Redmine::HelperTest
     assert_equal 'sort-by-attr1 sort-desc', sort_css_classes
   end
 
+  # @rbs () -> bool
   def test_sort_css_should_use_params
     @sort_param = 'attr2,attr1'
     sort_init 'attr1', 'desc'
@@ -95,6 +104,7 @@ class SortHelperTest < Redmine::HelperTest
     assert_equal 'sort-by-attr2 sort-asc', sort_css_classes
   end
 
+  # @rbs () -> bool
   def test_sort_css_should_dasherize_sort_name
     sort_init 'foo_bar'
     sort_update(['foo_bar'])
@@ -104,8 +114,12 @@ class SortHelperTest < Redmine::HelperTest
 
   private
 
+  # @rbs () -> String
   def controller_name; 'foo'; end
+  # @rbs () -> String
   def action_name; 'bar'; end
+  # @rbs () -> Hash[untyped, untyped]
   def params; {:sort => @sort_param}; end
+  # @rbs () -> Hash[untyped, untyped]
   def session; @session ||= {}; end
 end

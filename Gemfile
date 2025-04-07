@@ -103,6 +103,7 @@ end
 group :test do
   gem "rails-dom-testing"
   gem 'mocha', '>= 2.0.1'
+  gem 'rbs-trace'
   gem 'simplecov', '~> 0.22.0', :require => false
   gem "ffi", platforms: [:mingw, :x64_mingw, :mswin]
   # For running system tests

@@ -41,6 +41,7 @@ class TimelogController < ApplicationController
   helper :queries
   include QueriesHelper
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String | Array[untyped])
   def index
     retrieve_time_entry_query
     scope = time_entry_scope.
@@ -72,6 +73,7 @@ class TimelogController < ApplicationController
     end
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def report
     retrieve_time_entry_query
     scope = time_entry_scope
@@ -87,6 +89,7 @@ class TimelogController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def show
     respond_to do |format|
       # TODO: Implement html response
@@ -95,6 +98,7 @@ class TimelogController < ApplicationController
     end
   end
 
+  # @rbs () -> ActionController::Parameters?
   def new
     @time_entry ||=
       TimeEntry.new(:project => @project, :issue => @issue,
@@ -102,6 +106,7 @@ class TimelogController < ApplicationController
     @time_entry.safe_attributes = params[:time_entry]
   end
 
+  # @rbs () -> (bool | String | ActiveSupport::SafeBuffer)?
   def create
     @time_entry ||=
       TimeEntry.new(:project => @project, :issue => @issue,
@@ -154,10 +159,12 @@ class TimelogController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
     @time_entry.safe_attributes = params[:time_entry]
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | bool | String)
   def update
     @time_entry.safe_attributes = params[:time_entry]
     call_hook(:controller_timelog_edit_before_save,
@@ -179,6 +186,7 @@ class TimelogController < ApplicationController
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def bulk_edit
     @target_projects = Project.allowed_to(:log_time).to_a
     @custom_fields = TimeEntry.first.available_custom_fields.select {|field| field.format.bulk_edit_supported}
@@ -194,6 +202,7 @@ class TimelogController < ApplicationController
     @time_entry_params[:custom_field_values] ||= {}
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | bool)?
   def bulk_update
     attributes = parse_params_for_bulk_update(params[:time_entry])
 
@@ -229,6 +238,7 @@ class TimelogController < ApplicationController
     end
   end
 
+  # @rbs () -> (String | bool)?
   def destroy
     destroyed = TimeEntry.transaction do
       @time_entries.each do |t|
@@ -259,6 +269,7 @@ class TimelogController < ApplicationController
 
   private
 
+  # @rbs () -> (Project | bool)
   def find_time_entry
     @time_entry = TimeEntry.find(params[:id])
     @project = @time_entry.project
@@ -266,6 +277,7 @@ class TimelogController < ApplicationController
     render_404
   end
 
+  # @rbs () -> bool?
   def check_editability
     unless @time_entry.editable_by?(User.current)
       render_403
@@ -273,6 +285,7 @@ class TimelogController < ApplicationController
     end
   end
 
+  # @rbs () -> Project?
   def find_time_entries
     @time_entries = TimeEntry.where(:id => params[:id] || params[:ids]).
       preload(:project => :time_entry_activities).
@@ -287,6 +300,7 @@ class TimelogController < ApplicationController
     render_404
   end
 
+  # @rbs () -> bool
   def find_optional_issue
     if params[:issue_id].present?
       @issue = Issue.find(params[:issue_id])
@@ -298,10 +312,12 @@ class TimelogController < ApplicationController
   end
 
   # Returns the TimeEntry scope for index and report actions
+  # @rbs (?Hash[untyped, untyped]) -> TimeEntry::ActiveRecord_Relation
   def time_entry_scope(options={})
     @query.results_scope(options)
   end
 
+  # @rbs () -> void
   def retrieve_time_entry_query
     retrieve_query(TimeEntryQuery, false, :defaults => @default_columns_names)
   end

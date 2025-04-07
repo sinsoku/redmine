@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module BoardsHelper
+  # @rbs (Message | Board) -> ActiveSupport::SafeBuffer
   def board_breadcrumb(item)
     board = item.is_a?(Message) ? item.board : item
     links = [link_to(l(:label_board_plural), project_boards_path(item.project))]
@@ -29,6 +30,7 @@ module BoardsHelper
     breadcrumb links
   end
 
+  # @rbs (Board::ActiveRecord_Associations_CollectionProxy | Array[untyped]) -> Array[untyped]
   def boards_options_for_select(boards)
     options = []
     Board.board_tree(boards) do |board, level|

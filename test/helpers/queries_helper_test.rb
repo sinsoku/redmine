@@ -22,11 +22,13 @@ require_relative '../test_helper'
 class QueriesHelperTest < Redmine::HelperTest
   include QueriesHelper
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_filters_options_for_select_should_have_a_blank_option
     options = filters_options_for_select(IssueQuery.new)
     assert_select_in options, 'option[value=""]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_filters_options_for_select_should_not_group_regular_filters
     with_locale 'en' do
       options = filters_options_for_select(IssueQuery.new)
@@ -35,6 +37,7 @@ class QueriesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_filters_options_for_select_should_group_date_filters
     with_locale 'en' do
       options = filters_options_for_select(IssueQuery.new)
@@ -43,6 +46,7 @@ class QueriesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_filters_options_for_select_should_not_group_only_one_date_filter
     with_locale 'en' do
       options = filters_options_for_select(TimeEntryQuery.new)
@@ -52,6 +56,7 @@ class QueriesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_filters_options_for_select_should_group_relations_filters
     with_locale 'en' do
       options = filters_options_for_select(IssueQuery.new)
@@ -61,6 +66,7 @@ class QueriesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_filters_options_for_select_should_group_associations_filters
     CustomField.delete_all
     cf1 = ProjectCustomField.create!(:name => 'Foo', :field_format => 'string', :is_filter => true)
@@ -74,6 +80,7 @@ class QueriesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_filters_options_for_select_should_group_text_filters
     with_locale 'en' do
       options = filters_options_for_select(IssueQuery.new)
@@ -84,6 +91,7 @@ class QueriesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> bool
   def test_query_to_csv_should_translate_boolean_custom_field_values
     f = IssueCustomField.generate!(:field_format => 'bool', :name => 'Boolean', :is_for_all => true, :trackers => Tracker.all)
     issues = [
@@ -98,6 +106,7 @@ class QueriesHelperTest < Redmine::HelperTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_filters_options_for_select_should_group_custom_field_relations
     i_cf = IssueCustomField.generate!(field_format: 'user', name: 'User', is_for_all: true, trackers: Tracker.all, is_filter: true)
     u_cf = UserCustomField.find(4)

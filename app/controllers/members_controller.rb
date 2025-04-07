@@ -27,6 +27,7 @@ class MembersController < ApplicationController
 
   require_sudo_mode :create, :update, :destroy
 
+  # @rbs () -> nil
   def index
     scope = @project.memberships
     @offset, @limit = api_offset_and_limit
@@ -41,6 +42,7 @@ class MembersController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def show
     respond_to do |format|
       format.html {head :not_acceptable}
@@ -48,10 +50,12 @@ class MembersController < ApplicationController
     end
   end
 
+  # @rbs () -> Member
   def new
     @member = Member.new
   end
 
+  # @rbs () -> (String | Member)
   def create
     members = []
     if params[:membership]
@@ -82,10 +86,12 @@ class MembersController < ApplicationController
     end
   end
 
+  # @rbs () -> Array[untyped]
   def edit
     @roles = Role.givable.to_a
   end
 
+  # @rbs () -> (bool | String)?
   def update
     if params[:membership]
       @member.set_editable_role_ids(params[:membership][:role_ids])
@@ -104,6 +110,7 @@ class MembersController < ApplicationController
     end
   end
 
+  # @rbs () -> (bool | String)?
   def destroy
     if @member.deletable?
       @member.destroy
@@ -121,6 +128,7 @@ class MembersController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def autocomplete
     respond_to do |format|
       format.js
@@ -129,6 +137,7 @@ class MembersController < ApplicationController
 
   private
 
+  # @rbs () -> String
   def redirect_to_settings_in_projects
     redirect_to settings_project_path(@project, :tab => 'members')
   end

@@ -23,6 +23,7 @@ class SettingsHelperTest < Redmine::HelperTest
   include SettingsHelper
   include ERB::Util
 
+  # @rbs () -> bool
   def test_date_format_setting_options_should_include_human_readable_format
     Date.stubs(:today).returns(Date.parse("2015-07-14"))
 

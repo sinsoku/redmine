@@ -24,10 +24,12 @@ class TimelogReportTest < Redmine::ControllerTest
 
   include Redmine::I18n
 
+  # @rbs () -> String
   def setup
     Setting.default_language = "en"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_at_project_level
     get :report, :params => {:project_id => 'ecookbook'}
     assert_response :success
@@ -46,12 +48,14 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_select 'form#query_form[action=?]', '/projects/ecookbook/time_entries/report'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_all_projects
     get :report
     assert_response :success
     assert_select 'form#query_form[action=?]', '/time_entries/report'
   end
 
+  # @rbs () -> bool
   def test_report_all_projects_denied
     r = Role.anonymous
     r.permissions.delete(:view_time_entries)
@@ -61,6 +65,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_redirected_to '/login?back_url=http%3A%2F%2Ftest.host%2Ftime_entries%2Freport'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_all_projects_one_criteria
     get :report, :params => {:columns => 'week', :from => "2007-04-01", :to => "2007-04-30", :criteria => ['project']}
     assert_response :success
@@ -68,12 +73,14 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_select 'tr td.name a[href=?]', '/projects/ecookbook', :text => 'eCookbook'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_all_time
     get :report, :params => {:project_id => 1, :criteria => ['project', 'issue']}
     assert_response :success
     assert_select 'tr.total td:last', :text => '162:54'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_all_time_by_day
     get :report, :params => {:project_id => 1, :criteria => ['project', 'issue'], :columns => 'day'}
     assert_response :success
@@ -81,18 +88,21 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_select 'th', :text => '2007-03-12'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_one_criteria
     get :report, :params => {:project_id => 1, :columns => 'week', :from => "2007-04-01", :to => "2007-04-30", :criteria => ['project']}
     assert_response :success
     assert_select 'tr.total td:last', :text => '8:39'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_two_criteria
     get :report, :params => {:project_id => 1, :columns => 'month', :from => "2007-01-01", :to => "2007-12-31", :criteria => ["user", "activity"]}
     assert_response :success
     assert_select 'tr.total td:last', :text => '162:54'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_should_show_locked_users
     @request.session[:user_id] = 1
 
@@ -107,6 +117,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_select 'td.name a.user.locked[href=?]', '/users/2', :text => 'John Smith', :count => 1
   end
 
+  # @rbs () -> bool
   def test_report_custom_field_criteria_with_multiple_values_on_single_value_custom_field_should_not_fail
     field = TimeEntryCustomField.create!(:name => 'multi', :field_format => 'list', :possible_values => ['value1', 'value2'])
     entry = TimeEntry.create!(:project => Project.find(1), :hours => 1, :activity_id => 10, :user => User.find(2), :spent_on => Date.today)
@@ -117,6 +128,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_multiple_values_custom_fields_should_not_be_proposed
     TimeEntryCustomField.create!(:name => 'Single', :field_format => 'list', :possible_values => ['value1', 'value2'])
     TimeEntryCustomField.create!(:name => 'Multi', :field_format => 'list', :multiple => true, :possible_values => ['value1', 'value2'])
@@ -129,6 +141,7 @@ class TimelogReportTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_hidden_custom_fields_should_not_be_proposed
     TimeEntryCustomField.create!(name: 'shown', field_format: 'list', possible_values: ['value1', 'value2'], visible: true)
     TimeEntryCustomField.create!(name: 'Hidden', field_format: 'list', possible_values: ['value1', 'value2'], visible: false, role_ids: [3])
@@ -141,12 +154,14 @@ class TimelogReportTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_one_day
     get :report, :params => {:project_id => 1, :columns => 'day', :from => "2007-03-23", :to => "2007-03-23", :criteria => ["user", "activity"]}
     assert_response :success
     assert_select 'tr.total td:last', :text => '4:15'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_by_week_should_use_commercial_year
     TimeEntry.delete_all
     TimeEntry.generate!(:hours => '2', :spent_on => '2009-12-25') # 2009-52
@@ -173,6 +188,7 @@ class TimelogReportTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_should_propose_association_custom_fields
     get :report
     assert_response :success
@@ -184,6 +200,7 @@ class TimelogReportTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_with_association_custom_fields
     get :report, :params => {:criteria => ['cf_1', 'cf_3', 'cf_7']}
     assert_response :success
@@ -202,6 +219,7 @@ class TimelogReportTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_one_criteria_no_result
     get :report, :params => {:project_id => 1, :columns => 'week', :from => "1998-04-01", :to => "1998-04-30", :criteria => ['project']}
     assert_response :success
@@ -209,6 +227,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_select '.nodata'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_status_criterion
     get :report, :params => {:project_id => 1, :criteria => ['status']}
     assert_response :success
@@ -217,6 +236,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_select 'td', :text => 'New'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_report_activity_criterion_should_aggregate_system_activity_and_project_activity
     activity = TimeEntryActivity.create!(:name => 'Design', :parent_id => 9, :project_id => 3)
     TimeEntry.generate!(:project_id => 3, :issue_id => 5, :activity_id => activity.id, :spent_on => '2007-05-23', :hours => 10.0)
@@ -230,6 +250,7 @@ class TimelogReportTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_report_all_projects_csv_export
     get :report, :params => {
       :columns => 'month',
@@ -247,6 +268,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_equal 'Total time,"","",154.25,8.65,162.90', lines.last
   end
 
+  # @rbs () -> bool
   def test_report_csv_export
     get :report, :params => {
       :project_id => 1,
@@ -265,6 +287,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_equal 'Total time,"","",154.25,8.65,162.90', lines.last
   end
 
+  # @rbs () -> bool
   def test_report_csv_should_fill_issue_criteria_with_tracker_id_and_subject
     get :report, :params => {
       :project_id => 1,
@@ -280,6 +303,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert lines.detect {|line| line.include?('Bug #1: Cannot print recipes')}
   end
 
+  # @rbs () -> bool
   def test_csv_big_5
     str_big5  = (+"\xa4@\xa4\xeb").force_encoding('Big5')
     user = User.find_by_id(3)
@@ -326,6 +350,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_equal '.', l(:general_csv_decimal_separator)
   end
 
+  # @rbs () -> bool
   def test_csv_cannot_convert_should_be_replaced_big_5
     user = User.find_by_id(3)
     user.firstname = "以内"
@@ -365,6 +390,7 @@ class TimelogReportTest < Redmine::ControllerTest
     assert_equal "#{s2} #{user.lastname},7.30,7.30", lines[1]
   end
 
+  # @rbs () -> bool
   def test_csv_fr
     with_settings :default_language => "fr" do
       str1  = "test_csv_fr"

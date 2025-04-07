@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingPreviewsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_previews
     should_route 'GET /issues/preview' => 'previews#issue'
     should_route 'PUT /issues/preview' => 'previews#issue'

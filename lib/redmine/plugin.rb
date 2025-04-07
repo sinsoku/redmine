@@ -90,6 +90,7 @@ module Redmine
     #     version '0.0.1'
     #     requires_redmine version_or_higher: '3.0.0'
     #   end
+    # @rbs (Symbol) -> Redmine::Plugin?
     def self.register(id, &)
       p = new(id)
       p.instance_eval(&)
@@ -139,24 +140,28 @@ module Redmine
     end
 
     # Returns an array of all registered plugins
+    # @rbs () -> Array[untyped]
     def self.all
       registered_plugins.values.sort
     end
 
     # Finds a plugin by its id
     # Returns a PluginNotFound exception if the plugin doesn't exist
+    # @rbs (String | Symbol) -> Redmine::Plugin?
     def self.find(id)
       registered_plugins[id.to_sym] || raise(PluginNotFound)
     end
 
     # Clears the registered plugins hash
     # It doesn't unload installed plugins
+    # @rbs () -> Hash[untyped, untyped]
     def self.clear
       @registered_plugins = {}
     end
 
     # Removes a plugin from the registered plugins
     # It doesn't unload the plugin
+    # @rbs (Symbol) -> Redmine::Plugin
     def self.unregister(id)
       @registered_plugins.delete(id)
     end
@@ -164,10 +169,12 @@ module Redmine
     # Checks if a plugin is installed
     #
     # @param [String] id name of the plugin
+    # @rbs (Symbol) -> bool
     def self.installed?(id)
       registered_plugins[id.to_sym].present?
     end
 
+    # @rbs (Symbol) -> void
     def initialize(id)
       @id = id.to_sym
     end
@@ -176,11 +183,13 @@ module Redmine
       File.join(self.class.public_directory, id.to_s)
     end
 
+    # @rbs () -> Symbol
     def to_param
       id
     end
 
     # Returns the absolute path to the plugin assets directory
+    # @rbs () -> String
     def assets_directory
       path.assets_dir
     end
@@ -197,6 +206,7 @@ module Redmine
       Redmine::AssetPath.new(base_dir, paths, asset_prefix)
     end
 
+    # @rbs (Redmine::Plugin) -> Integer
     def <=>(plugin)
       return nil unless plugin.is_a?(Plugin)
 
@@ -222,6 +232,7 @@ module Redmine
     #   # Requires a Redmine version within a range
     #   requires_redmine :version => '0.7.3'..'0.9.1'     # >= 0.7.3 and <= 0.9.1
     #   requires_redmine :version => '0.7'..'0.9'         # >= 0.7.x and <= 0.9.x
+    # @rbs (String | Hash[untyped, untyped]) -> bool?
     def requires_redmine(arg)
       arg = {:version_or_higher => arg} unless arg.is_a?(Hash)
       arg.assert_valid_keys(:version, :version_or_higher)
@@ -264,6 +275,7 @@ module Redmine
       true
     end
 
+    # @rbs (String, Array[untyped]) -> Integer
     def compare_versions(requirement, current)
       requirement = requirement.split('.').collect(&:to_i)
       requirement <=> current.slice(0, requirement.size)
@@ -281,6 +293,7 @@ module Redmine
     #   # Requires a specific version of a Redmine plugin
     #   requires_redmine_plugin :foo, :version => '0.7.3'              # 0.7.3 only
     #   requires_redmine_plugin :foo, :version => ['0.7.3', '0.8.0']   # 0.7.3 or 0.8.0
+    # @rbs (Symbol, Hash[untyped, untyped] | String) -> bool?
     def requires_redmine_plugin(plugin_name, arg)
       arg = {:version_or_higher => arg} unless arg.is_a?(Hash)
       arg.assert_valid_keys(:version, :version_or_higher)
@@ -325,12 +338,14 @@ module Redmine
     #
     # +name+ parameter can be: :top_menu, :account_menu, :application_menu or :project_menu
     #
+    # @rbs (Symbol, Symbol, String, ?Hash[untyped, untyped]) -> Redmine::MenuManager::MenuItem
     def menu(menu, item, url, options={})
       Redmine::MenuManager.map(menu).push(item, url, options)
     end
     alias :add_menu_item :menu
 
     # Removes +item+ from the given +menu+.
+    # @rbs (Symbol, Symbol) -> Redmine::MenuManager::MenuItem
     def delete_menu_item(menu, item)
       Redmine::MenuManager.map(menu).delete(item)
     end
@@ -433,6 +448,7 @@ module Redmine
     #   attachment_object_type SomeAttachableModel
     #
     # This is necessary for the core attachments controller routes and attachments/_form to work.
+    # @rbs (*Class) -> Array[untyped]
     def attachment_object_type(*args)
       args.each do |klass|
         Redmine::Acts::Attachable::ObjectTypeConstraint.register_object_type(klass.name.underscore.pluralize)
@@ -440,11 +456,13 @@ module Redmine
     end
 
     # Returns +true+ if the plugin can be configured.
+    # @rbs () -> bool?
     def configurable?
       settings && settings.is_a?(Hash) && settings[:partial].present?
     end
 
     # The directory containing this plugin's migrations (<tt>plugin/db/migrate</tt>)
+    # @rbs () -> String
     def migration_directory
       File.join(directory, 'db', 'migrate')
     end
@@ -462,6 +480,7 @@ module Redmine
     end
 
     # Migrate this plugin to the given version
+    # @rbs (?String, ?nil) -> Array[untyped]
     def migrate(version = nil)
       Redmine::Plugin::Migrator.migrate_plugin(self, version)
     end
@@ -472,6 +491,7 @@ module Redmine
     #   Plugin.migrate('sample_plugin')
     #   Plugin.migrate('sample_plugin', 1)
     #
+    # @rbs (?String, ?nil) -> Array[untyped]
     def self.migrate(name=nil, version=nil)
       if name.present?
         find(name).migrate(version)
@@ -483,6 +503,7 @@ module Redmine
     end
 
     class MigrationContext < ActiveRecord::MigrationContext
+      # @rbs (?nil) -> Array[untyped]
       def up(target_version = nil)
         selected_migrations =
           if block_given?
@@ -511,6 +532,7 @@ module Redmine
         Migrator.new(:up, migrations, schema_migration, internal_metadata)
       end
 
+      # @rbs () -> Integer
       def current_version
         Migrator.current_version
       end
@@ -522,6 +544,7 @@ module Redmine
 
       class << self
         # Runs the migrations from a plugin, up (or down) to the version given
+        # @rbs (Redmine::Plugin, nil) -> Array[untyped]
         def migrate_plugin(plugin, version)
           self.current_plugin = plugin
           return if current_version(plugin) == version
@@ -529,6 +552,7 @@ module Redmine
           MigrationContext.new(plugin.migration_directory, ::ActiveRecord::Base.connection.pool.schema_migration).migrate(version)
         end
 
+        # @rbs (?Redmine::Plugin) -> Array[untyped]
         def get_all_versions(plugin = current_plugin)
           # Delete migrations that don't match .. to_i will work because the number comes first
           @all_versions ||= {}
@@ -541,6 +565,7 @@ module Redmine
           end
         end
 
+        # @rbs (?Redmine::Plugin) -> Integer
         def current_version(plugin = current_plugin)
           get_all_versions(plugin).last || 0
         end

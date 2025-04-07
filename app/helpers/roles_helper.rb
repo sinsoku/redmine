@@ -20,6 +20,7 @@
 module RolesHelper
   include ApplicationHelper
 
+  # @rbs (Array[untyped], Array[untyped]) -> String
   def permissions_to_csv(roles, permissions)
     Redmine::Export::CSV.generate(:encoding => params[:encoding]) do |csv|
       # csv header fields

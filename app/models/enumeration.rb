@@ -42,6 +42,7 @@ class Enumeration < ApplicationRecord
   scope :system, lambda {where(:project_id => nil)}
   scope :named, lambda {|arg| where("LOWER(#{table_name}.name) = LOWER(?)", arg.to_s.strip)}
 
+  # @rbs () -> Enumeration?
   def self.default
     # Creates a fake default scope so Enumeration.default will check
     # it's type.  STI subclasses will automatically add their own
@@ -59,6 +60,7 @@ class Enumeration < ApplicationRecord
     nil
   end
 
+  # @rbs () -> Integer?
   def check_default
     if is_default? && is_default_changed?
       Enumeration.where({:type => type}).update_all({:is_default => false})
@@ -70,11 +72,13 @@ class Enumeration < ApplicationRecord
     0
   end
 
+  # @rbs () -> bool
   def in_use?
     self.objects_count != 0
   end
 
   # Is this enumeration overriding a system level enumeration?
+  # @rbs () -> bool
   def is_override?
     !self.parent.nil?
   end
@@ -83,6 +87,7 @@ class Enumeration < ApplicationRecord
 
   # Destroy the enumeration
   # If a enumeration is specified, objects are reassigned
+  # @rbs (?(IssuePriority | TimeEntryActivity)?) -> (IssuePriority | TimeEntryActivity)
   def destroy(reassign_to = nil)
     if reassign_to && reassign_to.is_a?(Enumeration)
       self.transfer_relations(reassign_to)
@@ -90,23 +95,27 @@ class Enumeration < ApplicationRecord
     destroy_without_reassign
   end
 
+  # @rbs ((String | IssuePriority | DocumentCategory)?) -> Integer?
   def <=>(enumeration)
     return nil unless enumeration.is_a?(Enumeration)
 
     position <=> enumeration.position
   end
 
+  # @rbs () -> String
   def to_s; name end
 
   # Returns the Subclasses of Enumeration.  Each Subclass needs to be
   # required in development mode.
   #
   # Note: subclasses is protected in ActiveRecord
+  # @rbs () -> Array[untyped]
   def self.get_subclasses
     subclasses
   end
 
   # Does the +new+ Hash override the previous Enumeration?
+  # @rbs (Hash[untyped, untyped] | ActionController::Parameters, TimeEntryActivity) -> bool
   def self.overriding_change?(new, previous)
     if (same_active_state?(new['active'], previous.active)) &&
           same_custom_values?(new, previous)
@@ -117,6 +126,7 @@ class Enumeration < ApplicationRecord
   end
 
   # Does the +new+ Hash have the same custom values as the previous Enumeration?
+  # @rbs (Hash[untyped, untyped] | ActionController::Parameters, TimeEntryActivity) -> bool
   def self.same_custom_values?(new, previous)
     previous.custom_field_values.each do |custom_value|
       if custom_value.to_s != new["custom_field_values"][custom_value.custom_field_id.to_s].to_s
@@ -128,6 +138,7 @@ class Enumeration < ApplicationRecord
   end
 
   # Are the new and previous fields equal?
+  # @rbs (String, bool) -> bool
   def self.same_active_state?(new, previous)
     new = (new == "1" ? true : false)
     return new == previous
@@ -135,10 +146,12 @@ class Enumeration < ApplicationRecord
 
   private
 
+  # @rbs () -> nil
   def check_integrity
     raise "Cannot delete enumeration" if self.in_use?
   end
 
+  # @rbs () -> Integer?
   def update_children_name
     if saved_change_to_name? && self.parent_id.nil?
       self.class.where(name: self.name_before_last_save, parent_id: self.id).update_all(name: self.name_in_database)
@@ -147,6 +160,7 @@ class Enumeration < ApplicationRecord
 
   # Overrides Redmine::Acts::Positioned#set_default_position so that enumeration overrides
   # get the same position as the overridden enumeration
+  # @rbs () -> Integer?
   def set_default_position
     if position.nil? && parent
       self.position = parent.position
@@ -156,6 +170,7 @@ class Enumeration < ApplicationRecord
 
   # Overrides Redmine::Acts::Positioned#update_position so that overrides get the same
   # position as the overridden enumeration
+  # @rbs () -> Integer?
   def update_position
     super
     if saved_change_to_position? && self.parent_id.nil?
@@ -170,6 +185,7 @@ class Enumeration < ApplicationRecord
 
   # Overrides Redmine::Acts::Positioned#remove_position so that enumeration overrides
   # get the same position as the overridden enumeration
+  # @rbs () -> Integer?
   def remove_position
     if parent_id.blank?
       super

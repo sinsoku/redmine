@@ -28,6 +28,7 @@ module Redmine
       include ActionView::Helpers::OutputSafetyHelper
       attr_reader :diff, :words
 
+      # @rbs (String, String) -> void
       def initialize(content_to, content_from)
         @words = content_to.to_s.split(/(\s+)/)
         @words = @words.select {|word| word != ' '}
@@ -36,6 +37,7 @@ module Redmine
         @diff = words_from.diff @words
       end
 
+      # @rbs () -> ActiveSupport::SafeBuffer
       def to_html
         words = self.words.collect{|word| h(word)}
         words_add = 0

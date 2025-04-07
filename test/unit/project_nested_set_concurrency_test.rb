@@ -22,15 +22,18 @@ require_relative '../test_helper'
 class ProjectNestedSetConcurrencyTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
 
+  # @rbs () -> Integer
   def setup
     User.current = nil
     CustomField.delete_all
   end
 
+  # @rbs () -> Integer
   def teardown
     Project.delete_all
   end
 
+  # @rbs () -> nil
   def test_concurrency
     skip if sqlite?
     # Generates a project and destroys it in order

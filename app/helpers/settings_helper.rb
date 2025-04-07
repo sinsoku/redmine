@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module SettingsHelper
+  # @rbs () -> Array[untyped]
   def administration_settings_tabs
     tabs =
       [
@@ -41,6 +42,7 @@ module SettingsHelper
       ]
   end
 
+  # @rbs (Array[untyped]?) -> ActiveSupport::SafeBuffer?
   def render_settings_error(errors)
     return if errors.blank?
 
@@ -51,6 +53,7 @@ module SettingsHelper
     content_tag('div', content_tag('ul', s), :id => 'errorExplanation')
   end
 
+  # @rbs (Symbol | String) -> (String | Symbol | Array[untyped])?
   def setting_value(setting)
     value = nil
     if params[:settings]
@@ -59,6 +62,7 @@ module SettingsHelper
     value || Setting.send(setting)
   end
 
+  # @rbs (Symbol, Array[untyped], ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def setting_select(setting, choices, options={})
     if blank_text = options.delete(:blank)
       choices = [[blank_text.is_a?(Symbol) ? l(blank_text) : blank_text, '']] + choices
@@ -69,6 +73,7 @@ module SettingsHelper
                  options).html_safe
   end
 
+  # @rbs (Symbol, Array[untyped], ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def setting_multiselect(setting, choices, options={})
     setting_values = setting_value(setting)
     setting_values = [] unless setting_values.is_a?(Array)
@@ -90,22 +95,26 @@ module SettingsHelper
       end.join.html_safe
   end
 
+  # @rbs (Symbol, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def setting_text_field(setting, options={})
     setting_label(setting, options).html_safe +
       text_field_tag("settings[#{setting}]", setting_value(setting), options).html_safe
   end
 
+  # @rbs (Symbol, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def setting_text_area(setting, options={})
     setting_label(setting, options).html_safe +
       text_area_tag("settings[#{setting}]", setting_value(setting), options).html_safe
   end
 
+  # @rbs (Symbol, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def setting_check_box(setting, options={})
     setting_label(setting, options).html_safe +
       hidden_field_tag("settings[#{setting}]", 0, :id => nil).html_safe +
         check_box_tag("settings[#{setting}]", 1, setting_value(setting).to_s != '0', options).html_safe
   end
 
+  # @rbs (Symbol, ?Hash[untyped, untyped]) -> (ActiveSupport::SafeBuffer | String)
   def setting_label(setting, options={})
     label = options.delete(:label)
     if label == false
@@ -117,6 +126,7 @@ module SettingsHelper
   end
 
   # Renders a notification field for a Redmine::Notifiable option
+  # @rbs (Redmine::Notifiable) -> ActiveSupport::SafeBuffer
   def notification_field(notifiable)
     tag_data =
       if notifiable.parent.present?
@@ -137,6 +147,7 @@ module SettingsHelper
     content_tag(:label, tag + text, options)
   end
 
+  # @rbs () -> Array[untyped]
   def session_lifetime_options
     options = [[l(:label_disabled), 0]]
     options += [4, 8, 12].map do |hours|
@@ -148,6 +159,7 @@ module SettingsHelper
     options
   end
 
+  # @rbs () -> Array[untyped]
   def session_timeout_options
     options = [[l(:label_disabled), 0]]
     options += [1, 2, 4, 8, 12, 24, 48].map do |hours|
@@ -156,6 +168,7 @@ module SettingsHelper
     options
   end
 
+  # @rbs () -> Array[untyped]
   def link_copied_issue_options
     options = [
       [:general_text_Yes, 'yes'],
@@ -166,6 +179,7 @@ module SettingsHelper
     options.map {|label, value| [l(label), value.to_s]}
   end
 
+  # @rbs () -> Array[untyped]
   def copy_attachments_on_issue_copy_options
     options = [
       [:general_text_Yes, 'yes'],
@@ -176,14 +190,17 @@ module SettingsHelper
     options.map {|label, value| [l(label), value.to_s]}
   end
 
+  # @rbs () -> Array[untyped]
   def default_global_issue_query_options
     [[l(:label_none), '']] + IssueQuery.only_public.where(project_id: nil).pluck(:name, :id)
   end
 
+  # @rbs () -> Array[untyped]
   def default_global_project_query_options
     [[l(:label_none), '']] + ProjectQuery.only_public.pluck(:name, :id)
   end
 
+  # @rbs () -> Array[untyped]
   def cross_project_subtasks_options
     options = [
       [:label_disabled, ''],
@@ -196,6 +213,7 @@ module SettingsHelper
     options.map {|label, value| [l(label), value.to_s]}
   end
 
+  # @rbs () -> Array[untyped]
   def parent_issue_dates_options
     options = [
       [:label_parent_task_attributes_derived, 'derived'],
@@ -205,6 +223,7 @@ module SettingsHelper
     options.map {|label, value| [l(label), value.to_s]}
   end
 
+  # @rbs () -> Array[untyped]
   def parent_issue_priority_options
     options = [
       [:label_parent_task_attributes_derived, 'derived'],
@@ -214,6 +233,7 @@ module SettingsHelper
     options.map {|label, value| [l(label), value.to_s]}
   end
 
+  # @rbs () -> Array[untyped]
   def parent_issue_done_ratio_options
     options = [
       [:label_parent_task_attributes_derived, 'derived'],
@@ -224,6 +244,7 @@ module SettingsHelper
   end
 
   # Returns the options for the date_format setting
+  # @rbs (String) -> Array[untyped]
   def date_format_setting_options(locale)
     Setting::DATE_FORMATS.map do |f|
       today = ::I18n.l(User.current.today, :locale => locale, :format => f)
@@ -234,6 +255,7 @@ module SettingsHelper
     end
   end
 
+  # @rbs () -> Array[untyped]
   def gravatar_default_setting_options
     [['Identicons', 'identicon'],
      ['Monster ids', 'monsterid'],

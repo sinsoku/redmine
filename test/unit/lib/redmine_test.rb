@@ -21,15 +21,18 @@ require_relative '../../test_helper'
 
 module RedmineMenuTestHelper
   # Assertions
+  # @rbs (Symbol, Integer) -> bool
   def assert_number_of_items_in_menu(menu_name, count)
     assert Redmine::MenuManager.items(menu_name).size >= count, "Menu has less than #{count} items"
   end
 
+  # @rbs (Symbol, Symbol) -> bool
   def assert_menu_contains_item_named(menu_name, item_name)
     assert Redmine::MenuManager.items(menu_name).collect(&:name).include?(item_name.to_sym), "Menu did not have an item named #{item_name}"
   end
 
   # Helpers
+  # @rbs (Symbol, Symbol) -> Redmine::MenuManager::MenuItem
   def get_menu_item(menu_name, item_name)
     Redmine::MenuManager.items(menu_name).find {|item| item.name == item_name.to_sym}
   end
@@ -38,6 +41,7 @@ end
 class RedmineTest < ActiveSupport::TestCase
   include RedmineMenuTestHelper
 
+  # @rbs () -> bool
   def test_top_menu
     assert_number_of_items_in_menu :top_menu, 5
     assert_menu_contains_item_named :top_menu, :home
@@ -47,6 +51,7 @@ class RedmineTest < ActiveSupport::TestCase
     assert_menu_contains_item_named :top_menu, :help
   end
 
+  # @rbs () -> bool
   def test_account_menu
     assert_number_of_items_in_menu :account_menu, 4
     assert_menu_contains_item_named :account_menu, :login
@@ -55,14 +60,17 @@ class RedmineTest < ActiveSupport::TestCase
     assert_menu_contains_item_named :account_menu, :logout
   end
 
+  # @rbs () -> bool
   def test_application_menu
     assert_number_of_items_in_menu :application_menu, 0
   end
 
+  # @rbs () -> bool
   def test_admin_menu
     assert_number_of_items_in_menu :admin_menu, 0
   end
 
+  # @rbs () -> bool
   def test_project_menu
     assert_number_of_items_in_menu :project_menu, 13
     assert_menu_contains_item_named :project_menu, :overview

@@ -20,15 +20,18 @@
 require_relative '../test_helper'
 
 class SysControllerTest < Redmine::ControllerTest
+  # @rbs () -> Array[untyped]
   def setup
     Setting.sys_api_enabled = '1'
     Setting.enabled_scm = %w(Subversion Git)
   end
 
+  # @rbs () -> bool
   def teardown
     Setting.clear_cache
   end
 
+  # @rbs () -> bool
   def test_projects_with_repository_enabled
     get :projects
     assert_response :success
@@ -45,6 +48,7 @@ class SysControllerTest < Redmine::ControllerTest
     assert_not_include 'extra_info', response.body
   end
 
+  # @rbs () -> bool
   def test_create_project_repository
     assert_nil Project.find(4).repository
 
@@ -72,6 +76,7 @@ class SysControllerTest < Redmine::ControllerTest
     assert_not_include 'extra_info', response.body
   end
 
+  # @rbs () -> bool
   def test_create_already_existing
     post(
       :create_project_repository,
@@ -84,6 +89,7 @@ class SysControllerTest < Redmine::ControllerTest
     assert_response :conflict
   end
 
+  # @rbs () -> bool
   def test_create_with_failure
     post(
       :create_project_repository,
@@ -96,29 +102,34 @@ class SysControllerTest < Redmine::ControllerTest
     assert_response :unprocessable_content
   end
 
+  # @rbs () -> bool
   def test_fetch_changesets
     Repository::Subversion.any_instance.expects(:fetch_changesets).twice.returns(true)
     get :fetch_changesets
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_fetch_changesets_one_project_by_identifier
     Repository::Subversion.any_instance.expects(:fetch_changesets).once.returns(true)
     get :fetch_changesets, :params => {:id => 'ecookbook'}
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_fetch_changesets_one_project_by_id
     Repository::Subversion.any_instance.expects(:fetch_changesets).once.returns(true)
     get :fetch_changesets, :params => {:id => '1'}
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_fetch_changesets_unknown_project
     get :fetch_changesets, :params => {:id => 'unknown'}
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_disabled_ws_should_respond_with_403_error
     with_settings :sys_api_enabled => '0' do
       get :projects
@@ -127,6 +138,7 @@ class SysControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_api_key
     with_settings :sys_api_key => 'my_secret_key' do
       get :projects, :params => {:key => 'my_secret_key'}
@@ -134,6 +146,7 @@ class SysControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_wrong_key_should_respond_with_403_error
     with_settings :sys_api_enabled => 'my_secret_key' do
       get :projects, :params => {:key => 'wrong_key'}
@@ -142,6 +155,7 @@ class SysControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_should_skip_verify_authenticity_token
     ActionController::Base.allow_forgery_protection = true
     assert_nothing_raised {test_create_project_repository}

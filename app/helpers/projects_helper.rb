@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module ProjectsHelper
+  # @rbs () -> Array[untyped]
   def project_settings_tabs
     tabs =
       [
@@ -46,6 +47,7 @@ module ProjectsHelper
       select {|tab| tab[:module].nil? || @project.module_enabled?(tab[:module])}
   end
 
+  # @rbs (Project) -> ActiveSupport::SafeBuffer
   def parent_project_select_tag(project)
     selected = project.parent
     # retrieve the requested parent project
@@ -60,6 +62,7 @@ module ProjectsHelper
     content_tag('select', options.html_safe, :name => 'project[parent_id]', :id => 'project_parent_id')
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def render_project_action_links
     links = (+"").html_safe
     if User.current.allowed_to?(:add_project, nil, :global => true)
@@ -72,6 +75,7 @@ module ProjectsHelper
   end
 
   # Renders the projects index
+  # @rbs (Array[untyped]) -> ActiveSupport::SafeBuffer
   def render_project_hierarchy(projects)
     bookmarked_project_ids = User.current.bookmarked_project_ids
     render_project_nested_lists(projects) do |project|
@@ -90,6 +94,7 @@ module ProjectsHelper
   end
 
   # Returns a set of options for a select field, grouped by project.
+  # @rbs (Array[untyped] | Version::ActiveRecord_Relation, ?Version?) -> ActiveSupport::SafeBuffer
   def version_options_for_select(versions, selected=nil)
     grouped = Hash.new {|h, k| h[k] = []}
     versions.each do |version|
@@ -104,6 +109,7 @@ module ProjectsHelper
     end
   end
 
+  # @rbs (Project) -> ActiveSupport::SafeBuffer
   def project_default_version_options(project)
     versions = project.shared_versions.open.to_a
     if project.default_version && !versions.include?(project.default_version)
@@ -112,11 +118,13 @@ module ProjectsHelper
     version_options_for_select(versions, project.default_version)
   end
 
+  # @rbs (Project) -> ActiveSupport::SafeBuffer
   def project_default_assigned_to_options(project)
     assignable_users = (project.assignable_users.to_a + [project.default_assigned_to]).uniq.compact
     principals_options_for_select(assignable_users, project.default_assigned_to)
   end
 
+  # @rbs (Project) -> ActiveSupport::SafeBuffer
   def project_default_issue_query_options(project)
     public_queries = IssueQuery.only_public
     grouped = {
@@ -126,11 +134,13 @@ module ProjectsHelper
     grouped_options_for_select(grouped, project.default_issue_query_id)
   end
 
+  # @rbs (String) -> String
   def format_version_sharing(sharing)
     sharing = 'none' unless Version::VERSION_SHARINGS.include?(sharing)
     l("label_version_sharing_#{sharing}")
   end
 
+  # @rbs (Board::ActiveRecord_Associations_CollectionProxy, ?Board?, ?Integer) -> (String | ActiveSupport::SafeBuffer)
   def render_boards_tree(boards, parent=nil, level=0, &block)
     selection = boards.select {|b| b.parent == parent}
     return '' if selection.empty?
@@ -144,6 +154,7 @@ module ProjectsHelper
     content_tag('div', s, :class => 'sort-level')
   end
 
+  # @rbs (Project, Redmine::Views::Builders::Xml | Redmine::Views::Builders::Json) -> String?
   def render_api_includes(project, api)
     api.array :trackers do
       project.rolled_up_trackers(false).visible.each do |tracker|
@@ -176,6 +187,7 @@ module ProjectsHelper
     end if include_in_api_response?('issue_custom_fields')
   end
 
+  # @rbs (Project, ?AnonymousUser | User) -> (String | ActiveSupport::SafeBuffer)
   def bookmark_link(project, user = User.current)
     return '' unless user && user.logged?
 
@@ -199,6 +211,7 @@ module ProjectsHelper
     link_to text, url, remote: true, method: method, class: css
   end
 
+  # @rbs (Array[untyped], ProjectAdminQuery | ProjectQuery) -> Array[untyped]
   def grouped_project_list(projects, query, &)
     ancestors = []
     grouped_query_results(projects, query) do |project, group_name, group_count, group_totals|

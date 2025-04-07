@@ -21,6 +21,7 @@ require_relative '../test_helper'
 
 class SearchCustomFieldsVisibilityTest < Redmine::ControllerTest
   tests SearchController
+  # @rbs () -> Array[untyped]
   def setup
     field_attributes = {:field_format => 'string', :is_for_all => true, :is_filter => true, :searchable => true, :trackers => Tracker.all}
     @fields = []
@@ -50,6 +51,7 @@ class SearchCustomFieldsVisibilityTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_search_should_search_visible_custom_fields_only
     @users_to_test.each do |user, fields|
       @request.session[:user_id] = user.id

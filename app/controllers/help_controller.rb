@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class HelpController < ApplicationController
+  # @rbs () -> ActiveSupport::SafeBuffer
   def show_wiki_syntax
     type = params[:type].nil? ? "" : "#{params[:type]}_"
 
@@ -29,6 +30,7 @@ class HelpController < ApplicationController
     render template: "help/wiki_syntax/#{Setting.text_formatting}/#{lang}/wiki_syntax_#{type}#{Setting.text_formatting}", layout: nil
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer
   def show_code_highlighting
     @available_lexers = Rouge::Lexer.all.sort_by(&:tag)
     render template: "help/wiki_syntax/code_highlighting_languages", layout: nil

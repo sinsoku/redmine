@@ -23,57 +23,69 @@ class AvatarsHelperTest < Redmine::HelperTest
   include ERB::Util
   include AvatarsHelper
 
+  # @rbs () -> String
   def setup
     Setting.gravatar_enabled = '1'
   end
 
+  # @rbs () -> bool
   def test_avatar_with_user
     assert_include Digest::SHA256.hexdigest('jsmith@somenet.foo'), avatar(User.find_by_mail('jsmith@somenet.foo'))
   end
 
+  # @rbs () -> bool
   def test_avatar_with_email_string
     assert_include Digest::SHA256.hexdigest('jsmith@somenet.foo'), avatar('jsmith <jsmith@somenet.foo>')
   end
 
+  # @rbs () -> MatchData
   def test_avatar_with_anonymous_user
     assert_match %r{src="/assets/anonymous(-\w+)?.png"}, avatar(User.anonymous)
   end
 
+  # @rbs () -> MatchData
   def test_avatar_with_group
     assert_match %r{src="/assets/group(-\w+)?.png"}, avatar(Group.first)
   end
 
+  # @rbs () -> bool
   def test_avatar_with_invalid_arg_should_return_nil
     assert_nil avatar('jsmith')
     assert_nil avatar(nil)
   end
 
+  # @rbs () -> bool
   def test_avatar_default_size_should_be_24
     assert_include 'size=24', avatar('jsmith <jsmith@somenet.foo>')
   end
 
+  # @rbs () -> bool
   def test_avatar_with_size_option
     assert_include 'size=24', avatar('jsmith <jsmith@somenet.foo>', :size => 24)
     assert_include 'width="24" height="24"', avatar(User.anonymous, :size => 24)
   end
 
+  # @rbs () -> bool
   def test_avatar_with_html_option
     # Non-avatar options should be considered html options
     assert_include 'title="John Smith"', avatar('jsmith <jsmith@somenet.foo>', :title => 'John Smith')
   end
 
+  # @rbs () -> bool
   def test_avatar_css_class
     # The default class of the img tag should be gravatar
     assert_include 'class="gravatar"', avatar('jsmith <jsmith@somenet.foo>')
     assert_include 'class="gravatar picture"', avatar('jsmith <jsmith@somenet.foo>', :class => 'picture')
   end
 
+  # @rbs () -> bool
   def test_avatar_disabled
     with_settings :gravatar_enabled => '0' do
       assert_equal '', avatar(User.find_by_mail('jsmith@somenet.foo'))
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_avatar_server_url
     to_test = {
       'https://www.gravatar.com' => %r|https://www.gravatar.com/avatar/\h{32}|,

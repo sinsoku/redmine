@@ -28,16 +28,19 @@ class Comment < ApplicationRecord
 
   safe_attributes 'comments'
 
+  # @rbs (String) -> String
   def comments=(arg)
     self.content = arg
   end
 
+  # @rbs () -> String
   def comments
     content
   end
 
   private
 
+  # @rbs () -> Array[untyped]?
   def send_notification
     event = "#{commented.class.name.underscore}_comment_added"
     if Setting.notified_events.include?(event)

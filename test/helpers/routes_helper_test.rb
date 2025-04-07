@@ -20,16 +20,19 @@
 require_relative '../test_helper'
 
 class RoutesHelperTest < Redmine::HelperTest
+  # @rbs () -> bool
   def test_time_entries_path
     assert_equal '/projects/ecookbook/time_entries', _time_entries_path(Project.find(1), nil)
     assert_equal '/time_entries', _time_entries_path(nil, nil)
   end
 
+  # @rbs () -> bool
   def test_report_time_entries_path
     assert_equal '/projects/ecookbook/time_entries/report', _report_time_entries_path(Project.find(1), nil)
     assert_equal '/time_entries/report', _report_time_entries_path(nil, nil)
   end
 
+  # @rbs () -> bool
   def test_new_time_entry_path
     assert_equal '/projects/ecookbook/time_entries/new', _new_time_entry_path(Project.find(1), nil)
     assert_equal '/issues/1/time_entries/new', _new_time_entry_path(Project.find(1), Issue.find(1))
@@ -37,6 +40,7 @@ class RoutesHelperTest < Redmine::HelperTest
     assert_equal '/time_entries/new', _new_time_entry_path(nil, nil)
   end
 
+  # @rbs () -> bool
   def test_project_issues_url
     assert_equal 'http://test.host/projects/ecookbook/issues', _project_issues_url(Project.find(1))
     assert_equal 'http://test.host/issues', _project_issues_url(nil)

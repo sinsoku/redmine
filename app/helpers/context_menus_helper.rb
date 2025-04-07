@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module ContextMenusHelper
+  # @rbs (String | ActiveSupport::SafeBuffer, String | Hash[untyped, untyped], ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def context_menu_link(name, url, options={})
     label = name
     css_classes = [options[:class]]
@@ -40,6 +41,7 @@ module ContextMenusHelper
     link_to label, url, options
   end
 
+  # @rbs (IssueCustomField, String, String | Integer) -> ActiveSupport::SafeBuffer
   def bulk_update_custom_field_context_menu_link(field, text, value)
     context_menu_link(
       h(text),
@@ -52,6 +54,7 @@ module ContextMenusHelper
     )
   end
 
+  # @rbs (TimeEntryCustomField, String, String) -> ActiveSupport::SafeBuffer
   def bulk_update_time_entry_custom_field_context_menu_link(field, text, value)
     context_menu_link(
       h(text),

@@ -30,28 +30,34 @@ class IssuePriority < Enumeration
 
   OptionName = :enumeration_issue_priorities
 
+  # @rbs () -> Symbol
   def option_name
     OptionName
   end
 
+  # @rbs () -> Integer
   def objects_count
     issues.count
   end
 
+  # @rbs (IssuePriority) -> Integer
   def transfer_relations(to)
     issues.update_all(:priority_id => to.id)
   end
 
+  # @rbs () -> String
   def css_classes
     "priority-#{id} priority-#{position_name}"
   end
 
   # Clears position_name for all priorities
   # Called from migration 20121026003537_populate_enumerations_position_name
+  # @rbs () -> void
   def self.clear_position_names
     update_all :position_name => nil
   end
 
+  # @rbs () -> IssuePriority?
   def self.default_or_middle
     default || begin
       priorities = active
@@ -59,12 +65,14 @@ class IssuePriority < Enumeration
     end
   end
 
+  # @rbs () -> bool
   def high?
     return false unless (baseline_position = self.class.default_or_middle&.position)
 
     position > baseline_position
   end
 
+  # @rbs () -> bool
   def low?
     return false unless (baseline_position = self.class.default_or_middle&.position)
 
@@ -73,6 +81,7 @@ class IssuePriority < Enumeration
 
   # Updates position_name for active priorities
   # Called from migration 20121026003537_populate_enumerations_position_name
+  # @rbs () -> IssuePriority::ActiveRecord_Relation?
   def self.compute_position_names
     priorities = active
     if priorities.any?

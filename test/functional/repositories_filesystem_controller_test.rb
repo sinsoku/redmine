@@ -25,6 +25,7 @@ class RepositoriesFilesystemControllerTest < Redmine::RepositoryControllerTest
   REPOSITORY_PATH = Rails.root.join('tmp/test/filesystem_repository').to_s
   PRJ_ID = 3
 
+  # @rbs () -> bool
   def setup
     super
     @ruby19_non_utf8_pass = Encoding.default_external.to_s != 'UTF-8'
@@ -219,6 +220,7 @@ class RepositoriesFilesystemControllerTest < Redmine::RepositoryControllerTest
     end
   else
     puts "Filesystem test repository NOT FOUND. Skipping functional tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

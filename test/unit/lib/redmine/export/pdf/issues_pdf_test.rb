@@ -22,6 +22,7 @@ require_relative '../../../../../test_helper'
 class IssuesPdfHelperTest < ActiveSupport::TestCase
   include Redmine::Export::PDF::IssuesPdfHelper
 
+  # @rbs () -> Hash[untyped, untyped]
   def test_fetch_row_values_should_round_float_values
     query = IssueQuery.new(:project => Project.find(1), :name => '_')
     query.column_names = [:subject, :spent_hours]
@@ -39,6 +40,7 @@ class IssuesPdfHelperTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_fetch_row_values_should_be_able_to_handle_parent_issue_subject
     query = IssueQuery.new(:project => Project.find(1), :name => '_')
     query.column_names = [:subject, 'parent.subject']

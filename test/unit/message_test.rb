@@ -20,12 +20,14 @@
 require_relative '../test_helper'
 
 class MessageTest < ActiveSupport::TestCase
+  # @rbs () -> User
   def setup
     User.current = nil
     @board = Board.find(1)
     @user = User.find(1)
   end
 
+  # @rbs () -> bool
   def test_create
     topics_count = @board.topics_count
     messages_count = @board.messages_count
@@ -44,6 +46,7 @@ class MessageTest < ActiveSupport::TestCase
     assert message.watched_by?(@user)
   end
 
+  # @rbs () -> bool
   def test_reply
     topics_count = @board.topics_count
     messages_count = @board.messages_count
@@ -69,6 +72,7 @@ class MessageTest < ActiveSupport::TestCase
     assert message.watched_by?(reply_author)
   end
 
+  # @rbs () -> bool
   def test_cannot_reply_to_locked_topic
     topics_count = @board.topics_count
     messages_count = @board.messages_count
@@ -87,6 +91,7 @@ class MessageTest < ActiveSupport::TestCase
     assert_equal 1, reply.errors.count
   end
 
+  # @rbs () -> bool
   def test_moving_message_should_update_counters
     message = Message.find(1)
     assert_no_difference 'Message.count' do
@@ -104,6 +109,7 @@ class MessageTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_topic
     set_tmp_attachments_directory
     message = Message.find(1)
@@ -123,6 +129,7 @@ class MessageTest < ActiveSupport::TestCase
     # Watchers removed
   end
 
+  # @rbs () -> bool
   def test_destroy_reply
     message = Message.find(5)
     board = message.board
@@ -135,6 +142,7 @@ class MessageTest < ActiveSupport::TestCase
     assert_equal messages_count - 1, board.messages_count
   end
 
+  # @rbs () -> bool
   def test_destroying_last_reply_should_update_topic_last_reply_id
     topic = Message.find(4)
     assert_equal 6, topic.last_reply_id
@@ -150,6 +158,7 @@ class MessageTest < ActiveSupport::TestCase
     assert_nil topic.reload.last_reply_id
   end
 
+  # @rbs () -> bool
   def test_editable_by
     message = Message.find(6)
     author = message.author
@@ -159,6 +168,7 @@ class MessageTest < ActiveSupport::TestCase
     assert !message.reload.editable_by?(author.reload)
   end
 
+  # @rbs () -> bool
   def test_destroyable_by
     message = Message.find(6)
     author = message.author
@@ -168,6 +178,7 @@ class MessageTest < ActiveSupport::TestCase
     assert !message.reload.destroyable_by?(author.reload)
   end
 
+  # @rbs () -> bool
   def test_set_sticky
     message = Message.new
     assert_equal 0, message.sticky

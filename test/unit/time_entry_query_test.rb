@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class TimeEntryQueryTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> ActiveSupport::OrderedHash
   def test_filter_values_without_project_should_be_arrays
     q = TimeEntryQuery.new
     assert_nil q.project
@@ -35,6 +37,7 @@ class TimeEntryQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> ActiveSupport::OrderedHash
   def test_filter_values_with_project_should_be_arrays
     q = TimeEntryQuery.new(:project => Project.find(1))
     assert_not_nil q.project
@@ -46,6 +49,7 @@ class TimeEntryQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_cross_project_activity_filter_should_propose_non_active_activities
     activity = TimeEntryActivity.create!(:name => 'Disabled', :active => false)
     assert !activity.active?
@@ -56,6 +60,7 @@ class TimeEntryQueryTest < ActiveSupport::TestCase
     assert_include ["Disabled", activity.id.to_s], values
   end
 
+  # @rbs () -> bool
   def test_activity_filter_should_consider_system_and_project_activities
     TimeEntry.delete_all
     system = TimeEntryActivity.create!(:name => 'Foo')
@@ -76,6 +81,7 @@ class TimeEntryQueryTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_project_query_should_include_project_issue_custom_fields_only_as_filters
     global = IssueCustomField.generate!(:is_for_all => true, :is_filter => true)
     field_on_project =
@@ -91,6 +97,7 @@ class TimeEntryQueryTest < ActiveSupport::TestCase
     assert_not_include "issue.cf_#{field_not_on_project.id}", query.available_filters.keys
   end
 
+  # @rbs () -> bool
   def test_project_query_should_include_project_issue_custom_fields_only_as_columns
     global = IssueCustomField.generate!(:is_for_all => true, :is_filter => true)
     field_on_project =
@@ -106,26 +113,31 @@ class TimeEntryQueryTest < ActiveSupport::TestCase
     assert_not_include "issue.cf_#{field_not_on_project.id}", query.available_columns.map {|c| c.name.to_s}
   end
 
+  # @rbs () -> bool
   def test_issue_category_filter_should_not_be_available_in_global_queries
     query = TimeEntryQuery.new(:project => nil, :name => '_')
     assert !query.available_filters.has_key?('issue.category_id')
   end
 
+  # @rbs () -> bool
   def test_project_status_filter_should_be_available_in_global_queries
     query = TimeEntryQuery.new(:project => nil, :name => '_')
     assert query.available_filters.has_key?('project.status')
   end
 
+  # @rbs () -> bool
   def test_project_status_filter_should_be_available_when_project_has_subprojects
     query = TimeEntryQuery.new(:project => Project.find(1), :name => '_')
     assert query.available_filters.has_key?('project.status')
   end
 
+  # @rbs () -> bool
   def test_project_status_filter_should_not_be_available_when_project_is_leaf
     query = TimeEntryQuery.new(:project => Project.find(2), :name => '_')
     assert !query.available_filters.has_key?('project.status')
   end
 
+  # @rbs () -> bool
   def test_user_group_filter_should_consider_spacified_groups_time_entries
     Group.find(10).users << User.find(2)
     Group.find(11).users << User.find(3)
@@ -157,6 +169,7 @@ class TimeEntryQueryTest < ActiveSupport::TestCase
     assert_equal 7.0, query.results_scope.sum(:hours)
   end
 
+  # @rbs () -> bool
   def test_user_role_filter_should_consider_spacified_roles_time_entries
     project = Project.find(1)
     project.members << Member.new(:user_id => 2, :roles => [Role.find(1)])
@@ -189,6 +202,7 @@ class TimeEntryQueryTest < ActiveSupport::TestCase
     assert_equal 7.0, query.results_scope.sum(:hours)
   end
 
+  # @rbs () -> bool
   def test_results_scope_should_be_in_the_same_order_when_paginating
     4.times {TimeEntry.generate!}
     q = TimeEntryQuery.new

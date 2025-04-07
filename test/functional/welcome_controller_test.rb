@@ -20,35 +20,41 @@
 require_relative '../test_helper'
 
 class WelcomeControllerTest < Redmine::ControllerTest
+  # @rbs () -> nil
   def setup
     Setting.default_language = 'en'
     User.current = nil
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_index
     get :index
     assert_response :success
     assert_select 'h3', :text => 'Latest news'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_browser_language
     @request.env['HTTP_ACCEPT_LANGUAGE'] = 'fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3'
     get :index
     assert_select 'html[lang=fr]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_browser_language_alternate
     @request.env['HTTP_ACCEPT_LANGUAGE'] = 'zh-TW'
     get :index
     assert_select 'html[lang=zh-TW]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_browser_language_alternate_not_valid
     @request.env['HTTP_ACCEPT_LANGUAGE'] = 'fr-CA'
     get :index
     assert_select 'html[lang=fr]'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_browser_language_should_be_ignored_with_force_default_language_for_anonymous
     @request.env['HTTP_ACCEPT_LANGUAGE'] = 'fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3'
     with_settings :force_default_language_for_anonymous => '1' do
@@ -57,6 +63,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_user_language_should_be_used
     user = User.find(2).update_attribute :language, 'it'
     @request.session[:user_id] = 2
@@ -67,6 +74,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_user_language_should_be_ignored_if_force_default_language_for_loggedin
     user = User.find(2).update_attribute :language, 'it'
     @request.session[:user_id] = 2
@@ -77,6 +85,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_warn_on_leaving_unsaved_turn_on
     user = User.find(2)
     user.pref.warn_on_leaving_unsaved = '1'
@@ -87,6 +96,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     assert_select 'script', :text => %r{warnLeavingUnsaved}
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_warn_on_leaving_unsaved_turn_off
     user = User.find(2)
     user.pref.warn_on_leaving_unsaved = '0'
@@ -97,6 +107,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     assert_select 'script', :text => %r{warnLeavingUnsaved}, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_textarea_font_set_to_monospace
     user = User.find(1)
     user.pref.textarea_font = 'monospace'
@@ -106,6 +117,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     assert_select 'body.textarea-monospace'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_textarea_font_set_to_proportional
     user = User.find(1)
     user.pref.textarea_font = 'proportional'
@@ -115,6 +127,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     assert_select 'body.textarea-proportional'
   end
 
+  # @rbs () -> Array[untyped]
   def test_data_text_setting_attribute
     formats = %w(textile common_mark)
     formats.each do |format|
@@ -125,6 +138,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_logout_link_should_post
     @request.session[:user_id] = 2
 
@@ -132,10 +146,12 @@ class WelcomeControllerTest < Redmine::ControllerTest
     assert_select 'a[href="/logout"][data-method=post]', :text => 'Sign out'
   end
 
+  # @rbs () -> bool
   def test_call_hook_mixed_in
     assert @controller.respond_to?(:call_hook)
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_project_jump_box_should_escape_names_once
     Project.find(1).update_attribute :name, 'Foo & Bar'
     @request.session[:user_id] = 2
@@ -146,25 +162,30 @@ class WelcomeControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_api_offset_and_limit_without_params
     assert_equal [0, 25], @controller.api_offset_and_limit({})
   end
 
+  # @rbs () -> bool
   def test_api_offset_and_limit_with_limit
     assert_equal [0, 30], @controller.api_offset_and_limit({:limit => 30})
     assert_equal [0, 100], @controller.api_offset_and_limit({:limit => 120})
     assert_equal [0, 25], @controller.api_offset_and_limit({:limit => -10})
   end
 
+  # @rbs () -> bool
   def test_api_offset_and_limit_with_offset
     assert_equal [10, 25], @controller.api_offset_and_limit({:offset => 10})
     assert_equal [0, 25], @controller.api_offset_and_limit({:offset => -10})
   end
 
+  # @rbs () -> bool
   def test_api_offset_and_limit_with_offset_and_limit
     assert_equal [10, 50], @controller.api_offset_and_limit({:offset => 10, :limit => 50})
   end
 
+  # @rbs () -> bool
   def test_api_offset_and_limit_with_page
     assert_equal [0, 25], @controller.api_offset_and_limit({:page => 1})
     assert_equal [50, 25], @controller.api_offset_and_limit({:page => 3})
@@ -172,11 +193,13 @@ class WelcomeControllerTest < Redmine::ControllerTest
     assert_equal [0, 25], @controller.api_offset_and_limit({:page => -2})
   end
 
+  # @rbs () -> bool
   def test_api_offset_and_limit_with_page_and_limit
     assert_equal [0, 100], @controller.api_offset_and_limit({:page => 1, :limit => 100})
     assert_equal [200, 100], @controller.api_offset_and_limit({:page => 3, :limit => 100})
   end
 
+  # @rbs () -> bool
   def test_unhautorized_exception_with_anonymous_should_redirect_to_login
     WelcomeController.any_instance.stubs(:index).raises(::Unauthorized)
 
@@ -185,6 +208,7 @@ class WelcomeControllerTest < Redmine::ControllerTest
     assert_redirected_to('/login?back_url='+CGI.escape('http://test.host/'))
   end
 
+  # @rbs () -> bool
   def test_unhautorized_exception_with_anonymous_and_xmlhttprequest_should_respond_with_401_to_anonymous
     WelcomeController.any_instance.stubs(:index).raises(::Unauthorized)
 

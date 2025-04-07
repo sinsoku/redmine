@@ -20,12 +20,14 @@
 require_relative '../test_helper'
 
 class CommentTest < ActiveSupport::TestCase
+  # @rbs () -> News
   def setup
     User.current = nil
     @jsmith = User.find(2)
     @news = News.find(1)
   end
 
+  # @rbs () -> bool
   def test_create
     comment = Comment.new(:commented => @news, :author => @jsmith, :comments => "my comment")
     assert comment.save
@@ -33,6 +35,7 @@ class CommentTest < ActiveSupport::TestCase
     assert_equal 2, @news.comments_count
   end
 
+  # @rbs () -> Comment
   def test_create_should_send_notification
     Watcher.create!(:watchable => @news, :user => @jsmith)
 
@@ -43,12 +46,14 @@ class CommentTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_validate
     comment = Comment.new(:commented => @news)
     assert !comment.save
     assert_equal 2, comment.errors.count
   end
 
+  # @rbs () -> bool
   def test_destroy
     comment = Comment.find(1)
     assert comment.destroy

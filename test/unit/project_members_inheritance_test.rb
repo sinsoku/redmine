@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class ProjectMembersInheritanceTest < ActiveSupport::TestCase
+  # @rbs () -> bool
   def setup
     User.current = nil
     @parent = Project.generate!
@@ -27,6 +28,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     assert_equal 2, @member.reload.roles.size
   end
 
+  # @rbs () -> bool
   def test_project_created_with_inherit_members_disabled_should_not_inherit_members
     assert_no_difference 'Member.count' do
       project = Project.generate_with_parent!(@parent, :inherit_members => false)
@@ -35,6 +37,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_project_created_with_inherit_members_should_inherit_members
     assert_difference 'Member.count', 1 do
       project = Project.generate_with_parent!(@parent, :inherit_members => true)
@@ -47,6 +50,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_turning_on_inherit_members_should_inherit_members
     Project.generate_with_parent!(@parent, :inherit_members => false)
 
@@ -63,6 +67,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_turning_off_inherit_members_should_remove_inherited_members
     Project.generate_with_parent!(@parent, :inherit_members => true)
 
@@ -76,6 +81,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_moving_a_root_project_under_a_parent_should_inherit_members
     Project.generate!(:inherit_members => true)
     project = Project.order('id desc').first
@@ -91,6 +97,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_moving_a_subproject_as_root_should_loose_inherited_members
     Project.generate_with_parent!(@parent, :inherit_members => true)
     project = Project.order('id desc').first
@@ -103,6 +110,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_moving_a_subproject_to_another_parent_should_change_inherited_members
     other_parent = Project.generate!
     other_member = Member.create!(:principal => User.find(4), :project => other_parent, :role_ids => [3])
@@ -119,6 +127,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     assert_equal other_member.roles.sort, member.roles.sort
   end
 
+  # @rbs () -> bool
   def test_inheritance_should_propagate_to_subprojects
     project = Project.generate_with_parent!(@parent, :inherit_members => false)
     subproject = Project.generate_with_parent!(project, :inherit_members => true)
@@ -138,6 +147,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_inheritance_removal_should_propagate_to_subprojects
     project = Project.generate_with_parent!(@parent, :inherit_members => true)
     subproject = Project.generate_with_parent!(project, :inherit_members => true)
@@ -154,6 +164,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_adding_a_member_should_propagate
     project = Project.generate_with_parent!(@parent, :inherit_members => true)
 
@@ -167,6 +178,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_adding_a_member_should_not_propagate_if_child_does_not_inherit
     project = Project.generate_with_parent!(@parent, :inherit_members => false)
 
@@ -177,6 +189,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_removing_a_member_should_propagate
     project = Project.generate_with_parent!(@parent, :inherit_members => true)
 
@@ -188,6 +201,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_adding_a_group_member_should_propagate_with_its_users
     project = Project.generate_with_parent!(@parent, :inherit_members => true)
     group = Group.generate!
@@ -211,6 +225,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_removing_a_group_member_should_propagate
     project = Project.generate_with_parent!(@parent, :inherit_members => true)
     group = Group.generate!
@@ -232,6 +247,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_adding_user_who_use_is_already_a_member_to_parent_project_should_merge_roles
     project = Project.generate_with_parent!(@parent, :inherit_members => true)
     user = User.find(4)
@@ -246,6 +262,7 @@ class ProjectMembersInheritanceTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_turning_on_inheritance_with_user_who_is_already_a_member_should_merge_roles
     project = Project.generate_with_parent!(@parent)
     user = @member.user

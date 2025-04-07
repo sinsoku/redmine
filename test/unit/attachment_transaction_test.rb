@@ -22,11 +22,13 @@ require_relative '../test_helper'
 class AttachmentTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
 
+  # @rbs () -> String
   def setup
     User.current = nil
     set_tmp_attachments_directory
   end
 
+  # @rbs () -> bool
   def test_rollback_after_create_should_remove_file_from_disk
     diskfile = nil
 
@@ -42,6 +44,7 @@ class AttachmentTest < ActiveSupport::TestCase
     assert !File.exist?(diskfile)
   end
 
+  # @rbs () -> bool
   def test_destroy_should_remove_file_from_disk_after_commit
     a = Attachment.new(:container => Issue.find(1),
                        :file => uploaded_test_file("testfile.txt", "text/plain"),
@@ -57,6 +60,7 @@ class AttachmentTest < ActiveSupport::TestCase
     assert !File.exist?(diskfile)
   end
 
+  # @rbs () -> bool
   def test_rollback_after_destroy_should_not_remove_file_from_disk
     a = Attachment.new(:container => Issue.find(1),
                        :file => uploaded_test_file("testfile.txt", "text/plain"),

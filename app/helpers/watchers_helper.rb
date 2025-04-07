@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module WatchersHelper
+  # @rbs ((Issue | Message | WikiPage | Wiki | Array[untyped] | Board | News)?, AnonymousUser | User) -> (String | ActiveSupport::SafeBuffer)
   def watcher_link(objects, user)
     return '' unless user && user.logged?
 
@@ -37,6 +38,7 @@ module WatchersHelper
   end
 
   # Returns the css class used to identify watch links for a given +object+
+  # @rbs (Array[untyped]) -> String
   def watcher_css(objects)
     objects = Array.wrap(objects)
     id = (objects.size == 1 ? objects.first.id : 'bulk')
@@ -44,6 +46,7 @@ module WatchersHelper
   end
 
   # Returns a comma separated list of users watching the given object
+  # @rbs (Issue | Message | WikiPage) -> ActiveSupport::SafeBuffer
   def watchers_list(object)
     remove_allowed = User.current.allowed_to?(:"delete_#{object.class.name.underscore}_watchers", object.project)
     content = ''.html_safe
@@ -71,6 +74,7 @@ module WatchersHelper
     content.present? ? content_tag('ul', content, :class => 'watchers') : content
   end
 
+  # @rbs (Issue?, Array[untyped], ?bool?) -> ActiveSupport::SafeBuffer
   def watchers_checkboxes(object, users, checked=nil)
     users.map do |user|
       c = checked.nil? ? object.watcher_user_ids.include?(user.id) : checked

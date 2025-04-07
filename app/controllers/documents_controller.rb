@@ -28,6 +28,7 @@ class DocumentsController < ApplicationController
   helper :attachments
   helper :custom_fields
 
+  # @rbs () -> nil
   def index
     @sort_by = %w(category date title author).include?(params[:sort_by]) ? params[:sort_by] : 'category'
     documents = @project.documents.includes(:attachments, :category).to_a
@@ -46,15 +47,18 @@ class DocumentsController < ApplicationController
     render :layout => false if request.xhr?
   end
 
+  # @rbs () -> Array[untyped]
   def show
     @attachments = @document.attachments.to_a
   end
 
+  # @rbs () -> nil
   def new
     @document = @project.documents.build
     @document.safe_attributes = params[:document]
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def create
     @document = @project.documents.build
     @document.safe_attributes = params[:document]
@@ -68,9 +72,11 @@ class DocumentsController < ApplicationController
     end
   end
 
+  # @rbs () -> nil
   def edit
   end
 
+  # @rbs () -> (String | ActiveSupport::SafeBuffer)
   def update
     @document.safe_attributes = params[:document]
     if @document.save
@@ -81,12 +87,14 @@ class DocumentsController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def destroy
     @document.destroy if request.delete?
     flash[:notice] = l(:notice_successful_delete)
     redirect_to project_documents_path(@project)
   end
 
+  # @rbs () -> String
   def add_attachment
     attachments = Attachment.attach_files(@document, params[:attachments])
     render_attachment_warning_if_needed(@document)

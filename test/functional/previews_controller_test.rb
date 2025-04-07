@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class PreviewsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview_new_issue_description
     @request.session[:user_id] = 2
     post(
@@ -33,6 +34,7 @@ class PreviewsControllerTest < Redmine::ControllerTest
     assert_select 'p', :text => 'Foo'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview_issue_description
     @request.session[:user_id] = 2
     post(
@@ -48,6 +50,7 @@ class PreviewsControllerTest < Redmine::ControllerTest
     assert_select 'p', :text => 'Unable to print recipes'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview_issue_notes
     @request.session[:user_id] = 2
     post(
@@ -62,6 +65,7 @@ class PreviewsControllerTest < Redmine::ControllerTest
     assert_select 'p', :text => 'Foo'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview_issue_notes_should_support_links_to_existing_attachments
     Attachment.generate!(:container => Issue.find(1), :filename => 'foo.bar')
     @request.session[:user_id] = 2
@@ -78,6 +82,7 @@ class PreviewsControllerTest < Redmine::ControllerTest
     assert_select 'a.attachment', :text => 'foo.bar'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview_issue_notes_should_show_thumbnail_of_file_immidiately_after_attachment
     attachment = Attachment.generate!(filename: 'foo.png', digest: Redmine::Utils.random_hex(32))
     attachment.update(container: nil)
@@ -97,6 +102,7 @@ class PreviewsControllerTest < Redmine::ControllerTest
     assert_select 'a.thumbnail[title=?]', 'foo.png'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview_new_news
     get(
       :news,
@@ -109,6 +115,7 @@ class PreviewsControllerTest < Redmine::ControllerTest
     assert_select 'p', :text => /News description/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_preview_existing_news
     get(
       :news,

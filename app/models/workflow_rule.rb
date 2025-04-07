@@ -28,6 +28,7 @@ class WorkflowRule < ApplicationRecord
   validates_presence_of :role, :tracker
 
   # Copies workflows from source to targets
+  # @rbs (Tracker?, Role?, (Array[untyped] | Tracker)?, (Array[untyped] | Role)?) -> Array[untyped]
   def self.copy(source_tracker, source_role, target_trackers, target_roles)
     unless source_tracker.is_a?(Tracker) || source_role.is_a?(Role)
       raise ArgumentError.new(
@@ -53,6 +54,7 @@ class WorkflowRule < ApplicationRecord
   end
 
   # Copies a single set of workflows from source to target
+  # @rbs (Tracker, Role, Tracker, Role) -> bool
   def self.copy_one(source_tracker, source_role, target_tracker, target_role)
     unless source_tracker.is_a?(Tracker) && !source_tracker.new_record? &&
       source_role.is_a?(Role) && !source_role.new_record? &&

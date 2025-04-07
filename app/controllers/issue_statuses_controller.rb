@@ -25,6 +25,7 @@ class IssueStatusesController < ApplicationController
   before_action :require_admin_or_api_request, :only => :index
   accept_api_auth :index
 
+  # @rbs () -> nil
   def index
     @issue_statuses = IssueStatus.sorted.to_a
     respond_to do |format|
@@ -33,10 +34,12 @@ class IssueStatusesController < ApplicationController
     end
   end
 
+  # @rbs () -> IssueStatus
   def new
     @issue_status = IssueStatus.new
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def create
     @issue_status = IssueStatus.new
     @issue_status.safe_attributes = params[:issue_status]
@@ -48,10 +51,12 @@ class IssueStatusesController < ApplicationController
     end
   end
 
+  # @rbs () -> IssueStatus
   def edit
     @issue_status = IssueStatus.find(params[:id])
   end
 
+  # @rbs () -> (ActiveSupport::SafeBuffer | String)
   def update
     @issue_status = IssueStatus.find(params[:id])
     @issue_status.safe_attributes = params[:issue_status]
@@ -71,6 +76,7 @@ class IssueStatusesController < ApplicationController
     end
   end
 
+  # @rbs () -> String
   def destroy
     IssueStatus.find(params[:id]).destroy
     redirect_to issue_statuses_path
@@ -79,6 +85,7 @@ class IssueStatusesController < ApplicationController
     redirect_to issue_statuses_path
   end
 
+  # @rbs () -> String
   def update_issue_done_ratio
     if request.post? && IssueStatus.update_issue_done_ratios
       flash[:notice] = l(:notice_issue_done_ratios_updated)

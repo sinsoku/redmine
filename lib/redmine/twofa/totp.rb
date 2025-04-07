@@ -22,6 +22,7 @@ require_relative 'base'
 module Redmine
   module Twofa
     class Totp < Base
+      # @rbs () -> void
       def init_pairing!
         @user.update!(twofa_totp_key: ROTP::Base32.random)
         # reset the cached totp as the key might have changed
@@ -36,6 +37,7 @@ module Redmine
         super
       end
 
+      # @rbs (String) -> bool
       def verify_otp!(code)
         # topt codes are white-space-insensitive
         code = code.to_s.remove(/[[:space:]]/)
@@ -49,10 +51,12 @@ module Redmine
         end
       end
 
+      # @rbs () -> String
       def provisioning_uri
         totp.provisioning_uri(@user.login)
       end
 
+      # @rbs () -> Hash[untyped, untyped]
       def init_pairing_view_variables
         super.merge(
           {
@@ -64,6 +68,7 @@ module Redmine
 
       private
 
+      # @rbs () -> ROTP::TOTP
       def totp
         @totp ||= ROTP::TOTP.new(@user.twofa_totp_key, issuer: Setting.host_name)
       end

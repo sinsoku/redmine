@@ -18,14 +18,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class ProjectCustomField < CustomField
+  # @rbs () -> Symbol
   def type_name
     :label_project_plural
   end
 
+  # @rbs (Project, ?AnonymousUser | User) -> bool
   def visible_by?(project, user=User.current)
     super || roles.intersect?(user.roles_for_project(project))
   end
 
+  # @rbs (?nil, ?AnonymousUser | User, ?nil) -> String
   def visibility_by_project_condition(project_key=nil, user=User.current, id_column=nil)
     project_key ||= "#{Project.table_name}.id"
     super

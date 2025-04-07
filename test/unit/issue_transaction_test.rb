@@ -22,10 +22,12 @@ require_relative '../test_helper'
 class IssueTransactionTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
 
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_invalid_move_to_another_project
     lft1 = new_issue_lft
     parent1 = Issue.generate!

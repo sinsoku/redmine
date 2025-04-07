@@ -35,6 +35,7 @@ module Redmine
 
       private
 
+      # @rbs () -> Integer
       def target_lft
         scope_for_max_rgt = self.class.where(:root_id => root_id).where(:parent_id => parent_id)
         if id
@@ -50,6 +51,7 @@ module Redmine
         end
       end
 
+      # @rbs (?bool) -> Integer
       def add_to_nested_set(lock=true)
         if lock
           lock_nested_set { add_to_nested_set_without_lock }
@@ -58,6 +60,7 @@ module Redmine
         end
       end
 
+      # @rbs () -> Integer
       def add_to_nested_set_without_lock
         parent.send :reload_nested_set_values
         self.root_id = parent.root_id
@@ -72,6 +75,7 @@ module Redmine
         )
       end
 
+      # @rbs () -> Integer
       def add_as_root
         self.root_id = id
         self.lft = 1
@@ -79,6 +83,7 @@ module Redmine
         self.class.where(:id => id).update_all(:root_id => root_id, :lft => lft, :rgt => rgt)
       end
 
+      # @rbs () -> Array[untyped]
       def handle_parent_change
         lock_nested_set do
           reload_nested_set_values
@@ -92,6 +97,7 @@ module Redmine
         end
       end
 
+      # @rbs () -> Array[untyped]
       def move_to_nested_set
         if parent
           previous_root_id = root_id
@@ -116,6 +122,7 @@ module Redmine
         end
       end
 
+      # @rbs () -> Array[untyped]
       def remove_from_nested_set
         self.class.where(:root_id => root_id).where("lft >= ? AND rgt <= ?", lft, rgt).
           update_all(["root_id = :id, lft = lft - :shift, rgt = rgt - :shift", {:id => id, :shift => lft - 1}])
@@ -131,6 +138,7 @@ module Redmine
         self.lft, self.rgt = 1, (rgt - lft + 1)
       end
 
+      # @rbs () -> (Issue | Integer)?
       def destroy_children
         if @without_nested_set_update
           children.each {|c| c.send :destroy_without_nested_set_update}
@@ -151,23 +159,28 @@ module Redmine
         end
       end
 
+      # @rbs () -> Issue
       def destroy_without_nested_set_update
         @without_nested_set_update = true
         destroy
       end
 
+      # @rbs () -> Array[untyped]?
       def reload_nested_set_values
         self.root_id, self.lft, self.rgt = self.class.where(:id => id).pick(:root_id, :lft, :rgt)
       end
 
+      # @rbs () -> Integer
       def save_nested_set_values
         self.class.where(:id => id).update_all(:root_id => root_id, :lft => lft, :rgt => rgt)
       end
 
+      # @rbs (Issue) -> bool
       def move_possible?(issue)
         new_record? || !is_or_is_ancestor_of?(issue)
       end
 
+      # @rbs () -> (Integer | Array[untyped])?
       def lock_nested_set
         if /sqlserver/i.match?(self.class.connection.adapter_name)
           lock = "WITH (ROWLOCK HOLDLOCK UPDLOCK)"
@@ -199,10 +212,12 @@ module Redmine
         end
       end
 
+      # @rbs () -> Issue::ActiveRecord_Relation
       def nested_set_scope
         self.class.order(:lft).where(:root_id => root_id)
       end
 
+      # @rbs (Issue) -> bool
       def same_nested_set_scope?(issue)
         root_id == issue.root_id
       end
@@ -220,6 +235,7 @@ module Redmine
           end
         end
 
+        # @rbs (Integer) -> void
         def rebuild_single_tree!(root_id)
           root = Issue.where(:parent_id => nil).find(root_id)
           transaction do
@@ -232,6 +248,7 @@ module Redmine
 
         private
 
+        # @rbs (?Integer) -> Array[untyped]
         def rebuild_nodes(parent_id = nil)
           nodes = where(:parent_id => parent_id, :rgt => nil, :lft => nil).order(:id).to_a
 

@@ -21,6 +21,7 @@ module Redmine
   module Export
     module Text
       module VersionsTextHelper
+        # @rbs (Version) -> String
         def version_to_text(version)
           [
             "# #{version.name}",

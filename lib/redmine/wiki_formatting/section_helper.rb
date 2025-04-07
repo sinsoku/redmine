@@ -20,12 +20,14 @@
 module Redmine
   module WikiFormatting
     module SectionHelper
+      # @rbs (Integer) -> Array[untyped]
       def get_section(index)
         section = extract_sections(index)[1]
         hash = ActiveSupport::Digest.hexdigest(section)
         return section, hash
       end
 
+      # @rbs (Integer, String, ?String?) -> String?
       def update_section(index, update, hash=nil)
         t = extract_sections(index)
         if hash.present? && hash != ActiveSupport::Digest.hexdigest(t[1])
@@ -36,6 +38,7 @@ module Redmine
         t.reject(&:blank?).join "\n\n"
       end
 
+      # @rbs (Integer) -> Array[untyped]
       def extract_sections(index)
         sections = [+'', +'', +'']
         offset = 0

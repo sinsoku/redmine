@@ -19,6 +19,7 @@
 
 module Redmine
   module SafeAttributes
+    # @rbs (Class) -> Class
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -30,6 +31,7 @@ module Redmine
       # Example:
       #   safe_attributes 'title', 'pages'
       #   safe_attributes 'isbn', :if => {|book, user| book.author == user}
+      # @rbs (*Symbol | Symbol | Hash[untyped, untyped] | String | String | Hash[untyped, untyped] | nil) -> Array[untyped]
       def safe_attributes(*args)
         @safe_attributes ||= []
         if args.empty?
@@ -50,6 +52,7 @@ module Redmine
     # Example:
     #   book.safe_attributes # => ['title', 'pages']
     #   book.safe_attributes(book.author) # => ['title', 'pages', 'isbn']
+    # @rbs (?(User | AnonymousUser)?) -> Array[untyped]
     def safe_attribute_names(user=nil)
       return @safe_attribute_names if @safe_attribute_names && user.nil?
       names = []
@@ -64,6 +67,7 @@ module Redmine
     end
 
     # Returns true if attr can be set by user or the current user
+    # @rbs (String | Symbol, ?(User | AnonymousUser)?) -> bool
     def safe_attribute?(attr, user=nil)
       safe_attribute_names(user).include?(attr.to_s)
     end
@@ -74,6 +78,7 @@ module Redmine
     # Example:
     #   book.delete_unsafe_attributes({'title' => 'My book', 'foo' => 'bar'})
     #   # => {'title' => 'My book'}
+    # @rbs (ActiveSupport::HashWithIndifferentAccess | Hash[untyped, untyped], ?User | AnonymousUser) -> (ActiveSupport::HashWithIndifferentAccess | Hash[untyped, untyped])
     def delete_unsafe_attributes(attrs, user=User.current)
       safe = safe_attribute_names(user)
       attrs.dup.delete_if {|k, v| !safe.include?(k.to_s)}
@@ -81,6 +86,7 @@ module Redmine
 
     # Sets attributes from attrs that are safe
     # attrs is a Hash with string keys
+    # @rbs ((ActionController::Parameters | ActiveSupport::HashWithIndifferentAccess | Hash[untyped, untyped])?, ?User | AnonymousUser) -> (ActiveSupport::HashWithIndifferentAccess | Hash[untyped, untyped])?
     def safe_attributes=(attrs, user=User.current)
       if attrs.respond_to?(:to_unsafe_hash)
         attrs = attrs.to_unsafe_hash

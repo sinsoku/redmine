@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module ActivitiesHelper
+  # @rbs (Array[untyped]) -> Array[untyped]
   def sort_activity_events(events)
     events_by_group = events.group_by(&:event_group)
     sorted_events = []
@@ -31,6 +32,7 @@ module ActivitiesHelper
     sorted_events
   end
 
+  # @rbs (Project?, String?) -> ActiveSupport::SafeBuffer
   def activity_authors_options_for_select(project, selected)
     options = []
     options += [["<< #{l(:label_me)} >>", User.current.id]] if User.current.logged?

@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingCustomFieldsTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_custom_fields
     should_route 'GET /custom_fields' => 'custom_fields#index'
     should_route 'GET /custom_fields/new' => 'custom_fields#new'
@@ -30,6 +31,7 @@ class RoutingCustomFieldsTest < Redmine::RoutingTest
     should_route 'DELETE /custom_fields/2' => 'custom_fields#destroy', :id => '2'
   end
 
+  # @rbs () -> bool
   def test_custom_field_enumerations
     should_route 'GET /custom_fields/3/enumerations' => 'custom_field_enumerations#index', :custom_field_id => '3'
     should_route 'POST /custom_fields/3/enumerations' => 'custom_field_enumerations#create', :custom_field_id => '3'

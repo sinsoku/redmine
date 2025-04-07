@@ -297,6 +297,7 @@ module Redmine
   class MockFile
     attr_reader :size, :original_filename, :content_type
 
+    # @rbs (?Hash[untyped, untyped]) -> void
     def initialize(options={})
       @size = options[:size] || 32
       @original_filename = options[:original_filename] || options[:filename]
@@ -304,6 +305,7 @@ module Redmine
       @content = options[:content] || 'x'*size
     end
 
+    # @rbs (*Integer) -> (String | bool)
     def read(*args)
       if @eof
         false
@@ -315,6 +317,7 @@ module Redmine
   end
 
   class RoutingTest < ActionDispatch::IntegrationTest
+    # @rbs (Hash[untyped, untyped]) -> bool
     def should_route(arg)
       arg = arg.dup
       request = arg.keys.detect {|key| key.is_a?(String)}
@@ -338,6 +341,7 @@ module Redmine
     include Redmine::I18n
     include Propshaft::Helper
 
+    # @rbs () -> String
     def setup
       super
       User.current = nil
@@ -347,27 +351,32 @@ module Redmine
 
   class ControllerTest < ActionController::TestCase
     # Returns the issues that are displayed in the list in the same order
+    # @rbs () -> Array[untyped]
     def issues_in_list
       ids = css_select('tr.issue td.id').map {|e| e.text.to_i}
       Issue.where(:id => ids).sort_by {|issue| ids.index(issue.id)}
     end
 
     # Return the columns that are displayed in the issue list
+    # @rbs () -> Array[untyped]
     def columns_in_issues_list
       css_select('table.issues thead th:not(.checkbox)').map(&:text).select(&:present?)
     end
 
     # Return the columns that are displayed in the list
+    # @rbs () -> Array[untyped]
     def columns_in_list
       css_select('table.list thead th:not(.checkbox)').map(&:text).select(&:present?)
     end
 
     # Returns the values that are displayed in tds with the given css class
+    # @rbs (String) -> Array[untyped]
     def columns_values_in_list(css_class)
       css_select("table.list tbody td.#{css_class}").map(&:text)
     end
 
     # Verifies that the query filters match the expected filters
+    # @rbs (Array[untyped]) -> bool
     def assert_query_filters(expected_filters)
       response.body =~ /initFilters\(\);\s*((addFilter\(.+\);\s*)*)/
       filter_init = $1.to_s
@@ -388,6 +397,7 @@ module Redmine
   end
 
   class RepositoryControllerTest < ControllerTest
+    # @rbs () -> String
     def setup
       super
       # We need to explicitly set Accept header to html otherwise
@@ -399,11 +409,13 @@ module Redmine
   end
 
   class IntegrationTest < ActionDispatch::IntegrationTest
+    # @rbs () -> nil
     def setup
       ActionMailer::MailDeliveryJob.disable_test_adapter
       super
     end
 
+    # @rbs (String, String) -> bool
     def log_user(login, password)
       User.anonymous
       get "/login"
@@ -420,6 +432,7 @@ module Redmine
       assert_equal login, User.find(session[:user_id]).login
     end
 
+    # @rbs (String, ?String?) -> Hash[untyped, untyped]
     def credentials(user, password=nil)
       {'HTTP_AUTHORIZATION' => ActionController::HttpAuthentication::Basic.encode_credentials(user, password || user)}
     end
@@ -430,24 +443,29 @@ module Redmine
 
     # Base class for API tests
     class Base < Redmine::IntegrationTest
+      # @rbs () -> String
       def setup
         Setting.rest_api_enabled = '1'
       end
 
+      # @rbs () -> String
       def teardown
         Setting.rest_api_enabled = '0'
       end
 
       # Uploads content using the XML API and returns the attachment token
+      # @rbs (String, Hash[untyped, untyped]) -> String
       def xml_upload(content, credentials)
         upload('xml', content, credentials)
       end
 
       # Uploads content using the JSON API and returns the attachment token
+      # @rbs (String, Hash[untyped, untyped]) -> String
       def json_upload(content, credentials)
         upload('json', content, credentials)
       end
 
+      # @rbs (String, String, Hash[untyped, untyped]) -> String
       def upload(format, content, credentials)
         set_tmp_attachments_directory
         assert_difference 'Attachment.count' do
@@ -466,6 +484,7 @@ module Redmine
       end
 
       # Parses the response body based on its content type
+      # @rbs () -> Hash[untyped, untyped]
       def response_data
         unless response.media_type.to_s =~ /^application\/(.+)/
           raise "Unexpected response type: #{response.media_type}"
@@ -484,6 +503,7 @@ module Redmine
     end
 
     class Routing < Redmine::RoutingTest
+      # @rbs (Hash[untyped, untyped]) -> Array[untyped]
       def should_route(arg)
         arg = arg.dup
         request = arg.keys.detect {|key| key.is_a?(String)}
@@ -498,4 +518,12 @@ module Redmine
       end
     end
   end
+end
+
+trace = RBS::Trace.new
+trace.enable
+
+Minitest.after_run do
+  trace.disable
+  trace.save_comments
 end

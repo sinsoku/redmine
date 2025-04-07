@@ -25,6 +25,7 @@ module Redmine
   module Utils
     class << self
       # Returns the relative root url of the application
+      # @rbs () -> String
       def relative_url_root
         if ActionController::Base.respond_to?(:relative_url_root)
           ActionController::Base.relative_url_root.to_s
@@ -34,6 +35,7 @@ module Redmine
       end
 
       # Sets the relative root url of the application
+      # @rbs (String?) -> String?
       def relative_url_root=(arg)
         if ActionController::Base.respond_to?(:relative_url_root=)
           ActionController::Base.relative_url_root=arg
@@ -45,10 +47,12 @@ module Redmine
       # Generates a n bytes random hex string
       # Example:
       #   random_hex(4) # => "89b8c729"
+      # @rbs (Integer) -> String
       def random_hex(n)
         SecureRandom.hex(n)
       end
 
+      # @rbs (Rack::Test::UploadedFile | ActionDispatch::Http::UploadedFile, String) -> nil
       def save_upload(upload, path)
         directory = File.dirname(path)
         FileUtils.mkdir_p directory

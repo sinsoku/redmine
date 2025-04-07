@@ -20,12 +20,14 @@
 require_relative '../test_helper'
 
 class WikiRedirectTest < ActiveSupport::TestCase
+  # @rbs () -> WikiPage
   def setup
     User.current = nil
     @wiki = Wiki.find(1)
     @original = WikiPage.create(:wiki => @wiki, :title => 'Original title')
   end
 
+  # @rbs () -> bool
   def test_create_redirect_on_rename
     @original.title = 'New title'
     @original.save!
@@ -37,6 +39,7 @@ class WikiRedirectTest < ActiveSupport::TestCase
     assert_equal @original, redirect.target_page
   end
 
+  # @rbs () -> bool
   def test_create_redirect_on_move
     @original.wiki_id = 2
     @original.save!
@@ -48,6 +51,7 @@ class WikiRedirectTest < ActiveSupport::TestCase
     assert_equal @original, redirect.target_page
   end
 
+  # @rbs () -> bool
   def test_create_redirect_on_rename_and_move
     @original.title = 'New title'
     @original.wiki_id = 2
@@ -60,6 +64,7 @@ class WikiRedirectTest < ActiveSupport::TestCase
     assert_equal @original, redirect.target_page
   end
 
+  # @rbs () -> bool
   def test_update_redirect
     # create a redirect that point to this page
     assert WikiRedirect.create(:wiki => @wiki, :title => 'An_old_page', :redirects_to => 'Original_title')
@@ -70,6 +75,7 @@ class WikiRedirectTest < ActiveSupport::TestCase
     assert_equal 'New_title', @wiki.find_page('An old page').title
   end
 
+  # @rbs () -> bool
   def test_reverse_rename
     # create a redirect that point to this page
     assert WikiRedirect.create(:wiki => @wiki, :title => 'An_old_page', :redirects_to => 'Original_title')
@@ -80,6 +86,7 @@ class WikiRedirectTest < ActiveSupport::TestCase
     assert @wiki.redirects.find_by_title_and_redirects_to('Original_title', 'An_old_page')
   end
 
+  # @rbs () -> bool
   def test_rename_to_already_redirected
     assert WikiRedirect.create(:wiki => @wiki, :title => 'An_old_page', :redirects_to => 'Other_page')
 
@@ -89,6 +96,7 @@ class WikiRedirectTest < ActiveSupport::TestCase
     assert !@wiki.redirects.find_by_title_and_redirects_to('An_old_page', 'Other_page')
   end
 
+  # @rbs () -> bool
   def test_redirects_removed_when_deleting_page
     assert WikiRedirect.create(:wiki => @wiki, :title => 'An_old_page', :redirects_to => 'Original_title')
 

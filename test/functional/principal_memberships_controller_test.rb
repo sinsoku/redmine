@@ -20,10 +20,12 @@
 require_relative '../test_helper'
 
 class PrincipalMembershipsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     @request.session[:user_id] = 1
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_user_membership
     get(:new, :params => {:user_id => 7})
     assert_response :success
@@ -32,6 +34,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_user_membership_should_disable_user_projects
     Member.create!(:user_id => 7, :project_id => 1, :role_ids => [1])
 
@@ -42,12 +45,14 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_xhr_new_user_membership
     get(:new, :params => {:user_id => 7}, :xhr => true)
     assert_response :success
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> bool
   def test_create_user_membership
     assert_difference 'Member.count' do
       post(
@@ -68,6 +73,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_equal 3, member.project_id
   end
 
+  # @rbs () -> bool
   def test_create_user_membership_with_multiple_roles
     assert_difference 'Member.count' do
       post(
@@ -87,6 +93,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_equal 3, member.project_id
   end
 
+  # @rbs () -> Array[untyped]
   def test_create_user_membership_with_multiple_projects_and_roles
     assert_difference 'Member.count', 2 do
       post(
@@ -109,6 +116,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_xhr_create_user_membership
     assert_difference 'Member.count' do
       post(
@@ -133,6 +141,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_include 'tab-content-memberships', response.body
   end
 
+  # @rbs () -> bool
   def test_xhr_create_user_membership_with_failure
     assert_no_difference 'Member.count' do
       post(
@@ -153,6 +162,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_include 'Role cannot be empty', response.body, "Error message not sent"
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_user_membership
     get(
       :edit,
@@ -165,6 +175,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][value=?][checked=checked]', 'membership[role_ids][]', '1'
   end
 
+  # @rbs () -> bool
   def test_xhr_edit_user_membership
     get(
       :edit,
@@ -177,6 +188,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_update_user_membership
     assert_no_difference 'Member.count' do
       put(
@@ -194,6 +206,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_equal [2], Member.find(1).role_ids
   end
 
+  # @rbs () -> bool
   def test_xhr_update_user_membership
     assert_no_difference 'Member.count' do
       put(
@@ -215,6 +228,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_include '$("#member-1-roles").html("Developer").show();', response.body
   end
 
+  # @rbs () -> bool
   def test_destroy_user_membership
     assert_difference 'Member.count', -1 do
       delete(
@@ -229,6 +243,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_nil Member.find_by_id(1)
   end
 
+  # @rbs () -> bool
   def test_xhr_destroy_user_membership_js_format
     assert_difference 'Member.count', -1 do
       delete(
@@ -246,12 +261,14 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_include 'tab-content-memberships', response.body
   end
 
+  # @rbs () -> bool
   def test_xhr_new_group_membership
     get(:new, :params => {:group_id => 10}, :xhr => true)
     assert_response :success
     assert_equal 'text/javascript', response.media_type
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_create_group_membership
     assert_difference 'Group.find(10).members.count' do
       post(
@@ -267,6 +284,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_xhr_create_group_membership
     assert_difference 'Group.find(10).members.count' do
       post(
@@ -286,6 +304,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_match /OnlineStore/, response.body
   end
 
+  # @rbs () -> MatchData
   def test_xhr_create_group_membership_with_failure
     assert_no_difference 'Group.find(10).members.count' do
       post(
@@ -305,6 +324,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     assert_match /alert/, response.body, "Alert message not sent"
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_update_group_membership
     assert_no_difference 'Group.find(10).members.count' do
       put(
@@ -320,6 +340,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_xhr_update_group_membership
     assert_no_difference 'Group.find(10).members.count' do
       post(
@@ -338,6 +359,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> ActionDispatch::TestResponse
   def test_destroy_group_membership
     assert_difference 'Group.find(10).members.count', -1 do
       delete(
@@ -350,6 +372,7 @@ class PrincipalMembershipsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_xhr_destroy_group_membership
     assert_difference 'Group.find(10).members.count', -1 do
       delete(

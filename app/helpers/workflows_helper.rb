@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module WorkflowsHelper
+  # @rbs (String, Array[untyped] | Tracker::ActiveRecord_Relation, Array[untyped]?, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def options_for_workflow_select(name, objects, selected, options={})
     option_tags = ''.html_safe
     multiple = false
@@ -42,10 +43,12 @@ module WorkflowsHelper
     select_tag name, option_tags, {:multiple => multiple}.merge(options)
   end
 
+  # @rbs (String | IssueCustomField) -> bool
   def field_required?(field)
     field.is_a?(CustomField) ? field.is_required? : %w(project_id tracker_id subject priority_id is_private).include?(field)
   end
 
+  # @rbs (Hash[untyped, untyped], IssueStatus, String | IssueCustomField, Array[untyped]) -> ActiveSupport::SafeBuffer
   def field_permission_tag(permissions, status, field, roles)
     name = field.is_a?(CustomField) ? field.id.to_s : field
     options = [["", ""], [l(:label_readonly), "readonly"]]
@@ -74,6 +77,7 @@ module WorkflowsHelper
     select_tag("permissions[#{status.id}][#{name}]", options_for_select(options, selected), html_options)
   end
 
+  # @rbs (Integer, IssueStatus?, IssueStatus, String) -> ActiveSupport::SafeBuffer
   def transition_tag(transition_count, old_status, new_status, name)
     w = transition_count
     tag_name = "transitions[#{ old_status.try(:id) || 0 }][#{new_status.id}][#{name}]"

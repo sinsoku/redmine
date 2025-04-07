@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class GanttsControllerTest < Redmine::ControllerTest
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_gantt_should_work
     i2 = Issue.find(2)
     i2.update_attribute(:due_date, 1.month.from_now)
@@ -71,6 +72,7 @@ class GanttsControllerTest < Redmine::ControllerTest
     assert_select "div a.issue", /##{i.id}/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_gantt_at_minimal_zoom
     get(
       :show,
@@ -83,6 +85,7 @@ class GanttsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=hidden][name=zoom][value=?]', '1'
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_gantt_at_maximal_zoom
     get(
       :show,
@@ -95,12 +98,14 @@ class GanttsControllerTest < Redmine::ControllerTest
     assert_select 'input[type=hidden][name=zoom][value=?]', '4'
   end
 
+  # @rbs () -> bool
   def test_gantt_should_work_without_issue_due_dates
     Issue.update_all("due_date = NULL")
     get(:show, :params => {:project_id => 1})
     assert_response :success
   end
 
+  # @rbs () -> bool
   def test_gantt_should_work_without_issue_and_version_due_dates
     Issue.update_all("due_date = NULL")
     Version.update_all("effective_date = NULL")
@@ -108,6 +113,7 @@ class GanttsControllerTest < Redmine::ControllerTest
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_should_run_custom_query
     query = IssueQuery.create!(:name => 'Gantt Query', :description => 'Description for Gantt Query', :visibility => IssueQuery::VISIBILITY_PUBLIC)
     get(
@@ -121,11 +127,13 @@ class GanttsControllerTest < Redmine::ControllerTest
     assert_select '#sidebar a.query.selected[title=?]', query.description, :text => query.name
   end
 
+  # @rbs () -> bool
   def test_gantt_should_work_cross_project
     get :show
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_gantt_should_not_disclose_private_projects
     get :show
     assert_response :success
@@ -137,6 +145,7 @@ class GanttsControllerTest < Redmine::ControllerTest
     assert_select 'a', :text => /Private child of eCookbook/, :count => 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_gantt_should_display_relations
     IssueRelation.delete_all
     issue1 = Issue.generate!(:start_date => 1.day.from_now.to_date, :due_date => 3.day.from_now.to_date)
@@ -150,6 +159,7 @@ class GanttsControllerTest < Redmine::ControllerTest
     assert_select 'div.task_todo[id=?]:not([data-rels])', "task-todo-issue-#{issue2.id}"
   end
 
+  # @rbs () -> bool
   def test_gantt_should_export_to_pdf
     get(
       :show,
@@ -164,6 +174,7 @@ class GanttsControllerTest < Redmine::ControllerTest
     assert @response.body.starts_with?('%PDF')
   end
 
+  # @rbs () -> bool
   def test_gantt_should_export_to_pdf_cross_project
     get(:show, :params => {:format => 'pdf'})
     assert_response :success
@@ -172,6 +183,7 @@ class GanttsControllerTest < Redmine::ControllerTest
   end
 
   if Object.const_defined?(:MiniMagick) && convert_installed?
+    # @rbs () -> bool
     def test_gantt_should_export_to_png
       get(
         :show,
@@ -186,6 +198,7 @@ class GanttsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_gantt_should_respect_gantt_months_limit_setting
     with_settings :gantt_months_limit => '40' do
       # `months` parameter can be less than or equal to

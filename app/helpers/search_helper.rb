@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module SearchHelper
+  # @rbs (String?, Array[untyped]) -> ActiveSupport::SafeBuffer?
   def highlight_tokens(text, tokens)
     return text unless text && tokens && !tokens.empty?
 
@@ -40,10 +41,12 @@ module SearchHelper
     result.html_safe
   end
 
+  # @rbs (String) -> String
   def type_label(t)
     l("label_#{t.singularize}_plural", :default => t.to_s.humanize)
   end
 
+  # @rbs () -> ActiveSupport::SafeBuffer?
   def project_select_tag
     options = [[l(:label_project_all), 'all']]
     options << [l(:label_my_projects), 'my_projects'] unless User.current.memberships.empty?
@@ -54,6 +57,7 @@ module SearchHelper
     select_tag('scope', options_for_select(options, params[:scope].to_s)) if options.size > 1
   end
 
+  # @rbs (Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer?
   def render_results_by_type(results_by_type)
     links = []
     # Sorts types by results count
@@ -70,6 +74,7 @@ module SearchHelper
         '</ul>'.html_safe) unless links.empty?
   end
 
+  # @rbs (String, Hash[untyped, untyped]) -> String
   def issues_filter_path(question, options)
     projects_scope = options[:projects_scope]
     titles_only = options[:titles_only]

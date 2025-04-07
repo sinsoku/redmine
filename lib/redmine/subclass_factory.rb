@@ -19,11 +19,13 @@
 
 module Redmine
   module SubclassFactory
+    # @rbs (Class) -> Class
     def self.included(base)
       base.extend ClassMethods
     end
 
     module ClassMethods
+      # @rbs (String?) -> Class?
       def get_subclass(class_name)
         klass = nil
         begin
@@ -38,6 +40,7 @@ module Redmine
       end
 
       # Returns an instance of the given subclass name
+      # @rbs (String?, *nil | Hash[untyped, untyped]) -> (AuthSourceLdap | IssueCustomField | TimeEntryCustomField | VersionCustomField | ProjectCustomField | DocumentCategoryCustomField | DocumentCustomField | GroupCustomField | IssuePriorityCustomField | TimeEntryActivityCustomField | UserCustomField | TimeEntryActivity | IssuePriority)?
       def new_subclass_instance(class_name, *args)
         klass = get_subclass(class_name)
         if klass

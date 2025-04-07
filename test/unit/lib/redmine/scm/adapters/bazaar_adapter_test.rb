@@ -212,6 +212,7 @@ class BazaarAdapterTest < ActiveSupport::TestCase
     end
   else
     puts "Bazaar test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

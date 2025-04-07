@@ -22,11 +22,13 @@ require_relative '../test_helper'
 class BoardTest < ActiveSupport::TestCase
   include Redmine::I18n
 
+  # @rbs () -> Project
   def setup
     User.current = nil
     @project = Project.find(1)
   end
 
+  # @rbs () -> bool
   def test_create
     board = Board.new(:project => @project, :name => 'Test board', :description => 'Test board description')
     assert board.save
@@ -41,6 +43,7 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal @project.boards.size, board.position
   end
 
+  # @rbs () -> bool
   def test_parent_should_be_in_same_project
     set_language_if_valid 'en'
     board = Board.new(:project_id => 3, :name => 'Test', :description => 'Test', :parent_id => 1)
@@ -48,6 +51,7 @@ class BoardTest < ActiveSupport::TestCase
     assert_include "Parent forum is invalid", board.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_valid_parents_should_not_include_self_nor_a_descendant
     board1 = Board.generate!(:project_id => 3)
     board2 = Board.generate!(:project_id => 3, :parent => board1)
@@ -60,6 +64,7 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal [board1, board2, board3], board4.reload.valid_parents.sort_by(&:id)
   end
 
+  # @rbs () -> bool
   def test_position_should_be_assigned_with_parent_scope
     parent1 = Board.generate!(:project_id => 3)
     parent2 = Board.generate!(:project_id => 3)
@@ -72,6 +77,7 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal 2, parent2.reload.position
   end
 
+  # @rbs () -> bool
   def test_board_tree_should_yield_boards_with_level
     parent1 = Board.generate!(:project_id => 3)
     parent2 = Board.generate!(:project_id => 3)
@@ -90,6 +96,7 @@ class BoardTest < ActiveSupport::TestCase
     ], tree
   end
 
+  # @rbs () -> bool
   def test_destroy
     set_tmp_attachments_directory
     board = Board.find(1)
@@ -103,6 +110,7 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal 0, Message.where(:board_id => 1).count
   end
 
+  # @rbs () -> bool
   def test_destroy_should_nullify_children
     parent = Board.generate!(:project => @project)
     child = Board.generate!(:project => @project, :parent => parent)
@@ -114,6 +122,7 @@ class BoardTest < ActiveSupport::TestCase
     assert_nil child.parent_id
   end
 
+  # @rbs () -> bool
   def test_reset_counters_should_update_attributes
     Board.where(:id => 1).update_all(:topics_count => 0, :messages_count => 0, :last_message_id => 0)
     Board.reset_counters!(1)

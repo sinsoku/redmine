@@ -25,6 +25,7 @@ module Redmine
       end
 
       module ClassMethods
+        # @rbs (?Hash[untyped, untyped]) -> void
         def acts_as_activity_provider(options = {})
           unless self.included_modules.include?(Redmine::Acts::ActivityProvider::InstanceMethods)
             cattr_accessor :activity_provider_options
@@ -45,12 +46,14 @@ module Redmine
       end
 
       module InstanceMethods
+        # @rbs (Class) -> Class
         def self.included(base)
           base.extend ClassMethods
         end
 
         module ClassMethods
           # Returns events of type event_type visible by user that occurred between from and to
+          # @rbs (String, AnonymousUser | User, Date?, Date?, Hash[untyped, untyped]) -> Array[untyped]
           def find_events(event_type, user, from, to, options)
             provider_options = activity_provider_options[event_type]
             raise "#{self.name} can not provide #{event_type} events." if provider_options.nil?

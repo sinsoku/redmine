@@ -20,6 +20,7 @@
 require_relative '../../../../test_helper'
 
 class CalendarTest < ActiveSupport::TestCase
+  # @rbs () -> bool
   def test_monthly
     c = Redmine::Helpers::Calendar.new(Date.today, :fr, :month)
     assert_equal [1, 7], [c.startdt.cwday, c.enddt.cwday]
@@ -31,6 +32,7 @@ class CalendarTest < ActiveSupport::TestCase
     assert_equal [7, 6], [c.startdt.cwday, c.enddt.cwday]
   end
 
+  # @rbs () -> bool
   def test_weekly
     c = Redmine::Helpers::Calendar.new(Date.today, :fr, :week)
     assert_equal [1, 7], [c.startdt.cwday, c.enddt.cwday]
@@ -42,6 +44,7 @@ class CalendarTest < ActiveSupport::TestCase
     assert_equal [7, 6], [c.startdt.cwday, c.enddt.cwday]
   end
 
+  # @rbs () -> Array[untyped]
   def test_monthly_start_day
     [1, 6, 7].each do |day|
       with_settings :start_of_week => day do
@@ -52,6 +55,7 @@ class CalendarTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> Array[untyped]
   def test_weekly_start_day
     [1, 6, 7].each do |day|
       with_settings :start_of_week => day do

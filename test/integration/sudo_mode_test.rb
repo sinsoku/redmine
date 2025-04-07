@@ -3,14 +3,17 @@
 require_relative '../test_helper'
 
 class SudoModeTest < Redmine::IntegrationTest
+  # @rbs () -> Mocha::Expectation
   def setup
     Redmine::SudoMode.stubs(:enabled?).returns(true)
   end
 
+  # @rbs () -> nil
   def teardown
     travel_back
   end
 
+  # @rbs () -> bool
   def test_sudo_mode_should_be_active_after_login
     log_user("admin", "admin")
     get "/users/new"
@@ -32,6 +35,7 @@ class SudoModeTest < Redmine::IntegrationTest
     assert_kind_of User, user
   end
 
+  # @rbs () -> bool
   def test_add_user
     log_user("admin", "admin")
     expire_sudo_mode!
@@ -72,6 +76,7 @@ class SudoModeTest < Redmine::IntegrationTest
     assert_kind_of User, user
   end
 
+  # @rbs () -> bool
   def test_create_member_xhr
     log_user 'admin', 'admin'
     expire_sudo_mode!
@@ -96,6 +101,7 @@ class SudoModeTest < Redmine::IntegrationTest
     assert User.find(7).member_of?(Project.find(1))
   end
 
+  # @rbs () -> bool
   def test_create_member
     log_user 'admin', 'admin'
     expire_sudo_mode!
@@ -122,6 +128,7 @@ class SudoModeTest < Redmine::IntegrationTest
     assert User.find(7).member_of?(Project.find(1))
   end
 
+  # @rbs () -> bool
   def test_create_role
     log_user 'admin', 'admin'
     expire_sudo_mode!
@@ -185,6 +192,7 @@ class SudoModeTest < Redmine::IntegrationTest
     assert_redirected_to '/roles'
   end
 
+  # @rbs () -> bool
   def test_update_email_address
     log_user 'jsmith', 'jsmith'
     expire_sudo_mode!
@@ -239,6 +247,7 @@ class SudoModeTest < Redmine::IntegrationTest
     assert_equal 'even.newer.mail@test.com', User.find_by_login('jsmith').mail
   end
 
+  # @rbs () -> bool
   def test_sudo_mode_should_skip_api_requests
     with_settings :rest_api_enabled => '1' do
       assert_difference('User.count') do
@@ -262,6 +271,7 @@ class SudoModeTest < Redmine::IntegrationTest
   private
 
   # sudo mode is active after sign, let it expire by advancing the time
+  # @rbs () -> void
   def expire_sudo_mode!
     travel_to 20.minutes.from_now
   end

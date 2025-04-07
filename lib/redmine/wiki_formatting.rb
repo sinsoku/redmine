@@ -55,24 +55,29 @@ module Redmine
         @@formatters[name] = entry
       end
 
+      # @rbs () -> Class
       def formatter
         formatter_for(Setting.text_formatting)
       end
 
+      # @rbs () -> Class
       def html_parser
         html_parser_for(Setting.text_formatting)
       end
 
+      # @rbs (String) -> Class
       def formatter_for(name)
         entry = @@formatters[name.to_s]
         (entry && entry[:formatter]) || Redmine::WikiFormatting::NullFormatter::Formatter
       end
 
+      # @rbs (String) -> Module
       def helper_for(name)
         entry = @@formatters[name.to_s]
         (entry && entry[:helper]) || Redmine::WikiFormatting::NullFormatter::Helper
       end
 
+      # @rbs (String) -> Class
       def html_parser_for(name)
         entry = @@formatters[name.to_s]
         (entry && entry[:html_parser]) || Redmine::WikiFormatting::HtmlParser
@@ -82,10 +87,12 @@ module Redmine
         @@formatters.keys.map
       end
 
+      # @rbs () -> Array[untyped]
       def formats_for_select
         @@formatters.map {|name, options| [options[:label], name]}
       end
 
+      # @rbs (String, String, ?Hash[untyped, untyped]) -> (String | ActiveSupport::SafeBuffer)
       def to_html(format, text, options = {})
         text =
           if Setting.cache_formatted_text? && text.size > 2.kilobytes && cache_store &&
@@ -102,11 +109,13 @@ module Redmine
       end
 
       # Returns true if the text formatter supports single section edit
+      # @rbs () -> bool
       def supports_section_edit?
         formatter.instance_methods.intersect?(['update_section', :update_section])
       end
 
       # Returns a cache key for the given text +format+, +text+, +object+ and +attribute+ or nil if no caching should be done
+      # @rbs (String, String, Issue, Symbol) -> String
       def cache_key_for(format, text, object, attribute)
         if object && attribute && !object.new_record? && format.present?
           "formatted_text/#{format}/#{object.class.model_name.cache_key}/#{object.id}-#{attribute}-#{ActiveSupport::Digest.hexdigest text}"
@@ -127,10 +136,12 @@ module Redmine
         include ActionView::Helpers::UrlHelper
         include Redmine::WikiFormatting::LinksHelper
 
+        # @rbs (String) -> void
         def initialize(text)
           @text = text
         end
 
+        # @rbs (*nil) -> ActiveSupport::SafeBuffer
         def to_html(*args)
           t = CGI::escapeHTML(@text)
           auto_link!(t)

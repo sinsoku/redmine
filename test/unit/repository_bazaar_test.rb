@@ -41,6 +41,7 @@ class RepositoryBazaarTest < ActiveSupport::TestCase
   CHAR_1_UTF8_HEX   = 'Ü'
   CHAR_1_LATIN1_HEX = "\xdc".b
 
+  # @rbs () -> bool
   def setup
     User.current = nil
     @project = Project.find(3)
@@ -52,6 +53,7 @@ class RepositoryBazaarTest < ActiveSupport::TestCase
     assert @repository
   end
 
+  # @rbs () -> bool
   def test_blank_path_to_repository_error_message
     set_language_if_valid 'en'
     repo =
@@ -65,6 +67,7 @@ class RepositoryBazaarTest < ActiveSupport::TestCase
                    repo.errors.full_messages
   end
 
+  # @rbs () -> bool
   def test_blank_path_to_repository_error_message_fr
     set_language_if_valid 'fr'
     repo =
@@ -323,6 +326,7 @@ class RepositoryBazaarTest < ActiveSupport::TestCase
     end
   else
     puts "Bazaar test repository NOT FOUND. Skipping unit tests !!!"
+    # @rbs () -> bool
     def test_fake; assert true end
   end
 end

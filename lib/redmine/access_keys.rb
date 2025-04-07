@@ -30,6 +30,7 @@ module Redmine
       }.freeze
     end
 
+    # @rbs (Symbol) -> String
     def self.key_for(action)
       ACCESSKEYS[action]
     end

@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class WikiIntegrationTest < Redmine::IntegrationTest
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_updating_a_renamed_page
     log_user('jsmith', 'jsmith')
 

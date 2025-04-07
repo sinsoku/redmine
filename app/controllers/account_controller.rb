@@ -28,6 +28,7 @@ class AccountController < ApplicationController
   skip_before_action :check_twofa_activation, :only => :logout
 
   # Login request and validation
+  # @rbs () -> (Integer | String | ActiveSupport::SafeBuffer)?
   def login
     if request.post?
       authenticate_user
@@ -42,6 +43,7 @@ class AccountController < ApplicationController
   end
 
   # Log out current user and redirect to welcome page
+  # @rbs () -> String?
   def logout
     if User.current.anonymous?
       redirect_to home_url
@@ -53,6 +55,7 @@ class AccountController < ApplicationController
   end
 
   # Lets user choose a new password
+  # @rbs () -> nil
   def lost_password
     (redirect_to(home_url); return) unless Setting.lost_password?
     if prt = (params[:token] || session[:password_recovery_token])
@@ -132,6 +135,7 @@ class AccountController < ApplicationController
   end
 
   # User self-registration
+  # @rbs () -> (String | User)?
   def register
     (redirect_to(home_url); return) unless Setting.self_registration? || session[:auth_source_registration]
     if !request.post?
@@ -172,6 +176,7 @@ class AccountController < ApplicationController
   end
 
   # Token based account activation
+  # @rbs () -> String
   def activate
     (redirect_to(home_url); return) unless Setting.self_registration? && params[:token].present?
     token = Token.find_token('register', params[:token].to_s)
@@ -187,6 +192,7 @@ class AccountController < ApplicationController
   end
 
   # Sends a new account activation email
+  # @rbs () -> String?
   def activation_email
     if session[:registered_user_id] && Setting.self_registration == '1'
       user_id = session.delete(:registered_user_id).to_i
@@ -216,10 +222,12 @@ class AccountController < ApplicationController
     end
   end
 
+  # @rbs () -> Hash[untyped, untyped]
   def twofa_confirm
     @twofa_view = @twofa.otp_confirm_view_variables
   end
 
+  # @rbs () -> (String | Integer)
   def twofa
     if @twofa.verify!(params[:twofa_code].to_s)
       destroy_twofa_session
@@ -239,10 +247,12 @@ class AccountController < ApplicationController
 
   private
 
+  # @rbs () -> nil
   def prevent_twofa_session_replay
     renew_twofa_session(@user)
   end
 
+  # @rbs () -> Redmine::Twofa::Totp
   def twofa_setup
     # twofa sessions are only valid 2 minutes at a time
     twomind = 0.0014 # a little more than 2 minutes in days
@@ -266,10 +276,12 @@ class AccountController < ApplicationController
     @twofa = Redmine::Twofa.for_user(@user)
   end
 
+  # @rbs () -> bool
   def require_active_twofa
     Setting.twofa? ? true : deny_access
   end
 
+  # @rbs (User, ?Integer) -> nil
   def setup_twofa_session(user, previous_tries=1)
     token = Token.create(user: user, action: 'twofa_session')
     session[:twofa_session_token] = token.value
@@ -279,12 +291,14 @@ class AccountController < ApplicationController
   end
 
   # Prevent replay attacks by using each twofa_session_token only for exactly one request
+  # @rbs (User) -> nil
   def renew_twofa_session(user)
     twofa_tries = session[:twofa_tries_counter].to_i + 1
     destroy_twofa_session
     setup_twofa_session(user, twofa_tries)
   end
 
+  # @rbs () -> void
   def destroy_twofa_session
     # make sure tokens can only be used once server-side to prevent replay attacks
     Token.find_token('twofa_session', session[:twofa_session_token].to_s).try(:delete)
@@ -294,10 +308,12 @@ class AccountController < ApplicationController
     session[:twofa_autologin] = nil
   end
 
+  # @rbs () -> (Integer | String | ActiveSupport::SafeBuffer)?
   def authenticate_user
     password_authentication
   end
 
+  # @rbs () -> (Integer | String | ActiveSupport::SafeBuffer)?
   def password_authentication
     user = User.try_to_login!(params[:username], params[:password], false)
 
@@ -324,11 +340,13 @@ class AccountController < ApplicationController
     end
   end
 
+  # @rbs (User) -> Integer
   def handle_active_user(user)
     successful_authentication(user)
     update_sudo_timestamp! # activate Sudo Mode
   end
 
+  # @rbs (User) -> void
   def successful_authentication(user)
     logger.info "Successful authentication for '#{user.login}' from #{request.remote_ip} at #{Time.now.utc}"
     # Valid user
@@ -341,6 +359,7 @@ class AccountController < ApplicationController
     redirect_back_or_default my_page_path
   end
 
+  # @rbs (User) -> Hash[untyped, untyped]
   def set_autologin_cookie(user)
     token = user.generate_autologin_token
     secure = Redmine::Configuration['autologin_cookie_secure']
@@ -359,12 +378,14 @@ class AccountController < ApplicationController
   end
 
   # Onthefly creation failed, display the registration form to fill/fix attributes
+  # @rbs (User, ?Hash[untyped, untyped]) -> ActiveSupport::SafeBuffer
   def onthefly_creation_failed(user, auth_source_options = {})
     @user = user
     session[:auth_source_registration] = auth_source_options unless auth_source_options.empty?
     render :action => 'register'
   end
 
+  # @rbs () -> String
   def invalid_credentials
     logger.warn "Failed login for '#{params[:username]}' from #{request.remote_ip} at #{Time.now.utc}"
     flash.now[:error] = l(:notice_account_invalid_credentials)
@@ -373,6 +394,7 @@ class AccountController < ApplicationController
   # Register a user for email activation.
   #
   # Pass a block for behavior when a user fails to save
+  # @rbs (User) -> String
   def register_by_email_activation(user, &block)
     token = Token.new(:user => user, :action => "register")
     if user.save and token.save
@@ -387,6 +409,7 @@ class AccountController < ApplicationController
   # Automatically register a user
   #
   # Pass a block for behavior when a user fails to save
+  # @rbs (User) -> String
   def register_automatically(user, &block)
     # Automatic activation
     user.activate
@@ -403,6 +426,7 @@ class AccountController < ApplicationController
   # Manual activation by the administrator
   #
   # Pass a block for behavior when a user fails to save
+  # @rbs (User) -> String
   def register_manually_by_administrator(user, &block)
     if user.save
       # Sends an email to the administrators
@@ -413,6 +437,7 @@ class AccountController < ApplicationController
     end
   end
 
+  # @rbs (User, ?String) -> String
   def handle_inactive_user(user, redirect_path=signin_path)
     if user.registered?
       account_pending(user, redirect_path)
@@ -421,6 +446,7 @@ class AccountController < ApplicationController
     end
   end
 
+  # @rbs (User, ?String) -> String
   def account_pending(user, redirect_path=signin_path)
     if Setting.self_registration == '1'
       flash[:error] = l(:notice_account_not_activated_yet, :url => activation_email_path)
@@ -431,6 +457,7 @@ class AccountController < ApplicationController
     redirect_to redirect_path
   end
 
+  # @rbs (User, ?String) -> String
   def account_locked(user, redirect_path=signin_path)
     flash[:error] = l(:notice_account_locked)
     redirect_to redirect_path

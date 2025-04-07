@@ -20,6 +20,7 @@
 require_relative '../test_helper'
 
 class UsersTest < Redmine::IntegrationTest
+  # @rbs () -> bool
   def test_destroy_should_not_accept_get_requests
     log_user('admin', 'admin')
 

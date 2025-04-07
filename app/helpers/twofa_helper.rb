@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module TwofaHelper
+  # @rbs () -> bool
   def require_active_twofa
     Setting.twofa? ? true : deny_access
   end

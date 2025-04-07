@@ -80,6 +80,7 @@ class Tracker < ApplicationRecord
     'project_ids',
     'description')
 
+  # @rbs (Tracker, ?Hash[untyped, untyped]) -> Tracker
   def copy_from(arg, options={})
     return if arg.blank?
 
@@ -90,8 +91,10 @@ class Tracker < ApplicationRecord
     self
   end
 
+  # @rbs () -> String
   def to_s; name end
 
+  # @rbs (Tracker) -> Integer
   def <=>(tracker)
     return nil unless tracker.is_a?(Tracker)
 
@@ -100,10 +103,12 @@ class Tracker < ApplicationRecord
 
   # Returns an array of IssueStatus that are used
   # in the tracker's workflows
+  # @rbs () -> Array[untyped]
   def issue_statuses
     @issue_statuses ||= IssueStatus.where(:id => issue_status_ids).to_a.sort
   end
 
+  # @rbs () -> Array[untyped]
   def issue_status_ids
     if new_record?
       []
@@ -115,6 +120,7 @@ class Tracker < ApplicationRecord
     end
   end
 
+  # @rbs (Tracker::ActiveRecord_Relation | Array[untyped]) -> Array[untyped]
   def disabled_core_fields
     i = -1
     @disabled_core_fields ||=
@@ -124,10 +130,12 @@ class Tracker < ApplicationRecord
       end
   end
 
+  # @rbs () -> Array[untyped]
   def core_fields
     CORE_FIELDS - disabled_core_fields
   end
 
+  # @rbs (Array[untyped]) -> Array[untyped]
   def core_fields=(fields)
     raise ArgumentError.new("Tracker.core_fields takes an array") unless fields.is_a?(Array)
 
@@ -142,11 +150,13 @@ class Tracker < ApplicationRecord
     core_fields
   end
 
+  # @rbs (Tracker) -> Array[untyped]
   def copy_workflow_rules(source_tracker)
     WorkflowRule.copy(source_tracker, nil, self, nil)
   end
 
   # Returns the fields that are disabled for all the given trackers
+  # @rbs (Tracker::ActiveRecord_Relation | Array[untyped]) -> Array[untyped]
   def self.disabled_core_fields(trackers)
     if trackers.present?
       trackers.map(&:disabled_core_fields).reduce(:&)
@@ -156,6 +166,7 @@ class Tracker < ApplicationRecord
   end
 
   # Returns the fields that are enabled for one tracker at least
+  # @rbs () -> Array[untyped]
   def self.core_fields(trackers)
     if trackers.present?
       trackers.uniq.map(&:core_fields).reduce(:|)
@@ -166,6 +177,7 @@ class Tracker < ApplicationRecord
 
   private
 
+  # @rbs () -> nil
   def check_integrity
     raise "Cannot delete tracker" if Issue.where(:tracker_id => self.id).any?
   end

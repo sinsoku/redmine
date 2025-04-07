@@ -3,12 +3,14 @@
 class DestroyProjectJob < ApplicationJob
   include Redmine::I18n
 
+  # @rbs (Project, ?user: User) -> void
   def self.schedule(project, user: User.current)
     # make the project (and any children) disappear immediately
     project.self_and_descendants.update_all status: Project::STATUS_SCHEDULED_FOR_DELETION
     perform_later project.id, user.id, user.remote_ip
   end
 
+  # @rbs (Integer, Integer, String) -> Array[untyped]
   def perform(project_id, user_id, remote_ip)
     user_current_was = User.current
 
@@ -43,6 +45,7 @@ class DestroyProjectJob < ApplicationJob
 
   private
 
+  # @rbs () -> bool
   def delete_project
     info "Starting with project deletion"
     return !!@project.destroy
@@ -51,6 +54,7 @@ class DestroyProjectJob < ApplicationJob
     false
   end
 
+  # @rbs (Symbol) -> Array[untyped]
   def success(message)
     Mailer.deliver_security_notification(
       @user, @user,
@@ -71,6 +75,7 @@ class DestroyProjectJob < ApplicationJob
     )
   end
 
+  # @rbs (String) -> bool
   def info(msg)
     Rails.logger.info("[DestroyProjectJob] --- #{msg}")
   end

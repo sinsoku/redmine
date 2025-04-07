@@ -28,6 +28,7 @@ class CalendarsController < ApplicationController
   helper :queries
   include QueriesHelper
 
+  # @rbs () -> nil
   def show
     if params[:year] and params[:year].to_i > 1900
       @year = params[:year].to_i

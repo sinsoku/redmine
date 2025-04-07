@@ -20,15 +20,18 @@
 require_relative '../test_helper'
 
 class AuthSourcesControllerTest < Redmine::ControllerTest
+  # @rbs () -> Integer
   def setup
     @request.session[:user_id] = 1
   end
 
+  # @rbs () -> bool
   def test_index
     get :index
     assert_response :success
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new
     get :new
     assert_response :success
@@ -39,6 +42,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_new_with_invalid_type_should_respond_with_404
     get(
       :new,
@@ -49,6 +53,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_create
     assert_difference 'AuthSourceLdap.count' do
       post(
@@ -73,6 +78,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_equal 'cn', source.attr_login
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_create_with_failure
     assert_no_difference 'AuthSourceLdap.count' do
       post(
@@ -92,6 +98,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_select_error /host cannot be blank/i
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit
     get(
       :edit,
@@ -106,6 +113,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_edit_should_not_contain_password
     AuthSource.find(1).update_column :account_password, 'secret'
 
@@ -120,6 +128,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_select 'input[name=dummy_password][value^=xxxxxx]'
   end
 
+  # @rbs () -> bool
   def test_edit_invalid_should_respond_with_404
     get(
       :edit,
@@ -130,6 +139,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_response :not_found
   end
 
+  # @rbs () -> bool
   def test_update
     put(
       :update,
@@ -149,6 +159,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_equal '192.168.0.10', source.host
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_update_with_failure
     put(
       :update,
@@ -166,6 +177,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_select_error /host cannot be blank/i
   end
 
+  # @rbs () -> bool
   def test_destroy
     assert_difference 'AuthSourceLdap.count', -1 do
       delete(
@@ -178,6 +190,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_auth_source_in_use
     User.find(2).update_attribute :auth_source_id, 1
 
@@ -193,6 +206,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> MatchData
   def test_test_connection
     AuthSourceLdap.any_instance.stubs(:test_connection).returns(true)
 
@@ -207,6 +221,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_match /successful/i, flash[:notice]
   end
 
+  # @rbs () -> bool
   def test_test_connection_with_failure
     AuthSourceLdap.any_instance.stubs(:initialize_ldap_con).raises(Net::LDAP::Error.new("Something went wrong"))
 
@@ -221,6 +236,7 @@ class AuthSourcesControllerTest < Redmine::ControllerTest
     assert_include 'Something went wrong', flash[:error]
   end
 
+  # @rbs () -> bool
   def test_autocomplete_for_new_user
     AuthSource.expects(:search).with('foo').returns(
       [

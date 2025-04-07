@@ -20,23 +20,27 @@
 module FixedIssuesExtension
   # Returns the total estimated time for this version
   # (sum of leaves estimated_hours)
+  # @rbs () -> Float
   def estimated_hours
     @estimated_hours ||= sum(:estimated_hours).to_f
   end
 
   # Returns the total estimated remaining time for this version
   # (sum of leaves remaining_estimated_hours)
+  # @rbs () -> Float
   def estimated_remaining_hours
     @estimated_remaining_hours ||= sum(IssueQuery::ESTIMATED_REMAINING_HOURS_SQL).to_f
   end
 
   # Returns the total amount of open issues for this version.
+  # @rbs () -> Integer
   def open_count
     load_counts
     @open_count
   end
 
   # Returns the total amount of closed issues for this version.
+  # @rbs () -> Integer
   def closed_count
     load_counts
     @closed_count
@@ -44,6 +48,7 @@ module FixedIssuesExtension
 
   # Returns the completion percentage of this version based on the amount of open/closed issues
   # and the time spent on the open issues.
+  # @rbs () -> (Float | Integer)
   def completed_percent
     return 0 if open_count + closed_count == 0
     return 100 if open_count == 0
@@ -52,6 +57,7 @@ module FixedIssuesExtension
   end
 
   # Returns the percentage of issues that have been marked as 'closed'.
+  # @rbs () -> (Float | Integer)
   def closed_percent
     return 0 if open_count + closed_count == 0
     return 100 if open_count == 0
@@ -61,6 +67,7 @@ module FixedIssuesExtension
 
   private
 
+  # @rbs () -> void
   def load_counts
     unless @open_count
       @open_count = 0
@@ -78,6 +85,7 @@ module FixedIssuesExtension
   # Returns the average estimated time of assigned issues
   # or 1 if no issue has an estimated time
   # Used to weight unestimated issues in progress calculation
+  # @rbs () -> Float
   def estimated_average
     if @estimated_average.nil?
       issues_with_total_estimated_hours = select {|c| c.total_estimated_hours.to_f > 0.0}
@@ -97,6 +105,7 @@ module FixedIssuesExtension
   # Examples:
   # issues_progress(true)   => returns the progress percentage for open issues.
   # issues_progress(false)  => returns the progress percentage for closed issues.
+  # @rbs (bool) -> Float
   def issues_progress(open)
     @issues_progress ||= {}
     @issues_progress[open] ||= begin
@@ -171,6 +180,7 @@ class Version < ApplicationRecord
                   'custom_field_values',
                   'custom_fields'
 
+  # @rbs ((ActionController::Parameters | Hash[untyped, untyped])?, ?User) -> (ActiveSupport::HashWithIndifferentAccess | Hash[untyped, untyped])?
   def safe_attributes=(attrs, user=User.current)
     if attrs.respond_to?(:to_unsafe_hash)
       attrs = attrs.to_unsafe_hash
@@ -194,15 +204,18 @@ class Version < ApplicationRecord
   end
 
   # Returns true if +user+ or current user is allowed to view the version
+  # @rbs (?User | AnonymousUser) -> bool
   def visible?(user=User.current)
     user.allowed_to?(:view_issues, self.project)
   end
 
   # Returns the custom_field_values that can be edited by the given user
+  # @rbs (?User) -> Array[untyped]
   def editable_custom_field_values(user=nil)
     visible_custom_field_values(user)
   end
 
+  # @rbs (?User?) -> Array[untyped]
   def visible_custom_field_values(user = nil)
     user ||= User.current
     custom_field_values.select do |value|
@@ -211,10 +224,12 @@ class Version < ApplicationRecord
   end
 
   # Version files have same visibility as project files
+  # @rbs (*AnonymousUser) -> bool
   def attachments_visible?(*args)
     project.present? && project.attachments_visible?(*args)
   end
 
+  # @rbs (?User) -> bool
   def attachments_deletable?(usr=User.current)
     project.present? && project.attachments_deletable?(usr)
   end
@@ -226,48 +241,58 @@ class Version < ApplicationRecord
     base_reload(*args)
   end
 
+  # @rbs () -> Date?
   def start_date
     @start_date ||= fixed_issues.minimum('start_date')
   end
 
+  # @rbs () -> Date?
   def due_date
     effective_date
   end
 
+  # @rbs (String) -> String
   def due_date=(arg)
     self.effective_date=(arg)
   end
 
   # Returns the total estimated time for this version
   # (sum of leaves estimated_hours)
+  # @rbs () -> Float
   def estimated_hours
     fixed_issues.estimated_hours
   end
 
   # Returns the total estimated remaining time for this version
   # (sum of leaves estimated_remaining_hours)
+  # @rbs () -> Float
   def estimated_remaining_hours
     @estimated_remaining_hours ||= fixed_issues.estimated_remaining_hours
   end
 
   # Returns the total reported time for this version
+  # @rbs () -> Float
   def spent_hours
     @spent_hours ||= TimeEntry.joins(:issue).where("#{Issue.table_name}.fixed_version_id = ?", id).sum(:hours).to_f
   end
 
+  # @rbs () -> bool
   def closed?
     status == 'closed'
   end
 
+  # @rbs () -> bool
   def open?
     status == 'open'
   end
 
   # Returns true if the version is completed: closed or due date reached and no open issues
+  # @rbs () -> bool?
   def completed?
     closed? || (effective_date && (effective_date < User.current.today) && (open_issues_count == 0))
   end
 
+  # @rbs () -> bool
   def behind_schedule?
     # Blank due date, no issues, or 100% completed, so it's not late
     return false if due_date.nil? || start_date.nil? || completed_percent == 100
@@ -278,16 +303,19 @@ class Version < ApplicationRecord
 
   # Returns the completion percentage of this version based on the amount of open/closed issues
   # and the time spent on the open issues.
+  # @rbs () -> (Float | Integer)
   def completed_percent
     fixed_issues.completed_percent
   end
 
   # Returns the percentage of issues that have been marked as 'closed'.
+  # @rbs () -> (Float | Integer)
   def closed_percent
     fixed_issues.closed_percent
   end
 
   # Returns true if the version is overdue: due date reached and some open issues
+  # @rbs () -> bool?
   def overdue?
     effective_date && (effective_date < User.current.today) && (open_issues_count > 0)
   end
@@ -298,6 +326,7 @@ class Version < ApplicationRecord
   end
 
   # Returns the total amount of open issues for this version.
+  # @rbs () -> Integer
   def open_issues_count
     fixed_issues.open_count
   end
@@ -307,10 +336,12 @@ class Version < ApplicationRecord
     fixed_issues.closed_count
   end
 
+  # @rbs () -> Issue::ActiveRecord_AssociationRelation
   def visible_fixed_issues
     @visible_fixed_issues ||= fixed_issues.visible
   end
 
+  # @rbs () -> WikiPage?
   def wiki_page
     if project.wiki && !wiki_page_title.blank?
       @wiki_page ||= project.wiki.find_page(wiki_page_title)
@@ -318,14 +349,17 @@ class Version < ApplicationRecord
     @wiki_page
   end
 
+  # @rbs () -> String
   def to_s; name end
 
+  # @rbs () -> String
   def to_s_with_project
     "#{project} - #{name}"
   end
 
   # Versions are sorted by effective_date and name
   # Those with no effective_date are at the end, sorted by name
+  # @rbs (Version) -> Integer
   def <=>(version)
     return nil unless version.is_a?(Version)
 
@@ -349,6 +383,7 @@ class Version < ApplicationRecord
   end
 
   # Sort versions by status (open, locked then closed versions)
+  # @rbs (Array[untyped] | Version::ActiveRecord_Relation) -> Array[untyped]
   def self.sort_by_status(versions)
     versions.sort do |a, b|
       if a.status == b.status
@@ -359,6 +394,7 @@ class Version < ApplicationRecord
     end
   end
 
+  # @rbs () -> String
   def css_classes
     [
       completed? ? 'version-completed' : 'version-incompleted',
@@ -366,6 +402,7 @@ class Version < ApplicationRecord
     ].join(' ')
   end
 
+  # @rbs (?String?) -> Array[untyped]
   def self.fields_for_order_statement(table=nil)
     table ||= table_name
     [Arel.sql("(CASE WHEN #{table}.effective_date IS NULL THEN 1 ELSE 0 END)"), "#{table}.effective_date", "#{table}.name", "#{table}.id"]
@@ -374,6 +411,7 @@ class Version < ApplicationRecord
   scope :sorted, lambda {order(fields_for_order_statement)}
 
   # Returns the sharings that +user+ can set the version to
+  # @rbs (?User) -> Array[untyped]
   def allowed_sharings(user = User.current)
     VERSION_SHARINGS.select do |s|
       if sharing == s
@@ -399,10 +437,12 @@ class Version < ApplicationRecord
     sharing != 'none'
   end
 
+  # @rbs () -> bool
   def deletable?
     fixed_issues.empty? && !referenced_by_a_custom_field? && attachments.empty?
   end
 
+  # @rbs () -> bool
   def default_project_version
     if @default_project_version.nil?
       project.present? && project.default_version == self
@@ -411,6 +451,7 @@ class Version < ApplicationRecord
     end
   end
 
+  # @rbs (String) -> bool
   def default_project_version=(arg)
     @default_project_version = (arg == '1' || arg == true)
   end
@@ -418,6 +459,7 @@ class Version < ApplicationRecord
   private
 
   # Update the issue's fixed versions. Used if a version's sharing changes.
+  # @rbs () -> Array[untyped]?
   def update_issues_from_sharing_change
     if saved_change_to_sharing?
       if VERSION_SHARINGS.index(sharing_before_last_save).nil? ||
@@ -428,17 +470,20 @@ class Version < ApplicationRecord
     end
   end
 
+  # @rbs () -> bool?
   def update_default_project_version
     if @default_project_version && project.present?
       project.update_columns :default_version_id => id
     end
   end
 
+  # @rbs () -> bool
   def referenced_by_a_custom_field?
     CustomValue.joins(:custom_field).
       where(:value => id.to_s, :custom_fields => {:field_format => 'version'}).any?
   end
 
+  # @rbs () -> Integer
   def nullify_projects_default_version
     Project.where(:default_version_id => id).update_all(:default_version_id => nil)
   end

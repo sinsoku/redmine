@@ -52,10 +52,12 @@ class Document < ApplicationRecord
 
   safe_attributes 'category_id', 'title', 'description', 'custom_fields', 'custom_field_values'
 
+  # @rbs (?AnonymousUser | User) -> bool
   def visible?(user=User.current)
     !user.nil? && user.allowed_to?(:view_documents, project)
   end
 
+  # @rbs (?Hash[untyped, untyped]?, *nil) -> void
   def initialize(attributes=nil, *args)
     super
     if new_record?
@@ -63,6 +65,7 @@ class Document < ApplicationRecord
     end
   end
 
+  # @rbs () -> ActiveSupport::TimeWithZone
   def updated_on
     unless @updated_on
       a = attachments.last
@@ -71,12 +74,14 @@ class Document < ApplicationRecord
     @updated_on
   end
 
+  # @rbs () -> Array[untyped]
   def notified_users
     project.notified_users.reject {|user| !visible?(user)}
   end
 
   private
 
+  # @rbs () -> Array[untyped]?
   def send_notification
     if Setting.notified_events.include?('document_added')
       Mailer.deliver_document_added(self, User.current)

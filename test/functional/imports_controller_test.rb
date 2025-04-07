@@ -22,15 +22,18 @@ require_relative '../test_helper'
 class ImportsControllerTest < Redmine::ControllerTest
   include Redmine::I18n
 
+  # @rbs () -> Integer
   def setup
     User.current = nil
     @request.session[:user_id] = 2
   end
 
+  # @rbs () -> Array[untyped]
   def teardown
     Import.destroy_all
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_new_should_display_the_upload_form
     get(:new, :params => {:type => 'IssueImport', :project_id => 'subproject1'})
     assert_response :success
@@ -38,18 +41,21 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select 'input[name=?][type=?][value=?]', 'project_id', 'hidden', 'subproject1'
   end
 
+  # @rbs () -> bool
   def test_new_issue_import_without_add_issues_permission
     Role.all.map { |role| role.remove_permission! :add_issues }
     get(:new, :params => {:type => 'IssueImport', :project_id => 'subproject1'})
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_new_time_entry_import_without_log_time_permission
     Role.all.map { |role| role.remove_permission! :log_time }
     get(:new, :params => {:type => 'TimeEntryImport', :project_id => 'subproject1'})
     assert_response :forbidden
   end
 
+  # @rbs () -> bool
   def test_create_should_save_the_file
     import = new_record(Import) do
       post(
@@ -66,6 +72,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert import.file_exists?
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_settings_should_display_settings_form
     import = generate_import
     get(:settings, :params => {:id => import.to_param})
@@ -83,6 +90,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'import_settings[date_format]'
   end
 
+  # @rbs () -> bool
   def test_post_settings_should_update_settings
     import = generate_import
 
@@ -107,6 +115,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_equal '%m/%d/%Y', import.settings['date_format']
   end
 
+  # @rbs () -> bool
   def test_post_settings_should_update_total_items_count
     import = generate_import('import_iso8859-1.csv')
 
@@ -126,6 +135,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_equal 2, import.total_items
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_settings_with_wrong_encoding_should_display_error
     import = generate_import('import_iso8859-1.csv')
 
@@ -146,6 +156,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select 'div#flash_error', /not a valid UTF-8 encoded file/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_settings_with_invalid_encoding_should_display_error
     import = generate_import('invalid-Shift_JIS.csv')
 
@@ -166,6 +177,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select 'div#flash_error', /not a valid Shift_JIS encoded file/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_settings_with_mailformed_csv_should_display_error
     import = generate_import('unclosed_quoted_field.csv')
 
@@ -187,6 +199,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select 'div#flash_error', /The file is not a CSV file or does not match the settings below \([[:print:]]+\)/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_post_settings_with_no_data_row_should_display_error
     import = generate_import('import_issues_no_data_row.csv')
 
@@ -208,6 +221,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select 'div#flash_error', /The file does not contain any data/
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_mapping_should_display_mapping_form
     import = generate_import('import_iso8859-1.csv')
     import.settings = {'separator' => ";", 'wrapper' => '"', 'encoding' => "ISO-8859-1"}
@@ -227,6 +241,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_mapping_should_auto_map_fields_by_internal_field_name_or_by_label
     import = generate_import('import_issues_auto_mapping.csv')
     import.settings = {'separator' => ';', 'wrapper'=> '"', 'encoding' => 'ISO-8859-1'}
@@ -286,6 +301,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> bool
   def test_post_mapping_should_update_mapping
     import = generate_import('import_iso8859-1.csv')
 
@@ -311,6 +327,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_equal '0', mapping['subject']
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_mapping_time_entry
     Role.find(1).add_permission! :log_time_for_other_users
     import = generate_time_entry_import
@@ -335,6 +352,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_mapping_time_entry_for_user_with_log_time_for_other_users_permission
     Role.find(1).add_permission! :log_time_for_other_users
     import = generate_time_entry_import
@@ -356,6 +374,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     end
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_mapping_time_entry_for_user_without_log_time_for_other_users_permission
     import = generate_time_entry_import
     import.settings = {'separator' => ";", 'wrapper' => '"', 'encoding' => "ISO-8859-1"}
@@ -368,6 +387,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select 'select[name=?]', 'import_settings[mapping][user_id]', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_get_run
     import = generate_import_with_mapping
 
@@ -376,6 +396,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select '#import-progress'
   end
 
+  # @rbs () -> bool
   def test_post_run_should_import_the_file
     import = generate_import_with_mapping
 
@@ -392,6 +413,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_equal ["Child of existing issue", "Child 1", "First"], issues.map(&:subject)
   end
 
+  # @rbs () -> bool
   def test_post_run_should_import_max_items_and_resume
     ImportsController.any_instance.stubs(:max_items_per_request).returns(2)
     import = generate_import_with_mapping
@@ -410,6 +432,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_equal ["Child of existing issue", "Child 1", "First"], issues.map(&:subject)
   end
 
+  # @rbs () -> bool
   def test_post_run_with_notifications
     import = generate_import
 
@@ -448,6 +471,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_equal expected_email_count, actual_email_count
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_without_errors
     import = generate_import_with_mapping
     import.run
@@ -461,6 +485,7 @@ class ImportsControllerTest < Redmine::ControllerTest
     assert_select 'table#unsaved-items', 0
   end
 
+  # @rbs () -> Nokogiri::XML::NodeSet
   def test_show_with_errors_should_show_unsaved_items
     import = generate_import_with_mapping
     import.mapping['subject'] = 20

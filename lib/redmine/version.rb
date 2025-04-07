@@ -33,6 +33,7 @@ module Redmine
     BRANCH = 'stable'
 
     # Retrieves the revision from the working copy
+    # @rbs () -> nil
     def self.revision
       if File.directory?(File.join(Rails.root, '.svn'))
         begin
@@ -52,6 +53,7 @@ module Redmine
     STRING   = ARRAY.join('.')
 
     def self.to_a; ARRAY  end
+    # @rbs () -> String
     def self.to_s; STRING end
   end
 end

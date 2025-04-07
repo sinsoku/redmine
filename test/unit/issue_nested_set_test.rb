@@ -20,15 +20,18 @@
 require_relative '../test_helper'
 
 class IssueNestedSetTest < ActiveSupport::TestCase
+  # @rbs () -> nil
   def setup
     User.current = nil
   end
 
+  # @rbs () -> bool
   def test_new_record_is_leaf
     i = Issue.new
     assert i.leaf?
   end
 
+  # @rbs () -> bool
   def test_create_root_issue
     lft1 = new_issue_lft
     issue1 = Issue.generate!
@@ -40,6 +43,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal [issue2.id, nil, lft2, lft2 + 1], [issue2.root_id, issue2.parent_id, issue2.lft, issue2.rgt]
   end
 
+  # @rbs () -> bool
   def test_create_child_issue
     lft = new_issue_lft
     parent = Issue.generate!
@@ -53,6 +57,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal [parent.id, parent.id, lft + 1, lft + 2], [child.root_id, child.parent_id, child.lft, child.rgt]
   end
 
+  # @rbs () -> bool
   def test_creating_a_child_in_a_subproject_should_validate
     issue = Issue.generate!
     child = nil
@@ -64,6 +69,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal issue, child.reload.parent
   end
 
+  # @rbs () -> bool
   def test_creating_a_child_in_an_invalid_project_should_not_validate
     issue = Issue.generate!
     child = nil
@@ -75,6 +81,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_not_equal [], child.errors[:parent_issue_id]
   end
 
+  # @rbs () -> bool
   def test_move_a_root_to_child
     lft = new_issue_lft
     parent1 = Issue.generate!
@@ -93,6 +100,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal [parent1.id, lft + 3, lft + 4], [child.root_id, child.lft, child.rgt]
   end
 
+  # @rbs () -> bool
   def test_move_a_child_to_root
     lft1 = new_issue_lft
     parent1 = Issue.generate!
@@ -113,6 +121,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal [child.id,   lft3, lft3 + 1], [child.root_id, child.lft, child.rgt]
   end
 
+  # @rbs () -> bool
   def test_move_a_child_to_another_issue
     lft1 = new_issue_lft
     parent1 = Issue.generate!
@@ -132,6 +141,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal [parent2.id, lft2 + 1, lft2 + 2], [child.root_id,   child.lft,   child.rgt]
   end
 
+  # @rbs () -> bool
   def test_move_a_child_with_descendants_to_another_issue
     lft1 = new_issue_lft
     parent1 = Issue.generate!
@@ -159,6 +169,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal [parent2.id, lft2 + 2, lft2 + 3], [grandchild.root_id, grandchild.lft, grandchild.rgt]
   end
 
+  # @rbs () -> bool
   def test_move_a_child_with_descendants_to_another_project
     lft1 = new_issue_lft
     parent1 = Issue.generate!
@@ -183,6 +194,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
                  [grandchild.project_id, grandchild.root_id, grandchild.lft, grandchild.rgt]
   end
 
+  # @rbs () -> bool
   def test_moving_an_issue_to_a_descendant_should_not_validate
     parent1 = Issue.generate!
     parent2 = Issue.generate!
@@ -198,6 +210,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_not_equal [], child.errors[:parent_issue_id]
   end
 
+  # @rbs () -> bool
   def test_updating_a_root_issue_should_not_trigger_update_nested_set_attributes_on_parent_change
     issue = Issue.find(Issue.generate!.id)
     issue.parent_issue_id = ""
@@ -205,6 +218,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     issue.save!
   end
 
+  # @rbs () -> bool
   def test_updating_a_child_issue_should_not_trigger_update_nested_set_attributes_on_parent_change
     issue = Issue.find(Issue.generate!(:parent_issue_id => 1).id)
     issue.parent_issue_id = "1"
@@ -212,6 +226,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     issue.save!
   end
 
+  # @rbs () -> bool
   def test_moving_a_root_issue_should_trigger_update_nested_set_attributes_on_parent_change
     issue = Issue.find(Issue.generate!.id)
     issue.parent_issue_id = "1"
@@ -219,6 +234,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     issue.save!
   end
 
+  # @rbs () -> bool
   def test_moving_a_child_issue_to_another_parent_should_trigger_update_nested_set_attributes_on_parent_change
     issue = Issue.find(Issue.generate!(:parent_issue_id => 1).id)
     issue.parent_issue_id = "2"
@@ -226,6 +242,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     issue.save!
   end
 
+  # @rbs () -> bool
   def test_moving_a_child_issue_to_root_should_trigger_update_nested_set_attributes_on_parent_change
     issue = Issue.find(Issue.generate!(:parent_issue_id => 1).id)
     issue.parent_issue_id = ""
@@ -233,6 +250,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     issue.save!
   end
 
+  # @rbs () -> bool
   def test_destroy_should_destroy_children
     lft1 = new_issue_lft
     issue1 = Issue.generate!
@@ -257,6 +275,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal [issue1.id, lft1 + 1, lft1 + 2], [issue4.root_id, issue4.lft, issue4.rgt]
   end
 
+  # @rbs () -> bool
   def test_destroy_child_should_update_parent
     lft1 = new_issue_lft
     issue = Issue.generate!
@@ -271,6 +290,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert_equal [issue.id, lft1, lft1 + 3], [issue.root_id, issue.lft, issue.rgt]
   end
 
+  # @rbs () -> Issue
   def test_destroy_parent_issue_updated_during_children_destroy
     parent = Issue.generate!
     parent.generate_child!(:start_date => Date.today)
@@ -283,6 +303,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_destroy_child_issue_with_children
     root = Issue.generate!
     child = root.generate_child!
@@ -303,6 +324,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert root.leaf?, "Root issue is not a leaf (lft: #{root.lft}, rgt: #{root.rgt})"
   end
 
+  # @rbs () -> bool
   def test_destroy_issue_with_grand_child
     lft1 = new_issue_lft
     parent = Issue.generate!
@@ -319,6 +341,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     end
   end
 
+  # @rbs () -> bool
   def test_project_copy_should_copy_issue_tree
     p = Project.create!(:name => 'Tree copy', :identifier => 'tree-copy', :tracker_ids => [1, 2])
     i1 = Issue.generate!(:project => p, :subject => 'i1')
@@ -339,6 +362,7 @@ class IssueNestedSetTest < ActiveSupport::TestCase
     assert ic5.root?
   end
 
+  # @rbs () -> bool
   def test_rebuild_single_tree
     i1 = Issue.generate!
     i2 = i1.generate_child!

@@ -28,24 +28,29 @@ module Redmine
         SVN_BIN = Redmine::Configuration['scm_subversion_command'] || "svn"
 
         class << self
+          # @rbs () -> String
           def client_command
             @@bin    ||= SVN_BIN
           end
 
+          # @rbs () -> String
           def sq_bin
             @@sq_bin ||= shell_quote_command
           end
 
+          # @rbs () -> Array[untyped]
           def client_version
             @@client_version ||= (svn_binary_version || [])
           end
 
+          # @rbs () -> nil
           def client_available
             # --xml options are introduced in 1.3.
             # http://subversion.apache.org/docs/release-notes/1.3.html
             client_version_above?([1, 3])
           end
 
+          # @rbs () -> nil
           def svn_binary_version
             scm_version = scm_version_from_command_line.b
             if m = scm_version.match(%r{\A(.*?)((\d+\.)+\d+)})
@@ -53,6 +58,7 @@ module Redmine
             end
           end
 
+          # @rbs () -> String
           def scm_version_from_command_line
             shellout("#{sq_bin} --version") {|io| io.read}.to_s
           end
@@ -94,6 +100,7 @@ module Redmine
 
         # Returns an Entries collection
         # or nil if the given path doesn't exist in the repository
+        # @rbs (?String, ?nil, ?Hash[untyped, untyped]) -> nil
         def entries(path=nil, identifier=nil, options={})
           path ||= ''
           identifier = (identifier and identifier.to_i > 0) ? identifier.to_i : "HEAD"
@@ -275,6 +282,7 @@ module Redmine
 
         private
 
+        # @rbs () -> String
         def credentials_string
           str = +''
           str << " --username #{shell_quote(@login)}" unless @login.blank?
@@ -298,6 +306,7 @@ module Redmine
           end
         end
 
+        # @rbs (?String) -> String
         def target(path = '')
           base = path.start_with?('/') ? root_url : url
           uri = "#{base}/#{path}"

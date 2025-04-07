@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module ReportsHelper
+  # @rbs (Array[untyped], Hash[untyped, untyped]) -> Integer
   def aggregate(data, criteria)
     a = 0
     data&.each do |row|
@@ -34,16 +35,19 @@ module ReportsHelper
     a
   end
 
+  # @rbs (Array[untyped], Hash[untyped, untyped], *String) -> (ActiveSupport::SafeBuffer | String)
   def aggregate_link(data, criteria, *args)
     a = aggregate data, criteria
     a > 0 ? link_to(h(a), *args) : '-'
   end
 
+  # @rbs (Project, String, User | Tracker | IssuePriority | Version | Project | IssueCategory, ?Hash[untyped, untyped]) -> String
   def aggregate_path(project, field, row, options={})
     parameters = {:set_filter => 1, :subproject_id => '!*', field => (row.id || '!*')}.merge(options)
     project_issues_path(row.is_a?(Project) ? row : project, parameters)
   end
 
+  # @rbs (String, Array[untyped], Tracker::ActiveRecord_Relation | Array[untyped] | User::ActiveRecord_Relation | Project::ActiveRecord_Relation, Array[untyped]) -> String
   def issue_report_details_to_csv(field_name, statuses, rows, data)
     Redmine::Export::CSV.generate(:encoding => params[:encoding]) do |csv|
       # csv headers

@@ -22,6 +22,7 @@ require_relative '../test_helper'
 class ReportsHlperTest < Redmine::HelperTest
   include ReportsHelper
 
+  # @rbs () -> bool
   def test_aggregate_path_for_spacified_row
     project = Project.find(1)
     field = 'assigned_to_id'
@@ -29,6 +30,7 @@ class ReportsHlperTest < Redmine::HelperTest
     assert_equal '/projects/ecookbook/issues?assigned_to_id=2&set_filter=1&subproject_id=%21%2A', aggregate_path(project, field, row)
   end
 
+  # @rbs () -> bool
   def test_aggregate_path_for_unset_row
     project = Project.find(1)
     field = 'assigned_to_id'

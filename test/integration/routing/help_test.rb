@@ -20,6 +20,7 @@
 require_relative '../../test_helper'
 
 class RoutingHelpTest < Redmine::RoutingTest
+  # @rbs () -> bool
   def test_help
     should_route 'GET /help/wiki_syntax' => 'help#show_wiki_syntax'
     should_route 'GET /help/wiki_syntax/detailed' => 'help#show_wiki_syntax', :type => "detailed"

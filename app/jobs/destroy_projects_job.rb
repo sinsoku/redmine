@@ -3,6 +3,7 @@
 class DestroyProjectsJob < ApplicationJob
   include Redmine::I18n
 
+  # @rbs (Array[untyped], ?user: User) -> DestroyProjectsJob
   def self.schedule(projects_to_delete, user: User.current)
     # make the projects disappear immediately
     projects_to_delete.each do |project|
@@ -11,6 +12,7 @@ class DestroyProjectsJob < ApplicationJob
     perform_later(projects_to_delete.map(&:id), user.id, user.remote_ip)
   end
 
+  # @rbs (Array[untyped], Integer, String) -> Array[untyped]
   def perform(project_ids, user_id, remote_ip)
     user = User.active.find_by_id(user_id)
     unless user&.admin?
