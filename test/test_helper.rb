@@ -499,3 +499,11 @@ module Redmine
     end
   end
 end
+
+trace = RBS::Trace.new
+trace.enable
+
+Minitest.after_run do
+  trace.disable
+  trace.save_comments
+end
